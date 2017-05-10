@@ -13,6 +13,7 @@ public class ListCommand extends AbstractCommand {
 
     public ListCommand() {
         commandLength = 2;
+        commandDescription = "Displays available games for subscribing";
     }
 
     @Override

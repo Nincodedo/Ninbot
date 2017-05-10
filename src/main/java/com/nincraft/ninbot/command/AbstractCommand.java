@@ -1,10 +1,13 @@
 package com.nincraft.ninbot.command;
 
+import lombok.Data;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+@Data
 public abstract class AbstractCommand {
 
     int commandLength;
+    String commandDescription;
 
     public abstract void execute(MessageReceivedEvent event);
 
