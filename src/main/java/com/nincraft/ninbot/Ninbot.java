@@ -9,6 +9,8 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,14 +19,24 @@ import java.util.Properties;
 @UtilityClass
 public class Ninbot {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Properties properties = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = loader.getResourceAsStream("ninbot.properties");
+        if (inputStream == null) {
+            log.warn("Unable to load properties from classpath, retrying from current directory");
+            try {
+                inputStream = new FileInputStream("ninbot.properties");
+            } catch (FileNotFoundException e) {
+                log.error("Could not find property file", e);
+                throw e;
+            }
+        }
         try {
             properties.load(inputStream);
+            log.info("Property file loaded");
         } catch (IOException e) {
-            log.error("Unable to load properties", e);
+            log.error("Unable to load property file", e);
             throw e;
         }
         JDA jda = null;
