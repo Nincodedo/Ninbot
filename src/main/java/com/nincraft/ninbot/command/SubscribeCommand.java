@@ -7,10 +7,18 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Log4j2
 public class SubscribeCommand implements ICommand {
 
     private static final int COMMAND_LENGTH = 3;
+    private ArrayList<String> roleBlacklist;
+
+    public SubscribeCommand() {
+        roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS"));
+    }
 
     @Override
     public void execute(MessageReceivedEvent event) {
@@ -24,8 +32,7 @@ public class SubscribeCommand implements ICommand {
             if (isValidSubscribeRole(role)) {
                 MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
                 server.getController().addRolesToMember(event.getMember(), role).queue();
-            }
-            else{
+            } else {
                 MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin to create the role", subscribeTo);
             }
         } else {
@@ -34,11 +41,11 @@ public class SubscribeCommand implements ICommand {
     }
 
     private boolean isValidSubscribeRole(Role role) {
-        return role != null && role.getName().startsWith("gg_");
+        return role != null && !roleBlacklist.contains(role.getName());
     }
 
     private Role getRole(Guild server, String subscribeTo) {
-        val roleList = server.getRolesByName("gg_"+subscribeTo, true);
+        val roleList = server.getRolesByName(subscribeTo, true);
         return roleList.isEmpty() ? null : roleList.get(0);
     }
 
