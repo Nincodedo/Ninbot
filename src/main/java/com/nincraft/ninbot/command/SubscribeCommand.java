@@ -1,23 +1,23 @@
 package com.nincraft.ninbot.command;
 
 import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 @Log4j2
-public class SubscribeCommand implements ICommand {
+public class SubscribeCommand extends AbstractCommand {
 
-    private static final int COMMAND_LENGTH = 3;
-    private ArrayList<String> roleBlacklist;
+    private List<String> roleBlacklist;
 
     public SubscribeCommand() {
-        roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS"));
+        roleBlacklist = Reference.getRoleBlacklist();
+        commandLength = 3;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SubscribeCommand implements ICommand {
                 MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin to create the role", subscribeTo);
             }
         } else {
-            MessageSenderHelper.sendMessage(channel, "This command requires %s parameters", String.valueOf(COMMAND_LENGTH));
+            MessageSenderHelper.sendMessage(channel, "This command requires %s parameters", String.valueOf(commandLength));
         }
     }
 
@@ -47,9 +47,5 @@ public class SubscribeCommand implements ICommand {
     private Role getRole(Guild server, String subscribeTo) {
         val roleList = server.getRolesByName(subscribeTo, true);
         return roleList.isEmpty() ? null : roleList.get(0);
-    }
-
-    private boolean isCommandLengthCorrect(String content) {
-        return content.split(" ").length == COMMAND_LENGTH;
     }
 }
