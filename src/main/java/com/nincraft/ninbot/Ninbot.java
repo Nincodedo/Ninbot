@@ -1,6 +1,6 @@
 package com.nincraft.ninbot;
 
-import com.nincraft.ninbot.events.CommandListener;
+import com.nincraft.ninbot.listeners.CommandListener;
 import com.nincraft.ninbot.util.Reference;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
