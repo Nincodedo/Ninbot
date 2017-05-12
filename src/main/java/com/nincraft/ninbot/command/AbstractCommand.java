@@ -8,6 +8,7 @@ public abstract class AbstractCommand {
 
     int commandLength;
     String commandDescription;
+    String commandName;
 
     public abstract void execute(MessageReceivedEvent event);
 

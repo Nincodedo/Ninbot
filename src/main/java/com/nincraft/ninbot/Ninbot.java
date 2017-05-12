@@ -1,6 +1,7 @@
 package com.nincraft.ninbot;
 
 import com.nincraft.ninbot.events.CommandListener;
+import com.nincraft.ninbot.util.Reference;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
@@ -39,11 +40,11 @@ public class Ninbot {
     private static Properties readPropertiesFile() throws IOException {
         Properties properties = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = loader.getResourceAsStream("ninbot.properties");
+        InputStream inputStream = loader.getResourceAsStream(Reference.NINBOT_PROPERTIES);
         if (inputStream == null) {
             log.warn("Unable to load properties from classpath, retrying from current directory");
             try {
-                inputStream = new FileInputStream("ninbot.properties");
+                inputStream = new FileInputStream(Reference.NINBOT_PROPERTIES);
             } catch (FileNotFoundException e) {
                 log.error("Could not find property file", e);
                 throw e;

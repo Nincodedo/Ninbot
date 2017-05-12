@@ -5,8 +5,10 @@ import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.managers.GuildController;
 
 import java.util.List;
 
@@ -18,7 +20,8 @@ public class SubscribeCommand extends AbstractCommand {
     public SubscribeCommand() {
         roleBlacklist = Reference.getRoleBlacklist();
         commandLength = 3;
-        commandDescription = "Subscribes you to a game for game gathering events";
+        commandName = "subscribe/unsubscribe";
+        commandDescription = "Subscribes/unsubscribes you to a game for game gathering events";
     }
 
     @Override
@@ -31,13 +34,24 @@ public class SubscribeCommand extends AbstractCommand {
             val subscribeTo = content.split(" ")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role)) {
-                MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
-                server.getController().addRolesToMember(event.getMember(), role).queue();
+                addOrRemoveSubscription(event, channel, server.getController(), subscribeTo, role, content);
             } else {
-                MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin to create the role", subscribeTo);
+                MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
-            MessageSenderHelper.sendMessage(channel, "Add a game you want to subscribe to. Check what you can subscribe to using '@Ninbot list'");
+            MessageSenderHelper.sendMessage(channel, "Add a game you want to subscribe to/unsubscribe from. Check what you can subscribe to using '@Ninbot list'");
+        }
+    }
+
+    private void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
+        String command = messageContent.split(" ")[1];
+        if ("subscribe".equals(command)) {
+            MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
+            controller.addRolesToMember(event.getMember(), role).queue();
+
+        } else if ("unsubscribe".equals(command)) {
+            MessageSenderHelper.sendMessage(channel, "Unsubscribing %s from %s", event.getAuthor().getName(), subscribeTo);
+            controller.removeRolesFromMember(event.getMember(), role).queue();
         }
     }
 

@@ -10,5 +10,6 @@ import java.util.List;
 @UtilityClass
 public class Reference {
     @Getter
-    private final static List<String> roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone"));
+    private static final List<String> roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone"));
+    public static final String NINBOT_PROPERTIES = "ninbot.properties";
 }
