@@ -20,6 +20,23 @@ import java.util.Properties;
 public class Ninbot {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        Properties properties = readPropertiesFile();
+        JDA jda = null;
+        try {
+            jda = new JDABuilder(AccountType.BOT).setToken(properties.getProperty("ninbotToken")).buildBlocking();
+        } catch (LoginException e) {
+            log.error("Failed to login", e);
+        } catch (InterruptedException e) {
+            log.error("Interrupted", e);
+            throw e;
+        } catch (RateLimitedException e) {
+            log.warn("Rate limit exceeded", e);
+        }
+        assert jda != null;
+        jda.addEventListener(new CommandListener());
+    }
+
+    private static Properties readPropertiesFile() throws IOException {
         Properties properties = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = loader.getResourceAsStream("ninbot.properties");
@@ -39,18 +56,6 @@ public class Ninbot {
             log.error("Unable to load property file", e);
             throw e;
         }
-        JDA jda = null;
-        try {
-            jda = new JDABuilder(AccountType.BOT).setToken(properties.getProperty("ninbotToken")).buildBlocking();
-        } catch (LoginException e) {
-            log.error("Failed to login", e);
-        } catch (InterruptedException e) {
-            log.error("Interrupted", e);
-            throw e;
-        } catch (RateLimitedException e) {
-            log.warn("Rate limit exceeded", e);
-        }
-        assert jda != null;
-        jda.addEventListener(new CommandListener());
+        return properties;
     }
 }
