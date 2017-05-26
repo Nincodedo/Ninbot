@@ -16,10 +16,10 @@ public class Event {
 
     public String buildChannelMessage() {
         if (StringUtils.isNotBlank(endTime.toString())) {
-            return String.format("Event %s created by %s is starting at %s and will end at %s, %s", name, authorName,
+            return String.format("Event %s created by %s is starting at %s and will end at %s, @%s", name, authorName,
                     startTime, endTime, gameName);
         } else {
-            return String.format("Event %s created by %s is starting at %s, %s", name, authorName, startTime, gameName);
+            return String.format("Event %s created by %s is starting at %s, @%s", name, authorName, startTime, gameName);
         }
     }
 
