@@ -31,8 +31,9 @@ public class EventDao implements IEventDao {
                 statement.execute();
             } catch (SQLException e) {
                 log.error("SQL Exception during add event", e);
+            } finally {
+                close(connection);
             }
-            close(connection);
         }
     }
 
