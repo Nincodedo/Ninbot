@@ -7,15 +7,21 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
+    private boolean debugEnabled;
 
-    public CommandListener() {
+    public CommandListener(String debugEnabled) {
         commandParser = new CommandParser();
+        this.debugEnabled = Boolean.parseBoolean(debugEnabled);
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (isNinbotMention(event)) {
+        if (isNinbotMention(event) && checkDebug(event.getChannel().getName())) {
             commandParser.parseEvent(event);
         }
+    }
+
+    private boolean checkDebug(String channelName) {
+        return !debugEnabled || channelName.equals("admin-test");
     }
 
     private boolean isNinbotMention(MessageReceivedEvent event) {

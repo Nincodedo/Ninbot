@@ -49,7 +49,7 @@ public class Ninbot {
         assert jda != null;
         eventDao = new EventDao();
         eventScheduler = new EventScheduler();
-        jda.addEventListener(new CommandListener());
+        jda.addEventListener(new CommandListener(properties.getProperty("debugEnabled")));
         SqliteManager sqliteManager = new SqliteManager();
         sqliteManager.setupDb();
         eventScheduler.scheduleAll();
