@@ -13,7 +13,7 @@ public class CommandListener extends ListenerAdapter {
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (isNinbotMention(event) && event.getChannel().getName().equals("admin-test")) {
+        if (isNinbotMention(event)) {
             commandParser.parseEvent(event);
         }
     }
