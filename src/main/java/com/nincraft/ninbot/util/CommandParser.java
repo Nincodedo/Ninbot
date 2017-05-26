@@ -1,9 +1,6 @@
 package com.nincraft.ninbot.util;
 
-import com.nincraft.ninbot.command.AbstractCommand;
-import com.nincraft.ninbot.command.HelpCommand;
-import com.nincraft.ninbot.command.ListCommand;
-import com.nincraft.ninbot.command.SubscribeCommand;
+import com.nincraft.ninbot.command.*;
 import lombok.Getter;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +20,7 @@ public class CommandParser {
         commandHashMap.put("unsubscribe", new SubscribeCommand());
         commandHashMap.put("list", new ListCommand());
         commandHashMap.put("help", new HelpCommand());
+        commandHashMap.put("events", new EventCommand());
     }
 
     public void parseEvent(MessageReceivedEvent event) {
