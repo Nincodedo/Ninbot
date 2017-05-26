@@ -15,7 +15,7 @@ public class SqliteManager {
              Statement statement = connection.createStatement()) {
             statement.execute(SqlConstants.CREATE_EVENT_TABLE);
         } catch (SQLException e) {
-            log.error("", e);
+            log.error("Error setting up sqlite DB", e);
         }
     }
 }
