@@ -18,10 +18,10 @@ public class Event {
 
     public String buildChannelMessage(String roleId) {
         if (StringUtils.isNotBlank(endTime.toString())) {
-            return String.format("Event %s created by %s is starting at %s and will end at %s, <@&!%s>", name, authorName,
+            return String.format("Event %s created by %s is starting at %s and will end at %s, <@&%s>", name, authorName,
                     startTime, endTime, roleId);
         } else {
-            return String.format("Event %s created by %s is starting at %s, <@&!%s>", name, authorName, startTime, roleId);
+            return String.format("Event %s created by %s is starting at %s, <@&%s>", name, authorName, startTime, roleId);
         }
     }
 
