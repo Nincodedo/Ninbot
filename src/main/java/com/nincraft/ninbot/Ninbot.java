@@ -34,6 +34,9 @@ public class Ninbot {
     @Getter
     EventScheduler eventScheduler;
 
+    @Getter
+    private boolean debugEnabled;
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Properties properties = readPropertiesFile();
         try {
@@ -47,9 +50,10 @@ public class Ninbot {
             log.warn("Rate limit exceeded", e);
         }
         assert jda != null;
+        debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
         eventDao = new EventDao();
         eventScheduler = new EventScheduler();
-        jda.addEventListener(new CommandListener(properties.getProperty("debugEnabled")));
+        jda.addEventListener(new CommandListener(debugEnabled));
         SqliteManager sqliteManager = new SqliteManager();
         sqliteManager.setupDb();
         eventScheduler.scheduleAll();

@@ -9,9 +9,9 @@ public class CommandListener extends ListenerAdapter {
     private CommandParser commandParser;
     private boolean debugEnabled;
 
-    public CommandListener(String debugEnabled) {
+    public CommandListener(boolean debugEnabled) {
         commandParser = new CommandParser();
-        this.debugEnabled = Boolean.parseBoolean(debugEnabled);
+        this.debugEnabled = debugEnabled;
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {

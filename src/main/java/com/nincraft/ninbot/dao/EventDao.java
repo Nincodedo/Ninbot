@@ -2,19 +2,22 @@ package com.nincraft.ninbot.dao;
 
 import com.nincraft.ninbot.container.Event;
 import com.nincraft.ninbot.db.SqlConstants;
+import com.nincraft.ninbot.mapper.EventMapper;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
 public class EventDao implements IEventDao {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    private EventMapper eventMapper;
+
+    public EventDao(){
+        this.eventMapper = new EventMapper();
+    }
 
     @Override
     public void addEvent(Event event) {
@@ -47,7 +50,17 @@ public class EventDao implements IEventDao {
 
     @Override
     public void removeEvent(Event event) {
-        //TODO
+        Connection connection = connect();
+        if(connection!=null){
+            try (PreparedStatement statement = connection.prepareStatement(SqlConstants.UPDATE_HIDE_EVENT)){
+                statement.setInt(1, event.getId());
+                statement.execute();
+            } catch (SQLException e) {
+                log.error("Failed to remove event", e);
+            } finally {
+                close(connection);
+            }
+        }
     }
 
     @Override
@@ -58,7 +71,7 @@ public class EventDao implements IEventDao {
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(SqlConstants.GET_ALL_EVENTS)) {
                 while (resultSet.next()) {
-                    results.add(mapEvent(resultSet));
+                    results.add(eventMapper.mapEvent(resultSet));
                 }
             } catch (SQLException e) {
                 log.error("Failed to get all events", e);
@@ -67,21 +80,6 @@ public class EventDao implements IEventDao {
             close(connection);
         }
         return results;
-    }
-
-    private Event mapEvent(ResultSet resultSet) {
-        Event event = new Event();
-        try {
-            event.setName(resultSet.getString("Name"));
-            event.setAuthorName(resultSet.getString("AuthorName"));
-            event.setGameName(resultSet.getString("GameName"));
-            event.setDescription(resultSet.getString("Description"));
-            event.setStartTime(LocalDateTime.parse(resultSet.getString("StartTime"), formatter));
-            event.setEndTime(LocalDateTime.parse(resultSet.getString("EndTime"), formatter));
-        } catch (SQLException e) {
-            log.error("Failed to map event", e);
-        }
-        return event;
     }
 
     @Override

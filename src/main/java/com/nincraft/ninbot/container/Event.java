@@ -7,19 +7,21 @@ import java.time.LocalDateTime;
 
 @Data
 public class Event {
+    private int id;
     private String name;
     private String authorName;
     private String gameName;
     private String description;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private int hidden;
 
-    public String buildChannelMessage() {
+    public String buildChannelMessage(String roleId) {
         if (StringUtils.isNotBlank(endTime.toString())) {
-            return String.format("Event %s created by %s is starting at %s and will end at %s, @%s", name, authorName,
-                    startTime, endTime, gameName);
+            return String.format("Event %s created by %s is starting at %s and will end at %s, <@&!%s>", name, authorName,
+                    startTime, endTime, roleId);
         } else {
-            return String.format("Event %s created by %s is starting at %s, @%s", name, authorName, startTime, gameName);
+            return String.format("Event %s created by %s is starting at %s, <@&!%s>", name, authorName, startTime, roleId);
         }
     }
 
