@@ -17,7 +17,7 @@ public class CommandParser {
     public CommandParser() {
         commandHashMap = new HashMap<>();
         commandHashMap.put("subscribe", new SubscribeCommand());
-        commandHashMap.put("unsubscribe", new SubscribeCommand());
+        commandHashMap.put("unsubscribe", new UnsubscribeCommand());
         commandHashMap.put("list", new ListCommand());
         commandHashMap.put("help", new HelpCommand());
         commandHashMap.put("events", new EventCommand());

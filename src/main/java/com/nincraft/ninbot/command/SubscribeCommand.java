@@ -20,8 +20,8 @@ public class SubscribeCommand extends AbstractCommand {
     public SubscribeCommand() {
         roleBlacklist = Reference.getRoleBlacklist();
         commandLength = 3;
-        commandName = "subscribe/unsubscribe";
-        commandDescription = "Subscribes/unsubscribes you to a game for game gathering events";
+        commandName = "subscribe";
+        commandDescription = "Subscribes you to a game for game gathering events";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SubscribeCommand extends AbstractCommand {
         }
     }
 
-    private void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
+    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
         String command = messageContent.split(" ")[1];
         if ("subscribe".equalsIgnoreCase(command)) {
             MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
