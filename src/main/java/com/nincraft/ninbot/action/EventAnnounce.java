@@ -16,11 +16,13 @@ public class EventAnnounce extends TimerTask {
     private Event event;
     private JDA jda;
     private String announcementChannel;
+    private int minutesBeforeStart;
 
-    public EventAnnounce(Event event) {
+    public EventAnnounce(Event event, int minutesBeforeStart) {
         this.event = event;
         this.jda = Ninbot.getJda();
         this.announcementChannel = Ninbot.isDebugEnabled() ? Reference.OCW_DEBUG_CHANNEL : Reference.OCW_EVENT_ANNOUNCE_CHANNEL;
+        this.minutesBeforeStart = minutesBeforeStart;
     }
 
     @Override
@@ -29,6 +31,6 @@ public class EventAnnounce extends TimerTask {
         val ocwServer = jda.getGuildById(Reference.OCW_SERVER_ID);
         val channel = ocwServer.getTextChannelById(announcementChannel);
         val gameRoleId = ocwServer.getRolesByName(event.getGameName(), true).get(0);
-        MessageSenderHelper.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId()));
+        MessageSenderHelper.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
     }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class Event {
@@ -16,13 +17,29 @@ public class Event {
     private LocalDateTime endTime;
     private int hidden;
 
-    public String buildChannelMessage(String roleId) {
-        if (StringUtils.isNotBlank(endTime.toString())) {
-            return String.format("Event %s created by %s is starting at %s and will end at %s, <@&%s>", name, authorName,
-                    startTime, endTime, roleId);
+    public String buildChannelMessage(String roleId, int minutesBeforeStart) {
+        if (minutesBeforeStart > 0) {
+            String timezoneConvert = getTimezoneConvert(startTime);
+            String timezoneUrl = formatTime(timezoneConvert);
+            return String.format("<@&%s>, event %s created by %s is starting in %s minutes - click here for your timezone %s", roleId, name, authorName, minutesBeforeStart, timezoneUrl);
         } else {
-            return String.format("Event %s created by %s is starting at %s, <@&%s>", name, authorName, startTime, roleId);
+            if (StringUtils.isNotBlank(endTime.toString())) {
+                String timezoneConvert = getTimezoneConvert(endTime);
+                String timezoneUrl = formatTime(timezoneConvert);
+                return String.format("<@&%s>, event %s created by %s is starting now and will end at %s - click here for your timezone %s", roleId, name, authorName,
+                        endTime, timezoneUrl);
+            } else {
+                return String.format("<@&%s>, event %s created by %s is starting now", roleId, name, authorName);
+            }
         }
+    }
+
+    private String formatTime(String timezoneConvert) {
+        return String.format("http://www.thetimezoneconverter.com/?t=%s&tz=Chicago", timezoneConvert);
+    }
+
+    private String getTimezoneConvert(LocalDateTime time) {
+        return time.format(DateTimeFormatter.ofPattern("hh:mm a")).replaceAll(" ", "%20");
     }
 
     @Override

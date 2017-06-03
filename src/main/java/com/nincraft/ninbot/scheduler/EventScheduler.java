@@ -38,7 +38,8 @@ public class EventScheduler {
     private void scheduleEvent(Event event) {
         Timer timer = new Timer();
         Instant eventStartTime = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant();
-        Instant eventEarlyReminder = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant().minus(10, ChronoUnit.MINUTES);
+        int minutesBeforeStart = 30;
+        Instant eventEarlyReminder = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant().minus(minutesBeforeStart, ChronoUnit.MINUTES);
         Instant eventEndTime;
         if (event.getEndTime() != null) {
             eventEndTime = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant();
@@ -50,15 +51,15 @@ public class EventScheduler {
             new EventRemove(event).run();
         } else {
             log.debug("Scheduling {} for {}", event.getName(), event.getStartTime());
-            scheduleEvent(event, timer, eventStartTime);
-            scheduleEvent(event, timer, eventEarlyReminder);
+            scheduleEvent(event, timer, eventStartTime, 0);
+            scheduleEvent(event, timer, eventEarlyReminder, minutesBeforeStart);
             timer.schedule(new EventRemove(event), Date.from(eventEndTime));
         }
     }
 
-    private void scheduleEvent(Event event, Timer timer, Instant eventTime) {
+    private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart) {
         if (!eventTime.isBefore(Instant.now())) {
-            timer.schedule(new EventAnnounce(event), Date.from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart), Date.from(eventTime));
         }
     }
 }
