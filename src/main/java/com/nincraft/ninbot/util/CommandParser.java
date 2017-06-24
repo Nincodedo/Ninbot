@@ -1,7 +1,9 @@
 package com.nincraft.ninbot.util;
 
+import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.command.*;
 import lombok.Getter;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,9 +30,17 @@ public class CommandParser {
         if (StringUtils.isNotBlank(message)) {
             AbstractCommand command = commandHashMap.get(getCommand(message));
             if (command != null) {
-                command.execute(event);
+                try {
+                    command.execute(event);
+                } catch (Exception e) {
+                    MessageSenderHelper.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.getStackTrace().toString());
+                }
             }
         }
+    }
+
+    private MessageChannel getChannel(String channel) {
+        return Ninbot.getJda().getGuildById(Reference.OCW_SERVER_ID).getTextChannelById(channel);
     }
 
     private String getCommand(String message) {
