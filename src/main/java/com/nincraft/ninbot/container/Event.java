@@ -20,7 +20,7 @@ public class Event {
         if (minutesBeforeStart > 0) {
             return String.format("<@&%s>, event %s created by %s is starting in %d minutes", roleId, name, authorName, minutesBeforeStart);
         } else {
-            if (StringUtils.isNotBlank(endTime.toString())) {
+            if (endTime != null) {
                 return String.format("<@&%s>, event %s created by %s is starting now and will end at %s", roleId, name, authorName,
                         endTime);
             } else {
