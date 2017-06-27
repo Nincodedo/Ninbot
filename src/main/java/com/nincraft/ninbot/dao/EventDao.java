@@ -15,7 +15,7 @@ public class EventDao implements IEventDao {
 
     private EventMapper eventMapper;
 
-    public EventDao(){
+    public EventDao() {
         this.eventMapper = new EventMapper();
     }
 
@@ -51,8 +51,8 @@ public class EventDao implements IEventDao {
     @Override
     public void removeEvent(Event event) {
         Connection connection = connect();
-        if(connection!=null){
-            try (PreparedStatement statement = connection.prepareStatement(SqlConstants.UPDATE_HIDE_EVENT)){
+        if (connection != null) {
+            try (PreparedStatement statement = connection.prepareStatement(SqlConstants.UPDATE_HIDE_EVENT)) {
                 statement.setInt(1, event.getId());
                 statement.execute();
             } catch (SQLException e) {

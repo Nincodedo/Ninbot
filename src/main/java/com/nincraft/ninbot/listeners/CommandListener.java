@@ -13,6 +13,7 @@ public class CommandListener extends ListenerAdapter {
         commandParser = new CommandParser();
         this.debugEnabled = debugEnabled;
     }
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (isNinbotMention(event) && checkDebug(event.getChannel().getName())) {
