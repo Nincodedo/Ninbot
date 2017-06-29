@@ -20,17 +20,17 @@ public class SubscribeCommand extends AbstractCommand {
     public SubscribeCommand() {
         roleBlacklist = Reference.getRoleBlacklist();
         commandLength = 3;
-        commandName = "subscribe/unsubscribe";
-        commandDescription = "Subscribes/unsubscribes you to a game for game gathering events";
+        commandName = "subscribe";
+        commandDescription = "Subscribes you to a game for game gathering events";
     }
 
     @Override
     public void execute(MessageReceivedEvent event) {
         log.trace("execute SubscribeCommand: " + event);
+        val content = event.getMessage().getContent().toLowerCase();
         val channel = event.getChannel();
-        val server = event.getGuild();
-        val content = event.getMessage().getContent();
         if (isCommandLengthCorrect(content)) {
+            val server = event.getGuild();
             val subscribeTo = content.split(" ")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role)) {
@@ -39,11 +39,11 @@ public class SubscribeCommand extends AbstractCommand {
                 MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
-            MessageSenderHelper.sendMessage(channel, "Add a game you want to subscribe to/unsubscribe from. Check what you can subscribe to using '@Ninbot list'");
+            wrongCommandLengthMessage(channel);
         }
     }
 
-    private void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
+    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
         String command = messageContent.split(" ")[1];
         if ("subscribe".equalsIgnoreCase(command)) {
             MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);

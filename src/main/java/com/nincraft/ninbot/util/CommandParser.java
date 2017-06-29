@@ -1,10 +1,9 @@
 package com.nincraft.ninbot.util;
 
-import com.nincraft.ninbot.command.AbstractCommand;
-import com.nincraft.ninbot.command.HelpCommand;
-import com.nincraft.ninbot.command.ListCommand;
-import com.nincraft.ninbot.command.SubscribeCommand;
+import com.nincraft.ninbot.Ninbot;
+import com.nincraft.ninbot.command.*;
 import lombok.Getter;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,9 +19,10 @@ public class CommandParser {
     public CommandParser() {
         commandHashMap = new HashMap<>();
         commandHashMap.put("subscribe", new SubscribeCommand());
-        commandHashMap.put("unsubscribe", new SubscribeCommand());
+        commandHashMap.put("unsubscribe", new UnsubscribeCommand());
         commandHashMap.put("list", new ListCommand());
         commandHashMap.put("help", new HelpCommand());
+        commandHashMap.put("events", new EventCommand());
     }
 
     public void parseEvent(MessageReceivedEvent event) {
@@ -30,9 +30,18 @@ public class CommandParser {
         if (StringUtils.isNotBlank(message)) {
             AbstractCommand command = commandHashMap.get(getCommand(message));
             if (command != null) {
-                command.execute(event);
+                try {
+                    command.execute(event);
+                } catch (Exception e) {
+                    MessageSenderHelper.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
+                            "\n" + e.getStackTrace()[0].toString());
+                }
             }
         }
+    }
+
+    private MessageChannel getChannel(String channel) {
+        return Ninbot.getJda().getGuildById(Reference.OCW_SERVER_ID).getTextChannelById(channel);
     }
 
     private String getCommand(String message) {

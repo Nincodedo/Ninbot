@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.command;
 
+import com.nincraft.ninbot.util.MessageSenderHelper;
 import lombok.Data;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 @Data
@@ -14,5 +16,9 @@ public abstract class AbstractCommand {
 
     boolean isCommandLengthCorrect(String content) {
         return content.split(" ").length == commandLength;
+    }
+
+    void wrongCommandLengthMessage(MessageChannel channel) {
+        MessageSenderHelper.sendMessage(channel, "Wrong number of arguments for %s command", commandName);
     }
 }
