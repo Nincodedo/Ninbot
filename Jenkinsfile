@@ -2,13 +2,19 @@ pipeline {
     agent any
     stages {
         stage('Checkout') {
-            checkout scm
+            steps {
+                checkout scm
+            }
         }
         stage('Build') {
-           bat 'mvnw.cmd clean package'
+            steps {
+                bat 'mvnw.cmd clean package'
+            }
         }
         stage('Archive') {
-            archive includes: 'target/*.jar'
+            steps {
+                archive includes: 'target/*.jar'
+            }
         }
     }
 }
