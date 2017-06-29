@@ -33,7 +33,8 @@ public class CommandParser {
                 try {
                     command.execute(event);
                 } catch (Exception e) {
-                    MessageSenderHelper.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.getStackTrace().toString());
+                    MessageSenderHelper.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
+                            "\n" + e.getStackTrace()[0].toString());
                 }
             }
         }

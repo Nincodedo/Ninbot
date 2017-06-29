@@ -30,7 +30,8 @@ public class EventDao implements IEventDao {
                 statement.setString(i++, event.getGameName());
                 statement.setString(i++, event.getDescription());
                 statement.setString(i++, event.getStartTime().toString());
-                statement.setString(i, event.getEndTime().toString());
+                statement.setString(i++, event.getEndTime() == null ? null : event.getEndTime().toString());
+                statement.setInt(i, 0);
                 statement.execute();
             } catch (SQLException e) {
                 log.error("SQL Exception during add event", e);

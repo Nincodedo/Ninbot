@@ -39,7 +39,7 @@ public class SubscribeCommand extends AbstractCommand {
                 MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
-            MessageSenderHelper.sendMessage(channel, "Add a game you want to subscribe to/unsubscribe from. Check what you can subscribe to using '@Ninbot list'");
+            wrongCommandLengthMessage(channel);
         }
     }
 

@@ -1,11 +1,13 @@
 package com.nincraft.ninbot.container;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 
 @Data
+@Accessors(chain = true)
 public class Event {
     private int id;
     private String name;
@@ -45,7 +47,7 @@ public class Event {
         stringBuilder.append(StringUtils.capitalize(gameName));
         stringBuilder.append("\nStart Time: ");
         stringBuilder.append(startTime);
-        if (StringUtils.isNotBlank(endTime.toString())) {
+        if (getEndTime() != null) {
             stringBuilder.append("\nEnd Time: ");
             stringBuilder.append(endTime);
         }
