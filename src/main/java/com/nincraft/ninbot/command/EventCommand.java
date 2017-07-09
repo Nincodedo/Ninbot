@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class EventCommand extends AbstractCommand {
         event.setAuthorName(messageReceivedEvent.getAuthor().getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME).atOffset(ZoneOffset.of("-06:00")).toLocalDateTime());
         eventScheduler.addEvent(event);
         MessageSenderHelper.sendMessage(channel, "Added %s to schedule", event.getName());
     }

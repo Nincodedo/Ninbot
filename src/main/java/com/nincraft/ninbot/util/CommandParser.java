@@ -8,13 +8,14 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CommandParser {
 
     @Getter
     private static final CommandParser instance = new CommandParser();
     @Getter
-    private HashMap<String, AbstractCommand> commandHashMap;
+    private Map<String, AbstractCommand> commandHashMap;
 
     public CommandParser() {
         commandHashMap = new HashMap<>();

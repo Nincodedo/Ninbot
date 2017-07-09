@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Log4j2
 public class EventMapper {
@@ -21,8 +22,18 @@ public class EventMapper {
             event.setAuthorName(resultSet.getString("AuthorName"));
             event.setGameName(resultSet.getString("GameName"));
             event.setDescription(resultSet.getString("Description"));
-            event.setStartTime(LocalDateTime.parse(resultSet.getString("StartTime"), formatter));
-            event.setEndTime(LocalDateTime.parse(resultSet.getString("EndTime"), formatter));
+            try {
+                event.setStartTime(LocalDateTime.parse(resultSet.getString("StartTime"), formatter));
+            } catch (DateTimeParseException e) {
+                event.setStartTime(LocalDateTime.parse(resultSet.getString("StartTime"), DateTimeFormatter.ISO_DATE_TIME));
+            }
+            if (resultSet.getString("EndTime") != null) {
+                try {
+                    event.setStartTime(LocalDateTime.parse(resultSet.getString("EndTime"), formatter));
+                } catch (DateTimeParseException e) {
+                    event.setStartTime(LocalDateTime.parse(resultSet.getString("EndTime"), DateTimeFormatter.ISO_DATE_TIME));
+                }
+            }
             event.setHidden(resultSet.getInt("Hidden"));
         } catch (SQLException e) {
             log.error("Failed to map event", e);
