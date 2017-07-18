@@ -11,6 +11,7 @@ public abstract class AbstractCommand {
     int commandLength;
     String commandDescription;
     String commandName;
+    boolean hidden;
 
     public abstract void execute(MessageReceivedEvent event);
 
@@ -20,5 +21,9 @@ public abstract class AbstractCommand {
 
     void wrongCommandLengthMessage(MessageChannel channel) {
         MessageSenderHelper.sendMessage(channel, "Wrong number of arguments for %s command", commandName);
+    }
+
+    String getSubcommand(String command) {
+        return command.split(" ")[2].toLowerCase();
     }
 }

@@ -33,7 +33,7 @@ public class EventCommand extends AbstractCommand {
         val content = messageReceivedEvent.getMessage().getContent().toLowerCase();
         val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {
-            val action = content.split(" ")[2].toLowerCase();
+            val action = getSubcommand(content);
             switch (action) {
                 case "list":
                     listEvents(channel);
