@@ -25,6 +25,7 @@ public class CommandParser {
         commandHashMap.put("help", new HelpCommand());
         commandHashMap.put("events", new EventCommand());
         commandHashMap.put("stats", new StatsCommand());
+        commandHashMap.put("admin", new AdminCommand());
     }
 
     public void parseEvent(MessageReceivedEvent event) {

@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.command;
 
 import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.RolePermission;
 import lombok.Data;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -12,6 +13,7 @@ public abstract class AbstractCommand {
     String commandDescription;
     String commandName;
     boolean hidden;
+    RolePermission commandPermission = RolePermission.EVERYONE;
 
     public abstract void execute(MessageReceivedEvent event);
 
