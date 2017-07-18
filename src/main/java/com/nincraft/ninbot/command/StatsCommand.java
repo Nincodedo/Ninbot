@@ -7,7 +7,11 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatsCommand extends AbstractCommand {
 
@@ -35,16 +39,38 @@ public class StatsCommand extends AbstractCommand {
                 }
             }
         }
+
+        List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
+
         StringBuilder stringBuilder = new StringBuilder();
-        List<Role> roleList = new ArrayList(roleMap.keySet());
-        Collections.sort(roleList);
-        Collections.reverse(roleList);
-        roleList.forEach(role -> {
-            stringBuilder.append(role.getName());
+        Collections.sort(statList);
+        statList.forEach(stat -> {
+            stringBuilder.append(stat.name);
             stringBuilder.append(": ");
-            stringBuilder.append(roleMap.get(role));
+            stringBuilder.append(stat.amount);
             stringBuilder.append("\n");
         });
         MessageSenderHelper.sendMessage(event.getChannel(), stringBuilder.toString());
+    }
+
+    private class Stat implements Comparable {
+        private String name;
+        private int amount;
+
+        Stat(String name, int amount) {
+            this.name = name;
+            this.amount = amount;
+        }
+
+
+        @Override
+        public int compareTo(Object o) {
+            Stat stat = (Stat) o;
+            if (stat.amount == this.amount) {
+                return stat.name.compareTo(this.name);
+            } else {
+                return Integer.compare(stat.amount, this.amount);
+            }
+        }
     }
 }
