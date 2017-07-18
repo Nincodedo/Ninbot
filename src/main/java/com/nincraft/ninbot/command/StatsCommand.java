@@ -7,9 +7,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StatsCommand extends AbstractCommand {
 
@@ -38,7 +36,10 @@ public class StatsCommand extends AbstractCommand {
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
-        roleMap.keySet().forEach(role -> {
+        List<Role> roleList = new ArrayList(roleMap.keySet());
+        Collections.sort(roleList);
+        Collections.reverse(roleList);
+        roleList.forEach(role -> {
             stringBuilder.append(role.getName());
             stringBuilder.append(": ");
             stringBuilder.append(roleMap.get(role));
