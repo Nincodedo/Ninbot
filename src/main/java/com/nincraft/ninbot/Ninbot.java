@@ -2,7 +2,6 @@ package com.nincraft.ninbot;
 
 import com.nincraft.ninbot.dao.EventDao;
 import com.nincraft.ninbot.dao.IEventDao;
-import com.nincraft.ninbot.db.SqliteManager;
 import com.nincraft.ninbot.listeners.CommandListener;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.Reference;
@@ -13,6 +12,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import org.flywaydb.core.Flyway;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileInputStream;
@@ -54,9 +54,14 @@ public class Ninbot {
         eventDao = new EventDao();
         eventScheduler = new EventScheduler();
         jda.addEventListener(new CommandListener(debugEnabled));
-        SqliteManager sqliteManager = new SqliteManager();
-        sqliteManager.setupDb();
+        migrateDb();
         eventScheduler.scheduleAll();
+    }
+
+    private static void migrateDb() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(Reference.SQLITE_DB, null, null);
+        flyway.migrate();
     }
 
     private static Properties readPropertiesFile() throws IOException {
