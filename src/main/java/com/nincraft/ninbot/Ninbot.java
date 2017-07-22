@@ -3,6 +3,7 @@ package com.nincraft.ninbot;
 import com.nincraft.ninbot.dao.EventDao;
 import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.listeners.CommandListener;
+import com.nincraft.ninbot.listeners.ReactionListener;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
@@ -54,6 +55,7 @@ public class Ninbot {
         eventDao = new EventDao();
         eventScheduler = new EventScheduler();
         jda.addEventListener(new CommandListener(debugEnabled));
+        jda.addEventListener(new ReactionListener());
         migrateDb();
         eventScheduler.scheduleAll();
     }
