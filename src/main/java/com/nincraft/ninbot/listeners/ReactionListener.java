@@ -5,11 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class ReactionListener extends ListenerAdapter {
 
     private void loadResponseMap() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/responses.txt"));
+            List<String> lines = IOUtils.readLines(getClass().getClassLoader().getResourceAsStream("responses.txt"), Charset.defaultCharset());
             for (val line : lines) {
                 responseMap.put(line.split("\\|")[0], line.split("\\|")[1]);
             }
