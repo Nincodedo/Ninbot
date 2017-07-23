@@ -17,4 +17,9 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            build job: 'UpdateNinbot', wait: false
+        }
+    }
 }
