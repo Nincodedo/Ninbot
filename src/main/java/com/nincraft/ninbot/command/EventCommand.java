@@ -6,7 +6,9 @@ import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.MessageSenderHelper;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.time.LocalDateTime;
@@ -39,7 +41,7 @@ public class EventCommand extends AbstractCommand {
                     listEvents(channel);
                     break;
                 case "plan":
-                    planEvent(messageReceivedEvent, channel);
+                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), channel);
                     break;
                 case "help":
                     displayEventHelp(channel);
@@ -55,15 +57,15 @@ public class EventCommand extends AbstractCommand {
 
     private void displayEventHelp(MessageChannel channel) {
         String helpMessage = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
-                "Parameters: @Ninbot events plan \"Event Name\" StarTime GameName\n" +
+                "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
                 "Note: event name must be in quotes if it is longer than one word";
         MessageSenderHelper.sendMessage(channel, helpMessage);
     }
 
-    private void planEvent(MessageReceivedEvent messageReceivedEvent, MessageChannel channel) {
+    private void planEvent(Message message, User author, MessageChannel channel) {
         Event event = new Event();
-        Map<String, String> eventMap = parsePlanMessage(messageReceivedEvent.getMessage().getContent());
-        event.setAuthorName(messageReceivedEvent.getAuthor().getName())
+        Map<String, String> eventMap = parsePlanMessage(message.getContent());
+        event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
                 .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME).atOffset(ZoneOffset.of("-06:00")).toLocalDateTime());

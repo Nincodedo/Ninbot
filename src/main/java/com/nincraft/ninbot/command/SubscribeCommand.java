@@ -34,7 +34,7 @@ public class SubscribeCommand extends AbstractCommand {
             val subscribeTo = content.split(" ")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role)) {
-                addOrRemoveSubscription(event, channel, server.getController(), subscribeTo, role, content);
+                addOrRemoveSubscription(event, channel, server.getController(), subscribeTo, role);
             } else {
                 MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
@@ -43,16 +43,9 @@ public class SubscribeCommand extends AbstractCommand {
         }
     }
 
-    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role, String messageContent) {
-        String command = messageContent.split(" ")[1];
-        if ("subscribe".equalsIgnoreCase(command)) {
-            MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
-            controller.addRolesToMember(event.getMember(), role).queue();
-
-        } else if ("unsubscribe".equalsIgnoreCase(command)) {
-            MessageSenderHelper.sendMessage(channel, "Unsubscribing %s from %s", event.getAuthor().getName(), subscribeTo);
-            controller.removeRolesFromMember(event.getMember(), role).queue();
-        }
+    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
+        MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
+        controller.addRolesToMember(event.getMember(), role).queue();
     }
 
     private boolean isValidSubscribeRole(Role role) {

@@ -26,16 +26,14 @@ public class ListCommand extends AbstractCommand {
         val channel = event.getChannel();
         val content = event.getMessage().getContent().split(" ");
         if (content.length > 2) {
-            listUsersInSubscription(content[2], event);
+            listUsersInSubscription(content[2], event.getGuild(), event.getChannel());
         } else {
             listSubscriptions(event.getGuild(), channel);
         }
     }
 
-    private void listUsersInSubscription(String roleName, MessageReceivedEvent event) {
-        val guild = event.getGuild();
+    private void listUsersInSubscription(String roleName, Guild guild, MessageChannel channel) {
         val role = guild.getRolesByName(roleName, true);
-        val channel = event.getChannel();
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).collect(Collectors.toList());

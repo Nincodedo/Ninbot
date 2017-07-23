@@ -4,6 +4,7 @@ import com.nincraft.ninbot.util.MessageSenderHelper;
 import com.nincraft.ninbot.util.Reference;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -27,10 +28,10 @@ public class StatsCommand extends AbstractCommand {
     @Override
     public void execute(MessageReceivedEvent event) {
         val server = event.getGuild();
-        printRoleStats(event, server);
+        printRoleStats(event.getChannel(), server);
     }
 
-    private void printRoleStats(MessageReceivedEvent event, Guild server) {
+    private void printRoleStats(MessageChannel channel, Guild server) {
         Map<Role, Integer> roleMap = new HashMap<>();
         for (val member : server.getMembers()) {
             for (val role : member.getRoles()) {
@@ -50,7 +51,7 @@ public class StatsCommand extends AbstractCommand {
             stringBuilder.append(stat.amount);
             stringBuilder.append("\n");
         });
-        MessageSenderHelper.sendMessage(event.getChannel(), stringBuilder.toString());
+        MessageSenderHelper.sendMessage(channel, stringBuilder.toString());
     }
 
     private class Stat implements Comparable {
