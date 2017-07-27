@@ -31,7 +31,7 @@ public class EventCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(MessageReceivedEvent messageReceivedEvent) {
+    public void executeCommand(MessageReceivedEvent messageReceivedEvent) {
         val content = messageReceivedEvent.getMessage().getContent().toLowerCase();
         val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {

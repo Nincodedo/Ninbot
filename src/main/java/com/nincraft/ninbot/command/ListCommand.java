@@ -22,7 +22,7 @@ public class ListCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public void executeCommand(MessageReceivedEvent event) {
         val channel = event.getChannel();
         val content = event.getMessage().getContent().split(" ");
         if (content.length > 2) {

@@ -25,7 +25,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public void executeCommand(MessageReceivedEvent event) {
         log.trace("execute SubscribeCommand: " + event);
         val content = event.getMessage().getContent().toLowerCase();
         val channel = event.getChannel();

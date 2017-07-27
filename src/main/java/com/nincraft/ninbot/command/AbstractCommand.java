@@ -3,6 +3,9 @@ package com.nincraft.ninbot.command;
 import com.nincraft.ninbot.util.MessageSenderHelper;
 import com.nincraft.ninbot.util.RolePermission;
 import lombok.Data;
+import lombok.val;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -15,7 +18,18 @@ public abstract class AbstractCommand {
     boolean hidden;
     RolePermission commandPermission = RolePermission.EVERYONE;
 
-    public abstract void execute(MessageReceivedEvent event);
+    public void execute(MessageReceivedEvent event) {
+        if (userHasPermission(event.getGuild(), event.getMember())) {
+            executeCommand(event);
+        }
+    }
+
+    private boolean userHasPermission(Guild guild, Member member) {
+        val role = guild.getRolesByName(commandPermission.getRoleName(), true).get(0);
+        return guild.getMembersWithRoles(role).contains(member);
+    }
+
+    public abstract void executeCommand(MessageReceivedEvent event);
 
     boolean isCommandLengthCorrect(String content) {
         return content.split(" ").length == commandLength;
