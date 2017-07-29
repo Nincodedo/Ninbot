@@ -24,6 +24,11 @@ public abstract class AbstractCommand {
         }
     }
 
+    @Override
+    public String toString() {
+        return commandName + ": " + commandDescription;
+    }
+
     private boolean userHasPermission(Guild guild, Member member) {
         val role = guild.getRolesByName(commandPermission.getRoleName(), true).get(0);
         return guild.getMembersWithRoles(role).contains(member);

@@ -19,9 +19,7 @@ public class HelpCommand extends AbstractCommand {
         StringBuilder stringBuilder = new StringBuilder();
         for (val key : map.keySet()) {
             if (!map.get(key).isHidden()) {
-                stringBuilder.append(map.get(key).getCommandName());
-                stringBuilder.append(": ");
-                stringBuilder.append(map.get(key).getCommandDescription());
+                stringBuilder.append(map.get(key));
                 stringBuilder.append("\n");
             }
         }
