@@ -9,8 +9,8 @@ import net.dv8tion.jda.core.managers.GuildController;
 public class UnsubscribeCommand extends SubscribeCommand {
     public UnsubscribeCommand() {
         super();
-        commandName = "unsubscribe";
-        commandDescription = "Unsubscribes you from a game for game gathering events";
+        name = "unsubscribe";
+        description = "Unsubscribes you from a game for game gathering events";
     }
 
     @Override

@@ -23,9 +23,9 @@ public class EventCommand extends AbstractCommand {
     private EventScheduler eventScheduler;
 
     public EventCommand() {
-        commandLength = 3;
-        commandName = "events";
-        commandDescription = "list/plan events, use @Ninbot events help for more details";
+        length = 3;
+        name = "events";
+        description = "list/plan events, use @Ninbot events help for more details";
         eventDao = Ninbot.getEventDao();
         eventScheduler = Ninbot.getEventScheduler();
     }
@@ -102,6 +102,6 @@ public class EventCommand extends AbstractCommand {
 
     @Override
     boolean isCommandLengthCorrect(String content) {
-        return content.split(" ").length >= commandLength;
+        return content.split(" ").length >= length;
     }
 }

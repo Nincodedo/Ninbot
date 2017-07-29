@@ -19,9 +19,9 @@ public class SubscribeCommand extends AbstractCommand {
 
     public SubscribeCommand() {
         roleBlacklist = Reference.getRoleBlacklist();
-        commandLength = 3;
-        commandName = "subscribe";
-        commandDescription = "Subscribes you to a game for game gathering events";
+        length = 3;
+        name = "subscribe";
+        description = "Subscribes you to a game for game gathering events";
     }
 
     @Override

@@ -20,9 +20,9 @@ public class StatsCommand extends AbstractCommand {
 
     public StatsCommand() {
         roleBlacklist = Reference.getRoleBlacklist();
-        commandLength = 2;
-        commandName = "stats";
-        commandDescription = "Shows Ninbot stats";
+        length = 2;
+        name = "stats";
+        description = "Shows Ninbot stats";
     }
 
     @Override

@@ -6,10 +6,10 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public class AdminCommand extends AbstractCommand {
 
     public AdminCommand() {
-        commandLength = 3;
-        commandName = "admin";
-        commandDescription = "Admin commands";
-        commandPermission = RolePermission.ADMIN;
+        length = 3;
+        name = "admin";
+        description = "Admin commands";
+        permissionLevel = RolePermission.ADMIN;
         hidden = true;
     }
 

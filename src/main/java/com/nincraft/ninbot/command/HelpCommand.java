@@ -8,9 +8,9 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand() {
-        commandLength = 2;
-        commandName = "help";
-        commandDescription = "Displays this awesome message";
+        length = 2;
+        name = "help";
+        description = "Displays this awesome message";
     }
 
     @Override
