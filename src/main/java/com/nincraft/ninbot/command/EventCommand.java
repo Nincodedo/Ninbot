@@ -58,7 +58,8 @@ public class EventCommand extends AbstractCommand {
     private void displayEventHelp(MessageChannel channel) {
         String helpMessage = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
-                "Note: event name must be in quotes if it is longer than one word";
+                "Note: event name must be in quotes if it is longer than one word\n" +
+                "Event times are in GMT -6, formatted \"2017-01-31T12:00:00\" for January 31st 2017 at noon";
         MessageSenderHelper.sendMessage(channel, helpMessage);
     }
 
