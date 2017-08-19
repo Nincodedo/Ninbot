@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.listeners;
 
-import com.nincraft.ninbot.util.CommandParser;
+import com.nincraft.ninbot.command.util.CommandParser;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 

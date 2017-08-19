@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.command;
 
 import com.nincraft.ninbot.Ninbot;
-import com.nincraft.ninbot.container.Event;
 import com.nincraft.ninbot.dao.IEventDao;
+import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.MessageSenderHelper;
 import lombok.val;

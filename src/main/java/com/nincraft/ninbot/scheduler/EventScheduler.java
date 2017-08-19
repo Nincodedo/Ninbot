@@ -3,8 +3,8 @@ package com.nincraft.ninbot.scheduler;
 import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.action.EventAnnounce;
 import com.nincraft.ninbot.action.EventRemove;
-import com.nincraft.ninbot.container.Event;
 import com.nincraft.ninbot.dao.IEventDao;
+import com.nincraft.ninbot.entity.Event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 

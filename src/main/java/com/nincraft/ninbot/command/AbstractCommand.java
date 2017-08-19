@@ -21,6 +21,8 @@ public abstract class AbstractCommand {
     public void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
             executeCommand(event);
+        } else {
+            MessageSenderHelper.sendMessage(event.getChannel(), "Insufficient privileges for %s command, %s required", name, permissionLevel.toString());
         }
     }
 

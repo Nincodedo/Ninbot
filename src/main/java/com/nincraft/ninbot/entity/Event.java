@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.container;
+package com.nincraft.ninbot.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

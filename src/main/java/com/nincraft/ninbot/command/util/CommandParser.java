@@ -1,7 +1,9 @@
-package com.nincraft.ninbot.util;
+package com.nincraft.ninbot.command.util;
 
 import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.command.*;
+import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

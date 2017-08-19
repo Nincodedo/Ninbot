@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.util.CommandParser;
+import com.nincraft.ninbot.command.util.CommandParser;
 import com.nincraft.ninbot.util.MessageSenderHelper;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

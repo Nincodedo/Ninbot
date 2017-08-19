@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.action;
 
 import com.nincraft.ninbot.Ninbot;
-import com.nincraft.ninbot.container.Event;
+import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.util.MessageSenderHelper;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
