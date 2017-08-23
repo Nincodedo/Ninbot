@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
 import lombok.Data;
 import lombok.val;
@@ -22,7 +22,7 @@ public abstract class AbstractCommand {
         if (userHasPermission(event.getGuild(), event.getMember())) {
             executeCommand(event);
         } else {
-            MessageSenderHelper.sendMessage(event.getChannel(), "Insufficient privileges for %s command, %s required", name, permissionLevel.toString());
+            MessageUtils.sendMessage(event.getChannel(), "Insufficient privileges for %s command, %s required", name, permissionLevel.toString());
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractCommand {
     }
 
     void wrongCommandLengthMessage(MessageChannel channel) {
-        MessageSenderHelper.sendMessage(channel, "Wrong number of arguments for %s command", name);
+        MessageUtils.sendMessage(channel, "Wrong number of arguments for %s command", name);
     }
 
     String getSubcommand(String command) {

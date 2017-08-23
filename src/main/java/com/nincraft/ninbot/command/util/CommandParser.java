@@ -2,7 +2,7 @@ package com.nincraft.ninbot.command.util;
 
 import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.command.*;
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -38,7 +38,7 @@ public class CommandParser {
                 try {
                     command.execute(event);
                 } catch (Exception e) {
-                    MessageSenderHelper.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
+                    MessageUtils.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
                             "\n" + e.getStackTrace()[0].toString());
                 }
             }

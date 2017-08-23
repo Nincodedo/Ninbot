@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.command;
 
 import com.nincraft.ninbot.command.util.CommandParser;
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -23,6 +23,6 @@ public class HelpCommand extends AbstractCommand {
                 stringBuilder.append("\n");
             }
         }
-        MessageSenderHelper.sendMessage(event.getChannel(), stringBuilder.toString());
+        MessageUtils.sendMessage(event.getChannel(), stringBuilder.toString());
     }
 }

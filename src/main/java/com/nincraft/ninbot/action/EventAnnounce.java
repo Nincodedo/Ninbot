@@ -2,7 +2,7 @@ package com.nincraft.ninbot.action;
 
 import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.entity.Event;
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -31,6 +31,6 @@ public class EventAnnounce extends TimerTask {
         val ocwServer = jda.getGuildById(Reference.OCW_SERVER_ID);
         val channel = ocwServer.getTextChannelById(announcementChannel);
         val gameRoleId = ocwServer.getRolesByName(event.getGameName(), true).get(0);
-        MessageSenderHelper.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
+        MessageUtils.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
     }
 }

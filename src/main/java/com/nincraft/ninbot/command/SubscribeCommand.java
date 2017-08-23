@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -36,7 +36,7 @@ public class SubscribeCommand extends AbstractCommand {
             if (isValidSubscribeRole(role)) {
                 addOrRemoveSubscription(event, channel, server.getController(), subscribeTo, role);
             } else {
-                MessageSenderHelper.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
+                MessageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
             wrongCommandLengthMessage(channel);
@@ -44,7 +44,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
-        MessageSenderHelper.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
+        MessageUtils.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
         controller.addRolesToMember(event.getMember(), role).queue();
     }
 

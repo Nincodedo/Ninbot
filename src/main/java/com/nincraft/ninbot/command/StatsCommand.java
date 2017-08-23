@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
@@ -51,7 +51,7 @@ public class StatsCommand extends AbstractCommand {
             stringBuilder.append(stat.amount);
             stringBuilder.append("\n");
         });
-        MessageSenderHelper.sendMessage(channel, stringBuilder.toString());
+        MessageUtils.sendMessage(channel, stringBuilder.toString());
     }
 
     private class Stat implements Comparable {

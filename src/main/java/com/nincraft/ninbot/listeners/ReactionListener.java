@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.listeners;
 
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -44,7 +44,7 @@ public class ReactionListener extends ListenerAdapter {
     private void respond(MessageReceivedEvent event) {
         String response = responseMap.get(event.getMessage().getContent().toLowerCase());
         if (StringUtils.isNotBlank(response)) {
-            MessageSenderHelper.sendMessage(event.getChannel(), response);
+            MessageUtils.sendMessage(event.getChannel(), response);
         }
     }
 }

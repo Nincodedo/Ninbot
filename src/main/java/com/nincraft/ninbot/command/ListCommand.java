@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
@@ -38,10 +38,10 @@ public class ListCommand extends AbstractCommand {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).collect(Collectors.toList());
             Collections.sort(userNames);
-            MessageSenderHelper.sendMessage(channel, "Users in %s subscription", roleName);
-            MessageSenderHelper.sendMessage(channel, userNames.toString());
+            MessageUtils.sendMessage(channel, "Users in %s subscription", roleName);
+            MessageUtils.sendMessage(channel, userNames.toString());
         } else {
-            MessageSenderHelper.sendMessage(channel, "No subscription %s found", roleName);
+            MessageUtils.sendMessage(channel, "No subscription %s found", roleName);
         }
     }
 
@@ -49,7 +49,7 @@ public class ListCommand extends AbstractCommand {
         val roleList = guild.getRoles();
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
         roleNameList.removeAll(Reference.getRoleBlacklist());
-        MessageSenderHelper.sendMessage(channel, "Available subscriptions");
-        MessageSenderHelper.sendMessage(channel, roleNameList.toString());
+        MessageUtils.sendMessage(channel, "Available subscriptions");
+        MessageUtils.sendMessage(channel, roleNameList.toString());
     }
 }

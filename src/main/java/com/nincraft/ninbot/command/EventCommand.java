@@ -4,7 +4,7 @@ import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.scheduler.EventScheduler;
-import com.nincraft.ninbot.util.MessageSenderHelper;
+import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -47,7 +47,7 @@ public class EventCommand extends AbstractCommand {
                     displayEventHelp(channel);
                     break;
                 default:
-                    MessageSenderHelper.sendMessage(channel, "Not a valid events sub command");
+                    MessageUtils.sendMessage(channel, "Not a valid events sub command");
                     break;
             }
         } else {
@@ -60,7 +60,7 @@ public class EventCommand extends AbstractCommand {
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
                 "Note: event name must be in quotes if it is longer than one word\n" +
                 "Event times are in GMT -6, formatted \"2017-01-31T12:00:00\" for January 31st 2017 at noon";
-        MessageSenderHelper.sendMessage(channel, helpMessage);
+        MessageUtils.sendMessage(channel, helpMessage);
     }
 
     private void planEvent(Message message, User author, MessageChannel channel) {
@@ -71,7 +71,7 @@ public class EventCommand extends AbstractCommand {
                 .setName(eventMap.get("name"))
                 .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME).atOffset(ZoneOffset.of("-06:00")).toLocalDateTime());
         eventScheduler.addEvent(event);
-        MessageSenderHelper.sendMessage(channel, "Added %s to schedule", event.getName());
+        MessageUtils.sendMessage(channel, "Added %s to schedule", event.getName());
     }
 
     private Map<String, String> parsePlanMessage(String content) {
@@ -97,7 +97,7 @@ public class EventCommand extends AbstractCommand {
     }
 
     private void listEvents(MessageChannel channel) {
-        MessageSenderHelper.sendMessage(channel, eventDao.getAllEvents().toString());
+        MessageUtils.sendMessage(channel, eventDao.getAllEvents().toString());
     }
 
     @Override
