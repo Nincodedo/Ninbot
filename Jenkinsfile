@@ -16,10 +16,13 @@ pipeline {
                 archive includes: 'target/*.jar'
             }
         }
-    }
-    post {
-        success {
-            build job: 'UpdateNinbot', wait: false
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+            steps {
+                build job: 'UpdateNinbot', wait: false
+            }
         }
     }
 }
