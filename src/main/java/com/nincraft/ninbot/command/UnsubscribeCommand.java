@@ -15,7 +15,7 @@ public class UnsubscribeCommand extends SubscribeCommand {
 
     @Override
     void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
-        MessageUtils.sendMessage(channel, "Unsubscribing %s from %s", event.getAuthor().getName(), subscribeTo);
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
         controller.removeRolesFromMember(event.getMember(), role).queue();
     }
 }

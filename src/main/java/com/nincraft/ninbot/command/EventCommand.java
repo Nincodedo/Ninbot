@@ -71,7 +71,7 @@ public class EventCommand extends AbstractCommand {
                 .setName(eventMap.get("name"))
                 .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME).atOffset(ZoneOffset.of("-06:00")).toLocalDateTime());
         eventScheduler.addEvent(event);
-        MessageUtils.sendMessage(channel, "Added %s to schedule", event.getName());
+        MessageUtils.reactSuccessfulResponse(message);
     }
 
     private Map<String, String> parsePlanMessage(String content) {

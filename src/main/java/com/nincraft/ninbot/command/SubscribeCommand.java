@@ -44,7 +44,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
-        MessageUtils.sendMessage(channel, "Subscribing %s to %s", event.getAuthor().getName(), subscribeTo);
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
         controller.addRolesToMember(event.getMember(), role).queue();
     }
 
