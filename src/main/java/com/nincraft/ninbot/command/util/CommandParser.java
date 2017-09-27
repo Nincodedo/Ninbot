@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.command.util;
 
 import com.nincraft.ninbot.Ninbot;
-import com.nincraft.ninbot.command.*;
+import com.nincraft.ninbot.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
@@ -21,13 +21,6 @@ public class CommandParser {
 
     public CommandParser() {
         commandHashMap = new HashMap<>();
-        commandHashMap.put("subscribe", new SubscribeCommand());
-        commandHashMap.put("unsubscribe", new UnsubscribeCommand());
-        commandHashMap.put("list", new ListCommand());
-        commandHashMap.put("help", new HelpCommand());
-        commandHashMap.put("events", new EventCommand());
-        commandHashMap.put("stats", new StatsCommand());
-        commandHashMap.put("admin", new AdminCommand());
     }
 
     public void parseEvent(MessageReceivedEvent event) {
@@ -55,5 +48,9 @@ public class CommandParser {
             return splitMessage[1] != null ? splitMessage[1].toLowerCase() : StringUtils.EMPTY;
         }
         return null;
+    }
+
+    public void addCommand(String commandName, AbstractCommand command) {
+        commandHashMap.put(commandName, command);
     }
 }
