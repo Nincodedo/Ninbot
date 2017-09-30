@@ -17,4 +17,8 @@ public class MessageUtils {
     public static void reactSuccessfulResponse(Message message) {
         message.addReaction("\u2705").queue();
     }
+
+    public static void reactUnknownResponse(Message message) {
+        message.addReaction("\u2274").queue();
+    }
 }

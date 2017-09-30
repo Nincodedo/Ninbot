@@ -34,6 +34,8 @@ public class CommandParser {
                     MessageUtils.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
                             "\n" + e.getStackTrace()[0].toString());
                 }
+            } else {
+                MessageUtils.reactUnknownResponse(event.getMessage());
             }
         }
     }
