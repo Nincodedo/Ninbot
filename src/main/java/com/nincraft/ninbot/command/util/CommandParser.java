@@ -5,6 +5,7 @@ import com.nincraft.ninbot.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 public class CommandParser {
 
     @Getter
@@ -31,6 +33,7 @@ public class CommandParser {
                 try {
                     command.execute(event);
                 } catch (Exception e) {
+                    log.error("Error executing command " + command.getName(), e);
                     MessageUtils.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
                             "\n" + e.getStackTrace()[0].toString());
                 }
