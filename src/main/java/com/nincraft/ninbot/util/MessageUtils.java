@@ -21,4 +21,8 @@ public class MessageUtils {
     public static void reactUnknownResponse(Message message) {
         message.addReaction(Emoji.QUESTION_MARK).queue();
     }
+
+    public static void addReaction(Message message, String emoji) {
+        message.addReaction(emoji).queue();
+    }
 }
