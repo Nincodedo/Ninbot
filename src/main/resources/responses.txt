@@ -2,3 +2,4 @@ same|same
 meowth|That's right!
 good bot|thanks :3
 bad bot|:(
+me too|thanks
