@@ -19,7 +19,7 @@ public class CommandParser {
     @Getter
     private static final CommandParser instance = new CommandParser();
     @Getter
-    private Map<String, AbstractCommand> commandHashMap;
+    private static Map<String, AbstractCommand> commandHashMap;
 
     public CommandParser() {
         commandHashMap = new HashMap<>();
