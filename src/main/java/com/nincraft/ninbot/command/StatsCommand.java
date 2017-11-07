@@ -44,6 +44,7 @@ public class StatsCommand extends AbstractCommand {
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Subscription Stats\n");
         Collections.sort(statList);
         statList.forEach(stat -> {
             stringBuilder.append(stat.name);
