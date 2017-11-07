@@ -15,7 +15,7 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        val map = CommandParser.getInstance().getCommandHashMap();
+        val map = CommandParser.getCommandHashMap();
         StringBuilder stringBuilder = new StringBuilder();
         for (val key : map.keySet()) {
             if (!map.get(key).isHidden()) {

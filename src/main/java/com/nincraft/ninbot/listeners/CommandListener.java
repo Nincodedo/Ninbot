@@ -13,13 +13,13 @@ public class CommandListener extends ListenerAdapter {
     public CommandListener(boolean debugEnabled) {
         commandParser = new CommandParser();
         this.debugEnabled = debugEnabled;
-        commandParser.addCommand("subscribe", new SubscribeCommand());
-        commandParser.addCommand("unsubscribe", new UnsubscribeCommand());
-        commandParser.addCommand("list", new ListCommand());
-        commandParser.addCommand("help", new HelpCommand());
-        commandParser.addCommand("events", new EventCommand());
-        commandParser.addCommand("stats", new StatsCommand());
-        commandParser.addCommand("admin", new AdminCommand());
+        commandParser.addCommand(new SubscribeCommand());
+        commandParser.addCommand(new UnsubscribeCommand());
+        commandParser.addCommand(new ListCommand());
+        commandParser.addCommand(new HelpCommand());
+        commandParser.addCommand(new EventCommand());
+        commandParser.addCommand(new StatsCommand());
+        commandParser.addCommand(new AdminCommand());
     }
 
     @Override
