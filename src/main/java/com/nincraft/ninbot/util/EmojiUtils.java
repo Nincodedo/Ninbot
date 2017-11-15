@@ -11,14 +11,13 @@ public class EmojiUtils {
 
     static {
         letterMap = new HashMap<>();
-        letterMap.put("A", Emoji.A);
-        letterMap.put("E", Emoji.E);
-        letterMap.put("H", Emoji.H);
-        letterMap.put("K", Emoji.K);
-        letterMap.put("M", Emoji.M);
-        letterMap.put("N", Emoji.N);
-        letterMap.put("S", Emoji.S);
-        letterMap.put("T", Emoji.T);
+        char unicodeChar = '\uDDE6';
+        char letterChar = 'A';
+        for (int i = 0; i < 26; i++) {
+            letterMap.put(String.valueOf(letterChar), "\uD83C" + unicodeChar);
+            letterChar++;
+            unicodeChar++;
+        }
     }
 
     public static String getLetterEmoji(char c) {
