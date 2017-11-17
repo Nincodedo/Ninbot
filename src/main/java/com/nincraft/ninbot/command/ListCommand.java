@@ -9,7 +9,6 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +35,7 @@ public class ListCommand extends AbstractCommand {
         val role = guild.getRolesByName(roleName, true);
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
-            List<String> userNames = users.stream().map(Member::getEffectiveName).collect(Collectors.toList());
-            Collections.sort(userNames);
+            List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
             MessageUtils.sendMessage(channel, "Users in %s subscription", roleName);
             MessageUtils.sendMessage(channel, userNames.toString());
         } else {
