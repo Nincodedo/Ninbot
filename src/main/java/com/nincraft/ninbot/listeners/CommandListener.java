@@ -20,6 +20,7 @@ public class CommandListener extends ListenerAdapter {
         commandParser.addCommand(new EventCommand());
         commandParser.addCommand(new StatsCommand());
         commandParser.addCommand(new AdminCommand());
+        commandParser.addCommand(new DabCommand());
     }
 
     @Override

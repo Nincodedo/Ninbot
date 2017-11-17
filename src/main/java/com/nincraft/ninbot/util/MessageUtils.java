@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.util;
 
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -18,11 +19,19 @@ public class MessageUtils {
         message.addReaction(Emoji.CHECK_MARK).queue();
     }
 
+    public static void reactUnsuccessfulResponse(Message message) {
+        message.addReaction(Emoji.CROSS_X).queue();
+    }
+
     public static void reactUnknownResponse(Message message) {
         message.addReaction(Emoji.QUESTION_MARK).queue();
     }
 
     public static void addReaction(Message message, String emoji) {
+        message.addReaction(emoji).queue();
+    }
+
+    public static void addReaction(Message message, Emote emoji) {
         message.addReaction(emoji).queue();
     }
 }
