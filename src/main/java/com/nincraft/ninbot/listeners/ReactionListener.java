@@ -32,7 +32,7 @@ public class ReactionListener extends ListenerAdapter {
         try {
             List<String> lines = IOUtils.readLines(getClass().getClassLoader().getResourceAsStream("responses.txt"), Charset.defaultCharset());
             for (val line : lines) {
-                responseMap.put(line.split("\\|")[0], generateResponse(line.split("\\|")[1]));
+                responseMap.put(line.split("\\|")[0].toLowerCase(), generateResponse(line.split("\\|")[1]));
             }
         } catch (IOException e) {
             log.error("Failed to read responses file", e);
