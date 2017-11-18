@@ -18,7 +18,7 @@ public class DabCommand extends AbstractCommand {
         val content = event.getMessage().getContent();
         if (isCommandLengthCorrect(content)) {
             val channel = event.getChannel();
-            val dabUser = content.split(" ")[2].replaceFirst("@", "");
+            val dabUser = content.substring(12).replaceFirst("@", "");
             int count = 0;
             int maxDab = 10;
             for (Message message : channel.getIterableHistory()) {
@@ -45,5 +45,10 @@ public class DabCommand extends AbstractCommand {
                 MessageUtils.addReaction(message, emote);
             }
         }
+    }
+
+    @Override
+    boolean isCommandLengthCorrect(String content) {
+        return content.split(" ").length >= length;
     }
 }
