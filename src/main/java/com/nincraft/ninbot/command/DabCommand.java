@@ -11,6 +11,7 @@ public class DabCommand extends AbstractCommand {
         length = 3;
         name = "dab";
         description = "Adds all dab emojis to the last message of the user named";
+        checkExactLength = false;
     }
 
     @Override
@@ -45,10 +46,5 @@ public class DabCommand extends AbstractCommand {
                 MessageUtils.addReaction(message, emote);
             }
         }
-    }
-
-    @Override
-    boolean isCommandLengthCorrect(String content) {
-        return content.split(" ").length >= length;
     }
 }

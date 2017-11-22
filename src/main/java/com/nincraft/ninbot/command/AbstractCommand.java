@@ -17,6 +17,7 @@ public abstract class AbstractCommand {
     String name;
     boolean hidden;
     RolePermission permissionLevel = RolePermission.EVERYONE;
+    boolean checkExactLength = true;
 
     public void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
@@ -42,7 +43,12 @@ public abstract class AbstractCommand {
     public abstract void executeCommand(MessageReceivedEvent event);
 
     boolean isCommandLengthCorrect(String content) {
-        return content.split(" ").length == length;
+        val commandLength = content.split(" ").length;
+        if (checkExactLength) {
+            return commandLength == length;
+        } else {
+            return commandLength >= length;
+        }
     }
 
     void wrongCommandLengthMessage(MessageChannel channel) {

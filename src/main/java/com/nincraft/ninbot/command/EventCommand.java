@@ -26,6 +26,7 @@ public class EventCommand extends AbstractCommand {
         length = 3;
         name = "events";
         description = "list/plan events, use @Ninbot events help for more details";
+        checkExactLength = false;
         eventDao = Ninbot.getEventDao();
         eventScheduler = Ninbot.getEventScheduler();
     }
@@ -98,10 +99,5 @@ public class EventCommand extends AbstractCommand {
 
     private void listEvents(MessageChannel channel) {
         MessageUtils.sendMessage(channel, eventDao.getAllEvents().toString());
-    }
-
-    @Override
-    boolean isCommandLengthCorrect(String content) {
-        return content.split(" ").length >= length;
     }
 }
