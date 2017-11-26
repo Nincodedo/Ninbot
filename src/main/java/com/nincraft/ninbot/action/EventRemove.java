@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.action;
 
-import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.entity.Event;
 
@@ -11,9 +10,9 @@ public class EventRemove extends TimerTask {
     private Event event;
     private IEventDao eventDao;
 
-    public EventRemove(Event event) {
+    public EventRemove(Event event, IEventDao eventDao) {
         this.event = event;
-        this.eventDao = Ninbot.getEventDao();
+        this.eventDao = eventDao;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.nincraft.ninbot.scheduler;
 
-import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.action.EventAnnounce;
 import com.nincraft.ninbot.action.EventRemove;
 import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.entity.Event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.JDA;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -19,8 +19,14 @@ public class EventScheduler {
 
     private IEventDao eventDao;
 
-    public EventScheduler() {
-        eventDao = Ninbot.getEventDao();
+    private JDA jda;
+
+    private boolean debugEnabled;
+
+    public EventScheduler(JDA jda, IEventDao eventDao, boolean debugEnabled) {
+        this.eventDao = eventDao;
+        this.jda = jda;
+        this.debugEnabled = debugEnabled;
     }
 
     public void scheduleAll() {
@@ -48,18 +54,18 @@ public class EventScheduler {
         }
         if (eventEndTime.isBefore(Instant.now())) {
             log.debug("Removing event {}, the end time is passed", event.getName());
-            new EventRemove(event).run();
+            new EventRemove(event, eventDao).run();
         } else {
             log.debug("Scheduling {} for {}", event.getName(), event.getStartTime());
             scheduleEvent(event, timer, eventStartTime, 0);
             scheduleEvent(event, timer, eventEarlyReminder, minutesBeforeStart);
-            timer.schedule(new EventRemove(event), Date.from(eventEndTime));
+            timer.schedule(new EventRemove(event, eventDao), Date.from(eventEndTime));
         }
     }
 
     private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart) {
         if (!eventTime.isBefore(Instant.now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart), Date.from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, debugEnabled), Date.from(eventTime));
         }
     }
 }

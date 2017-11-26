@@ -6,7 +6,6 @@ import com.nincraft.ninbot.listeners.CommandListener;
 import com.nincraft.ninbot.listeners.ReactionListener;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.Reference;
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
@@ -26,17 +25,7 @@ import java.util.Properties;
 @UtilityClass
 public class Ninbot {
 
-    @Getter
-    JDA jda;
-
-    @Getter
-    IEventDao eventDao;
-
-    @Getter
-    EventScheduler eventScheduler;
-
-    @Getter
-    private boolean debugEnabled;
+    private JDA jda;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Properties properties = readPropertiesFile();
@@ -51,10 +40,10 @@ public class Ninbot {
             log.warn("Rate limit exceeded", e);
         }
         assert jda != null;
-        debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
-        eventDao = new EventDao();
-        eventScheduler = new EventScheduler();
-        jda.addEventListener(new CommandListener(debugEnabled));
+        boolean debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
+        IEventDao eventDao = new EventDao();
+        EventScheduler eventScheduler = new EventScheduler(jda, eventDao, debugEnabled);
+        jda.addEventListener(new CommandListener(eventDao, eventScheduler, debugEnabled));
         jda.addEventListener(new ReactionListener());
         migrateDb();
         eventScheduler.scheduleAll();

@@ -1,11 +1,11 @@
 package com.nincraft.ninbot.command.util;
 
-import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -16,8 +16,6 @@ import java.util.Map;
 @Log4j2
 public class CommandParser {
 
-    @Getter
-    private static final CommandParser instance = new CommandParser();
     @Getter
     private static Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
@@ -30,7 +28,7 @@ public class CommandParser {
                     command.execute(event);
                 } catch (Exception e) {
                     log.error("Error executing command " + command.getName(), e);
-                    MessageUtils.sendMessage(getChannel(Reference.OCW_DEBUG_CHANNEL), e.toString() +
+                    MessageUtils.sendMessage(getChannel(event.getJDA(), Reference.OCW_DEBUG_CHANNEL), e.toString() +
                             "\n" + e.getStackTrace()[0].toString());
                 }
             } else {
@@ -39,8 +37,8 @@ public class CommandParser {
         }
     }
 
-    private MessageChannel getChannel(String channel) {
-        return Ninbot.getJda().getGuildById(Reference.OCW_SERVER_ID).getTextChannelById(channel);
+    private MessageChannel getChannel(JDA jda, String channel) {
+        return jda.getGuildById(Reference.OCW_SERVER_ID).getTextChannelById(channel);
     }
 
     private String getCommand(String message) {

@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.command;
 
-import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.dao.IEventDao;
 import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.scheduler.EventScheduler;
@@ -22,13 +21,13 @@ public class EventCommand extends AbstractCommand {
     private IEventDao eventDao;
     private EventScheduler eventScheduler;
 
-    public EventCommand() {
+    public EventCommand(IEventDao eventDao, EventScheduler eventScheduler) {
         length = 3;
         name = "events";
         description = "list/plan events, use @Ninbot events help for more details";
         checkExactLength = false;
-        eventDao = Ninbot.getEventDao();
-        eventScheduler = Ninbot.getEventScheduler();
+        this.eventDao = eventDao;
+        this.eventScheduler = eventScheduler;
     }
 
     @Override

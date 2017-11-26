@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.action;
 
-import com.nincraft.ninbot.Ninbot;
 import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
@@ -18,10 +17,10 @@ public class EventAnnounce extends TimerTask {
     private String announcementChannel;
     private int minutesBeforeStart;
 
-    public EventAnnounce(Event event, int minutesBeforeStart) {
+    public EventAnnounce(Event event, int minutesBeforeStart, JDA jda, boolean debugEnabled) {
         this.event = event;
-        this.jda = Ninbot.getJda();
-        this.announcementChannel = Ninbot.isDebugEnabled() ? Reference.OCW_DEBUG_CHANNEL : Reference.OCW_EVENT_ANNOUNCE_CHANNEL;
+        this.jda = jda;
+        this.announcementChannel = debugEnabled ? Reference.OCW_DEBUG_CHANNEL : Reference.OCW_EVENT_ANNOUNCE_CHANNEL;
         this.minutesBeforeStart = minutesBeforeStart;
     }
 
