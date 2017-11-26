@@ -34,8 +34,6 @@ public class Event {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Name: ");
-        stringBuilder.append(name);
         if (StringUtils.isNotBlank(description)) {
             stringBuilder.append("\n");
             stringBuilder.append(description);

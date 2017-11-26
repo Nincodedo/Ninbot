@@ -34,4 +34,8 @@ public class MessageUtils {
     public static void addReaction(Message message, Emote emoji) {
         message.addReaction(emoji).queue();
     }
+
+    public static void sendMessage(MessageChannel channel, Message message) {
+        channel.sendMessage(message).queue();
+    }
 }

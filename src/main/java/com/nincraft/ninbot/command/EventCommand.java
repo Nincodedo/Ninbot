@@ -5,11 +5,14 @@ import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.scheduler.EventScheduler;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -97,6 +100,18 @@ public class EventCommand extends AbstractCommand {
     }
 
     private void listEvents(MessageChannel channel) {
-        MessageUtils.sendMessage(channel, eventDao.getAllEvents().toString());
+        val events = eventDao.getAllEvents();
+        if (events.size() == 0) {
+            MessageUtils.sendMessage(channel, "No events scheduled");
+        }
+        MessageBuilder messageBuilder = new MessageBuilder();
+        messageBuilder.append("Current scheduled events");
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.BLUE);
+        for (val event : events) {
+            embedBuilder.addField(event.getName(), event.toString(), true);
+        }
+        messageBuilder.setEmbed(embedBuilder.build());
+        MessageUtils.sendMessage(channel, messageBuilder.build());
     }
 }
