@@ -3,6 +3,8 @@ package com.nincraft.ninbot.command;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
@@ -28,10 +30,10 @@ public class StatsCommand extends AbstractCommand {
     @Override
     public void executeCommand(MessageReceivedEvent event) {
         val server = event.getGuild();
-        printRoleStats(event.getChannel(), server);
+        displayRoleStats(event.getChannel(), server);
     }
 
-    private void printRoleStats(MessageChannel channel, Guild server) {
+    private void displayRoleStats(MessageChannel channel, Guild server) {
         Map<Role, Integer> roleMap = new HashMap<>();
         for (val member : server.getMembers()) {
             for (val role : member.getRoles()) {
@@ -43,16 +45,13 @@ public class StatsCommand extends AbstractCommand {
 
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Subscription Stats\n");
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Subscription Stats");
         Collections.sort(statList);
-        statList.forEach(stat -> {
-            stringBuilder.append(stat.name);
-            stringBuilder.append(": ");
-            stringBuilder.append(stat.amount);
-            stringBuilder.append("\n");
-        });
-        MessageUtils.sendMessage(channel, stringBuilder.toString());
+        statList.forEach(stat -> embedBuilder.appendDescription(stat.name + ": " + stat.amount + "\n"));
+        messageBuilder.setEmbed(embedBuilder.build());
+        MessageUtils.sendMessage(channel, messageBuilder.build());
     }
 
     private class Stat implements Comparable {
