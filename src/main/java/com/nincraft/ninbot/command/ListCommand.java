@@ -3,6 +3,8 @@ package com.nincraft.ninbot.command;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -47,7 +49,13 @@ public class ListCommand extends AbstractCommand {
         val roleList = guild.getRoles();
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
         roleNameList.removeAll(Reference.getRoleBlacklist());
-        MessageUtils.sendMessage(channel, "Available subscriptions");
-        MessageUtils.sendMessage(channel, roleNameList.toString());
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Available subscriptions");
+        for (val roleName : roleNameList) {
+            embedBuilder.appendDescription(roleName + "\n");
+        }
+        messageBuilder.setEmbed(embedBuilder.build());
+        MessageUtils.sendMessage(channel, messageBuilder.build());
     }
 }
