@@ -101,8 +101,9 @@ public class EventCommand extends AbstractCommand {
 
     private void listEvents(MessageChannel channel) {
         val events = eventDao.getAllEvents();
-        if (events.size() == 0) {
+        if (events.isEmpty()) {
             MessageUtils.sendMessage(channel, "No events scheduled");
+            return;
         }
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append("Current scheduled events");
