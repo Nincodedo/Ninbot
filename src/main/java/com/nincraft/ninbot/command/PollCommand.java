@@ -88,6 +88,7 @@ public class PollCommand extends AbstractCommand {
                 poll.setResult("\"" + poll.getChoices().get(index) + "\" had the most votes with " + (highCount - 1) + " vote." + pollClosedMessage);
             }
             message.editMessage(poll.buildClosed()).queue();
+            MessageUtils.sendMessage(message.getChannel(), poll.getResult());
         }
     }
 }
