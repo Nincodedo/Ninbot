@@ -43,12 +43,16 @@ public abstract class AbstractCommand {
     public abstract void executeCommand(MessageReceivedEvent event);
 
     boolean isCommandLengthCorrect(String content) {
-        val commandLength = content.split(" ").length;
+        val commandLength = getCommandLength(content);
         if (checkExactLength) {
             return commandLength == length;
         } else {
             return commandLength >= length;
         }
+    }
+
+    int getCommandLength(String content) {
+        return content.split(" ").length;
     }
 
     void wrongCommandLengthMessage(MessageChannel channel) {
