@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.flywaydb.core.Flyway;
 
@@ -47,6 +48,7 @@ public class Ninbot {
         jda.addEventListener(new ReactionListener());
         migrateDb();
         eventScheduler.scheduleAll();
+        jda.getPresence().setGame(Game.of("say \"@Ninbot help\" for list of commands"));
     }
 
     private static void migrateDb() {
