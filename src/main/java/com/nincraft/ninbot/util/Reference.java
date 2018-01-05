@@ -15,5 +15,5 @@ public class Reference {
     public static final String OCW_DEBUG_CHANNEL = "308081429051604992";
     public static final String SQLITE_DB = "jdbc:sqlite:data/events.db";
     @Getter
-    private static final List<String> roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone"));
+    private static final List<String> roleBlacklist = new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone", "Dad Bot"));
 }
