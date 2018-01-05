@@ -19,11 +19,12 @@ public class DabCommand extends AbstractCommand {
         val content = event.getMessage().getContent();
         if (isCommandLengthCorrect(content)) {
             val channel = event.getChannel();
-            val dabUser = content.substring(content.indexOf(name) + name.length() + 1).replaceFirst("@", "");
+            val mentionedUsers = event.getMessage().getMentionedUsers();
+            val dabUser = mentionedUsers.get(mentionedUsers.size() - 1);
             int count = 0;
             int maxDab = 10;
             for (Message message : channel.getIterableHistory()) {
-                if (message.getAuthor().getName().equalsIgnoreCase(dabUser)) {
+                if (message.getAuthor().equals(dabUser)) {
                     dabOnMessage(message);
                     break;
                 }
