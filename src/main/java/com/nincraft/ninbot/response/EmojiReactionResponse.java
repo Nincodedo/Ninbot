@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.entity;
+package com.nincraft.ninbot.response;
 
 import com.nincraft.ninbot.util.EmojiUtils;
 import com.nincraft.ninbot.util.MessageUtils;
