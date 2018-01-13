@@ -83,18 +83,6 @@ public class EventDao implements IEventDao {
         return results;
     }
 
-    @Override
-    public Event getEventByName(String name) {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public Event getEventByAuthorName(String authorName) {
-        //TODO
-        return null;
-    }
-
     private Connection connect() {
         Connection connection = null;
         try {

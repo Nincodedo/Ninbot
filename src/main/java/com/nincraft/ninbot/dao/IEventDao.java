@@ -11,8 +11,4 @@ public interface IEventDao {
     void removeEvent(Event event);
 
     List<Event> getAllEvents();
-
-    Event getEventByName(String name);
-
-    Event getEventByAuthorName(String authorName);
 }
