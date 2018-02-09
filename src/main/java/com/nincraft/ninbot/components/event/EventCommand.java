@@ -1,8 +1,6 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.dao.IEventDao;
-import com.nincraft.ninbot.entity.Event;
-import com.nincraft.ninbot.scheduler.EventScheduler;
+import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;

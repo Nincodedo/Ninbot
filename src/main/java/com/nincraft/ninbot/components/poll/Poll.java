@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.entity;
+package com.nincraft.ninbot.components.poll;
 
 import lombok.Data;
 import lombok.val;

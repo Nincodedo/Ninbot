@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.response;
+package com.nincraft.ninbot.components.reaction;
 
 import com.nincraft.ninbot.util.MessageUtils;
 import net.dv8tion.jda.core.entities.Message;

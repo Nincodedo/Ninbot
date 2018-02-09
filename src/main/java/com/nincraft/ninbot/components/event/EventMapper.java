@@ -1,6 +1,5 @@
-package com.nincraft.ninbot.mapper;
+package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.entity.Event;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.ResultSet;

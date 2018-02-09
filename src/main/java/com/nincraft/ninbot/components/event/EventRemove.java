@@ -1,7 +1,4 @@
-package com.nincraft.ninbot.action;
-
-import com.nincraft.ninbot.dao.IEventDao;
-import com.nincraft.ninbot.entity.Event;
+package com.nincraft.ninbot.components.event;
 
 import java.util.TimerTask;
 

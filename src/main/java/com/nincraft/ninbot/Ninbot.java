@@ -1,10 +1,10 @@
 package com.nincraft.ninbot;
 
-import com.nincraft.ninbot.dao.EventDao;
-import com.nincraft.ninbot.dao.IEventDao;
-import com.nincraft.ninbot.listeners.CommandListener;
-import com.nincraft.ninbot.listeners.ReactionListener;
-import com.nincraft.ninbot.scheduler.EventScheduler;
+import com.nincraft.ninbot.components.command.CommandListener;
+import com.nincraft.ninbot.components.event.EventDao;
+import com.nincraft.ninbot.components.event.EventScheduler;
+import com.nincraft.ninbot.components.event.IEventDao;
+import com.nincraft.ninbot.components.reaction.ReactionListener;
 import com.nincraft.ninbot.util.Reference;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;

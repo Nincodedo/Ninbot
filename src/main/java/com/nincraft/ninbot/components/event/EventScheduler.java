@@ -1,9 +1,5 @@
-package com.nincraft.ninbot.scheduler;
+package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.action.EventAnnounce;
-import com.nincraft.ninbot.action.EventRemove;
-import com.nincraft.ninbot.dao.IEventDao;
-import com.nincraft.ninbot.entity.Event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;

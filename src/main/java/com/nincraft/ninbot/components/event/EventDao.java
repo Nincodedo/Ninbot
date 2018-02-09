@@ -1,8 +1,6 @@
-package com.nincraft.ninbot.dao;
+package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.db.SqlConstants;
-import com.nincraft.ninbot.entity.Event;
-import com.nincraft.ninbot.mapper.EventMapper;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-public class EventDao implements IEventDao {
+class EventDao implements IEventDao {
 
     private EventMapper eventMapper;
 

@@ -1,8 +1,5 @@
-package com.nincraft.ninbot.listeners;
+package com.nincraft.ninbot.components.reaction;
 
-import com.nincraft.ninbot.response.EmojiReactionResponse;
-import com.nincraft.ninbot.response.IReactionResponse;
-import com.nincraft.ninbot.response.StringReactionResponse;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

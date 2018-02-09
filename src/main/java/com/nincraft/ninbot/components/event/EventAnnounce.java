@@ -1,6 +1,5 @@
-package com.nincraft.ninbot.action;
+package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.entity.Event;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
@@ -10,14 +9,14 @@ import net.dv8tion.jda.core.JDA;
 import java.util.TimerTask;
 
 @Log4j2
-public class EventAnnounce extends TimerTask {
+class EventAnnounce extends TimerTask {
 
     private Event event;
     private JDA jda;
     private String announcementChannel;
     private int minutesBeforeStart;
 
-    public EventAnnounce(Event event, int minutesBeforeStart, JDA jda, boolean debugEnabled) {
+    EventAnnounce(Event event, int minutesBeforeStart, JDA jda, boolean debugEnabled) {
         this.event = event;
         this.jda = jda;
         this.announcementChannel = debugEnabled ? Reference.OCW_DEBUG_CHANNEL : Reference.OCW_EVENT_ANNOUNCE_CHANNEL;

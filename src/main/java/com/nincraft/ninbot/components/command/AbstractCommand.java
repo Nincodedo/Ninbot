@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.command;
 
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
@@ -12,12 +12,12 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 @Data
 public abstract class AbstractCommand {
 
-    int length;
-    String description;
-    String name;
-    boolean hidden;
-    RolePermission permissionLevel = RolePermission.EVERYONE;
-    boolean checkExactLength = true;
+    protected int length;
+    protected String description;
+    protected String name;
+    protected boolean hidden;
+    protected RolePermission permissionLevel = RolePermission.EVERYONE;
+    protected boolean checkExactLength = true;
 
     public void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
@@ -42,7 +42,7 @@ public abstract class AbstractCommand {
 
     public abstract void executeCommand(MessageReceivedEvent event);
 
-    boolean isCommandLengthCorrect(String content) {
+    protected boolean isCommandLengthCorrect(String content) {
         val commandLength = getCommandLength(content);
         if (checkExactLength) {
             return commandLength == length;
@@ -51,15 +51,15 @@ public abstract class AbstractCommand {
         }
     }
 
-    int getCommandLength(String content) {
+    protected int getCommandLength(String content) {
         return content.split(" ").length;
     }
 
-    void wrongCommandLengthMessage(MessageChannel channel) {
+    protected void wrongCommandLengthMessage(MessageChannel channel) {
         MessageUtils.sendMessage(channel, "Wrong number of arguments for %s command", name);
     }
 
-    String getSubcommand(String command) {
+    protected String getSubcommand(String command) {
         return command.split(" ")[2].toLowerCase();
     }
 }

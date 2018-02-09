@@ -1,5 +1,6 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.admin;
 
+import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
 import net.dv8tion.jda.core.entities.Message;

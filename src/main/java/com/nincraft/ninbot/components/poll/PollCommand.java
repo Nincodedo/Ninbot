@@ -1,6 +1,6 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.poll;
 
-import com.nincraft.ninbot.entity.Poll;
+import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

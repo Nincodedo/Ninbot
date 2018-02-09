@@ -1,6 +1,7 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.dab;
 
-import com.nincraft.ninbot.response.EmojiReactionResponse;
+import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;

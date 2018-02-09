@@ -1,6 +1,4 @@
-package com.nincraft.ninbot.dao;
-
-import com.nincraft.ninbot.entity.Event;
+package com.nincraft.ninbot.components.event;
 
 import java.util.List;
 

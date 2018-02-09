@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.entity;
+package com.nincraft.ninbot.components.event;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
-public class Event {
+class Event {
     private int id;
     private String name;
     private String authorName;
@@ -18,7 +18,7 @@ public class Event {
     private LocalDateTime endTime;
     private int hidden;
 
-    public String buildChannelMessage(String roleId, int minutesBeforeStart) {
+    String buildChannelMessage(String roleId, int minutesBeforeStart) {
         if (minutesBeforeStart > 0) {
             return String.format("<@&%s>, event %s created by %s is starting in %d minutes", roleId, name, authorName, minutesBeforeStart);
         } else {
