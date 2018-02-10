@@ -1,13 +1,17 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.command.*;
-import com.nincraft.ninbot.command.util.CommandParser;
 import com.nincraft.ninbot.components.admin.AdminCommand;
+import com.nincraft.ninbot.components.adventure.RollCommand;
 import com.nincraft.ninbot.components.dab.DabCommand;
 import com.nincraft.ninbot.components.event.EventCommand;
 import com.nincraft.ninbot.components.event.EventScheduler;
 import com.nincraft.ninbot.components.event.IEventDao;
+import com.nincraft.ninbot.components.info.HelpCommand;
+import com.nincraft.ninbot.components.info.ListCommand;
+import com.nincraft.ninbot.components.info.StatsCommand;
 import com.nincraft.ninbot.components.poll.PollCommand;
+import com.nincraft.ninbot.components.subscribe.SubscribeCommand;
+import com.nincraft.ninbot.components.subscribe.UnsubscribeCommand;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-class EventDao implements IEventDao {
+public class EventDao implements IEventDao {
 
     private EventMapper eventMapper;
 

@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.adventure;
 
 import com.bernardomg.tabletop.dice.parser.DefaultDiceNotationExpressionParser;
 import com.bernardomg.tabletop.dice.roller.DefaultRoller;

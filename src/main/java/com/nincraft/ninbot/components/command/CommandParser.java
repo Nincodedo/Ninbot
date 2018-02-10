@@ -1,6 +1,5 @@
-package com.nincraft.ninbot.command.util;
+package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.Reference;
 import lombok.Getter;

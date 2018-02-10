@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.util.MessageUtils;
 import net.dv8tion.jda.core.entities.MessageChannel;

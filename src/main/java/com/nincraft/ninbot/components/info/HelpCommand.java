@@ -1,7 +1,7 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.info;
 
-import com.nincraft.ninbot.command.util.CommandParser;
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandParser;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;

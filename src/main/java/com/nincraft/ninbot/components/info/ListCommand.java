@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.command;
+package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
