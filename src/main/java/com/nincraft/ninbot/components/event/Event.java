@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Accessors(chain = true)
@@ -17,6 +18,7 @@ class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int hidden;
+    private String dateFormat = "yyyy-MM-dd hh:mm a (HH:mm)";
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
         if (minutesBeforeStart > 0) {
@@ -44,10 +46,10 @@ class Event {
         stringBuilder.append("\nGame: ");
         stringBuilder.append(StringUtils.capitalize(gameName));
         stringBuilder.append("\nStart Time: ");
-        stringBuilder.append(startTime);
+        stringBuilder.append(startTime.format(DateTimeFormatter.ofPattern(dateFormat)));
         if (getEndTime() != null) {
             stringBuilder.append("\nEnd Time: ");
-            stringBuilder.append(endTime);
+            stringBuilder.append(endTime.format(DateTimeFormatter.ofPattern(dateFormat)));
         }
         return stringBuilder.toString();
     }
