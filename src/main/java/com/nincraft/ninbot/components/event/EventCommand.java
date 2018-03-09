@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -110,6 +111,7 @@ public class EventCommand extends AbstractCommand {
         for (val event : events) {
             embedBuilder.addField(event.getName(), event.toString(), true);
         }
+        embedBuilder.setFooter("All times are in GMT " + OffsetDateTime.now().getOffset(), null);
         messageBuilder.setEmbed(embedBuilder.build());
         MessageUtils.sendMessage(channel, messageBuilder.build());
     }
