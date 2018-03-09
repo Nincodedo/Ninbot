@@ -18,7 +18,8 @@ class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int hidden;
-    private String dateFormat = "yyyy-MM-dd hh:mm a (HH:mm)";
+    private String dateFormat = "yyyy-MM-dd";
+    private String timeFormat = "hh:mm a (HH:mm)";
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
         if (minutesBeforeStart > 0) {
@@ -45,11 +46,15 @@ class Event {
         stringBuilder.append(authorName);
         stringBuilder.append("\nGame: ");
         stringBuilder.append(StringUtils.capitalize(gameName));
-        stringBuilder.append("\nStart Time: ");
+        stringBuilder.append("\nStart Date: ");
         stringBuilder.append(startTime.format(DateTimeFormatter.ofPattern(dateFormat)));
+        stringBuilder.append("\nStart Time: ");
+        stringBuilder.append(startTime.format(DateTimeFormatter.ofPattern(timeFormat)));
         if (getEndTime() != null) {
-            stringBuilder.append("\nEnd Time: ");
+            stringBuilder.append("\nEnd Date: ");
             stringBuilder.append(endTime.format(DateTimeFormatter.ofPattern(dateFormat)));
+            stringBuilder.append("\nEnd Time: ");
+            stringBuilder.append(endTime.format(DateTimeFormatter.ofPattern(timeFormat)));
         }
         return stringBuilder.toString();
     }
