@@ -19,7 +19,7 @@ class Event {
     private LocalDateTime endTime;
     private int hidden;
     private String dateFormat = "yyyy-MM-dd";
-    private String timeFormat = "hh:mm a (HH:mm)";
+    private String timeFormat = "hh:mm a";
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
         if (minutesBeforeStart > 0) {
