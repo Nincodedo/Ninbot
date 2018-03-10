@@ -16,14 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-public class Poll {
+class Poll {
     private User pollAuthor;
     private String title;
     private List<String> choices;
     private String result;
     private long timeLength;
 
-    public Poll(MessageReceivedEvent event) {
+    Poll(MessageReceivedEvent event) {
         this.pollAuthor = event.getAuthor();
         val pollMessage = event.getMessage().getContent().substring("@Ninbot poll ".length());
         choices = new ArrayList<>();
@@ -40,11 +40,11 @@ public class Poll {
         }
     }
 
-    public Message build() {
+    Message build() {
         return buildPollMessage("Poll will close in " + timeLength + " minutes at " + Instant.now().plus(timeLength, ChronoUnit.MINUTES));
     }
 
-    public Message buildClosed() {
+    Message buildClosed() {
         return buildPollMessage(result);
     }
 
