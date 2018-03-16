@@ -19,7 +19,7 @@ public class CommandParser {
     private static Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
     void parseEvent(MessageReceivedEvent event) {
-        String message = event.getMessage().getContent();
+        String message = event.getMessage().getContentStripped();
         if (StringUtils.isNotBlank(message)) {
             AbstractCommand command = commandHashMap.get(getCommand(message));
             if (command != null) {

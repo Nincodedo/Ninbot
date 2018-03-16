@@ -19,7 +19,7 @@ public class PollCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        if (getCommandLength(event.getMessage().getContent()) == 2) {
+        if (getCommandLength(event.getMessage().getContentStripped()) == 2) {
             MessageUtils.sendMessage(event.getChannel(), description);
             return;
         }

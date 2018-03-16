@@ -25,7 +25,7 @@ class Poll {
 
     Poll(MessageReceivedEvent event) {
         this.pollAuthor = event.getAuthor();
-        val pollMessage = event.getMessage().getContent().substring("@Ninbot poll ".length());
+        val pollMessage = event.getMessage().getContentStripped().substring("@Ninbot poll ".length());
         choices = new ArrayList<>();
         if (pollMessage.contains("\"")) {
             this.title = pollMessage.substring(0, pollMessage.indexOf("\""));

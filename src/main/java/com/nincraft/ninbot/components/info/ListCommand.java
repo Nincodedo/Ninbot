@@ -26,7 +26,7 @@ public class ListCommand extends AbstractCommand {
     @Override
     public void executeCommand(MessageReceivedEvent event) {
         val channel = event.getChannel();
-        val content = event.getMessage().getContent().split(" ");
+        val content = event.getMessage().getContentStripped().split(" ");
         if (content.length > 2) {
             listUsersInSubscription(content[2], event.getGuild(), event.getChannel());
         } else {

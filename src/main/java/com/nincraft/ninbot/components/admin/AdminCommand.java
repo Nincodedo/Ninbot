@@ -18,7 +18,7 @@ public class AdminCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        switch (getSubcommand(event.getMessage().getContent())) {
+        switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "restart":
                 restart(event.getMessage());
                 break;

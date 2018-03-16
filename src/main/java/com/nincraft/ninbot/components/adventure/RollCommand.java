@@ -20,7 +20,7 @@ public class RollCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        val content = event.getMessage().getContent();
+        val content = event.getMessage().getContentStripped();
         val commandArgs = content.split(" ");
         if (commandArgs.length == 2) {
             rollDice("1d20", event);

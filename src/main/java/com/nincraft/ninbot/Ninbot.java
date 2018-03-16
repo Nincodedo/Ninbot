@@ -12,7 +12,6 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.flywaydb.core.Flyway;
 
 import javax.security.auth.login.LoginException;
@@ -37,8 +36,6 @@ public class Ninbot {
         } catch (InterruptedException e) {
             log.error("Interrupted", e);
             throw e;
-        } catch (RateLimitedException e) {
-            log.warn("Rate limit exceeded", e);
         }
         assert jda != null;
         boolean debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
@@ -48,7 +45,7 @@ public class Ninbot {
         jda.addEventListener(new ReactionListener());
         migrateDb();
         eventScheduler.scheduleAll();
-        jda.getPresence().setGame(Game.of("say \"@Ninbot help\" for list of commands"));
+        jda.getPresence().setGame(Game.playing("say \"@Ninbot help\" for list of commands"));
     }
 
     private static void migrateDb() {

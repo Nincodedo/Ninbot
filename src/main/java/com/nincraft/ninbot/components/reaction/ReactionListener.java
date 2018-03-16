@@ -74,7 +74,7 @@ public class ReactionListener extends ListenerAdapter {
     }
 
     private void respond(MessageReceivedEvent event) {
-        val response = responseMap.get(event.getMessage().getContent().toLowerCase());
+        val response = responseMap.get(event.getMessage().getContentStripped().toLowerCase());
 
         if (response != null) {
             response.react(event.getMessage(), event.getChannel());

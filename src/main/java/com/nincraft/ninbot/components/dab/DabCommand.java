@@ -24,7 +24,7 @@ public class DabCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        val content = event.getMessage().getContent();
+        val content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
             val channel = event.getChannel();
             val mentionedUsers = event.getMessage().getMentionedUsers();
