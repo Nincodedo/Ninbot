@@ -11,9 +11,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +69,7 @@ public class EventCommand extends AbstractCommand {
         event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(LocalDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME).atOffset(ZoneOffset.of("-06:00")).toLocalDateTime());
+                .setStartTime(OffsetDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         eventScheduler.addEvent(event);
         MessageUtils.reactSuccessfulResponse(message);
     }

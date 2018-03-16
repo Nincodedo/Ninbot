@@ -5,7 +5,6 @@ import lombok.val;
 import net.dv8tion.jda.core.JDA;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Timer;
@@ -39,12 +38,12 @@ public class EventScheduler {
 
     private void scheduleEvent(Event event) {
         Timer timer = new Timer();
-        Instant eventStartTime = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant();
+        Instant eventStartTime = event.getStartTime().toInstant();
         int minutesBeforeStart = 30;
-        Instant eventEarlyReminder = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant().minus(minutesBeforeStart, ChronoUnit.MINUTES);
+        Instant eventEarlyReminder = event.getStartTime().toInstant().minus(minutesBeforeStart, ChronoUnit.MINUTES);
         Instant eventEndTime;
         if (event.getEndTime() != null) {
-            eventEndTime = event.getStartTime().atZone(ZoneId.systemDefault()).toInstant();
+            eventEndTime = event.getStartTime().toInstant();
         } else {
             eventEndTime = eventStartTime.plus(1, ChronoUnit.DAYS);
         }

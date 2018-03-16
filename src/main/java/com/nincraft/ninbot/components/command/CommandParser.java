@@ -18,7 +18,7 @@ public class CommandParser {
     @Getter
     private static Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
-    public void parseEvent(MessageReceivedEvent event) {
+    void parseEvent(MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
         if (StringUtils.isNotBlank(message)) {
             AbstractCommand command = commandHashMap.get(getCommand(message));
@@ -48,7 +48,7 @@ public class CommandParser {
         return null;
     }
 
-    public void addCommand(AbstractCommand command) {
+    void addCommand(AbstractCommand command) {
         commandHashMap.put(command.getName(), command);
     }
 }

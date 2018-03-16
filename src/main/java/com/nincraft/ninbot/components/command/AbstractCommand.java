@@ -3,12 +3,14 @@ package com.nincraft.ninbot.components.command;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+@Log4j2
 @Data
 public abstract class AbstractCommand {
 
@@ -19,11 +21,12 @@ public abstract class AbstractCommand {
     protected RolePermission permissionLevel = RolePermission.EVERYONE;
     protected boolean checkExactLength = true;
 
-    public void execute(MessageReceivedEvent event) {
+    void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
+            log.info("Executing command {}", name);
             executeCommand(event);
         } else {
-            MessageUtils.sendMessage(event.getChannel(), "Insufficient privileges for %s command, %s required", name, permissionLevel.toString());
+            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
     }
 

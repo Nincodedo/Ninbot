@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -15,8 +15,8 @@ class Event {
     private String authorName;
     private String gameName;
     private String description;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private OffsetDateTime startTime;
+    private OffsetDateTime endTime;
     private int hidden;
     private String dateFormat = "yyyy-MM-dd";
     private String timeFormat = "hh:mm a";
