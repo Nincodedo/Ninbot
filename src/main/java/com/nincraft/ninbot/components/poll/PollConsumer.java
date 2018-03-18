@@ -49,8 +49,12 @@ class PollConsumer implements Consumer<Message> {
         List<MessageReaction> reactions = newMessage.getReactions();
         for (int i = 0; i < reactions.size() && i < poll.getChoices().size(); i++) {
             MessageReaction reaction = reactions.get(i);
-            if (reaction.getCount() >= highCount) {
+            if (reaction.getCount() == highCount) {
+                winningChoices.add(poll.getChoices().get(i));
+            }
+            if (reaction.getCount() > highCount) {
                 highCount = reaction.getCount();
+                winningChoices.clear();
                 winningChoices.add(poll.getChoices().get(i));
             }
         }
@@ -59,7 +63,7 @@ class PollConsumer implements Consumer<Message> {
         if (highCount <= 1) {
             poll.setResult("No one voted in this poll." + pollClosedMessage);
         } else if (winningChoices.size() == 1) {
-            poll.setResult("\"" + poll.getChoices().get(0) + "\" had the most votes with " + (highCount - 1) + " vote(s)." + pollClosedMessage);
+            poll.setResult("\"" + winningChoices.get(0) + "\" had the most votes with " + (highCount - 1) + " vote(s)." + pollClosedMessage);
         } else if (winningChoices.size() > 1) {
             poll.setResult("It's a tie! " + listWinners(winningChoices) + " won with " + (highCount - 1) + " vote(s) each." + pollClosedMessage);
         }
