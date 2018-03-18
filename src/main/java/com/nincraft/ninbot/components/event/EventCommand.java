@@ -32,7 +32,7 @@ public class EventCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent messageReceivedEvent) {
-        val content = messageReceivedEvent.getMessage().getContent().toLowerCase();
+        val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {
             val action = getSubcommand(content);
@@ -65,7 +65,7 @@ public class EventCommand extends AbstractCommand {
 
     private void planEvent(Message message, User author, MessageChannel channel) {
         Event event = new Event();
-        Map<String, String> eventMap = parsePlanMessage(message.getContent());
+        Map<String, String> eventMap = parsePlanMessage(message.getContentStripped());
         event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
