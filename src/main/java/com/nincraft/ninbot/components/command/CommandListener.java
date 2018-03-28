@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.command;
 import com.nincraft.ninbot.components.admin.AdminCommand;
 import com.nincraft.ninbot.components.adventure.RollCommand;
 import com.nincraft.ninbot.components.event.EventCommand;
+import com.nincraft.ninbot.components.event.EventDao;
 import com.nincraft.ninbot.components.event.EventScheduler;
 import com.nincraft.ninbot.components.event.IEventDao;
 import com.nincraft.ninbot.components.fun.DabCommand;
@@ -20,7 +21,7 @@ public class CommandListener extends ListenerAdapter {
     private CommandParser commandParser;
     private boolean debugEnabled;
 
-    public CommandListener(IEventDao eventDao, EventScheduler eventScheduler, boolean debugEnabled) {
+    public CommandListener(EventDao eventDao, EventScheduler eventScheduler, boolean debugEnabled) {
         commandParser = new CommandParser();
         this.debugEnabled = debugEnabled;
         commandParser.addCommand(new SubscribeCommand());

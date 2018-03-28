@@ -12,13 +12,13 @@ import java.util.Timer;
 @Log4j2
 public class EventScheduler {
 
-    private IEventDao eventDao;
+    private EventDao eventDao;
 
     private JDA jda;
 
     private boolean debugEnabled;
 
-    public EventScheduler(JDA jda, IEventDao eventDao, boolean debugEnabled) {
+    public EventScheduler(JDA jda, EventDao eventDao, boolean debugEnabled) {
         this.eventDao = eventDao;
         this.jda = jda;
         this.debugEnabled = debugEnabled;
@@ -26,7 +26,8 @@ public class EventScheduler {
 
     public void scheduleAll() {
         log.trace("scheduling events");
-        for (val event : eventDao.getAllEvents()) {
+        val events = eventDao.getAllEvents();
+        for (val event : events) {
             scheduleEvent(event);
         }
     }

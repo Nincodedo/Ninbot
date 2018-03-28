@@ -18,10 +18,10 @@ import java.util.Map;
 
 public class EventCommand extends AbstractCommand {
 
-    private IEventDao eventDao;
+    private EventDao eventDao;
     private EventScheduler eventScheduler;
 
-    public EventCommand(IEventDao eventDao, EventScheduler eventScheduler) {
+    public EventCommand(EventDao eventDao, EventScheduler eventScheduler) {
         length = 3;
         name = "events";
         description = "list/plan events, use @Ninbot events help for more details";
