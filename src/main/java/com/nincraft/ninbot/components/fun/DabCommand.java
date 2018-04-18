@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.dab;
+package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
