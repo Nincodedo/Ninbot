@@ -3,6 +3,8 @@ package com.nincraft.ninbot.components.event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -10,18 +12,19 @@ import java.util.Date;
 import java.util.Timer;
 
 @Log4j2
+@Component
 public class EventScheduler {
 
     private EventDao eventDao;
 
     private JDA jda;
 
-    private boolean debugEnabled;
+    private Environment environment;
 
-    public EventScheduler(JDA jda, EventDao eventDao, boolean debugEnabled) {
+    public EventScheduler(JDA jda, EventDao eventDao, Environment environment) {
         this.eventDao = eventDao;
         this.jda = jda;
-        this.debugEnabled = debugEnabled;
+        this.environment = environment;
     }
 
     public void scheduleAll() {
@@ -32,7 +35,7 @@ public class EventScheduler {
         }
     }
 
-    public void addEvent(Event event) {
+    void addEvent(Event event) {
         eventDao.addEvent(event);
         scheduleEvent(event);
     }
@@ -61,7 +64,7 @@ public class EventScheduler {
 
     private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart) {
         if (!eventTime.isBefore(Instant.now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, debugEnabled), Date.from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, environment.getProperty("debugEnabled", Boolean.class)), Date.from(eventTime));
         }
     }
 }

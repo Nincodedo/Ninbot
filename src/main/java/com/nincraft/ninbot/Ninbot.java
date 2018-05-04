@@ -5,21 +5,16 @@ import com.nincraft.ninbot.components.event.EventDao;
 import com.nincraft.ninbot.components.event.EventScheduler;
 import com.nincraft.ninbot.components.reaction.ReactionListener;
 import com.nincraft.ninbot.util.Reference;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
-import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.EntityBuilder;
+import net.dv8tion.jda.core.entities.Game;
 import org.flywaydb.core.Flyway;
-import org.json.JSONObject;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import javax.security.auth.login.LoginException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,43 +23,10 @@ import java.util.Properties;
 
 @Log4j2
 @ComponentScan({"com.nincraft.ninbot"})
-@SpringBootApplication
 public class Ninbot {
 
-    @Getter
-    private static JDA jda;
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        ApplicationContext context = SpringApplication.run(Ninbot.class, args);
-
-        Properties properties = readPropertiesFile();
-        try {
-            jda = new JDABuilder(AccountType.BOT).setToken(properties.getProperty("ninbotToken")).buildBlocking();
-        } catch (LoginException e) {
-            log.error("Failed to login", e);
-        } catch (InterruptedException e) {
-            log.error("Interrupted", e);
-            throw e;
-        }
-        assert jda != null;
-        boolean debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
-
-        EventDao eventDao = (EventDao) context.getBean("eventDao");
-        EventScheduler eventScheduler = new EventScheduler(jda, eventDao, debugEnabled);
-        jda.addEventListener(new CommandListener(eventDao, eventScheduler, debugEnabled));
-        jda.addEventListener(new ReactionListener());
-        migrateDb();
-        eventScheduler.scheduleAll();
-        setupPresence();
-    }
-
-    private static void setupPresence() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "you");
-        jsonObject.put("type", 2);
-        val game = EntityBuilder.createGame(jsonObject);
-        Ninbot.getJda().getPresence().setGame(game);
-    }
+    @Autowired
+    private JDA jda;
 
     private static void migrateDb() {
         Flyway flyway = new Flyway();
@@ -93,5 +55,22 @@ public class Ninbot {
             throw e;
         }
         return properties;
+    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext context) {
+        return args -> {
+            Properties properties = readPropertiesFile();
+            assert jda != null;
+            boolean debugEnabled = Boolean.parseBoolean(properties.getProperty("debugEnabled"));
+
+            EventDao eventDao = (EventDao) context.getBean("eventDao");
+            EventScheduler eventScheduler = (EventScheduler) context.getBean("eventScheduler");
+            jda.addEventListener(new CommandListener(eventDao, eventScheduler, debugEnabled));
+            jda.addEventListener(new ReactionListener());
+            migrateDb();
+            eventScheduler.scheduleAll();
+            jda.getPresence().setGame(Game.playing("say \"@Ninbot help\" for list of commands"));
+        };
     }
 }

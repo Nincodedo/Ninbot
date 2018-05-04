@@ -1,5 +1,6 @@
-package com.nincraft.ninbot.db;
+package com.nincraft.ninbot.config;
 
+import com.nincraft.ninbot.util.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,7 +37,7 @@ public class DBConfig {
     @Bean
     public DataSource dataSource() {
         SQLiteDataSource dataSource = new SQLiteDataSource();
-        dataSource.setUrl("jdbc:sqlite:data/events.db");
+        dataSource.setUrl(Reference.SQLITE_DB);
         return dataSource;
     }
 

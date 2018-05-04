@@ -20,7 +20,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.5.1_348</version>
+            <version>3.6.0_359</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -120,7 +120,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.nincraft.ninbot.Ninbot</mainClass>
+                                    <mainClass>com.nincraft.ninbot.NinbotRunner</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

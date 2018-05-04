@@ -7,7 +7,7 @@ public class EventRemove extends TimerTask {
     private Event event;
     private EventDao eventDao;
 
-    public EventRemove(Event event, EventDao eventDao) {
+    EventRemove(Event event, EventDao eventDao) {
         this.event = event;
         this.eventDao = eventDao;
     }
