@@ -5,9 +5,9 @@ import java.util.TimerTask;
 public class EventRemove extends TimerTask {
 
     private Event event;
-    private IEventDao eventDao;
+    private EventDao eventDao;
 
-    public EventRemove(Event event, IEventDao eventDao) {
+    EventRemove(Event event, EventDao eventDao) {
         this.event = event;
         this.eventDao = eventDao;
     }

@@ -4,21 +4,35 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
 @Accessors(chain = true)
+@Entity
+@Table(name = "GameEvents")
 class Event {
+    @Id
+    @Column(name = "Id")
     private int id;
+    @Column(name = "Name")
     private String name;
+    @Column(name = "AuthorName")
     private String authorName;
+    @Column(name = "SubscriptionId")
+    private int subscriptionId;
+    @Transient
     private String gameName;
+    @Column(name = "Description")
     private String description;
+    @Column(name = "StartTime")
     private OffsetDateTime startTime;
+    @Column(name = "EndTime")
     private OffsetDateTime endTime;
-    private int hidden;
+    @Transient
     private String dateFormat = "yyyy-MM-dd";
+    @Transient
     private String timeFormat = "hh:mm a";
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
@@ -45,7 +59,7 @@ class Event {
         stringBuilder.append("\nCreated by: ");
         stringBuilder.append(authorName);
         stringBuilder.append("\nGame: ");
-        stringBuilder.append(StringUtils.capitalize(gameName));
+        stringBuilder.append(StringUtils.capitalize(""));
         stringBuilder.append("\nStart Date: ");
         stringBuilder.append(startTime.format(DateTimeFormatter.ofPattern(dateFormat)));
         stringBuilder.append("\nStart Time: ");

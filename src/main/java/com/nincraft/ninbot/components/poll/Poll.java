@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.Instant;
@@ -23,9 +22,9 @@ class Poll {
     private String result;
     private long timeLength;
 
-    Poll(MessageReceivedEvent event) {
-        this.pollAuthor = event.getAuthor();
-        val pollMessage = event.getMessage().getContentStripped().substring("@Ninbot poll ".length());
+    Poll(User author, Message message) {
+        this.pollAuthor = author;
+        val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         choices = new ArrayList<>();
         if (pollMessage.contains("\"")) {
             this.title = pollMessage.substring(0, pollMessage.indexOf("\""));

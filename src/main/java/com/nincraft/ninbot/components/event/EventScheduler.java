@@ -3,6 +3,9 @@ package com.nincraft.ninbot.components.event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -10,28 +13,31 @@ import java.util.Date;
 import java.util.Timer;
 
 @Log4j2
+@Component
 public class EventScheduler {
 
-    private IEventDao eventDao;
+    private EventDao eventDao;
 
     private JDA jda;
 
-    private boolean debugEnabled;
+    @Value("${debugEnabled}")
+    private boolean isDebugEnabled;
 
-    public EventScheduler(JDA jda, IEventDao eventDao, boolean debugEnabled) {
+    @Autowired
+    public EventScheduler(JDA jda, EventDao eventDao) {
         this.eventDao = eventDao;
         this.jda = jda;
-        this.debugEnabled = debugEnabled;
     }
 
     public void scheduleAll() {
         log.trace("scheduling events");
-        for (val event : eventDao.getAllEvents()) {
+        val events = eventDao.getAllEvents();
+        for (val event : events) {
             scheduleEvent(event);
         }
     }
 
-    public void addEvent(Event event) {
+    void addEvent(Event event) {
         eventDao.addEvent(event);
         scheduleEvent(event);
     }
@@ -60,7 +66,7 @@ public class EventScheduler {
 
     private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart) {
         if (!eventTime.isBefore(Instant.now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, debugEnabled), Date.from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, isDebugEnabled), Date.from(eventTime));
         }
     }
 }

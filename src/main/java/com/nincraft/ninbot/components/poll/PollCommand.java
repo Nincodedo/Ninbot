@@ -23,7 +23,7 @@ public class PollCommand extends AbstractCommand {
             MessageUtils.sendMessage(event.getChannel(), description);
             return;
         }
-        Poll poll = new Poll(event);
+        Poll poll = new Poll(event.getAuthor(), event.getMessage());
         if (!poll.getChoices().isEmpty()) {
             event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
         } else {

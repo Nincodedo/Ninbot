@@ -23,7 +23,7 @@ public abstract class AbstractCommand {
 
     void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
-            log.info("Executing command {}", name);
+            log.info("Executing command {} by {}", name, event.getAuthor().getName());
             executeCommand(event);
         } else {
             MessageUtils.reactUnsuccessfulResponse(event.getMessage());

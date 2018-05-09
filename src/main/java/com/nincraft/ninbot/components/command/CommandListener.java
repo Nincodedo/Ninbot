@@ -2,10 +2,10 @@ package com.nincraft.ninbot.components.command;
 
 import com.nincraft.ninbot.components.admin.AdminCommand;
 import com.nincraft.ninbot.components.adventure.RollCommand;
-import com.nincraft.ninbot.components.dab.DabCommand;
 import com.nincraft.ninbot.components.event.EventCommand;
+import com.nincraft.ninbot.components.event.EventDao;
 import com.nincraft.ninbot.components.event.EventScheduler;
-import com.nincraft.ninbot.components.event.IEventDao;
+import com.nincraft.ninbot.components.fun.DabCommand;
 import com.nincraft.ninbot.components.info.HelpCommand;
 import com.nincraft.ninbot.components.info.ListCommand;
 import com.nincraft.ninbot.components.info.StatsCommand;
@@ -14,25 +14,30 @@ import com.nincraft.ninbot.components.subscribe.SubscribeCommand;
 import com.nincraft.ninbot.components.subscribe.UnsubscribeCommand;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
+    @Value("${debugEnabled}")
     private boolean debugEnabled;
 
-    public CommandListener(IEventDao eventDao, EventScheduler eventScheduler, boolean debugEnabled) {
+    @Autowired
+    public CommandListener(EventDao eventDao, EventScheduler eventScheduler) {
         commandParser = new CommandParser();
-        this.debugEnabled = debugEnabled;
         commandParser.addCommand(new SubscribeCommand());
         commandParser.addCommand(new UnsubscribeCommand());
         commandParser.addCommand(new ListCommand());
-        commandParser.addCommand(new HelpCommand());
         commandParser.addCommand(new EventCommand(eventDao, eventScheduler));
         commandParser.addCommand(new StatsCommand());
         commandParser.addCommand(new AdminCommand());
         commandParser.addCommand(new DabCommand());
         commandParser.addCommand(new PollCommand());
         commandParser.addCommand(new RollCommand());
+        commandParser.addCommand(new HelpCommand(commandParser));
     }
 
     @Override
