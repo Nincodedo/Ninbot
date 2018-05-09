@@ -16,7 +16,7 @@ import java.util.Map;
 public class CommandParser {
 
     @Getter
-    private static Map<String, AbstractCommand> commandHashMap = new HashMap<>();
+    private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
     void parseEvent(MessageReceivedEvent event) {
         String message = event.getMessage().getContentStripped();

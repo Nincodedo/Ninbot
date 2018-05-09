@@ -4,12 +4,11 @@ import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 import javax.security.auth.login.LoginException;
 
@@ -19,24 +18,21 @@ import javax.security.auth.login.LoginException;
 @Log4j2
 public class BeanConfig {
 
-    private final Environment environment;
+    @Value("${ninbotToken}")
+    private String ninbotToken;
 
-    @Autowired
-    public BeanConfig(Environment environment) {
-        this.environment = environment;
-    }
-
-    @Bean(name = "jda")
+    @Bean
     public JDA jda() throws InterruptedException {
         JDA jda = null;
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(environment.getProperty("ninbotToken")).buildBlocking();
+            jda = new JDABuilder(AccountType.BOT).setToken(ninbotToken).buildBlocking();
         } catch (LoginException e) {
             log.error("Failed to login", e);
         } catch (InterruptedException e) {
             log.error("Interrupted", e);
             throw e;
         }
+        assert jda != null;
         return jda;
     }
 }

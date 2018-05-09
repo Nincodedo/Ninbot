@@ -3,7 +3,8 @@ package com.nincraft.ninbot.components.event;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -19,12 +20,13 @@ public class EventScheduler {
 
     private JDA jda;
 
-    private Environment environment;
+    @Value("${debugEnabled}")
+    private boolean isDebugEnabled;
 
-    public EventScheduler(JDA jda, EventDao eventDao, Environment environment) {
+    @Autowired
+    public EventScheduler(JDA jda, EventDao eventDao) {
         this.eventDao = eventDao;
         this.jda = jda;
-        this.environment = environment;
     }
 
     public void scheduleAll() {
@@ -64,7 +66,7 @@ public class EventScheduler {
 
     private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart) {
         if (!eventTime.isBefore(Instant.now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, environment.getProperty("debugEnabled", Boolean.class)), Date.from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, jda, isDebugEnabled), Date.from(eventTime));
         }
     }
 }

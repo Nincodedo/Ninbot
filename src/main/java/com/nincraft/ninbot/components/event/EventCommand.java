@@ -41,7 +41,7 @@ public class EventCommand extends AbstractCommand {
                     listEvents(channel);
                     break;
                 case "plan":
-                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), channel);
+                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor());
                     break;
                 case "help":
                     displayEventHelp(channel);
@@ -63,7 +63,7 @@ public class EventCommand extends AbstractCommand {
         MessageUtils.sendMessage(channel, helpMessage);
     }
 
-    private void planEvent(Message message, User author, MessageChannel channel) {
+    private void planEvent(Message message, User author) {
         Event event = new Event();
         Map<String, String> eventMap = parsePlanMessage(message.getContentStripped());
         event.setAuthorName(author.getName())
