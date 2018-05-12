@@ -20,7 +20,7 @@ public class EventScheduler {
 
     private JDA jda;
 
-    @Value("${debugEnabled}")
+    @Value("${debugEnabled:false}")
     private boolean isDebugEnabled;
 
     @Autowired

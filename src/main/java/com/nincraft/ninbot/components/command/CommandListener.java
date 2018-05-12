@@ -24,7 +24,7 @@ import java.util.List;
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
-    @Value("${debugEnabled}")
+    @Value("${debugEnabled:false}")
     private boolean debugEnabled;
     @Autowired
     private List<String> roleBlackList;
