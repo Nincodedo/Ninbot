@@ -26,11 +26,9 @@ public class CommandListener extends ListenerAdapter {
     private CommandParser commandParser;
     @Value("${debugEnabled:false}")
     private boolean debugEnabled;
-    @Autowired
-    private List<String> roleBlackList;
 
     @Autowired
-    public CommandListener(EventDao eventDao, EventScheduler eventScheduler) {
+    public CommandListener(EventDao eventDao, EventScheduler eventScheduler, List<String> roleBlackList) {
         commandParser = new CommandParser();
         commandParser.addCommand(new SubscribeCommand(roleBlackList));
         commandParser.addCommand(new UnsubscribeCommand(roleBlackList));
