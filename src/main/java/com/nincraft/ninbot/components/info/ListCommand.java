@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
-import com.nincraft.ninbot.util.Reference;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -17,7 +16,10 @@ import java.util.stream.Collectors;
 
 public class ListCommand extends AbstractCommand {
 
-    public ListCommand() {
+    private List<String> roleBlackList;
+
+    public ListCommand(List<String> roleBlackList) {
+        this.roleBlackList = roleBlackList;
         length = 2;
         name = "list";
         description = "Displays available games for subscribing";
@@ -49,7 +51,7 @@ public class ListCommand extends AbstractCommand {
     private void listSubscriptions(Guild guild, MessageChannel channel) {
         val roleList = guild.getRoles();
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
-        roleNameList.removeAll(Reference.getRoleBlacklist());
+        roleNameList.removeAll(roleBlackList);
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Available subscriptions");

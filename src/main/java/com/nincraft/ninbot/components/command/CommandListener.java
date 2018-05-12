@@ -18,21 +18,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
     @Value("${debugEnabled}")
     private boolean debugEnabled;
+    @Autowired
+    private List<String> roleBlackList;
 
     @Autowired
     public CommandListener(EventDao eventDao, EventScheduler eventScheduler) {
         commandParser = new CommandParser();
-        commandParser.addCommand(new SubscribeCommand());
-        commandParser.addCommand(new UnsubscribeCommand());
-        commandParser.addCommand(new ListCommand());
+        commandParser.addCommand(new SubscribeCommand(roleBlackList));
+        commandParser.addCommand(new UnsubscribeCommand(roleBlackList));
+        commandParser.addCommand(new ListCommand(roleBlackList));
         commandParser.addCommand(new EventCommand(eventDao, eventScheduler));
-        commandParser.addCommand(new StatsCommand());
+        commandParser.addCommand(new StatsCommand(roleBlackList));
         commandParser.addCommand(new AdminCommand());
         commandParser.addCommand(new DabCommand());
         commandParser.addCommand(new PollCommand());

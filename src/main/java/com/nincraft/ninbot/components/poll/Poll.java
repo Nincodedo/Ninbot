@@ -5,7 +5,6 @@ import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.Instant;
@@ -16,14 +15,12 @@ import java.util.List;
 
 @Data
 class Poll {
-    private User pollAuthor;
     private String title;
     private List<String> choices;
     private String result;
     private long timeLength;
 
-    Poll(User author, Message message) {
-        this.pollAuthor = author;
+    Poll(Message message) {
         val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         choices = new ArrayList<>();
         if (pollMessage.contains("\"")) {

@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = {"com.nincraft.ninbot"})
@@ -20,6 +23,11 @@ public class BeanConfig {
 
     @Value("${ninbotToken}")
     private String ninbotToken;
+
+    @Bean
+    public List<String> roleBlackList() {
+        return new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone", "Dad Bot"));
+    }
 
     @Bean
     public JDA jda() throws InterruptedException {

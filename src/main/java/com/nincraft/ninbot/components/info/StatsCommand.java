@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
-import com.nincraft.ninbot.util.Reference;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -19,10 +18,10 @@ import java.util.stream.Collectors;
 
 public class StatsCommand extends AbstractCommand {
 
-    private List<String> roleBlacklist;
+    private List<String> roleBlackList;
 
-    public StatsCommand() {
-        roleBlacklist = Reference.getRoleBlacklist();
+    public StatsCommand(List<String> roleBlackList) {
+        this.roleBlackList = roleBlackList;
         length = 2;
         name = "stats";
         description = "Shows Ninbot stats";
@@ -38,7 +37,7 @@ public class StatsCommand extends AbstractCommand {
         Map<Role, Integer> roleMap = new HashMap<>();
         for (val member : server.getMembers()) {
             for (val role : member.getRoles()) {
-                if (!roleBlacklist.contains(role.getName())) {
+                if (!roleBlackList.contains(role.getName())) {
                     roleMap.merge(role, 1, (a, b) -> a + b);
                 }
             }

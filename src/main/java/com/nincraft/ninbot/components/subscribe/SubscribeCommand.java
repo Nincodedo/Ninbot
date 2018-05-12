@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
-import com.nincraft.ninbot.util.Reference;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
@@ -18,8 +17,8 @@ public class SubscribeCommand extends AbstractCommand {
 
     private List<String> roleBlacklist;
 
-    public SubscribeCommand() {
-        roleBlacklist = Reference.getRoleBlacklist();
+    public SubscribeCommand(List<String> roleBlackList) {
+        this.roleBlacklist = roleBlackList;
         length = 3;
         name = "subscribe";
         description = "Subscribes you to a game for game gathering events";

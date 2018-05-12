@@ -6,9 +6,11 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.GuildController;
 
+import java.util.List;
+
 public class UnsubscribeCommand extends SubscribeCommand {
-    public UnsubscribeCommand() {
-        super();
+    public UnsubscribeCommand(List<String> roleBlackList) {
+        super(roleBlackList);
         name = "unsubscribe";
         description = "Unsubscribes you from a game for game gathering events";
     }
