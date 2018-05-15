@@ -7,6 +7,7 @@ import com.nincraft.ninbot.components.event.EventCommand;
 import com.nincraft.ninbot.components.event.EventDao;
 import com.nincraft.ninbot.components.event.EventScheduler;
 import com.nincraft.ninbot.components.fun.DabCommand;
+import com.nincraft.ninbot.components.fun.DadbotCommand;
 import com.nincraft.ninbot.components.info.HelpCommand;
 import com.nincraft.ninbot.components.info.ListCommand;
 import com.nincraft.ninbot.components.info.StatsCommand;
@@ -44,6 +45,7 @@ public class CommandListener extends ListenerAdapter {
         commandParser.addCommand(new DabCommand());
         commandParser.addCommand(new PollCommand());
         commandParser.addCommand(new RollCommand());
+        commandParser.addCommand(new DadbotCommand(configDao));
         commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap()));
     }
 

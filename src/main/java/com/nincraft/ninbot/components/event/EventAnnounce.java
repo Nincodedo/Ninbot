@@ -1,13 +1,11 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigDao;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
 
-import java.util.Optional;
 import java.util.TimerTask;
 
 @Log4j2
@@ -32,12 +30,12 @@ class EventAnnounce extends TimerTask {
         log.info("Running announce for event {}", event.getName());
         val serverId = event.getServerId();
         val announcementServer = jda.getGuildById(serverId);
-        Optional<Config> config = configDao.getConfigByName(serverId, announcementConfigName);
-        if (!config.isPresent()) {
+        val config = configDao.getConfigByName(serverId, announcementConfigName);
+        if (config.isEmpty()) {
             log.error("Config not set for server {}, config name {}", serverId, announcementConfigName);
             return;
         }
-        val channel = announcementServer.getTextChannelById(config.get().getValue());
+        val channel = announcementServer.getTextChannelById(config.get(0).getValue());
         val gameRoleId = announcementServer.getRolesByName(event.getGameName(), true).get(0);
         MessageUtils.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
     }

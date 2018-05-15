@@ -29,7 +29,7 @@ public class AdminCommand extends AbstractCommand {
                 break;
             case "config":
                 if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
-                    setConfig(event);
+                    addConfig(event);
                 } else {
                     MessageUtils.reactUnsuccessfulResponse(event.getMessage());
                 }
@@ -39,12 +39,12 @@ public class AdminCommand extends AbstractCommand {
         }
     }
 
-    private void setConfig(MessageReceivedEvent event) {
+    private void addConfig(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         val configName = message.split(" ")[3];
         val configValue = message.split(" ")[4];
         val serverId = event.getGuild().getId();
-        val isSuccessful = configDao.setConfig(serverId, configName, configValue);
+        val isSuccessful = configDao.addConfig(serverId, configName, configValue);
         MessageUtils.reactAccordingly(event.getMessage(), isSuccessful);
     }
 

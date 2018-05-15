@@ -10,7 +10,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.List;
 
 @Log4j2
 @Repository
@@ -22,15 +22,20 @@ public class ConfigDao {
         this.entityManager = entityManager;
     }
 
-    public Optional<Config> getConfigByName(String serverId, String configName) {
+    public List<Config> getConfigByName(String serverId, String configName) {
         val query = entityManager.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
         query.setParameter("serverId", serverId);
         query.setParameter("configName", configName);
-        return Optional.ofNullable(query.getResultList().get(0));
+        return query.getResultList();
     }
 
     @Transactional
-    public boolean setConfig(String serverId, String configName, String configValue) {
+    public void updateConfig(Config config) {
+        entityManager.persist(config);
+    }
+
+    @Transactional
+    public boolean addConfig(String serverId, String configName, String configValue) {
         Config config = new Config(serverId, configName, configValue);
         try {
             entityManager.persist(config);

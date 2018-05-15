@@ -1,11 +1,13 @@
 package com.nincraft.ninbot.components.fun;
 
+import com.nincraft.ninbot.components.config.ConfigDao;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -14,9 +16,12 @@ import java.util.Random;
 public class Dadbot extends ListenerAdapter {
 
     private Random random;
+    private ConfigDao configDao;
 
-    public Dadbot() {
+    @Autowired
+    public Dadbot(ConfigDao configDao) {
         random = new Random();
+        this.configDao = configDao;
     }
 
     @Override
@@ -27,6 +32,9 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
+        if (channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+            return;
+        }
         val message = event.getMessage().getContentStripped();
         if (StringUtils.isNotBlank(message) && message.split(" ").length >= 1) {
             String first = message.split(" ")[0];
@@ -34,6 +42,11 @@ public class Dadbot extends ListenerAdapter {
                 hiImDad(message, event.getChannel());
             }
         }
+    }
+
+    private boolean channelIsBlacklisted(String serverId, String channelId) {
+        val channelConfigList = configDao.getConfigByName(serverId, "dadbotChannelBlacklist");
+        return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
     private void hiImDad(String message, MessageChannel channel) {
