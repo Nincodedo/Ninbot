@@ -24,7 +24,7 @@ public class PollCommand extends AbstractCommand {
             return;
         }
         Poll poll = new Poll(event.getMessage());
-        if (!poll.getChoices().isEmpty()) {
+        if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
             event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
         } else {
             MessageUtils.reactUnsuccessfulResponse(event.getMessage());
