@@ -5,7 +5,6 @@ import com.nincraft.ninbot.util.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.GuildController;
@@ -26,7 +25,6 @@ public class SubscribeCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        log.trace("execute SubscribeCommand: " + event);
         val content = event.getMessage().getContentStripped().toLowerCase();
         val channel = event.getChannel();
         if (isCommandLengthCorrect(content)) {
@@ -34,7 +32,7 @@ public class SubscribeCommand extends AbstractCommand {
             val subscribeTo = content.split(" ")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role)) {
-                addOrRemoveSubscription(event, channel, server.getController(), subscribeTo, role);
+                addOrRemoveSubscription(event, server.getController(), role);
             } else {
                 MessageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
@@ -43,7 +41,7 @@ public class SubscribeCommand extends AbstractCommand {
         }
     }
 
-    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
+    void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
         MessageUtils.reactSuccessfulResponse(event.getMessage());
         controller.addRolesToMember(event.getMember(), role).queue();
     }

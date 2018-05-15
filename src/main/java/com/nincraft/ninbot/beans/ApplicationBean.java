@@ -1,9 +1,11 @@
-package com.nincraft.ninbot.config;
+package com.nincraft.ninbot.beans;
 
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,7 +19,7 @@ import java.util.List;
 @Configuration
 @ComponentScan(basePackages = {"com.nincraft.ninbot"})
 @Log4j2
-public class BeanConfig {
+public class ApplicationBean {
 
     @Value("${ninbotToken}")
     private String ninbotToken;
@@ -27,8 +29,9 @@ public class BeanConfig {
         return new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone", "Dad Bot"));
     }
 
+    @Autowired
     @Bean
-    public JDA jda() throws InterruptedException {
+    public JDA jda(List<ListenerAdapter> listenerAdapters) throws InterruptedException {
         JDA jda = null;
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(ninbotToken).buildBlocking();
@@ -39,6 +42,7 @@ public class BeanConfig {
             throw e;
         }
         assert jda != null;
+        jda.addEventListener(listenerAdapters.toArray());
         return jda;
     }
 }

@@ -1,8 +1,10 @@
-package com.nincraft.ninbot.config;
+package com.nincraft.ninbot.beans;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -18,10 +20,10 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-public class DBConfig {
+public class DBBean {
 
     @Value("${db.sqliteUrl}")
-    private String sqliteUrl;
+    private String dbUrl;
 
     @Value("${db.hibernateDialect}")
     private String hibernateDialect;
@@ -37,10 +39,11 @@ public class DBConfig {
     @Bean
     public DataSource dataSource() {
         SQLiteDataSource dataSource = new SQLiteDataSource();
-        dataSource.setUrl(sqliteUrl);
+        dataSource.setUrl(dbUrl);
         return dataSource;
     }
 
+    @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -68,4 +71,10 @@ public class DBConfig {
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager(entityManagerFactoryBean().getObject());
     }
+
+    @Bean
+    public SessionFactory sessionFactory() {
+        return entityManagerFactoryBean().getObject().unwrap(SessionFactory.class);
+    }
+
 }

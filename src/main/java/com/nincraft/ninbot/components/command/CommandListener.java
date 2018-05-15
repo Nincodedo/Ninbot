@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.command;
 
 import com.nincraft.ninbot.components.admin.AdminCommand;
 import com.nincraft.ninbot.components.adventure.RollCommand;
+import com.nincraft.ninbot.components.config.ConfigDao;
 import com.nincraft.ninbot.components.event.EventCommand;
 import com.nincraft.ninbot.components.event.EventDao;
 import com.nincraft.ninbot.components.event.EventScheduler;
@@ -28,18 +29,22 @@ public class CommandListener extends ListenerAdapter {
     private boolean debugEnabled;
 
     @Autowired
-    public CommandListener(EventDao eventDao, EventScheduler eventScheduler, List<String> roleBlackList) {
-        commandParser = new CommandParser();
+    public CommandListener(CommandParser commandParser, EventDao eventDao, EventScheduler eventScheduler, ConfigDao configDao, List<String> roleBlackList) {
+        this.commandParser = commandParser;
+        addCommands(eventDao, eventScheduler, configDao, roleBlackList);
+    }
+
+    private void addCommands(EventDao eventDao, EventScheduler eventScheduler, ConfigDao configDao, List<String> roleBlackList) {
         commandParser.addCommand(new SubscribeCommand(roleBlackList));
         commandParser.addCommand(new UnsubscribeCommand(roleBlackList));
         commandParser.addCommand(new ListCommand(roleBlackList));
         commandParser.addCommand(new EventCommand(eventDao, eventScheduler));
         commandParser.addCommand(new StatsCommand(roleBlackList));
-        commandParser.addCommand(new AdminCommand());
+        commandParser.addCommand(new AdminCommand(configDao));
         commandParser.addCommand(new DabCommand());
         commandParser.addCommand(new PollCommand());
         commandParser.addCommand(new RollCommand());
-        commandParser.addCommand(new HelpCommand(commandParser));
+        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap()));
     }
 
     @Override

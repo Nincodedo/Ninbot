@@ -1,20 +1,20 @@
 package com.nincraft.ninbot.components.event;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
-@Log4j2
 @Repository
 public class EventDao {
 
     private final EntityManager entityManager;
 
     @Autowired
-    public EventDao(EntityManager entityManager) {
+    public EventDao(@Qualifier("entityManagerFactoryBean") EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -22,10 +22,12 @@ public class EventDao {
         return entityManager.createQuery("FROM Event", Event.class).getResultList();
     }
 
+    @Transactional
     void addEvent(Event event) {
         entityManager.persist(event);
     }
 
+    @Transactional
     void removeEvent(Event event) {
         entityManager.remove(event);
     }

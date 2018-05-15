@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "GameEvents")
 class Event {
     @Id
+    @GeneratedValue
     @Column(name = "Id")
     private int id;
     @Column(name = "Name")
@@ -34,6 +35,8 @@ class Event {
     private String dateFormat = "yyyy-MM-dd";
     @Transient
     private String timeFormat = "hh:mm a";
+    @Column(name = "ServerId")
+    private String serverId;
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
         if (minutesBeforeStart > 0) {

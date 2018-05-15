@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.util.MessageUtils;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.GuildController;
@@ -16,8 +15,8 @@ public class UnsubscribeCommand extends SubscribeCommand {
     }
 
     @Override
-    void addOrRemoveSubscription(MessageReceivedEvent event, MessageChannel channel, GuildController controller, String subscribeTo, Role role) {
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+    void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
         controller.removeRolesFromMember(event.getMember(), role).queue();
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
     }
 }

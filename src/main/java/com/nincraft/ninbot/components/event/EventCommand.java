@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -41,7 +42,7 @@ public class EventCommand extends AbstractCommand {
                     listEvents(channel);
                     break;
                 case "plan":
-                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor());
+                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
                     break;
                 case "help":
                     displayEventHelp(channel);
@@ -63,14 +64,14 @@ public class EventCommand extends AbstractCommand {
         MessageUtils.sendMessage(channel, helpMessage);
     }
 
-    private void planEvent(Message message, User author) {
+    private void planEvent(Message message, User author, JDA jda) {
         Event event = new Event();
         Map<String, String> eventMap = parsePlanMessage(message.getContentStripped());
         event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
                 .setStartTime(OffsetDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        eventScheduler.addEvent(event);
+        eventScheduler.addEvent(event, jda);
         MessageUtils.reactSuccessfulResponse(message);
     }
 

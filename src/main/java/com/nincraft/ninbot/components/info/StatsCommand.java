@@ -29,8 +29,7 @@ public class StatsCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        val server = event.getGuild();
-        displayRoleStats(event.getChannel(), server);
+        displayRoleStats(event.getChannel(), event.getGuild());
     }
 
     private void displayRoleStats(MessageChannel channel, Guild server) {

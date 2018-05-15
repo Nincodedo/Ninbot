@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandParser;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -18,11 +17,11 @@ public class HelpCommand extends AbstractCommand {
 
     private Map<String, AbstractCommand> commandMap;
 
-    public HelpCommand(CommandParser commandParser) {
+    public HelpCommand(Map<String, AbstractCommand> commandMap) {
         length = 2;
         name = "help";
         description = "Displays this awesome message";
-        commandMap = commandParser.getCommandHashMap();
+        this.commandMap = commandMap;
     }
 
     @Override

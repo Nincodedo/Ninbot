@@ -1,8 +1,6 @@
 package com.nincraft.ninbot;
 
-import com.nincraft.ninbot.components.command.CommandListener;
 import com.nincraft.ninbot.components.event.EventScheduler;
-import com.nincraft.ninbot.components.reaction.ReactionListener;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Game;
@@ -22,30 +20,22 @@ public class Ninbot {
     private JDA jda;
 
     @Autowired
-    private CommandListener commandListener;
-
-    @Autowired
-    private ReactionListener reactionListener;
-
-    @Autowired
     private EventScheduler eventScheduler;
 
     @Value("${db.sqliteUrl}")
-    private String sqliteUrl;
+    private String dbUrl;
 
     private void migrateDb() {
         Flyway flyway = new Flyway();
-        flyway.setDataSource(sqliteUrl, null, null);
+        flyway.setDataSource(dbUrl, null, null);
         flyway.migrate();
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext context) {
         return args -> {
-            jda.addEventListener(commandListener);
-            jda.addEventListener(reactionListener);
             migrateDb();
-            eventScheduler.scheduleAll();
+            eventScheduler.scheduleAll(jda);
             jda.getPresence().setGame(Game.playing("say \"@Ninbot help\" for list of commands"));
         };
     }

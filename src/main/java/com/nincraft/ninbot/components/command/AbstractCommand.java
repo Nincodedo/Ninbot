@@ -23,7 +23,7 @@ public abstract class AbstractCommand {
 
     void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
-            log.info("Executing command {} by {}", name, event.getAuthor().getName());
+            log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), event.getMessage().getContentStripped());
             executeCommand(event);
         } else {
             MessageUtils.reactUnsuccessfulResponse(event.getMessage());
@@ -45,6 +45,15 @@ public abstract class AbstractCommand {
 
     public abstract void executeCommand(MessageReceivedEvent event);
 
+    protected boolean isCommandLengthCorrect(String content, int length) {
+        val commandLength = getCommandLength(content);
+        if (checkExactLength) {
+            return commandLength == length;
+        } else {
+            return commandLength >= length;
+        }
+    }
+
     protected boolean isCommandLengthCorrect(String content) {
         val commandLength = getCommandLength(content);
         if (checkExactLength) {
@@ -63,6 +72,10 @@ public abstract class AbstractCommand {
     }
 
     protected String getSubcommand(String command) {
-        return command.split(" ")[2].toLowerCase();
+        if (getCommandLength(command) >= 3) {
+            return command.split(" ")[2].toLowerCase();
+        } else {
+            return "";
+        }
     }
 }
