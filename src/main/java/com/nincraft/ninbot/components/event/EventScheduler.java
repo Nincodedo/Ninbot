@@ -54,7 +54,8 @@ public class EventScheduler {
         } else {
             eventEndTime = eventStartTime.plus(1, ChronoUnit.DAYS);
         }
-        if (eventEndTime.isBefore(Instant.now())) {
+        if (eventEndTime.isBefore(Instant.now()) ||
+                (event.getEndTime() == null && eventStartTime.plus(1, ChronoUnit.DAYS).isBefore(Instant.now()))) {
             log.debug("Removing event {}, the end time is passed", event.getName());
             new EventRemove(event, eventDao).run();
         } else {
