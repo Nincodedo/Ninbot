@@ -7,7 +7,9 @@ import com.nincraft.ninbot.util.RolePermission;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AdminCommand extends AbstractCommand {
 
     private final ConfigDao configDao;

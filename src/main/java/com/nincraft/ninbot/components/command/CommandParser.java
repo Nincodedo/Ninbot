@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -60,6 +61,10 @@ class CommandParser {
             return splitMessage[1] != null ? splitMessage[1].toLowerCase() : StringUtils.EMPTY;
         }
         return null;
+    }
+
+    void addCommands(List<AbstractCommand> commands) {
+        commands.forEach(this::addCommand);
     }
 
     void addCommand(AbstractCommand command) {

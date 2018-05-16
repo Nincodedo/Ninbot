@@ -7,9 +7,11 @@ import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
 public class DabCommand extends AbstractCommand {
 
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");

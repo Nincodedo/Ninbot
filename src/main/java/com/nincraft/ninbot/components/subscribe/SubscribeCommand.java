@@ -8,10 +8,12 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.GuildController;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Log4j2
+@Component
 public class SubscribeCommand extends AbstractCommand {
 
     private List<String> roleBlacklist;
