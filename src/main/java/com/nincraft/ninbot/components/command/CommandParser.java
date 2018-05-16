@@ -39,8 +39,9 @@ class CommandParser {
                     log.error("Error executing command " + command.getName(), e);
                     val config = configDao.getConfigByName(event.getGuild().getId(), "errorAnnounceChannel");
                     if (config.size() > 0) {
-                        MessageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()), e.toString() +
-                                "\n" + e.getStackTrace()[0].toString());
+                        MessageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()),
+                                e.toString() +
+                                        "\n" + e.getStackTrace()[0].toString());
                     }
                 }
             } else {

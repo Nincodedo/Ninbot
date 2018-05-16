@@ -25,7 +25,8 @@ class Poll {
         choices = new ArrayList<>();
         if (pollMessage.contains("\"")) {
             this.title = pollMessage.substring(0, pollMessage.indexOf("\""));
-            val pollOptions = pollMessage.substring(pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
+            val pollOptions = pollMessage.substring(
+                    pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
             this.choices = Arrays.asList(pollOptions.split(", "));
             val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
@@ -37,7 +38,8 @@ class Poll {
     }
 
     Message build() {
-        return buildPollMessage("Poll will close in " + timeLength + " minutes at " + Instant.now().plus(timeLength, ChronoUnit.MINUTES));
+        return buildPollMessage("Poll will close in " + timeLength + " minutes at "
+                + Instant.now().plus(timeLength, ChronoUnit.MINUTES));
     }
 
     Message buildClosed() {

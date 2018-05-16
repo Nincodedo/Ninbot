@@ -30,12 +30,14 @@ public class CommandListener extends ListenerAdapter {
     private boolean debugEnabled;
 
     @Autowired
-    public CommandListener(CommandParser commandParser, EventDao eventDao, EventScheduler eventScheduler, ConfigDao configDao, List<String> roleBlackList) {
+    public CommandListener(CommandParser commandParser, EventDao eventDao, EventScheduler eventScheduler,
+            ConfigDao configDao, List<String> roleBlackList) {
         this.commandParser = commandParser;
         addCommands(eventDao, eventScheduler, configDao, roleBlackList);
     }
 
-    private void addCommands(EventDao eventDao, EventScheduler eventScheduler, ConfigDao configDao, List<String> roleBlackList) {
+    private void addCommands(EventDao eventDao, EventScheduler eventScheduler, ConfigDao configDao,
+            List<String> roleBlackList) {
         commandParser.addCommand(new SubscribeCommand(roleBlackList));
         commandParser.addCommand(new UnsubscribeCommand(roleBlackList));
         commandParser.addCommand(new ListCommand(roleBlackList));
@@ -61,6 +63,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean isNinbotMention(MessageReceivedEvent event) {
-        return !event.getAuthor().isBot() && event.getMessage().getContentStripped().toLowerCase().startsWith("@ninbot");
+        return !event.getAuthor().isBot()
+                && event.getMessage().getContentStripped().toLowerCase().startsWith("@ninbot");
     }
 }
