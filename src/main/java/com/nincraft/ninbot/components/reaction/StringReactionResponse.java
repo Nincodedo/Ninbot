@@ -13,11 +13,6 @@ public class StringReactionResponse implements IReactionResponse {
     }
 
     @Override
-    public void addReaction(String reaction) {
-        this.reaction = reaction;
-    }
-
-    @Override
     public void react(Message message, MessageChannel channel) {
         MessageUtils.sendMessage(channel, reaction);
     }

@@ -2,7 +2,7 @@ package com.nincraft.ninbot.components.event;
 
 import java.util.TimerTask;
 
-public class EventRemove extends TimerTask {
+class EventRemove extends TimerTask {
 
     private Event event;
     private EventDao eventDao;

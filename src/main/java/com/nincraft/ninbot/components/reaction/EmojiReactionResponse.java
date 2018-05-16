@@ -20,14 +20,6 @@ public class EmojiReactionResponse implements IReactionResponse {
     }
 
     @Override
-    public void addReaction(String reaction) {
-        if (emojiList == null) {
-            emojiList = new ArrayList<>();
-        }
-        emojiList.add(reaction);
-    }
-
-    @Override
     public void react(Message message, MessageChannel channel) {
         for (String emoji : emojiList) {
             MessageUtils.addReaction(message, emoji);

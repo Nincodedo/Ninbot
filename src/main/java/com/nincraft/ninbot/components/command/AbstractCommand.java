@@ -43,7 +43,7 @@ public abstract class AbstractCommand {
         return guild.getMembersWithRoles(role).contains(member);
     }
 
-    public abstract void executeCommand(MessageReceivedEvent event);
+    protected abstract void executeCommand(MessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content, int length) {
         val commandLength = getCommandLength(content);

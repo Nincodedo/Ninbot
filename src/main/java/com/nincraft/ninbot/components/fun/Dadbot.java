@@ -51,7 +51,7 @@ public class Dadbot extends ListenerAdapter {
 
     private void hiImDad(String message, MessageChannel channel) {
         String stringBuilder = "Hi" +
-                message.substring(message.indexOf(' '), message.length()) +
+                message.substring(message.indexOf(' ')) +
                 ", I'm Dad!";
         MessageUtils.sendMessage(channel, stringBuilder);
     }
