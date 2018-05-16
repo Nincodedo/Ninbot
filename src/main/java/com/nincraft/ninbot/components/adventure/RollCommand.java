@@ -15,6 +15,7 @@ public class RollCommand extends AbstractCommand {
         name = "roll";
         checkExactLength = false;
         length = 2;
+        description = "Rolls dice which is nice";
         parser = new DefaultDiceNotationExpressionParser(new DefaultRoller());
     }
 
