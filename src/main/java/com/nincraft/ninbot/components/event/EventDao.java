@@ -1,34 +1,44 @@
 package com.nincraft.ninbot.components.event;
 
+import lombok.val;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
 public class EventDao {
 
-    private final EntityManager entityManager;
+    private SessionFactory sessionFactory;
 
     @Autowired
-    public EventDao(@Qualifier("entityManagerFactoryBean") EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public EventDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
     List<Event> getAllEvents() {
-        return entityManager.createQuery("FROM Event", Event.class).getResultList();
+        try (val session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Event", Event.class).getResultList();
+        }
     }
 
-    @Transactional
     void addEvent(Event event) {
-        entityManager.persist(event);
+        try (val session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(event);
+            transaction.commit();
+        }
     }
 
-    @Transactional
     void removeEvent(Event event) {
-        entityManager.remove(event);
+        try (val session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(session.contains(event) ? event : session.merge(event));
+            transaction.commit();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.beans;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -43,7 +46,6 @@ public class DBBean {
         return dataSource;
     }
 
-    @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -67,14 +69,19 @@ public class DBBean {
         return entityManagerFactoryBean().getObject().createEntityManager();
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager(entityManagerFactoryBean().getObject());
+    @Bean(name = "entityManagerFactory")
+    public EntityManagerFactory entityManagerFactory() {
+        return entityManagerFactoryBean().getObject();
     }
 
     @Bean
-    public SessionFactory sessionFactory() {
-        return entityManagerFactoryBean().getObject().unwrap(SessionFactory.class);
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
+    @Primary
+    @Bean
+    public SessionFactory sessionFactory(@Qualifier("entityManager") EntityManager entityManager) {
+        return entityManager.unwrap(Session.class).getSessionFactory();
+    }
 }
