@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.fun;
 
-import com.nincraft.ninbot.components.config.ConfigDao;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -16,12 +16,12 @@ import java.util.Random;
 public class Dadbot extends ListenerAdapter {
 
     private Random random;
-    private ConfigDao configDao;
+    private ConfigService configService;
 
     @Autowired
-    public Dadbot(ConfigDao configDao) {
+    public Dadbot(ConfigService configService) {
         random = new Random();
-        this.configDao = configDao;
+        this.configService = configService;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private boolean channelIsBlacklisted(String serverId, String channelId) {
-        val channelConfigList = configDao.getConfigByName(serverId, "dadbotChannelBlacklist");
+        val channelConfigList = configService.getConfigByName(serverId, "dadbotChannelBlacklist");
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 

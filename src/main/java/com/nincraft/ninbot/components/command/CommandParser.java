@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.components.config.ConfigDao;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -20,13 +20,13 @@ import java.util.Map;
 @Component
 class CommandParser {
 
-    private final ConfigDao configDao;
+    private ConfigService configService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
     @Autowired
-    CommandParser(ConfigDao configDao) {
-        this.configDao = configDao;
+    CommandParser(ConfigService configService) {
+        this.configService = configService;
     }
 
     void parseEvent(MessageReceivedEvent event) {
@@ -38,7 +38,7 @@ class CommandParser {
                     command.execute(event);
                 } catch (Exception e) {
                     log.error("Error executing command " + command.getName(), e);
-                    val config = configDao.getConfigByName(event.getGuild().getId(), "errorAnnounceChannel");
+                    val config = configService.getConfigByName(event.getGuild().getId(), "errorAnnounceChannel");
                     if (config.size() > 0) {
                         MessageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()),
                                 e.toString() +

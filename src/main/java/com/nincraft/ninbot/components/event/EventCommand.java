@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
@@ -12,24 +11,28 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.nincraft.ninbot.util.MessageUtils.reactSuccessfulResponse;
+import static com.nincraft.ninbot.util.MessageUtils.sendMessage;
+import static java.awt.Color.BLUE;
+import static java.time.OffsetDateTime.now;
+import static java.time.OffsetDateTime.parse;
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 @Component
 public class EventCommand extends AbstractCommand {
 
-    private EventDao eventDao;
+    private EventService eventService;
     private EventScheduler eventScheduler;
 
-    public EventCommand(EventDao eventDao, EventScheduler eventScheduler) {
+    public EventCommand(EventService eventService, EventScheduler eventScheduler) {
         length = 3;
         name = "events";
         description = "list/plan events, use @Ninbot events help for more details";
         checkExactLength = false;
-        this.eventDao = eventDao;
+        this.eventService = eventService;
         this.eventScheduler = eventScheduler;
     }
 
@@ -50,7 +53,7 @@ public class EventCommand extends AbstractCommand {
                     displayEventHelp(channel);
                     break;
                 default:
-                    MessageUtils.sendMessage(channel, "Not a valid events sub command");
+                    sendMessage(channel, "Not a valid events sub command");
                     break;
             }
         } else {
@@ -63,7 +66,7 @@ public class EventCommand extends AbstractCommand {
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
                 "Note: event name must be in quotes if it is longer than one word\n" +
                 "Event times are in GMT -6, formatted \"2017-01-31T12:00:00-06:00\" for January 31st 2017 at noon";
-        MessageUtils.sendMessage(channel, helpMessage);
+        sendMessage(channel, helpMessage);
     }
 
     private void planEvent(Message message, User author, JDA jda) {
@@ -72,9 +75,9 @@ public class EventCommand extends AbstractCommand {
         event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(OffsetDateTime.parse(eventMap.get("startTime"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME));
         eventScheduler.addEvent(event, jda);
-        MessageUtils.reactSuccessfulResponse(message);
+        reactSuccessfulResponse(message);
     }
 
     private Map<String, String> parsePlanMessage(String content) {
@@ -100,20 +103,20 @@ public class EventCommand extends AbstractCommand {
     }
 
     private void listEvents(MessageChannel channel) {
-        val events = eventDao.getAllEvents();
+        val events = eventService.getAllEvents();
         if (events.isEmpty()) {
-            MessageUtils.sendMessage(channel, "No events scheduled");
+            sendMessage(channel, "No events scheduled");
             return;
         }
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append("Current scheduled events");
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.BLUE);
+        embedBuilder.setColor(BLUE);
         for (val event : events) {
             embedBuilder.addField(event.getName(), event.toString(), true);
         }
-        embedBuilder.setFooter("All times are in GMT " + OffsetDateTime.now().getOffset(), null);
+        embedBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendMessage(channel, messageBuilder.build());
+        sendMessage(channel, messageBuilder.build());
     }
 }

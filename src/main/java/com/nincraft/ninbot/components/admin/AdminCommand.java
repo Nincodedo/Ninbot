@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.admin;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.config.ConfigDao;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
 import lombok.val;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminCommand extends AbstractCommand {
 
-    private final ConfigDao configDao;
+    private ConfigService configService;
 
-    public AdminCommand(ConfigDao configDao) {
+    public AdminCommand(ConfigService configService) {
         length = 3;
         name = "admin";
         description = "Admin commands";
         permissionLevel = RolePermission.ADMIN;
         hidden = true;
-        this.configDao = configDao;
+        this.configService = configService;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AdminCommand extends AbstractCommand {
         val configName = message.split(" ")[3];
         val configValue = message.split(" ")[4];
         val serverId = event.getGuild().getId();
-        val isSuccessful = configDao.addConfig(serverId, configName, configValue);
+        val isSuccessful = configService.addConfig(serverId, configName, configValue);
         MessageUtils.reactAccordingly(event.getMessage(), isSuccessful);
     }
 

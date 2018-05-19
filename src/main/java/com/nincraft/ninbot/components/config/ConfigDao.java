@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.TransactionRequiredException;
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -23,7 +21,7 @@ public class ConfigDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<Config> getConfigByName(String serverId, String configName) {
+    List<Config> getConfigByName(String serverId, String configName) {
         log.info("Getting configs for {} {}", serverId, configName);
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
@@ -33,7 +31,7 @@ public class ConfigDao {
         }
     }
 
-    public List<String> getValuesByName(String serverId, String configName) {
+    List<String> getValuesByName(String serverId, String configName) {
         log.info("Getting config values for {} {}", serverId, configName);
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
@@ -43,19 +41,7 @@ public class ConfigDao {
         }
     }
 
-    public Optional<String> getSingleValueByName(String serverId, String configName) {
-        return Optional.ofNullable(getValuesByName(serverId, configName).get(0));
-    }
-
-    @Transactional
-    public void updateConfig(Config config) {
-        try (val session = sessionFactory.openSession()) {
-            session.persist(config);
-        }
-    }
-
-    @Transactional
-    public void removeConfig(String serverId, String configName, String configValue) {
+    void removeConfig(String serverId, String configName, String configValue) {
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("DELETE Config WHERE serverId = :serverId and key = :configName and value = :configValue");
             query.setParameter("serverId", serverId);
@@ -65,8 +51,7 @@ public class ConfigDao {
         }
     }
 
-    @Transactional
-    public boolean addConfig(String serverId, String configName, String configValue) {
+    boolean addConfig(String serverId, String configName, String configValue) {
         Config config = new Config(serverId, configName, configValue);
         try (val session = sessionFactory.openSession()) {
             session.persist(config);

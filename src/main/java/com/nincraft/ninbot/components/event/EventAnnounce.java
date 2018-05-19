@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.config.ConfigDao;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -14,14 +14,14 @@ class EventAnnounce extends TimerTask {
     private Event event;
     private JDA jda;
     private int minutesBeforeStart;
-    private ConfigDao configDao;
+    private ConfigService configService;
     private String announcementConfigName;
 
-    EventAnnounce(Event event, int minutesBeforeStart, boolean debugEnabled, ConfigDao configDao, JDA jda) {
+    EventAnnounce(Event event, int minutesBeforeStart, boolean debugEnabled, ConfigService configService, JDA jda) {
         this.event = event;
         this.minutesBeforeStart = minutesBeforeStart;
         this.announcementConfigName = debugEnabled ? "announcementChannel" : "debugAnnouncementChannel";
-        this.configDao = configDao;
+        this.configService = configService;
         this.jda = jda;
     }
 
@@ -30,7 +30,7 @@ class EventAnnounce extends TimerTask {
         log.info("Running announce for event {}", event.getName());
         val serverId = event.getServerId();
         val announcementServer = jda.getGuildById(serverId);
-        val config = configDao.getConfigByName(serverId, announcementConfigName);
+        val config = configService.getConfigByName(serverId, announcementConfigName);
         if (config.isEmpty()) {
             log.error("Config not set for server {}, config name {}", serverId, announcementConfigName);
             return;
