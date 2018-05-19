@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.config;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -54,7 +55,9 @@ public class ConfigDao {
     boolean addConfig(String serverId, String configName, String configValue) {
         Config config = new Config(serverId, configName, configValue);
         try (val session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.persist(config);
+            transaction.commit();
         } catch (EntityExistsException | TransactionRequiredException e) {
             log.error("Failed to set config {} with value {} for server {}", configName, configValue, serverId);
             log.error(e);
