@@ -60,12 +60,7 @@ public class ReactionListener extends ListenerAdapter {
     }
 
     private boolean containsBadCharacters(String response) {
-        for (String check : badCharacters) {
-            if (response.contains(check)) {
-                return true;
-            }
-        }
-        return false;
+        return badCharacters.stream().anyMatch(response::contains);
     }
 
     @Override

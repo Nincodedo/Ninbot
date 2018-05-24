@@ -2,7 +2,6 @@
 /target/
 /.idea/
 /logs/
-/src/main/resources/ninbot.properties
 /Ninbot.iml
 /dependency-reduced-pom.xml
 /data/

@@ -8,7 +8,7 @@ public class StringReactionResponse implements IReactionResponse {
 
     private String reaction;
 
-    public StringReactionResponse(String response) {
+    StringReactionResponse(String response) {
         this.reaction = response;
     }
 

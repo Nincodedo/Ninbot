@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Data
 class Poll {
@@ -58,10 +59,10 @@ class Poll {
 
     private String buildPollChoices() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < choices.size(); i++) {
+        IntStream.range(0, choices.size()).forEachOrdered(i -> {
             String choice = choices.get(i);
             stringBuilder.append(i + 1).append(": ").append(choice).append("\n");
-        }
+        });
         return stringBuilder.toString();
     }
 }

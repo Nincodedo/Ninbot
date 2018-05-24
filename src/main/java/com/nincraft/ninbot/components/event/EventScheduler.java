@@ -36,9 +36,7 @@ public class EventScheduler {
     public void scheduleAll(JDA jda) {
         log.trace("scheduling events");
         val events = eventService.getAllEvents();
-        for (val event : events) {
-            scheduleEvent(event, jda);
-        }
+        events.forEach(event -> scheduleEvent(event, jda));
     }
 
     void addEvent(Event event, JDA jda) {

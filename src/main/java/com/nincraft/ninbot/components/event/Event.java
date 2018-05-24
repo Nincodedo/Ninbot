@@ -57,7 +57,6 @@ class Event {
         if (StringUtils.isNotBlank(description)) {
             stringBuilder.append("\n");
             stringBuilder.append(description);
-
         }
         stringBuilder.append("\nCreated by: ");
         stringBuilder.append(authorName);

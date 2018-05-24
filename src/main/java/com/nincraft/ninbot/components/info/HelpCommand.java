@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
-import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -32,11 +31,7 @@ public class HelpCommand extends AbstractCommand {
         embedBuilder.setColor(Color.BLUE);
         List<String> keyList = new ArrayList<>(commandMap.keySet());
         Collections.sort(keyList);
-        for (val key : keyList) {
-            if (!commandMap.get(key).isHidden()) {
-                embedBuilder.addField(key, commandMap.get(key).getDescription(), false);
-            }
-        }
+        keyList.stream().filter(key -> !commandMap.get(key).isHidden()).forEachOrdered(key -> embedBuilder.addField(key, commandMap.get(key).getDescription(), false));
         messageBuilder.setEmbed(embedBuilder.build());
         MessageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }

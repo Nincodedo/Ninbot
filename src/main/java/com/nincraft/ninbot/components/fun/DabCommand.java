@@ -56,11 +56,7 @@ public class DabCommand extends AbstractCommand {
         if (critDab) {
             critResponse.react(message, channel);
         }
-        for (val emote : guild.getEmotes()) {
-            if (emote.getName().contains("dab")) {
-                MessageUtils.addReaction(message, emote);
-            }
-        }
+        guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).forEachOrdered(emote -> MessageUtils.addReaction(message, emote));
         if (critDab) {
             dabResponse.react(message, channel);
         }

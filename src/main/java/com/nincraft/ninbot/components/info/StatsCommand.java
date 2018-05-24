@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.util.MessageUtils;
-import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -12,7 +11,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,14 +33,9 @@ public class StatsCommand extends AbstractCommand {
     }
 
     private void displayRoleStats(MessageChannel channel, Guild server) {
-        Map<Role, Integer> roleMap = new HashMap<>();
-        for (val member : server.getMembers()) {
-            for (val role : member.getRoles()) {
-                if (!roleBlackList.contains(role.getName())) {
-                    roleMap.merge(role, 1, (a, b) -> a + b);
-                }
-            }
-        }
+        Map<Role, Integer> roleMap = server.getMembers().stream().flatMap(member -> member.getRoles().stream())
+                .filter(role -> !roleBlackList.contains(role.getName()))
+                .collect(Collectors.toMap(role -> role, role -> 1, (a, b) -> a + b));
 
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 

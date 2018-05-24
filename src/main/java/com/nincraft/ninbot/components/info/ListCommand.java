@@ -57,9 +57,7 @@ public class ListCommand extends AbstractCommand {
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Available subscriptions");
-        for (val roleName : roleNameList) {
-            embedBuilder.appendDescription(roleName + "\n");
-        }
+        roleNameList.stream().map(roleName -> roleName + "\n").forEach(embedBuilder::appendDescription);
         messageBuilder.setEmbed(embedBuilder.build());
         MessageUtils.sendMessage(channel, messageBuilder.build());
     }
