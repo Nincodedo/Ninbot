@@ -16,16 +16,16 @@ public class EventService {
 
     @Transactional
     public List<Event> getAllEvents() {
-        return eventDao.getAllEvents();
+        return eventDao.getAllObjects();
     }
 
     @Transactional
     public void addEvent(Event event) {
-        eventDao.addEvent(event);
+        eventDao.saveObject(event);
     }
 
     @Transactional
     public void removeEvent(Event event) {
-        eventDao.removeEvent(event);
+        eventDao.removeObject(event);
     }
 }
