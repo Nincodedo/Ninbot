@@ -1,6 +1,3 @@
-spring:
-  flyway:
-    enabled: false
 logging:
   file: ninbot.log
   path: logs
