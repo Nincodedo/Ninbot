@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -14,7 +15,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.sqlite.SQLiteConfig;
-import org.sqlite.SQLiteDataSource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,10 +23,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan("com.nincraft.ninbot")
 public class DBBean {
-
-    @Value("${db.sqliteUrl}")
-    private String dbUrl;
 
     @Value("${db.hibernateDialect}")
     private String hibernateDialect;
@@ -40,20 +38,13 @@ public class DBBean {
     }
 
     @Bean
-    public DataSource dataSource() {
-        SQLiteDataSource dataSource = new SQLiteDataSource();
-        dataSource.setUrl(dbUrl);
-        return dataSource;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(DataSource dataSource) {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setShowSql(true);
         jpaVendorAdapter.setGenerateDdl(true);
         jpaVendorAdapter.setDatabasePlatform(hibernateDialect);
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setDataSource(dataSource());
+        factoryBean.setDataSource(dataSource);
         factoryBean.setPackagesToScan("com.nincraft.ninbot.components");
         Properties properties = new Properties();
         properties.put("hibernate.dialect", hibernateDialect);
@@ -65,13 +56,13 @@ public class DBBean {
     }
 
     @Bean(name = "entityManager")
-    public EntityManager entityManager() {
-        return entityManagerFactoryBean().getObject().createEntityManager();
+    public EntityManager entityManager(LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+        return entityManagerFactoryBean.getObject().createEntityManager();
     }
 
     @Bean(name = "entityManagerFactory")
-    public EntityManagerFactory entityManagerFactory() {
-        return entityManagerFactoryBean().getObject();
+    public EntityManagerFactory entityManagerFactory(LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+        return entityManagerFactoryBean.getObject();
     }
 
     @Bean

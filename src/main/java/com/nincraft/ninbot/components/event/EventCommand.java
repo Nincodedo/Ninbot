@@ -75,7 +75,8 @@ public class EventCommand extends AbstractCommand {
         event.setAuthorName(author.getName())
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME));
+                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME))
+                .setServerId(message.getGuild().getId());
         eventScheduler.addEvent(event, jda);
         reactSuccessfulResponse(message);
     }

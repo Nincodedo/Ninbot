@@ -60,7 +60,7 @@ public class EventScheduler {
             log.debug("Removing event {}, the end time is passed", event.getName());
             new EventRemove(event, eventService).run();
         } else {
-            log.debug("Scheduling {} for {}", event.getName(), event.getStartTime());
+            log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
             scheduleEvent(event, timer, eventStartTime, 0, jda);
             scheduleEvent(event, timer, eventEarlyReminder, minutesBeforeStart, jda);
             timer.schedule(new EventRemove(event, eventService), from(eventEndTime));

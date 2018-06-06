@@ -1,11 +1,13 @@
 package com.nincraft.ninbot.components.config;
 
+import com.nincraft.ninbot.components.common.GenericDao;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.TransactionRequiredException;
@@ -14,14 +16,14 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Repository
-public class ConfigDao {
+@Transactional
+public class ConfigDao extends GenericDao<Config> {
     private static final String CONFIG_NAME = "configName";
     private static final String SERVER_ID = "serverId";
-    private SessionFactory sessionFactory;
 
     @Autowired
     public ConfigDao(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+        super(sessionFactory);
     }
 
     List<Config> getConfigByName(String serverId, String configName) {
@@ -46,11 +48,11 @@ public class ConfigDao {
 
     void removeConfig(String serverId, String configName, String configValue) {
         try (val session = sessionFactory.openSession()) {
-            val query = session.createQuery("DELETE Config WHERE serverId = :serverId and key = :configName and value = :configValue");
-            query.setParameter(SERVER_ID, serverId);
-            query.setParameter(CONFIG_NAME, configName);
-            query.setParameter("configValue", configValue);
-            query.executeUpdate();
+            session.beginTransaction();
+            val list = getConfigByName(serverId, configName);
+            list.stream().filter(config -> config.getValue().equals(configValue)).forEach(config ->
+                    session.delete(session.contains(config) ? config : session.merge(config)));
+            session.getTransaction().commit();
         }
     }
 

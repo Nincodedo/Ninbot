@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class GenericDao<T> {
     private final Class<T> generic;
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
     public GenericDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -24,14 +24,18 @@ public class GenericDao<T> {
     }
 
     public void saveObject(T object) {
-        try (val sesssion = sessionFactory.openSession()) {
-            sesssion.persist(object);
+        try (val session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(object);
+            session.getTransaction().commit();
         }
     }
 
     public void removeObject(T object) {
         try (val session = sessionFactory.openSession()) {
+            session.beginTransaction();
             session.delete(session.contains(object) ? object : session.merge(object));
+            session.getTransaction().commit();
         }
     }
 

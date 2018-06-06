@@ -20,7 +20,7 @@ class EventAnnounce extends TimerTask {
     EventAnnounce(Event event, int minutesBeforeStart, boolean debugEnabled, ConfigService configService, JDA jda) {
         this.event = event;
         this.minutesBeforeStart = minutesBeforeStart;
-        this.announcementConfigName = debugEnabled ? "announcementChannel" : "debugAnnouncementChannel";
+        this.announcementConfigName = debugEnabled ? "debugAnnouncementChannel" : "announcementChannel";
         this.configService = configService;
         this.jda = jda;
     }

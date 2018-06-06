@@ -23,7 +23,7 @@ class Event {
     private String authorName;
     @Column(name = "SubscriptionId")
     private int subscriptionId;
-    @Transient
+    @Column(name = "GameName")
     private String gameName;
     @Column(name = "Description")
     private String description;
