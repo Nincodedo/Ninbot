@@ -1,8 +1,10 @@
 package com.nincraft.ninbot.components.event;
 
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,7 +18,9 @@ public class EventService {
 
     @Transactional
     public List<Event> getAllEvents() {
-        return eventDao.getAllObjects();
+        val list = eventDao.getAllObjects();
+        list.sort(Comparator.comparing(Event::getStartTime));
+        return list;
     }
 
     @Transactional
