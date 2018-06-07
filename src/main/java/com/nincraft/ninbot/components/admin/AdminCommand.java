@@ -29,9 +29,16 @@ public class AdminCommand extends AbstractCommand {
             case "restart":
                 restart(event.getMessage());
                 break;
-            case "config":
+            case "config-add":
                 if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
                     addConfig(event);
+                } else {
+                    MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+                }
+                break;
+            case "config-remove":
+                if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
+                    removeConfig(event);
                 } else {
                     MessageUtils.reactUnsuccessfulResponse(event.getMessage());
                 }
@@ -39,6 +46,15 @@ public class AdminCommand extends AbstractCommand {
             default:
                 break;
         }
+    }
+
+    private void removeConfig(MessageReceivedEvent event) {
+        val message = event.getMessage().getContentStripped();
+        val configName = message.split(" ")[3];
+        val configValue = message.split(" ")[4];
+        val serverId = event.getGuild().getId();
+        configService.removeConfig(serverId, configName, configValue);
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
     }
 
     private void addConfig(MessageReceivedEvent event) {
