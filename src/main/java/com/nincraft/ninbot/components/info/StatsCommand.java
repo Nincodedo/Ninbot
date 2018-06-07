@@ -41,9 +41,11 @@ public class StatsCommand extends AbstractCommand {
 
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Subscription Stats");
+        int limit = 5;
+        embedBuilder.setTitle("Top " + limit + " Subscriptions Stats");
         Collections.sort(statList);
-        statList.forEach(stat -> embedBuilder.appendDescription(stat.name + ": " + stat.amount + "\n"));
+        statList.stream().limit(limit).forEach(stat -> embedBuilder.appendDescription(
+                stat.name + ": " + stat.amount + "\n"));
         messageBuilder.setEmbed(embedBuilder.build());
         MessageUtils.sendMessage(channel, messageBuilder.build());
     }
