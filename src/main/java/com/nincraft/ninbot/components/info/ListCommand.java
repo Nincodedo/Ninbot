@@ -5,10 +5,7 @@ import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -32,21 +29,26 @@ public class ListCommand extends AbstractCommand {
         val channel = event.getChannel();
         val content = event.getMessage().getContentStripped().split(" ");
         if (content.length > 2) {
-            listUsersInSubscription(content[2], event.getGuild(), event.getChannel());
+            listUsersInSubscription(content[2], event.getGuild(), event.getChannel(), event.getMessage());
         } else {
             listSubscriptions(event.getGuild(), channel);
         }
     }
 
-    private void listUsersInSubscription(String roleName, Guild guild, MessageChannel channel) {
+    private void listUsersInSubscription(String roleName, Guild guild, MessageChannel channel,
+            Message message) {
         val role = guild.getRolesByName(roleName, true);
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
-            MessageUtils.sendMessage(channel, "Users in %s subscription", roleName);
-            MessageUtils.sendMessage(channel, userNames.toString());
+            MessageBuilder messageBuilder = new MessageBuilder();
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("Users in " + roleName + " subscription");
+            embedBuilder.appendDescription(userNames.toString());
+            messageBuilder.setEmbed(embedBuilder.build());
+            MessageUtils.sendMessage(channel, messageBuilder.build());
         } else {
-            MessageUtils.sendMessage(channel, "No subscription %s found", roleName);
+            MessageUtils.reactUnsuccessfulResponse(message);
         }
     }
 
