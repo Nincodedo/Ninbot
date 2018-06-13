@@ -46,6 +46,5 @@ public class TwitchCommand extends AbstractCommand {
             responseEmoji = "\uD83D\uDD1B";
         }
         MessageUtils.addReaction(message, responseEmoji);
-        MessageUtils.reactSuccessfulResponse(message);
     }
 }

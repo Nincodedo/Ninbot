@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import com.nincraft.ninbot.util.RolePermission;
@@ -38,12 +39,11 @@ public class DadbotCommand extends AbstractCommand {
     }
 
     private void toggleBlacklistChannel(String serverId, MessageChannel channel, Message message) {
-        String configName = "dadbotChannelBlacklist";
-        val channelBlacklist = configService.getValuesByName(serverId, configName);
+        val channelBlacklist = configService.getValuesByName(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL);
         if (!channelBlacklist.contains(channel.getId())) {
-            configService.addConfig(serverId, configName, channel.getId());
+            configService.addConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channel.getId());
         } else {
-            configService.removeConfig(serverId, configName, channel.getId());
+            configService.removeConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channel.getId());
         }
         MessageUtils.reactSuccessfulResponse(message);
     }

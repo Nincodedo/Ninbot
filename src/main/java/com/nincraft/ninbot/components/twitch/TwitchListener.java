@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.twitch;
 
+import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
@@ -24,9 +25,9 @@ public class TwitchListener extends ListenerAdapter {
             if (updateGameEvent.getOldGame() != null && updateGameEvent.getNewGame() != null
                     && updateGameEvent.getOldGame().getUrl() == null && updateGameEvent.getNewGame().getUrl() != null) {
                 val serverId = event.getGuild().getId();
-                val streamingAnnounceUsers = configService.getValuesByName(serverId, "streamingAnnounceUsers");
+                val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUsers.contains(event.getMember().getUser().getId())) {
-                    val streamingAnnounceChannel = configService.getSingleValueByName(serverId, "streamingAnnounceChannel");
+                    val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
                     if (streamingAnnounceChannel.isPresent()) {
                         val channel = event.getGuild().getTextChannelById(streamingAnnounceChannel.get());
                         val user = updateGameEvent.getUser().getName();

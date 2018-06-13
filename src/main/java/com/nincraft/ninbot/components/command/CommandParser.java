@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
+import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.Getter;
@@ -47,7 +48,7 @@ class CommandParser {
     }
 
     private void reportError(MessageReceivedEvent event, Exception e) {
-        val config = configService.getConfigByName(event.getGuild().getId(), "errorAnnounceChannel");
+        val config = configService.getConfigByName(event.getGuild().getId(), ConfigConstants.ERROR_ANNOUNCE_CHANNEL);
         if (config.size() > 0) {
             MessageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()),
                     e.toString() +

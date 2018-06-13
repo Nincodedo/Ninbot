@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.fun;
 
+import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
@@ -45,7 +46,7 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private boolean channelIsBlacklisted(String serverId, String channelId) {
-        val channelConfigList = configService.getConfigByName(serverId, "dadbotChannelBlacklist");
+        val channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
