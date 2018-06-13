@@ -17,12 +17,6 @@ public class GenericDao<T> {
         this.generic = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), GenericDao.class);
     }
 
-    public T getById(int id) {
-        try (val session = sessionFactory.openSession()) {
-            return session.get(generic, id);
-        }
-    }
-
     public void saveObject(T object) {
         try (val session = sessionFactory.openSession()) {
             session.beginTransaction();
