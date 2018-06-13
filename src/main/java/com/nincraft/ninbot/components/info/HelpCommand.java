@@ -33,6 +33,7 @@ public class HelpCommand extends AbstractCommand {
         Collections.sort(keyList);
         keyList.stream().filter(key -> !commandMap.get(key).isHidden()).forEachOrdered(key -> embedBuilder.addField(key, commandMap.get(key).getDescription(), false));
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendMessage(event.getChannel(), messageBuilder.build());
+        MessageUtils.sendPrivateMessage(event.getAuthor(), messageBuilder.build());
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
     }
 }
