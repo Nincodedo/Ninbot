@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 
 @UtilityClass
 public class MessageUtils {
@@ -50,5 +51,9 @@ public class MessageUtils {
         } else {
             reactUnsuccessfulResponse(message);
         }
+    }
+
+    public static void sendPrivateMessage(User user, String message) {
+        user.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(message).queue());
     }
 }

@@ -30,10 +30,14 @@ public class EventCommand extends AbstractCommand {
     public EventCommand(EventService eventService, EventScheduler eventScheduler) {
         length = 3;
         name = "events";
-        description = "list/plan events, use @Ninbot events help for more details";
+        description = "list/plan events, use events help for more details";
         checkExactLength = false;
         this.eventService = eventService;
         this.eventScheduler = eventScheduler;
+        helpText = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
+                "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
+                "Note: event name must be in quotes if it is longer than one word\n" +
+                "Event times are in GMT -6, formatted \"2017-01-31T12:00:00-06:00\" for January 31st 2017 at noon";
     }
 
     @Override
@@ -49,9 +53,6 @@ public class EventCommand extends AbstractCommand {
                 case "plan":
                     planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
                     break;
-                case "help":
-                    displayEventHelp(channel);
-                    break;
                 default:
                     sendMessage(channel, "Not a valid events sub command");
                     break;
@@ -59,14 +60,6 @@ public class EventCommand extends AbstractCommand {
         } else {
             wrongCommandLengthMessage(channel);
         }
-    }
-
-    private void displayEventHelp(MessageChannel channel) {
-        String helpMessage = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
-                "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
-                "Note: event name must be in quotes if it is longer than one word\n" +
-                "Event times are in GMT -6, formatted \"2017-01-31T12:00:00-06:00\" for January 31st 2017 at noon";
-        sendMessage(channel, helpMessage);
     }
 
     private void planEvent(Message message, User author, JDA jda) {

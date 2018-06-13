@@ -20,14 +20,26 @@ public abstract class AbstractCommand {
     protected boolean hidden;
     protected RolePermission permissionLevel = RolePermission.EVERYONE;
     protected boolean checkExactLength = true;
+    protected String helpText;
 
     void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
-            log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), event.getMessage().getContentStripped());
-            executeCommand(event);
+            val message = event.getMessage().getContentStripped();
+            log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), message);
+            if (getSubcommand(message).equalsIgnoreCase("help")) {
+                displayHelp(event);
+            } else {
+                executeCommand(event);
+            }
         } else {
             MessageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
+    }
+
+    private void displayHelp(MessageReceivedEvent event) {
+        val help = helpText != null ? helpText : description;
+        MessageUtils.sendPrivateMessage(event.getAuthor(), help);
+        MessageUtils.reactSuccessfulResponse(event.getMessage());
     }
 
     @Override
@@ -63,7 +75,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    protected int getCommandLength(String content) {
+    private int getCommandLength(String content) {
         return content.split(" ").length;
     }
 

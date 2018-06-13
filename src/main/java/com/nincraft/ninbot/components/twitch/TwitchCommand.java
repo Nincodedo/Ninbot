@@ -14,9 +14,10 @@ public class TwitchCommand extends AbstractCommand {
 
     public TwitchCommand(ConfigService configService) {
         name = "twitch";
-        description = "Access Twitch related commands\n - \"twitch announce\" toggles your Twitch going live announcement";
+        description = "Access Twitch related commands";
         length = 2;
         this.configService = configService;
+        helpText = "Access Twitch related commands\n\"twitch announce\" toggles your Twitch going live announcement";
     }
 
     @Override
@@ -35,11 +36,16 @@ public class TwitchCommand extends AbstractCommand {
         val serverId = event.getGuild().getId();
         val configName = "streamingAnnounceUsers";
         val streamingAnnounceUsers = configService.getValuesByName(serverId, configName);
+        val message = event.getMessage();
+        String responseEmoji;
         if (streamingAnnounceUsers.contains(userId)) {
             configService.removeConfig(serverId, configName, userId);
+            responseEmoji = "\uD83D\uDCF4";
         } else {
             configService.addConfig(serverId, configName, userId);
+            responseEmoji = "\uD83D\uDD1B";
         }
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+        MessageUtils.addReaction(message, responseEmoji);
+        MessageUtils.reactSuccessfulResponse(message);
     }
 }

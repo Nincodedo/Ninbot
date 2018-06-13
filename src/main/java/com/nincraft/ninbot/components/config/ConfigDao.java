@@ -27,7 +27,7 @@ public class ConfigDao extends GenericDao<Config> {
     }
 
     List<Config> getConfigByName(String serverId, String configName) {
-        log.info("Getting configs for {} {}", serverId, configName);
+        log.debug("Getting configs for {} {}", serverId, configName);
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
             query.setParameter(SERVER_ID, serverId);
@@ -37,7 +37,7 @@ public class ConfigDao extends GenericDao<Config> {
     }
 
     List<String> getValuesByName(String serverId, String configName) {
-        log.info("Getting config values for {} {}", serverId, configName);
+        log.debug("Getting config values for {} {}", serverId, configName);
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
             query.setParameter(SERVER_ID, serverId);
