@@ -11,21 +11,17 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.nincraft.ninbot.util.MessageUtils.reactSuccessfulResponse;
 import static com.nincraft.ninbot.util.MessageUtils.sendMessage;
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
-import static java.time.OffsetDateTime.parse;
-import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 @Component
 public class EventCommand extends AbstractCommand {
 
     private EventService eventService;
     private EventScheduler eventScheduler;
+    private EventParser eventParser;
 
     public EventCommand(EventService eventService, EventScheduler eventScheduler) {
         length = 3;
@@ -34,6 +30,7 @@ public class EventCommand extends AbstractCommand {
         checkExactLength = false;
         this.eventService = eventService;
         this.eventScheduler = eventScheduler;
+        this.eventParser = new EventParser();
         helpText = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
                 "Note: event name must be in quotes if it is longer than one word\n" +
@@ -45,8 +42,7 @@ public class EventCommand extends AbstractCommand {
         val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {
-            val action = getSubcommand(content);
-            switch (action) {
+            switch (getSubcommand(content)) {
                 case "list":
                     listEvents(channel);
                     break;
@@ -63,37 +59,9 @@ public class EventCommand extends AbstractCommand {
     }
 
     private void planEvent(Message message, User author, JDA jda) {
-        Event event = new Event();
-        Map<String, String> eventMap = parsePlanMessage(message.getContentStripped());
-        event.setAuthorName(author.getName())
-                .setGameName(eventMap.get("gameName"))
-                .setName(eventMap.get("name"))
-                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME))
-                .setServerId(message.getGuild().getId());
+        Event event = eventParser.parsePlanMessage(message, author.getName());
         eventScheduler.addEvent(event, jda);
         reactSuccessfulResponse(message);
-    }
-
-    private Map<String, String> parsePlanMessage(String content) {
-        Map<String, String> eventMap = new HashMap<>();
-        val messageList = content.split(" ");
-        int counter = 3;
-        StringBuilder name = new StringBuilder();
-        if (content.contains("\"")) {
-            String currentWord = messageList[counter];
-            name.append(currentWord).append(" ");
-            while (!currentWord.endsWith("\"") && counter < 22) {
-                counter++;
-                name.append(messageList[counter]).append(" ");
-                currentWord = messageList[counter];
-            }
-        } else {
-            name.append(messageList[counter++]);
-        }
-        eventMap.put("name", name.toString().replace("\"", "").substring(0, name.length() - 3));
-        eventMap.put("startTime", messageList[++counter]);
-        eventMap.put("gameName", messageList[++counter]);
-        return eventMap;
     }
 
     private void listEvents(MessageChannel channel) {
