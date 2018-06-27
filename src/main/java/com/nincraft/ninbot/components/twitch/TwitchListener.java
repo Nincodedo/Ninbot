@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.twitch;
 
+import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
-import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;

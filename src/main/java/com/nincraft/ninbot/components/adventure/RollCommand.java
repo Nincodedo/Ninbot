@@ -3,7 +3,7 @@ package com.nincraft.ninbot.components.adventure;
 import com.bernardomg.tabletop.dice.parser.DefaultDiceNotationExpressionParser;
 import com.bernardomg.tabletop.dice.roller.DefaultRoller;
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.util.MessageUtils;
+import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;

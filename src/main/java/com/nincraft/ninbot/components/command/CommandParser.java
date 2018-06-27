@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.command;
 
+import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
-import com.nincraft.ninbot.util.MessageUtils;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

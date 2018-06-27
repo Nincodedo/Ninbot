@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.subscribe;
 
-import com.nincraft.ninbot.util.MessageUtils;
+import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.GuildController;

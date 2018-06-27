@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.poll;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.util.MessageUtils;
+import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;

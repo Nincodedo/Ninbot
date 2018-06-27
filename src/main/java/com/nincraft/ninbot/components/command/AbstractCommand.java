@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.util.MessageUtils;
-import com.nincraft.ninbot.util.RolePermission;
+import com.nincraft.ninbot.components.common.MessageUtils;
+import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

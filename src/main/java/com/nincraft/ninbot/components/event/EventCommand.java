@@ -11,8 +11,8 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import static com.nincraft.ninbot.util.MessageUtils.reactSuccessfulResponse;
-import static com.nincraft.ninbot.util.MessageUtils.sendMessage;
+import static com.nincraft.ninbot.components.common.MessageUtils.reactSuccessfulResponse;
+import static com.nincraft.ninbot.components.common.MessageUtils.sendMessage;
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
 

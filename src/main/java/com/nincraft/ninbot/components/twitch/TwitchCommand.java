@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigService;
-import com.nincraft.ninbot.util.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;

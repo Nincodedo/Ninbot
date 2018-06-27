@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.util;
+package com.nincraft.ninbot.components.common;
 
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.entities.Emote;
