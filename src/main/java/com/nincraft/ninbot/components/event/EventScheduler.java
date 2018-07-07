@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.event;
 
+import com.nincraft.ninbot.components.common.AbstractScheduler;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -18,7 +19,7 @@ import static java.util.Date.from;
 
 @Log4j2
 @Component
-public class EventScheduler {
+public class EventScheduler extends AbstractScheduler<Event> {
 
     private EventService eventService;
 
@@ -36,16 +37,15 @@ public class EventScheduler {
     public void scheduleAll(JDA jda) {
         log.trace("scheduling events");
         val events = eventService.getAllEvents();
-        events.forEach(event -> scheduleEvent(event, jda));
+        events.forEach(event -> scheduleOne(event, jda));
     }
 
     void addEvent(Event event, JDA jda) {
         eventService.addEvent(event);
-        scheduleEvent(event, jda);
+        scheduleOne(event, jda);
     }
 
-    private void scheduleEvent(Event event, JDA jda) {
-        Timer timer = new Timer();
+    public void scheduleOne(Event event, JDA jda) {
         Instant eventStartTime = event.getStartTime().toInstant();
         int minutesBeforeStart = 30;
         Instant eventEarlyReminder = event.getStartTime().toInstant().minus(minutesBeforeStart, MINUTES);
@@ -60,14 +60,15 @@ public class EventScheduler {
             log.debug("Removing event {}, the end time is passed", event.getName());
             new EventRemove(event, eventService).run();
         } else {
+            Timer timer = new Timer();
             log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
-            scheduleEvent(event, timer, eventStartTime, 0, jda);
-            scheduleEvent(event, timer, eventEarlyReminder, minutesBeforeStart, jda);
+            scheduleOne(event, timer, eventStartTime, 0, jda);
+            scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, jda);
             timer.schedule(new EventRemove(event, eventService), from(eventEndTime));
         }
     }
 
-    private void scheduleEvent(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, JDA jda) {
+    private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, JDA jda) {
         if (!eventTime.isBefore(now())) {
             timer.schedule(new EventAnnounce(event, minutesBeforeStart, isDebugEnabled, configService, jda), from(eventTime));
         }
