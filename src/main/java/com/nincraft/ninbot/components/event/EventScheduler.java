@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.common.AbstractScheduler;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -19,7 +18,7 @@ import static java.util.Date.from;
 
 @Log4j2
 @Component
-public class EventScheduler extends AbstractScheduler<Event> {
+public class EventScheduler {
 
     private EventService eventService;
 

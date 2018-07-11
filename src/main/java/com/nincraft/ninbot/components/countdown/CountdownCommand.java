@@ -9,6 +9,9 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class CountdownCommand extends AbstractCommand {
 
@@ -19,7 +22,7 @@ public class CountdownCommand extends AbstractCommand {
         description = "Setup a countdown to an event";
         length = 2;
         checkExactLength = false;
-        helpText = "wow";
+        helpText = "Use \"@Ninbot coundown YYYY-MM-DD CoundownName\" to setup a countdown. It will be announced once a week up until the week before the event. Then it will be announced every day leading up to the event.";
         this.countdownDao = countdownDao;
     }
 
@@ -50,6 +53,20 @@ public class CountdownCommand extends AbstractCommand {
     }
 
     private void setupCountdown(MessageReceivedEvent event) {
-
+        val message = event.getMessage().getContentStripped();
+        val splitMessage = message.split(" ");
+        if (splitMessage.length >= 3) {
+            val stringDate = splitMessage[2];
+            val countdownName = message.substring(message.indexOf(stringDate) + stringDate.length() + 1);
+            Countdown countdown = new Countdown();
+            countdown.setChannelId(event.getChannel().getId())
+                    .setEventDate(LocalDate.parse(stringDate, DateTimeFormatter.ISO_LOCAL_DATE))
+                    .setName(countdownName)
+                    .setServerId(event.getGuild().getId());
+            countdownDao.saveObject(countdown);
+            MessageUtils.reactSuccessfulResponse(event.getMessage());
+        } else {
+            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+        }
     }
 }
