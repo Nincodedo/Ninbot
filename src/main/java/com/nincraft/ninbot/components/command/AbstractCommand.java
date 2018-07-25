@@ -48,10 +48,14 @@ public abstract class AbstractCommand {
     }
 
     private boolean userHasPermission(Guild guild, Member member) {
-        if (RolePermission.EVERYONE.equals(permissionLevel)) {
+        return userHasPermission(guild, member, this.permissionLevel);
+    }
+
+    protected boolean userHasPermission(Guild guild, Member member, RolePermission rolePermission) {
+        if (RolePermission.EVERYONE.equals(rolePermission)) {
             return true;
         }
-        val role = guild.getRolesByName(permissionLevel.getRoleName(), true).get(0);
+        val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
         return guild.getMembersWithRoles(role).contains(member);
     }
 
