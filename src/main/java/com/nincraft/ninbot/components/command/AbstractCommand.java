@@ -36,7 +36,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    private void displayHelp(MessageReceivedEvent event) {
+    protected void displayHelp(MessageReceivedEvent event) {
         val help = helpText != null ? helpText : description;
         MessageUtils.sendPrivateMessage(event.getAuthor(), help);
         MessageUtils.reactSuccessfulResponse(event.getMessage());

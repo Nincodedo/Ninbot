@@ -16,14 +16,16 @@ import java.time.format.DateTimeFormatter;
 public class CountdownCommand extends AbstractCommand {
 
     private CountdownDao countdownDao;
+    private CountdownScheduler countdownScheduler;
 
-    public CountdownCommand(CountdownDao countdownDao) {
+    public CountdownCommand(CountdownDao countdownDao, CountdownScheduler countdownScheduler) {
         name = "countdown";
         description = "Setup a countdown to an event";
         length = 2;
         checkExactLength = false;
         helpText = "Use \"@Ninbot coundown YYYY-MM-DD CoundownName\" to setup a countdown. It will be announced once a week up until the week before the event. Then it will be announced every day leading up to the event.";
         this.countdownDao = countdownDao;
+        this.countdownScheduler = countdownScheduler;
     }
 
 
@@ -33,6 +35,9 @@ public class CountdownCommand extends AbstractCommand {
         switch (getSubcommand(message)) {
             case "list":
                 listCountdowns(event.getChannel());
+                break;
+            case "":
+                displayHelp(event);
                 break;
             default:
                 setupCountdown(event);
@@ -44,9 +49,13 @@ public class CountdownCommand extends AbstractCommand {
         val list = countdownDao.getAllObjects();
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Current Countdowns");
-        for (val countdown : list) {
-            embedBuilder.addField(countdown.getName(), countdown.getEventDate().toString(), false);
+        if (!list.isEmpty()) {
+            embedBuilder.setTitle("Current Countdowns");
+            for (val countdown : list) {
+                embedBuilder.addField(countdown.getName(), countdown.getEventDate().toString(), false);
+            }
+        } else {
+            embedBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
         }
         messageBuilder.setEmbed(embedBuilder.build());
         MessageUtils.sendMessage(channel, messageBuilder.build());
@@ -64,6 +73,7 @@ public class CountdownCommand extends AbstractCommand {
                     .setName(countdownName)
                     .setServerId(event.getGuild().getId());
             countdownDao.saveObject(countdown);
+            countdownScheduler.scheduleOne(countdown, event.getJDA());
             MessageUtils.reactSuccessfulResponse(event.getMessage());
         } else {
             MessageUtils.reactUnsuccessfulResponse(event.getMessage());

@@ -26,9 +26,11 @@ class Countdown {
 
     String buildMessage(long dayDifference) {
         if (dayDifference == 1) {
-            return "Countdown event " + name + " is tomorrow!";
+            return String.format("Countdown event %s is tomorrow!", name);
+        } else if (dayDifference == 0) {
+            return String.format("Countdown event %s is today!", name);
         } else {
-            return "Countdown event " + name + " is in " + dayDifference + " days.";
+            return String.format("Countdown event %s is in %d days.", name, dayDifference);
         }
     }
 }

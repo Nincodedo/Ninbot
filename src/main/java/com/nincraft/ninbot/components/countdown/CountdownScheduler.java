@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.JDA;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
@@ -31,10 +31,10 @@ public class CountdownScheduler {
         countdownDao.getAllObjects().forEach(countdown -> scheduleOne(countdown, jda));
     }
 
-    private void scheduleOne(Countdown countdown, JDA jda) {
+    void scheduleOne(Countdown countdown, JDA jda) {
         val countdownDate = countdown.getEventDate();
         val tomorrowDate = LocalDate.now().plus(1, ChronoUnit.DAYS);
-        if (countdownDate.isAfter(tomorrowDate)) {
+        if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
             val dayDifference = ChronoUnit.DAYS.between(countdownDate, tomorrowDate);
             val countdownMessage = countdown.buildMessage(dayDifference);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
@@ -48,8 +48,11 @@ public class CountdownScheduler {
                 log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or this countdown", countdown.getName(), countdown.getServerId());
                 return;
             }
-            Timer timer = new Timer();
-            timer.schedule(new GenericAnnounce(jda, announceChannel, countdownMessage), Date.from(LocalDate.now().atStartOfDay().plus(1, ChronoUnit.DAYS).toInstant(ZoneOffset.of(ZoneOffset.systemDefault().getId()))));
+            new Timer().schedule(new GenericAnnounce(jda, announceChannel, countdownMessage),
+                    Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).plus(1, ChronoUnit.DAYS).toInstant()));
+        } else {
+            log.debug("Countdown {} is past, removing", countdown.getName());
+            countdownDao.removeObject(countdown);
         }
     }
 }
