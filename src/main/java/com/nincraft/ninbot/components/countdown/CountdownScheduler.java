@@ -14,6 +14,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Log4j2
@@ -28,7 +30,7 @@ public class CountdownScheduler {
     }
 
     public void scheduleAll(JDA jda) {
-        countdownDao.getAllObjects().forEach(countdown -> scheduleOne(countdown, jda));
+        new Timer().scheduleAtFixedRate(new Scheduler(jda), new Date(), TimeUnit.DAYS.toMillis(1));
     }
 
     void scheduleOne(Countdown countdown, JDA jda) {
@@ -53,6 +55,20 @@ public class CountdownScheduler {
         } else {
             log.debug("Countdown {} is past, removing", countdown.getName());
             countdownDao.removeObject(countdown);
+        }
+    }
+
+    class Scheduler extends TimerTask {
+
+        private JDA jda;
+
+        Scheduler(JDA jda) {
+            this.jda = jda;
+        }
+
+        @Override
+        public void run() {
+            countdownDao.getAllObjects().forEach(countdown -> scheduleOne(countdown, jda));
         }
     }
 }
