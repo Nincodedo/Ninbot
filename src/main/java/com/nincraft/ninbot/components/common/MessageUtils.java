@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.entities.User;
 public class MessageUtils {
 
     private static final String CHECK_MARK = "\u2705";
-    private static final String QUESTION_MARK = "\u2274";
+    private static final String QUESTION_MARK = "\u2754";
     private static final String CROSS_X = "\u274C";
 
     public static void sendMessage(MessageChannel channel, String message, String... parameters) {
