@@ -37,7 +37,7 @@ public class CountdownScheduler {
         val countdownDate = countdown.getEventDate();
         val tomorrowDate = LocalDate.now().plus(1, ChronoUnit.DAYS);
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
-            val dayDifference = ChronoUnit.DAYS.between(countdownDate, tomorrowDate);
+            val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
             val countdownMessage = countdown.buildMessage(dayDifference);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(), ConfigConstants.ANNOUNCE_CHANNEL);
