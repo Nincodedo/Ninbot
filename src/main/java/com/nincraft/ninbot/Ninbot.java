@@ -1,5 +1,6 @@
 package com.nincraft.ninbot;
 
+import com.nincraft.ninbot.components.countdown.CountdownScheduler;
 import com.nincraft.ninbot.components.event.EventScheduler;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.JDA;
@@ -21,6 +22,9 @@ public class Ninbot {
     @Autowired
     private EventScheduler eventScheduler;
 
+    @Autowired
+    private CountdownScheduler countdownScheduler;
+
     @Value("${db.sqliteUrl}")
     private String dbUrl;
 
@@ -28,6 +32,7 @@ public class Ninbot {
     public CommandLineRunner commandLineRunner(ApplicationContext context) {
         return args -> {
             eventScheduler.scheduleAll(jda);
+            countdownScheduler.scheduleAll(jda);
             jda.getPresence().setGame(Game.playing("say \"@Ninbot help\" for list of commands"));
         };
     }
