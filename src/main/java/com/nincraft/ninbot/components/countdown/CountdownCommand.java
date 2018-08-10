@@ -5,7 +5,6 @@ import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,7 @@ public class CountdownCommand extends AbstractCommand {
         description = "Setup a countdown to an event";
         length = 2;
         checkExactLength = false;
-        helpText = "Use \"@Ninbot coundown YYYY-MM-DD CoundownName\" to setup a countdown. It will be announced once a week up until the week before the event. Then it will be announced every day leading up to the event.";
+        helpText = "Use \"@Ninbot countdown YYYY-MM-DD CountdownName\" to setup a countdown. It will be announced once a week up until the week before the event. Then it will be announced every day leading up to the event.";
         this.countdownDao = countdownDao;
         this.countdownScheduler = countdownScheduler;
     }
@@ -34,7 +33,7 @@ public class CountdownCommand extends AbstractCommand {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list":
-                listCountdowns(event.getChannel());
+                listCountdowns(event);
                 break;
             case "":
                 displayHelp(event);
@@ -45,8 +44,9 @@ public class CountdownCommand extends AbstractCommand {
         }
     }
 
-    private void listCountdowns(MessageChannel channel) {
-        val list = countdownDao.getAllObjects();
+    private void listCountdowns(MessageReceivedEvent event) {
+        val channel = event.getChannel();
+        val list = countdownDao.getAllObjectsByServerId(event.getGuild().getId());
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (!list.isEmpty()) {

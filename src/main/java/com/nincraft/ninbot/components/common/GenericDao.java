@@ -17,6 +17,14 @@ public class GenericDao<T> {
         this.generic = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), GenericDao.class);
     }
 
+    public List<T> getAllObjectsByServerId(String serverId) {
+        try (val session = sessionFactory.openSession()) {
+            val query = session.createQuery("FROM " + generic + " where serverId = :serverId", generic);
+            query.setParameter("serverId", serverId);
+            return query.getResultList();
+        }
+    }
+
     public void saveObject(T object) {
         try (val session = sessionFactory.openSession()) {
             session.beginTransaction();
