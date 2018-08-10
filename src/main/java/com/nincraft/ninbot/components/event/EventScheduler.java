@@ -44,7 +44,7 @@ public class EventScheduler {
         scheduleOne(event, jda);
     }
 
-    public void scheduleOne(Event event, JDA jda) {
+    private void scheduleOne(Event event, JDA jda) {
         Instant eventStartTime = event.getStartTime().toInstant();
         int minutesBeforeStart = 30;
         Instant eventEarlyReminder = event.getStartTime().toInstant().minus(minutesBeforeStart, MINUTES);

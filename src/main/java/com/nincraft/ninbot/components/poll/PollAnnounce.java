@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
-public class PollAnnounce extends TimerTask {
+class PollAnnounce extends TimerTask {
 
     private Poll poll;
     private Message message;

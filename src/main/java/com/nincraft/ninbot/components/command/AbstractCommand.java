@@ -51,7 +51,7 @@ public abstract class AbstractCommand {
         return userHasPermission(guild, member, this.permissionLevel);
     }
 
-    protected boolean userHasPermission(Guild guild, Member member, RolePermission rolePermission) {
+    private boolean userHasPermission(Guild guild, Member member, RolePermission rolePermission) {
         if (RolePermission.EVERYONE.equals(rolePermission)) {
             return true;
         }
