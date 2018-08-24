@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.poll;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -27,9 +26,9 @@ public class PollCommand extends AbstractCommand {
     public void executeCommand(MessageReceivedEvent event) {
         Poll poll = new Poll(event.getMessage());
         if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
-            event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
+            event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll, messageUtils));
         } else {
-            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
     }
 

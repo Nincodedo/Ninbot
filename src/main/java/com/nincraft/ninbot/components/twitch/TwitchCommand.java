@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -45,6 +44,6 @@ public class TwitchCommand extends AbstractCommand {
             configService.addConfig(serverId, configName, userId);
             responseEmoji = "\uD83D\uDD1B";
         }
-        MessageUtils.addReaction(message, responseEmoji);
+        messageUtils.addReaction(message, responseEmoji);
     }
 }

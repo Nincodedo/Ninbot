@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.reaction;
 
+import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -23,8 +24,11 @@ public class ReactionListener extends ListenerAdapter {
 
     private Map<String, IReactionResponse> responseMap = new HashMap<>();
 
-    public ReactionListener() {
+    private MessageUtils messageUtils;
+
+    public ReactionListener(MessageUtils messageUtils) {
         loadResponseMap();
+        this.messageUtils = messageUtils;
     }
 
     private void loadResponseMap() {
@@ -74,7 +78,7 @@ public class ReactionListener extends ListenerAdapter {
         val response = responseMap.get(event.getMessage().getContentStripped().toLowerCase());
 
         if (response != null) {
-            response.react(event.getMessage(), event.getChannel());
+            response.react(event.getMessage(), event.getChannel(), messageUtils);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.adventure;
 import com.bernardomg.tabletop.dice.parser.DefaultDiceNotationExpressionParser;
 import com.bernardomg.tabletop.dice.roller.DefaultRoller;
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -35,6 +34,6 @@ public class RollCommand extends AbstractCommand {
     private void rollDice(String diceArgs, MessageReceivedEvent event) {
         val parsed = parser.parse(diceArgs);
         val diceCommand = diceArgs.split("d");
-        MessageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getValue()));
+        messageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getValue()));
     }
 }

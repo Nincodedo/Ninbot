@@ -38,7 +38,7 @@ public class EmojiReactionResponse implements IReactionResponse {
     }
 
     @Override
-    public void react(Message message, MessageChannel channel) {
-        emojiList.forEach(emoji -> MessageUtils.addReaction(message, emoji));
+    public void react(Message message, MessageChannel channel, MessageUtils messageUtils) {
+        emojiList.forEach(emoji -> messageUtils.addReaction(message, emoji));
     }
 }

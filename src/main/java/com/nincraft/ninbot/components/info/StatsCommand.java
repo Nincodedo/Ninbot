@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -47,7 +46,7 @@ public class StatsCommand extends AbstractCommand {
         statList.stream().limit(limit).forEach(stat -> embedBuilder.appendDescription(
                 stat.name + ": " + stat.amount + "\n"));
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendMessage(channel, messageBuilder.build());
+        messageUtils.sendMessage(channel, messageBuilder.build());
     }
 
     private class Stat implements Comparable {

@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
@@ -36,7 +35,7 @@ public class SubscribeCommand extends AbstractCommand {
             if (isValidSubscribeRole(role)) {
                 addOrRemoveSubscription(event, server.getController(), role);
             } else {
-                MessageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
+                messageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
             wrongCommandLengthMessage(channel);
@@ -44,7 +43,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+        messageUtils.reactSuccessfulResponse(event.getMessage());
         controller.addRolesToMember(event.getMember(), role).queue();
     }
 

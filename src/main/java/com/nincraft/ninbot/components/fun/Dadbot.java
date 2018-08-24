@@ -18,11 +18,13 @@ public class Dadbot extends ListenerAdapter {
 
     private Random random;
     private ConfigService configService;
+    private MessageUtils messageUtils;
 
     @Autowired
-    public Dadbot(ConfigService configService) {
+    public Dadbot(ConfigService configService, MessageUtils messageUtils) {
         random = new Random();
         this.configService = configService;
+        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class Dadbot extends ListenerAdapter {
         String stringBuilder = "Hi" +
                 message.substring(message.indexOf(' ')) +
                 ", I'm Dad!";
-        MessageUtils.sendMessage(channel, stringBuilder);
+        messageUtils.sendMessage(channel, stringBuilder);
     }
 
     private boolean checkChance() {

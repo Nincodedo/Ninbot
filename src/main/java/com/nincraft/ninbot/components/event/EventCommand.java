@@ -11,8 +11,6 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import static com.nincraft.ninbot.components.common.MessageUtils.reactSuccessfulResponse;
-import static com.nincraft.ninbot.components.common.MessageUtils.sendMessage;
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
 
@@ -50,7 +48,7 @@ public class EventCommand extends AbstractCommand {
                     planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
                     break;
                 default:
-                    sendMessage(channel, "Not a valid events sub command");
+                    messageUtils.sendMessage(channel, "Not a valid events sub command");
                     break;
             }
         } else {
@@ -61,13 +59,13 @@ public class EventCommand extends AbstractCommand {
     private void planEvent(Message message, User author, JDA jda) {
         Event event = eventParser.parsePlanMessage(message, author.getName());
         eventScheduler.addEvent(event, jda);
-        reactSuccessfulResponse(message);
+        messageUtils.reactSuccessfulResponse(message);
     }
 
     private void listEvents(MessageChannel channel) {
         val events = eventService.getAllEvents();
         if (events.isEmpty()) {
-            sendMessage(channel, "No events scheduled");
+            messageUtils.sendMessage(channel, "No events scheduled");
             return;
         }
         MessageBuilder messageBuilder = new MessageBuilder();
@@ -79,6 +77,6 @@ public class EventCommand extends AbstractCommand {
         }
         embedBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
         messageBuilder.setEmbed(embedBuilder.build());
-        sendMessage(channel, messageBuilder.build());
+        messageUtils.sendMessage(channel, messageBuilder.build());
     }
 }

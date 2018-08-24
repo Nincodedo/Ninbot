@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
+    private MessageUtils messageUtils;
 
-    public TwitchListener(ConfigService configService) {
+    public TwitchListener(ConfigService configService, MessageUtils messageUtils) {
         this.configService = configService;
+        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class TwitchListener extends ListenerAdapter {
                         val channel = event.getGuild().getTextChannelById(streamingAnnounceChannel.get());
                         val user = updateGameEvent.getUser().getName();
                         val url = updateGameEvent.getNewGame().getUrl();
-                        MessageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
+                        messageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
                     }
                 }
             }

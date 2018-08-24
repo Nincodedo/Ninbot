@@ -13,10 +13,12 @@ class PollAnnounce extends TimerTask {
 
     private Poll poll;
     private Message message;
+    private MessageUtils messageUtils;
 
-    PollAnnounce(Poll poll, Message message) {
+    PollAnnounce(Poll poll, Message message, MessageUtils messageUtils) {
         this.poll = poll;
         this.message = message;
+        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -53,7 +55,7 @@ class PollAnnounce extends TimerTask {
                             + pollClosedMessage);
         }
         message.editMessage(poll.buildClosed()).queue();
-        MessageUtils.sendMessage(message.getChannel(), poll.getResult());
+        messageUtils.sendMessage(message.getChannel(), poll.getResult());
     }
 
     private String listWinners(List<String> winningChoices) {

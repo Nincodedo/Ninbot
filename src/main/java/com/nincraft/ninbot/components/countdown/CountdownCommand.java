@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -58,7 +57,7 @@ public class CountdownCommand extends AbstractCommand {
             embedBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
         }
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendMessage(channel, messageBuilder.build());
+        messageUtils.sendMessage(channel, messageBuilder.build());
     }
 
     private void setupCountdown(MessageReceivedEvent event) {
@@ -74,9 +73,9 @@ public class CountdownCommand extends AbstractCommand {
                     .setServerId(event.getGuild().getId());
             countdownDao.saveObject(countdown);
             countdownScheduler.scheduleOne(countdown, event.getJDA());
-            MessageUtils.reactSuccessfulResponse(event.getMessage());
+            messageUtils.reactSuccessfulResponse(event.getMessage());
         } else {
-            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
     }
 }

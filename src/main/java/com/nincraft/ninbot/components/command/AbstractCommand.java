@@ -3,12 +3,14 @@ package com.nincraft.ninbot.components.command;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.Data;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Log4j2
 @Data
@@ -21,6 +23,9 @@ public abstract class AbstractCommand {
     protected RolePermission permissionLevel = RolePermission.EVERYONE;
     protected boolean checkExactLength = true;
     protected String helpText;
+    @Autowired
+    @Setter
+    protected MessageUtils messageUtils;
 
     void execute(MessageReceivedEvent event) {
         if (userHasPermission(event.getGuild(), event.getMember())) {
@@ -32,14 +37,14 @@ public abstract class AbstractCommand {
                 executeCommand(event);
             }
         } else {
-            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
     }
 
     protected void displayHelp(MessageReceivedEvent event) {
         val help = helpText != null ? helpText : description;
-        MessageUtils.sendPrivateMessage(event.getAuthor(), help);
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+        messageUtils.sendPrivateMessage(event.getAuthor(), help);
+        messageUtils.reactSuccessfulResponse(event.getMessage());
     }
 
     @Override
@@ -87,7 +92,7 @@ public abstract class AbstractCommand {
     }
 
     protected void wrongCommandLengthMessage(MessageChannel channel) {
-        MessageUtils.sendMessage(channel, "Wrong number of arguments for %s command", name);
+        messageUtils.sendMessage(channel, "Wrong number of arguments for %s command", name);
     }
 
     protected String getSubcommand(String command) {

@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -33,7 +32,7 @@ public class HelpCommand extends AbstractCommand {
         Collections.sort(keyList);
         keyList.stream().filter(key -> !commandMap.get(key).isHidden()).forEachOrdered(key -> embedBuilder.addField(key, commandMap.get(key).getDescription(), false));
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendPrivateMessage(event.getAuthor(), messageBuilder.build());
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+        messageUtils.sendPrivateMessage(event.getAuthor(), messageBuilder.build());
+        messageUtils.reactSuccessfulResponse(event.getMessage());
     }
 }

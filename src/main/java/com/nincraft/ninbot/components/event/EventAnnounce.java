@@ -17,13 +17,16 @@ class EventAnnounce extends TimerTask {
     private int minutesBeforeStart;
     private ConfigService configService;
     private String announcementConfigName;
+    private MessageUtils messageUtils;
 
-    EventAnnounce(Event event, int minutesBeforeStart, boolean debugEnabled, ConfigService configService, JDA jda) {
+    EventAnnounce(Event event, int minutesBeforeStart, boolean debugEnabled, ConfigService configService, JDA jda,
+            MessageUtils messageUtils) {
         this.event = event;
         this.minutesBeforeStart = minutesBeforeStart;
         this.announcementConfigName = debugEnabled ? ConfigConstants.DEBUG_ANNOUNCE_CHANNEL : ConfigConstants.ANNOUNCE_CHANNEL;
         this.configService = configService;
         this.jda = jda;
+        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -38,6 +41,6 @@ class EventAnnounce extends TimerTask {
         }
         val channel = announcementServer.getTextChannelById(config.get(0).getValue());
         val gameRoleId = announcementServer.getRolesByName(event.getGameName(), true).get(0);
-        MessageUtils.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
+        messageUtils.sendMessage(channel, event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart));
     }
 }

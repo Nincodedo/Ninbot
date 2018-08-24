@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -45,6 +44,6 @@ public class DadbotCommand extends AbstractCommand {
         } else {
             configService.removeConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channel.getId());
         }
-        MessageUtils.reactSuccessfulResponse(message);
+        messageUtils.reactSuccessfulResponse(message);
     }
 }

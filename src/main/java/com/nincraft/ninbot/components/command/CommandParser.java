@@ -22,12 +22,14 @@ import java.util.Map;
 class CommandParser {
 
     private ConfigService configService;
+    private MessageUtils messageUtils;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
 
     @Autowired
-    CommandParser(ConfigService configService) {
+    CommandParser(ConfigService configService, MessageUtils messageUtils) {
         this.configService = configService;
+        this.messageUtils = messageUtils;
     }
 
     void parseEvent(MessageReceivedEvent event) {
@@ -42,7 +44,7 @@ class CommandParser {
                     reportError(event, e);
                 }
             } else {
-                MessageUtils.reactUnknownResponse(event.getMessage());
+                messageUtils.reactUnknownResponse(event.getMessage());
             }
         }
     }
@@ -50,7 +52,7 @@ class CommandParser {
     private void reportError(MessageReceivedEvent event, Exception e) {
         val config = configService.getConfigByName(event.getGuild().getId(), ConfigConstants.ERROR_ANNOUNCE_CHANNEL);
         if (config.size() > 0) {
-            MessageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()),
+            messageUtils.sendMessage(getChannel(event.getJDA(), event.getGuild().getId(), config.get(0).getValue()),
                     e.toString() +
                             "\n" + e.getStackTrace()[0].toString());
         }

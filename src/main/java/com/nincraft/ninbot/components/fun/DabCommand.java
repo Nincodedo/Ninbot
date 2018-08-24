@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
@@ -39,13 +38,13 @@ public class DabCommand extends AbstractCommand {
                     break;
                 }
                 if (count >= maxDab) {
-                    MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
                     break;
                 }
                 count++;
             }
         } else {
-            MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
         }
     }
 
@@ -54,11 +53,11 @@ public class DabCommand extends AbstractCommand {
         Random random = new Random();
         val critDab = random.nextInt(100) < 5;
         if (critDab) {
-            critResponse.react(message, channel);
+            critResponse.react(message, channel, messageUtils);
         }
-        guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).forEachOrdered(emote -> MessageUtils.addReaction(message, emote));
+        guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).forEachOrdered(emote -> messageUtils.addReaction(message, emote));
         if (critDab) {
-            dabResponse.react(message, channel);
+            dabResponse.react(message, channel, messageUtils);
         }
     }
 }

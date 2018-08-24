@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -46,9 +45,9 @@ public class ListCommand extends AbstractCommand {
             embedBuilder.setTitle("Users in " + roleName + " subscription");
             embedBuilder.appendDescription(userNames.toString());
             messageBuilder.setEmbed(embedBuilder.build());
-            MessageUtils.sendMessage(channel, messageBuilder.build());
+            messageUtils.sendMessage(channel, messageBuilder.build());
         } else {
-            MessageUtils.reactUnsuccessfulResponse(message);
+            messageUtils.reactUnsuccessfulResponse(message);
         }
     }
 
@@ -61,6 +60,6 @@ public class ListCommand extends AbstractCommand {
         embedBuilder.setTitle("Available subscriptions");
         roleNameList.stream().map(roleName -> roleName + "\n").forEach(embedBuilder::appendDescription);
         messageBuilder.setEmbed(embedBuilder.build());
-        MessageUtils.sendMessage(channel, messageBuilder.build());
+        messageUtils.sendMessage(channel, messageBuilder.build());
     }
 }

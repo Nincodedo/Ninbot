@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.admin;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -31,14 +30,14 @@ public class AdminCommand extends AbstractCommand {
                 if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
                     addConfig(event);
                 } else {
-                    MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
                 }
                 break;
             case "config-remove":
                 if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
                     removeConfig(event);
                 } else {
-                    MessageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
                 }
                 break;
             default:
@@ -52,7 +51,7 @@ public class AdminCommand extends AbstractCommand {
         val configValue = message.split(" ")[4];
         val serverId = event.getGuild().getId();
         configService.removeConfig(serverId, configName, configValue);
-        MessageUtils.reactSuccessfulResponse(event.getMessage());
+        messageUtils.reactSuccessfulResponse(event.getMessage());
     }
 
     private void addConfig(MessageReceivedEvent event) {
@@ -61,6 +60,6 @@ public class AdminCommand extends AbstractCommand {
         val configValue = message.split(" ")[4];
         val serverId = event.getGuild().getId();
         val isSuccessful = configService.addConfig(serverId, configName, configValue);
-        MessageUtils.reactAccordingly(event.getMessage(), isSuccessful);
+        messageUtils.reactAccordingly(event.getMessage(), isSuccessful);
     }
 }
