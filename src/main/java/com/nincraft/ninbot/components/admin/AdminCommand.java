@@ -4,12 +4,13 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigService;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class AdminCommand extends AbstractCommand {
 
     private ConfigService configService;
@@ -26,9 +27,6 @@ public class AdminCommand extends AbstractCommand {
     @Override
     public void executeCommand(MessageReceivedEvent event) {
         switch (getSubcommand(event.getMessage().getContentStripped())) {
-            case "restart":
-                restart(event.getMessage());
-                break;
             case "config-add":
                 if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
                     addConfig(event);
@@ -64,10 +62,5 @@ public class AdminCommand extends AbstractCommand {
         val serverId = event.getGuild().getId();
         val isSuccessful = configService.addConfig(serverId, configName, configValue);
         MessageUtils.reactAccordingly(event.getMessage(), isSuccessful);
-    }
-
-    private void restart(Message message) {
-        MessageUtils.reactSuccessfulResponse(message);
-        System.exit(0);
     }
 }
