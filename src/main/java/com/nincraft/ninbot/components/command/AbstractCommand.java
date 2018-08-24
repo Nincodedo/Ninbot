@@ -54,9 +54,12 @@ public abstract class AbstractCommand {
     private boolean userHasPermission(Guild guild, Member member, RolePermission rolePermission) {
         if (RolePermission.EVERYONE.equals(rolePermission)) {
             return true;
+        } else if (RolePermission.OWNER.equals(rolePermission)) {
+            return member.getUser().getId().equals(RolePermission.OWNER.getRoleName());
+        } else {
+            val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
+            return guild.getMembersWithRoles(role).contains(member);
         }
-        val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
-        return guild.getMembersWithRoles(role).contains(member);
     }
 
     protected abstract void executeCommand(MessageReceivedEvent event);
