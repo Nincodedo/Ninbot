@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.owner;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -41,7 +40,7 @@ public class OwnerCommand extends AbstractCommand {
     }
 
     private void restart(Message message) {
-        MessageUtils.reactSuccessfulResponse(message);
+        messageUtils.reactSuccessfulResponse(message);
         System.exit(0);
     }
 
