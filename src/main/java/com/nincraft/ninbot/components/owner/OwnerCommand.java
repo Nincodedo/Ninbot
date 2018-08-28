@@ -7,6 +7,7 @@ import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -15,6 +16,8 @@ import java.io.File;
 public class OwnerCommand extends AbstractCommand {
 
     private ConfigService configService;
+    @Value("${logging.file}")
+    private String ninbotLog;
 
     public OwnerCommand(ConfigService configService) {
         length = 3;
@@ -48,7 +51,7 @@ public class OwnerCommand extends AbstractCommand {
         val announceChannelId = configService.getSingleValueByName(event.getGuild().getId(), ConfigConstants.ERROR_ANNOUNCE_CHANNEL);
         if (announceChannelId.isPresent()) {
             val announceChannel = event.getJDA().getTextChannelById(announceChannelId.get());
-            announceChannel.sendFile(new File("ninbot.log")).queue();
+            announceChannel.sendFile(new File(ninbotLog)).queue();
         }
     }
 }

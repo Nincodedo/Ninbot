@@ -2,7 +2,10 @@
 /target/
 /.idea/
 /logs/
+/config
 /Ninbot.iml
 /dependency-reduced-pom.xml
 /data/
 *.db
+*.log
+*.gz
