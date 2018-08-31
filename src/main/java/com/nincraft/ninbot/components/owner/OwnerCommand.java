@@ -24,7 +24,6 @@ public class OwnerCommand extends AbstractCommand {
         name = "owner";
         description = "Owner commands";
         permissionLevel = RolePermission.OWNER;
-        hidden = true;
         this.configService = configService;
     }
 

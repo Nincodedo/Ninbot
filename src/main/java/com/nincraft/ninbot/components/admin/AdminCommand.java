@@ -19,7 +19,6 @@ public class AdminCommand extends AbstractCommand {
         name = "admin";
         description = "Admin commands";
         permissionLevel = RolePermission.ADMIN;
-        hidden = true;
         this.configService = configService;
     }
 

@@ -19,7 +19,6 @@ public abstract class AbstractCommand {
     protected int length;
     protected String description;
     protected String name;
-    protected boolean hidden;
     protected RolePermission permissionLevel = RolePermission.EVERYONE;
     protected boolean checkExactLength = true;
     protected String helpText;
