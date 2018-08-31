@@ -37,6 +37,7 @@ public class OwnerCommand extends AbstractCommand {
                 showLogs(event);
                 break;
             default:
+                messageUtils.reactUnknownResponse(event.getMessage());
                 break;
         }
     }

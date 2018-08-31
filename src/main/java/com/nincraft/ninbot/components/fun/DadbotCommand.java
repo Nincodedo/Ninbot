@@ -32,6 +32,7 @@ public class DadbotCommand extends AbstractCommand {
                 toggleBlacklistChannel(event.getGuild().getId(), event.getChannel(), event.getMessage());
                 break;
             default:
+                messageUtils.reactUnknownResponse(event.getMessage());
                 break;
         }
     }

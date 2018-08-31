@@ -26,6 +26,7 @@ public class TwitchCommand extends AbstractCommand {
                 announceToggle(event);
                 break;
             default:
+                messageUtils.reactUnknownResponse(event.getMessage());
                 break;
         }
     }

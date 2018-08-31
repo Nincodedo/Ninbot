@@ -40,6 +40,7 @@ public class AdminCommand extends AbstractCommand {
                 }
                 break;
             default:
+                messageUtils.reactUnknownResponse(event.getMessage());
                 break;
         }
     }

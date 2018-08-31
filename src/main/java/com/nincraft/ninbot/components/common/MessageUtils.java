@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageUtils {
 
-    private final String CHECK_MARK = "\u2705";
-    private final String QUESTION_MARK = "\u2754";
-    private final String CROSS_X = "\u274C";
+    private static final String CHECK_MARK = "\u2705";
+    private static final String QUESTION_MARK = "\u2754";
+    private static final String CROSS_X = "\u274C";
 
     public void sendMessage(MessageChannel channel, String message, String... parameters) {
         if (parameters == null) {

@@ -21,7 +21,7 @@ public class CountdownCommand extends AbstractCommand {
         description = "Setup a countdown to an event";
         length = 2;
         checkExactLength = false;
-        helpText = "Use \"@Ninbot countdown YYYY-MM-DD CountdownName\" to setup a countdown. It will be announced once a week up until the week before the event. Then it will be announced every day leading up to the event.";
+        helpText = "Use \"@Ninbot countdown YYYY-MM-DD CountdownName\" to setup a countdown. It will be announced every day leading up to the event.";
         this.countdownDao = countdownDao;
         this.countdownScheduler = countdownScheduler;
     }

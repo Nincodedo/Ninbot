@@ -38,7 +38,7 @@ public class SubscribeCommand extends AbstractCommand {
                 messageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
             }
         } else {
-            wrongCommandLengthMessage(channel);
+            messageUtils.reactUnknownResponse(event.getMessage());
         }
     }
 

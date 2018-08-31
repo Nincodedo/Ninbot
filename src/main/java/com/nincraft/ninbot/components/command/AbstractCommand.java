@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -88,10 +87,6 @@ public abstract class AbstractCommand {
 
     private int getCommandLength(String content) {
         return content.split(" ").length;
-    }
-
-    protected void wrongCommandLengthMessage(MessageChannel channel) {
-        messageUtils.sendMessage(channel, "Wrong number of arguments for %s command", name);
     }
 
     protected String getSubcommand(String command) {

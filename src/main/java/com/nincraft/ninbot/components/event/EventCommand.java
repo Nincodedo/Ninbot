@@ -11,6 +11,8 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
 
@@ -32,7 +34,8 @@ public class EventCommand extends AbstractCommand {
         helpText = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
                 "Note: event name must be in quotes if it is longer than one word\n" +
-                "Event times are in GMT -6, formatted \"2017-01-31T12:00:00-06:00\" for January 31st 2017 at noon";
+                "Event times are in GMT -6, formatted \"" + LocalDate.now().getYear() + "-01-31T12:00:00-06:00\" "
+                + "for January 31st " + LocalDate.now().getYear() + " at noon";
     }
 
     @Override
@@ -48,11 +51,11 @@ public class EventCommand extends AbstractCommand {
                     planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
                     break;
                 default:
-                    messageUtils.sendMessage(channel, "Not a valid events sub command");
+                    messageUtils.reactUnknownResponse(messageReceivedEvent.getMessage());
                     break;
             }
         } else {
-            wrongCommandLengthMessage(channel);
+            messageUtils.reactUnknownResponse(messageReceivedEvent.getMessage());
         }
     }
 

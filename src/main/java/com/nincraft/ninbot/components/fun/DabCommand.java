@@ -44,7 +44,7 @@ public class DabCommand extends AbstractCommand {
                 count++;
             }
         } else {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            messageUtils.reactUnknownResponse(event.getMessage());
         }
     }
 

@@ -28,6 +28,8 @@ public class RollCommand extends AbstractCommand {
             rollDice("1d20", event);
         } else if (commandArgs.length == 3 && commandArgs[2].contains("d")) {
             rollDice(commandArgs[2], event);
+        } else {
+            messageUtils.reactUnknownResponse(event.getMessage());
         }
     }
 
