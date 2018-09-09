@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -14,13 +16,13 @@ import java.util.stream.Collectors;
 @Component
 public class ListCommand extends AbstractCommand {
 
-    private List<String> roleBlackList;
+    private ConfigService configService;
 
-    public ListCommand(List<String> roleBlackList) {
-        this.roleBlackList = roleBlackList;
+    public ListCommand(ConfigService configService) {
         length = 2;
         name = "list";
         description = "Displays available games for subscribing";
+        this.configService = configService;
     }
 
     @Override
@@ -54,6 +56,7 @@ public class ListCommand extends AbstractCommand {
     private void listSubscriptions(Guild guild, MessageChannel channel) {
         val roleList = guild.getRoles();
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
+        List<String> roleBlackList = configService.getValuesByName(guild.getId(), ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();

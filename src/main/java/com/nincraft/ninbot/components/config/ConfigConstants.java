@@ -10,4 +10,5 @@ public class ConfigConstants {
     public static final String DADBOT_BLACKLIST_CHANNEL = "dadbotChannelBlacklist";
     public static final String STREAMING_ANNOUNCE_USERS = "streamingAnnounceUsers";
     public static final String STREAMING_ANNOUNCE_CHANNEL = "streamingAnnounceChannel";
+    public static final String ROLE_BLACKLIST = "roleBlacklist";
 }

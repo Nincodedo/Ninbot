@@ -15,7 +15,6 @@ import java.util.Map;
 public class HelpCommand extends AbstractCommand {
 
     private Map<String, AbstractCommand> commandMap;
-    private MessageUtils messageUtils;
 
     public HelpCommand(Map<String, AbstractCommand> commandMap,
             MessageUtils messageUtils) {

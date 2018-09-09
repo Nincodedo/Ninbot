@@ -12,8 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -23,11 +21,6 @@ public class ApplicationBean {
 
     @Value("${ninbotToken}")
     private String ninbotToken;
-
-    @Bean
-    public List<String> roleBlackList() {
-        return new ArrayList<>(Arrays.asList("admin", "mods", "AIRHORN SOLUTIONS", "@everyone", "Dad Bot"));
-    }
 
     @Autowired
     @Bean

@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
@@ -15,13 +17,13 @@ import java.util.List;
 @Component
 public class SubscribeCommand extends AbstractCommand {
 
-    private List<String> roleBlacklist;
+    private ConfigService configService;
 
-    public SubscribeCommand(List<String> roleBlackList) {
-        this.roleBlacklist = roleBlackList;
+    public SubscribeCommand(ConfigService configService) {
         length = 3;
         name = "subscribe";
         description = "Subscribes you to a game for game gathering events";
+        this.configService = configService;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class SubscribeCommand extends AbstractCommand {
             val server = event.getGuild();
             val subscribeTo = content.split(" ")[2];
             val role = getRole(server, subscribeTo);
-            if (isValidSubscribeRole(role)) {
+            if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server.getController(), role);
             } else {
                 messageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
@@ -47,7 +49,8 @@ public class SubscribeCommand extends AbstractCommand {
         controller.addRolesToMember(event.getMember(), role).queue();
     }
 
-    private boolean isValidSubscribeRole(Role role) {
+    private boolean isValidSubscribeRole(Role role, String serverId) {
+        List<String> roleBlacklist = configService.getValuesByName(serverId, ConfigConstants.ROLE_BLACKLIST);
         return role != null && !roleBlacklist.contains(role.getName());
     }
 
