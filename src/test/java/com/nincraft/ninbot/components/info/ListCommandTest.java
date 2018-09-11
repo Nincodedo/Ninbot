@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.components.common.MessageUtils;
+import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -45,6 +46,9 @@ public class ListCommandTest {
 
     @Mock
     MessageUtils messageUtils;
+
+    @Mock
+    ConfigService configService;
 
     @InjectMocks
     ListCommand listCommand;
