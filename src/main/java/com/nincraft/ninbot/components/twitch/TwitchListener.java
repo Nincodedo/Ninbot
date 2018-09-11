@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.twitch;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
@@ -24,6 +26,9 @@ public class TwitchListener extends ListenerAdapter {
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
         if (event instanceof UserUpdateGameEvent) {
             val updateGameEvent = (UserUpdateGameEvent) event;
+            log.debug("UserUpdateEvent " + updateGameEvent);
+            log.debug("Old game " + updateGameEvent.getOldGame());
+            log.debug("New game " + updateGameEvent.getNewGame());
             if (updateGameEvent.getOldGame() != null && updateGameEvent.getNewGame() != null
                     && updateGameEvent.getOldGame().getUrl() == null && updateGameEvent.getNewGame().getUrl() != null) {
                 val serverId = event.getGuild().getId();
