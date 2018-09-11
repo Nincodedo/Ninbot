@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -17,13 +19,13 @@ import java.util.stream.Collectors;
 @Component
 public class StatsCommand extends AbstractCommand {
 
-    private List<String> roleBlackList;
+    private ConfigService configService;
 
-    public StatsCommand(List<String> roleBlackList) {
-        this.roleBlackList = roleBlackList;
+    public StatsCommand(ConfigService configService) {
         length = 2;
         name = "stats";
         description = "Shows Ninbot stats";
+        this.configService = configService;
     }
 
     @Override
@@ -32,6 +34,8 @@ public class StatsCommand extends AbstractCommand {
     }
 
     private void displayRoleStats(MessageChannel channel, Guild server) {
+        List<String> roleBlackList = configService.getValuesByName(server.getId(), ConfigConstants.ROLE_BLACKLIST);
+
         Map<Role, Integer> roleMap = server.getMembers().stream().flatMap(member -> member.getRoles().stream())
                 .filter(role -> !roleBlackList.contains(role.getName()))
                 .collect(Collectors.toMap(role -> role, role -> 1, (a, b) -> a + b));
