@@ -19,7 +19,7 @@ public class GenericDao<T> {
 
     public List<T> getAllObjectsByServerId(String serverId) {
         try (val session = sessionFactory.openSession()) {
-            val query = session.createQuery("FROM " + generic + " where serverId = :serverId", generic);
+            val query = session.createQuery("FROM " + generic.getName() + " where serverId = :serverId", generic);
             query.setParameter("serverId", serverId);
             return query.getResultList();
         }
