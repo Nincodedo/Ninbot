@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.common.GenericAnnounce;
+import com.nincraft.ninbot.components.common.ISchedulable;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Log4j2
-public class CountdownScheduler {
+public class CountdownScheduler implements ISchedulable {
 
     private CountdownDao countdownDao;
     private ConfigService configService;

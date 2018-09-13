@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.event;
 
+import com.nincraft.ninbot.components.common.ISchedulable;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +20,7 @@ import static java.util.Date.from;
 
 @Log4j2
 @Component
-public class EventScheduler {
+public class EventScheduler implements ISchedulable {
 
     private EventService eventService;
 
