@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    image: nincodedo/ninbot:latest
+    volumes:
+      - .:/tmp
+    ports:
+      - '8090:8090'
+    healthcheck:
+      test: curl --request GET --url http://localhost:8090/actuator/health || exit 1
+      interval: 45s
+      timeout: 10s
+      retries: 5
