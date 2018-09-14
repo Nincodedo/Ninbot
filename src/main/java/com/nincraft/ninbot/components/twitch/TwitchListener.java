@@ -29,18 +29,18 @@ public class TwitchListener extends ListenerAdapter {
             log.debug("UserUpdateEvent " + updateGameEvent);
             log.debug("Old game " + updateGameEvent.getOldGame());
             log.debug("New game " + updateGameEvent.getNewGame());
-            if (updateGameEvent.getOldGame() != null && updateGameEvent.getNewGame() != null
-                    && updateGameEvent.getOldGame().getUrl() == null && updateGameEvent.getNewGame().getUrl() != null) {
+            if (updateGameEvent.getOldGame() == null && updateGameEvent.getNewGame() != null
+                    && updateGameEvent.getNewGame().getUrl() != null) {
                 val serverId = event.getGuild().getId();
                 val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUsers.contains(event.getMember().getUser().getId())) {
                     val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
-                    if (streamingAnnounceChannel.isPresent()) {
-                        val channel = event.getGuild().getTextChannelById(streamingAnnounceChannel.get());
+                    streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
+                        val channel = event.getGuild().getTextChannelById(streamingAnnounceChannelString);
                         val user = updateGameEvent.getUser().getName();
                         val url = updateGameEvent.getNewGame().getUrl();
                         messageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
-                    }
+                    });
                 }
             }
         }

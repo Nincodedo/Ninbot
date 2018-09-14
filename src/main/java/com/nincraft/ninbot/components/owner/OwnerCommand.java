@@ -49,9 +49,9 @@ public class OwnerCommand extends AbstractCommand {
 
     private void showLogs(MessageReceivedEvent event) {
         val announceChannelId = configService.getSingleValueByName(event.getGuild().getId(), ConfigConstants.ERROR_ANNOUNCE_CHANNEL);
-        if (announceChannelId.isPresent()) {
-            val announceChannel = event.getJDA().getTextChannelById(announceChannelId.get());
+        announceChannelId.ifPresent(announcementChannelString -> {
+            val announceChannel = event.getJDA().getTextChannelById(announcementChannelString);
             announceChannel.sendFile(new File(ninbotLog)).queue();
-        }
+        });
     }
 }
