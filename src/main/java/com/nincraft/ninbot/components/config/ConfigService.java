@@ -38,4 +38,9 @@ public class ConfigService {
     public boolean addConfig(String serverId, String configName, String configValue) {
         return configDao.addConfig(serverId, configName, configValue);
     }
+
+    @Transactional
+    public List<Config> getConfigsByServerId(String serverId) {
+        return configDao.getAllObjectsByServerId(serverId);
+    }
 }
