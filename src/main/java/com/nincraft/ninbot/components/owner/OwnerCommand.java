@@ -5,6 +5,7 @@ import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,10 @@ public class OwnerCommand extends AbstractCommand {
 
     @Override
     protected void executeCommand(MessageReceivedEvent event) {
+        if (!event.getMessage().isFromType(ChannelType.PRIVATE)) {
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            return;
+        }
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "restart":
                 restart(event.getMessage());
