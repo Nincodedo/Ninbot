@@ -33,7 +33,7 @@ public class HelpCommand extends AbstractCommand {
         embedBuilder.setColor(Color.BLUE);
         List<String> keyList = new ArrayList<>(commandMap.keySet());
         Collections.sort(keyList);
-        keyList.stream().filter(key -> userHasPermission(event.getGuild(), event.getMember(), commandMap.get(key).getPermissionLevel()))
+        keyList.stream().filter(key -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(key).getPermissionLevel()))
                 .forEach(key -> embedBuilder.addField(key, commandMap.get(key).getDescription(), false));
         embedBuilder.setFooter("Use \"help\" at the end of any command to get more information about it", null);
         messageBuilder.setEmbed(embedBuilder.build());

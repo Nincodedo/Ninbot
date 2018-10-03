@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +26,7 @@ public abstract class AbstractCommand {
     protected MessageUtils messageUtils;
 
     void execute(MessageReceivedEvent event) {
-        if (userHasPermission(event.getGuild(), event.getMember())) {
+        if (userHasPermission(event.getGuild(), event.getAuthor())) {
             val message = event.getMessage().getContentStripped();
             log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
@@ -50,16 +50,17 @@ public abstract class AbstractCommand {
         return name + ": " + description;
     }
 
-    private boolean userHasPermission(Guild guild, Member member) {
-        return userHasPermission(guild, member, this.permissionLevel);
+    private boolean userHasPermission(Guild guild, User user) {
+        return userHasPermission(guild, user, this.permissionLevel);
     }
 
-    protected boolean userHasPermission(Guild guild, Member member, RolePermission rolePermission) {
+    protected boolean userHasPermission(Guild guild, User user, RolePermission rolePermission) {
         if (RolePermission.EVERYONE.equals(rolePermission)) {
             return true;
         } else if (RolePermission.OWNER.equals(rolePermission)) {
-            return member.getUser().getId().equals(RolePermission.OWNER.getRoleName());
+            return user.getId().equals(RolePermission.OWNER.getRoleName());
         } else {
+            val member = guild.getMember(user);
             val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
             return guild.getMembersWithRoles(role).contains(member);
         }

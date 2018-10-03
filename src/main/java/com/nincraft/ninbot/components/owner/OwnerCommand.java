@@ -2,9 +2,7 @@ package com.nincraft.ninbot.components.owner;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.RolePermission;
-import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
-import lombok.val;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -53,10 +51,6 @@ public class OwnerCommand extends AbstractCommand {
     }
 
     private void showLogs(MessageReceivedEvent event) {
-        val announceChannelId = configService.getSingleValueByName(event.getGuild().getId(), ConfigConstants.ERROR_ANNOUNCE_CHANNEL);
-        announceChannelId.ifPresent(announcementChannelString -> {
-            val announceChannel = event.getJDA().getTextChannelById(announcementChannelString);
-            announceChannel.sendFile(new File(ninbotLog)).queue();
-        });
+        event.getChannel().sendFile(new File(ninbotLog)).queue();
     }
 }
