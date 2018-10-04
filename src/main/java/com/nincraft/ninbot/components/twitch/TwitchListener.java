@@ -5,6 +5,8 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -26,23 +28,53 @@ public class TwitchListener extends ListenerAdapter {
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
         if (event instanceof UserUpdateGameEvent) {
             val updateGameEvent = (UserUpdateGameEvent) event;
-            log.debug("UserUpdateEvent " + updateGameEvent);
-            log.debug("Old game " + updateGameEvent.getOldGame());
-            log.debug("New game " + updateGameEvent.getNewGame());
-            if (updateGameEvent.getOldGame() == null && updateGameEvent.getNewGame() != null
-                    && updateGameEvent.getNewGame().getUrl() != null) {
+            if (isNowStreaming(updateGameEvent)) {
                 val serverId = event.getGuild().getId();
                 val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUsers.contains(event.getMember().getUser().getId())) {
-                    val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
-                    streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
-                        val channel = event.getGuild().getTextChannelById(streamingAnnounceChannelString);
-                        val user = updateGameEvent.getUser().getName();
-                        val url = updateGameEvent.getNewGame().getUrl();
-                        messageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
-                    });
+                    announceStream(updateGameEvent, serverId);
                 }
+            } else if (isNoLongerStreaming(updateGameEvent)) {
+                removeRole(updateGameEvent.getGuild(), updateGameEvent.getMember());
             }
         }
+    }
+
+    private void removeRole(Guild guild, Member member) {
+        val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        streamingRoleId.ifPresent(roleId -> {
+            val streamingRole = guild.getRoleById(roleId);
+            guild.getController().removeSingleRoleFromMember(member, streamingRole).queue();
+        });
+    }
+
+    private boolean isNoLongerStreaming(UserUpdateGameEvent updateGameEvent) {
+        return updateGameEvent.getNewGame() == null && updateGameEvent.getOldGame() != null
+                && updateGameEvent.getOldGame().getUrl() != null;
+    }
+
+    private boolean isNowStreaming(UserUpdateGameEvent updateGameEvent) {
+        return updateGameEvent.getOldGame() == null && updateGameEvent.getNewGame() != null
+                && updateGameEvent.getNewGame().getUrl() != null;
+    }
+
+    private void announceStream(UserUpdateGameEvent updateGameEvent, String serverId) {
+        val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
+        streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
+            val guild = updateGameEvent.getGuild();
+            val channel = guild.getTextChannelById(streamingAnnounceChannelString);
+            val user = updateGameEvent.getUser().getName();
+            val url = updateGameEvent.getNewGame().getUrl();
+            addRole(guild, guild.getMember(updateGameEvent.getUser()));
+            messageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
+        });
+    }
+
+    private void addRole(Guild guild, Member member) {
+        val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        streamingRoleId.ifPresent(roleId -> {
+            val streamingRole = guild.getRoleById(roleId);
+            guild.getController().addSingleRoleToMember(member, streamingRole).queue();
+        });
     }
 }
