@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.admin;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.RolePermission;
+import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -73,19 +74,15 @@ public class AdminCommand extends AbstractCommand {
 
     private void removeConfig(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
-        val configName = message.split(" ")[3];
-        val configValue = message.split(" ")[4];
-        val serverId = event.getGuild().getId();
-        configService.removeConfig(serverId, configName, configValue);
+        Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
+        configService.removeConfig(config);
         messageUtils.reactSuccessfulResponse(event.getMessage());
     }
 
     private void addConfig(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
-        val configName = message.split(" ")[3];
-        val configValue = message.split(" ")[4];
-        val serverId = event.getGuild().getId();
-        val isSuccessful = configService.addConfig(serverId, configName, configValue);
+        Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
+        val isSuccessful = configService.addConfig(config);
         messageUtils.reactAccordingly(event.getMessage(), isSuccessful);
     }
 }

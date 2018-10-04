@@ -69,4 +69,25 @@ public class ConfigDao extends GenericDao<Config> {
         }
         return true;
     }
+
+    void removeConfig(Config config) {
+        try (val session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.delete(session.contains(config) ? config : session.merge(config));
+            session.getTransaction().commit();
+        }
+    }
+
+    public boolean addConfig(Config config) {
+        try (val session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(config);
+            session.getTransaction().commit();
+        } catch (EntityExistsException | TransactionRequiredException e) {
+            log.error("Failed to set config {} with value {} for server {}", config.getKey(), config.getValue(), config.getServerId());
+            log.error(e);
+            return false;
+        }
+        return true;
+    }
 }

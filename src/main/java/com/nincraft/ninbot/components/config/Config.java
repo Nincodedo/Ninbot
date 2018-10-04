@@ -24,7 +24,7 @@ public class Config implements Serializable {
         //no-op
     }
 
-    Config(String serverId, String configName, String configValue) {
+    public Config(String serverId, String configName, String configValue) {
         this.serverId = serverId;
         this.key = configName;
         this.value = configValue;

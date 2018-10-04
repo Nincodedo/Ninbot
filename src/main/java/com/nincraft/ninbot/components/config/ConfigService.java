@@ -30,8 +30,18 @@ public class ConfigService {
     }
 
     @Transactional
+    public void removeConfig(Config config) {
+        configDao.removeConfig(config);
+    }
+
+    @Transactional
     public void removeConfig(String serverId, String configName, String configValue) {
         configDao.removeConfig(serverId, configName, configValue);
+    }
+
+    @Transactional
+    public boolean addConfig(Config config) {
+        return configDao.addConfig(config);
     }
 
     @Transactional
