@@ -2,13 +2,11 @@ package com.nincraft.ninbot.components.trivia;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import org.apache.commons.text.StringEscapeUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -28,16 +26,15 @@ public class TriviaQuestion {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(question);
         embedBuilder.setAuthor(category);
-        StringBuilder builder = new StringBuilder();
-        List<String> choices = new ArrayList<>();
-        choices.add(correctAnswer);
-        choices.addAll(incorrectAnswers);
-        Collections.shuffle(choices);
-        for (val choice : choices) {
-            builder.append(choice).append("\n");
-        }
-        embedBuilder.addField("Possible Answers", builder.toString(), true);
         messageBuilder.setEmbed(embedBuilder.build());
         return messageBuilder.build();
+    }
+
+    void unescapeFields() {
+        category = StringEscapeUtils.unescapeHtml3(category).trim();
+        type = StringEscapeUtils.unescapeHtml3(type).trim();
+        difficulty = StringEscapeUtils.unescapeHtml3(difficulty).trim();
+        question = StringEscapeUtils.unescapeHtml3(question).trim();
+        correctAnswer = StringEscapeUtils.unescapeHtml3(correctAnswer).trim();
     }
 }

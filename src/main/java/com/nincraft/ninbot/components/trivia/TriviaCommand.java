@@ -43,10 +43,25 @@ public class TriviaCommand extends AbstractCommand {
             case "categories":
                 displayTriviaCategories(event);
                 break;
+            case "score":
+                getPlayerScore(event);
+                break;
+            case "bad":
+                reportBadQuestion(event);
+                break;
             default:
                 messageUtils.reactUnsuccessfulResponse(event.getMessage());
                 break;
         }
+    }
+
+    private void getPlayerScore(MessageReceivedEvent event) {
+        int score = triviaManager.getPlayerScore(event.getAuthor().getId());
+        messageUtils.sendMessage(event.getChannel(), "%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score));
+    }
+
+    private void reportBadQuestion(MessageReceivedEvent event) {
+        //TODO
     }
 
     private void displayTriviaCategories(MessageReceivedEvent event) {

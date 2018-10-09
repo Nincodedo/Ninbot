@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.JDA;
 
 import java.util.TimerTask;
 
-public class TriviaTask extends TimerTask {
+public class TriviaTimeUpTask extends TimerTask {
 
     private TriviaInstance triviaInstance;
     private TriviaInstanceDao triviaInstanceDao;
@@ -14,7 +14,7 @@ public class TriviaTask extends TimerTask {
     @Getter
     private boolean timeExpired;
 
-    TriviaTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao,
+    TriviaTimeUpTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao,
             JDA jda) {
         this.triviaInstance = triviaInstance;
         this.triviaInstanceDao = triviaInstanceDao;
