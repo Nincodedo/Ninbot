@@ -22,6 +22,7 @@ import java.util.Timer;
 @Component
 public class TriviaManager {
 
+    private static final String HTTP_OPENTDB_COM = "http://opentdb.com/";
     private TriviaInstanceDao triviaInstanceDao;
     private TriviaScoreService triviaScoreService;
     private Map<Integer, String> triviaCategoryMap;
@@ -148,11 +149,11 @@ public class TriviaManager {
     }
 
     private void resetToken() {
-        String s = "https://opentdb.com/api_token.php?command=reset&token=YOURTOKENHERE";
+        String s = HTTP_OPENTDB_COM + "api_token.php?command=reset&token=YOURTOKENHERE";
     }
 
     private String buildTriviaUrl(String token, int categoryId) {
-        String triviaUrl = "https://opentdb.com/api.php?amount=1&type=multiple";
+        String triviaUrl = HTTP_OPENTDB_COM + "api.php?amount=1&type=multiple";
         if (!token.isEmpty()) {
             triviaUrl += "&token=" + token;
         }
@@ -163,7 +164,7 @@ public class TriviaManager {
     }
 
     private String getTriviaToken() {
-        val jsonOptional = httpGetJson("https://opentdb.com/api_token.php?command=request");
+        val jsonOptional = httpGetJson(HTTP_OPENTDB_COM + "api_token.php?command=request");
         if (jsonOptional.isPresent()) {
             val json = jsonOptional.get();
             ObjectMapper objectMapper = new ObjectMapper();
@@ -195,7 +196,7 @@ public class TriviaManager {
         if (!triviaCategoryMap.isEmpty()) {
             return triviaCategoryMap;
         }
-        val jsonOptional = httpGetJson("https://opentdb.com/api_category.php");
+        val jsonOptional = httpGetJson(HTTP_OPENTDB_COM + "api_category.php");
         if (jsonOptional.isPresent()) {
             val json = jsonOptional.get();
             ObjectMapper objectMapper = new ObjectMapper();
