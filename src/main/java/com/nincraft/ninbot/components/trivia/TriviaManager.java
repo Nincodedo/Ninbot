@@ -86,6 +86,7 @@ public class TriviaManager {
                         }
                     }
                     if (triviaListener.isQuestionAnswered()) {
+                        unansweredQuestionCount = 0;
                         timer.cancel();
                     } else {
                         unansweredQuestionCount++;
