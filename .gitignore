@@ -5,6 +5,5 @@
 /config
 /Ninbot.iml
 /data/
-*.db
 *.log
 *.gz

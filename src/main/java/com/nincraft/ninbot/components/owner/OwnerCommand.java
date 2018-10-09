@@ -2,9 +2,9 @@ package com.nincraft.ninbot.components.owner;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.RolePermission;
-import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,16 +14,14 @@ import java.io.File;
 @Component
 public class OwnerCommand extends AbstractCommand {
 
-    private ConfigService configService;
     @Value("${logging.file}")
     private String ninbotLog;
 
-    public OwnerCommand(ConfigService configService) {
+    public OwnerCommand() {
         length = 3;
         name = "owner";
         description = "Owner commands";
         permissionLevel = RolePermission.OWNER;
-        this.configService = configService;
     }
 
     @Override
@@ -37,7 +35,7 @@ public class OwnerCommand extends AbstractCommand {
                 restart(event.getMessage());
                 break;
             case "logs":
-                showLogs(event);
+                showLogs(event.getChannel());
                 break;
             default:
                 messageUtils.reactUnknownResponse(event.getMessage());
@@ -50,7 +48,7 @@ public class OwnerCommand extends AbstractCommand {
         System.exit(0);
     }
 
-    private void showLogs(MessageReceivedEvent event) {
-        event.getChannel().sendFile(new File(ninbotLog)).queue();
+    private void showLogs(MessageChannel channel) {
+        channel.sendFile(new File(ninbotLog)).queue();
     }
 }

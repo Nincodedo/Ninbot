@@ -86,7 +86,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    private int getCommandLength(String content) {
+    protected int getCommandLength(String content) {
         return content.split(" ").length;
     }
 
