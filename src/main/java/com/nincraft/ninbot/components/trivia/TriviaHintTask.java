@@ -49,10 +49,12 @@ public class TriviaHintTask extends TimerTask {
     }
 
     private String replaceSome(String answer) {
+        int count = 0;
         String newAnswer = "";
         for (char letter : answer.toCharArray()) {
-            if (letter == ' ' || random.nextBoolean()) {
+            if ((letter == ' ' || random.nextBoolean()) && count < answer.length() / 2) {
                 newAnswer += letter;
+                count++;
             } else {
                 newAnswer += "-";
             }
