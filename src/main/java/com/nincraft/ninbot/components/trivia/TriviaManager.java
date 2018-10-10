@@ -74,7 +74,7 @@ public class TriviaManager {
                     val channel = jda.getTextChannelById(triviaInstance.getChannelId());
                     channel.sendMessage(triviaQuestion.build()).queue();
                     val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceDao, jda);
-                    long time = 20000L;
+                    long time = 30000L;
                     timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), time);
                     timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time * 2);
                     timer.schedule(triviaTask, time * 3);
