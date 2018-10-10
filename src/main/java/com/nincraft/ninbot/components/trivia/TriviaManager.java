@@ -13,10 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Timer;
+import java.util.*;
 
 @Log4j2
 @Component
@@ -27,11 +24,13 @@ public class TriviaManager {
     private TriviaScoreService triviaScoreService;
     private Map<Integer, String> triviaCategoryMap;
     private int triviaUnansweredLimit = 3;
+    private List<String> badPhraseList;
 
     public TriviaManager(TriviaInstanceDao triviaInstanceDao, TriviaScoreService triviaScoreService) {
         triviaCategoryMap = new HashMap<>();
         this.triviaInstanceDao = triviaInstanceDao;
         this.triviaScoreService = triviaScoreService;
+        this.badPhraseList = Arrays.asList("which of", "which one of");
     }
 
     private void stopTrivia(TriviaInstance triviaInstance, JDA jda) {
@@ -117,7 +116,11 @@ public class TriviaManager {
                     val triviaResults = jsonTree.get("results").get(0).toString();
                     val triviaQuestion = objectMapper.readValue(triviaResults, TriviaQuestion.class);
                     triviaQuestion.unescapeFields();
-                    return triviaQuestion;
+                    if (!containsBadQuestionPhrase(triviaQuestion.getQuestion())) {
+                        return triviaQuestion;
+                    } else {
+                        return null;
+                    }
                 } else {
                     handleResponseCode(responseCode);
                 }
@@ -126,6 +129,16 @@ public class TriviaManager {
             }
         }
         return null;
+    }
+
+    private boolean containsBadQuestionPhrase(String question) {
+        val lowerQuestion = question.toLowerCase();
+        for (val badPhrase : badPhraseList) {
+            if (lowerQuestion.contains(badPhrase.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
