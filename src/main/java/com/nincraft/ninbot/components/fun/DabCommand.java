@@ -8,19 +8,21 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Component
 public class DabCommand extends AbstractCommand {
 
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
+    private SecureRandom random;
 
     public DabCommand() {
         length = 3;
         name = "dab";
         description = "Adds all dab emojis to the last message of the user named";
         checkExactLength = false;
+        random = new SecureRandom();
     }
 
     @Override
@@ -50,7 +52,6 @@ public class DabCommand extends AbstractCommand {
 
     private void dabOnMessage(Message message, MessageChannel channel) {
         val guild = message.getGuild();
-        Random random = new Random();
         val critDab = random.nextInt(100) < 5;
         if (critDab) {
             critResponse.react(message, channel, messageUtils);
