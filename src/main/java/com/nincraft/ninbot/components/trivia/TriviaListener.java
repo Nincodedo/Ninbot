@@ -11,6 +11,8 @@ public class TriviaListener extends ListenerAdapter {
     private String answer;
     @Getter
     private boolean questionAnswered;
+    @Getter
+    private boolean someAnswerOfSorts;
     private TriviaScoreService triviaScoreService;
 
     public TriviaListener(String channelId, String answer,
@@ -18,12 +20,14 @@ public class TriviaListener extends ListenerAdapter {
         this.channelId = channelId;
         this.answer = answer;
         questionAnswered = false;
+        someAnswerOfSorts = false;
         this.triviaScoreService = triviaScoreService;
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.getAuthor().isBot() && event.getChannel().getId().equals(channelId)) {
+            someAnswerOfSorts = true;
             val message = event.getMessage().getContentStripped().toLowerCase().trim();
             if (message.equalsIgnoreCase(answer)) {
                 triviaScoreService.addUser(event.getAuthor().getId());

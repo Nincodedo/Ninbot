@@ -87,6 +87,8 @@ public class TriviaManager {
                     if (triviaListener.isQuestionAnswered()) {
                         unansweredQuestionCount = 0;
                         timer.cancel();
+                    } else if (triviaListener.isSomeAnswerOfSorts()) {
+                        unansweredQuestionCount = 0;
                     } else {
                         unansweredQuestionCount++;
                     }
