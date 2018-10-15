@@ -3,10 +3,9 @@ package com.nincraft.ninbot.components.trivia;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
 
-import java.util.Random;
-import java.util.TimerTask;
+import java.util.*;
 
-public class TriviaHintTask extends TimerTask {
+class TriviaHintTask extends TimerTask {
 
     private TriviaInstance triviaInstance;
     private TriviaInstanceDao triviaInstanceDao;
@@ -14,7 +13,7 @@ public class TriviaHintTask extends TimerTask {
     private int hintNumber;
     private Random random;
 
-    public TriviaHintTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao, JDA jda, int hintNumber) {
+    TriviaHintTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao, JDA jda, int hintNumber) {
         this.triviaInstance = triviaInstance;
         this.triviaInstanceDao = triviaInstanceDao;
         this.jda = jda;
@@ -26,39 +25,33 @@ public class TriviaHintTask extends TimerTask {
     public void run() {
         if (triviaInstanceDao.isActiveTriviaChannel(triviaInstance.getChannelId())) {
             val answer = triviaInstance.getAnswer();
-            String hint = "";
-            if (hintNumber == 1) {
-                hint = replaceAll(answer);
-            } else if (hintNumber == 2) {
-                hint = replaceSome(answer);
-            }
+            String hint = revealHint(answer, hintNumber);
             jda.getTextChannelById(triviaInstance.getChannelId()).sendMessage("Hint! " + hint).queue();
         }
     }
 
-    private String replaceAll(String answer) {
-        String newAnswer = "";
-        for (char letter : answer.toCharArray()) {
-            if (letter == ' ') {
-                newAnswer += letter;
+    private String revealHint(String answer, int hintNumber) {
+        StringBuilder newAnswer = new StringBuilder();
+        double percentOfForcedHint = ((hintNumber - 1) * 25) / 100.0;
+        int numOfLettersToShow = (int) (answer.length() * percentOfForcedHint);
+        List<Integer> hintIndexes = getHintIndexList(numOfLettersToShow, answer.length());
+        char[] charArray = answer.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char letter = charArray[i];
+            if (letter == ' ' || hintIndexes.contains(i)) {
+                newAnswer.append(letter);
             } else {
-                newAnswer += "-";
+                newAnswer.append("-");
             }
         }
-        return newAnswer;
+        return newAnswer.toString();
     }
 
-    private String replaceSome(String answer) {
-        int count = 0;
-        String newAnswer = "";
-        for (char letter : answer.toCharArray()) {
-            if ((letter == ' ' || random.nextBoolean()) && count < answer.length() / 2) {
-                newAnswer += letter;
-                count++;
-            } else {
-                newAnswer += "-";
-            }
+    private List<Integer> getHintIndexList(int numOfLettersToShow, int length) {
+        Set<Integer> hintIndexes = new HashSet<>();
+        for (int i = 0; i < numOfLettersToShow; i++) {
+            hintIndexes.add(random.nextInt(length));
         }
-        return newAnswer;
+        return new ArrayList<>(hintIndexes);
     }
 }
