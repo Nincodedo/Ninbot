@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.trivia;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -21,7 +20,7 @@ public class TriviaCommand extends AbstractCommand {
 
     private TriviaManager triviaManager;
 
-    public TriviaCommand(ConfigService configService, TriviaManager triviaManager) {
+    public TriviaCommand(TriviaManager triviaManager) {
         name = "trivia";
         description = "Starts/Stops trivia";
         length = 3;
@@ -46,9 +45,6 @@ public class TriviaCommand extends AbstractCommand {
             case "score":
                 getPlayerScore(event);
                 break;
-            case "bad":
-                reportBadQuestion(event);
-                break;
             default:
                 messageUtils.reactUnsuccessfulResponse(event.getMessage());
                 break;
@@ -58,10 +54,6 @@ public class TriviaCommand extends AbstractCommand {
     private void getPlayerScore(MessageReceivedEvent event) {
         int score = triviaManager.getPlayerScore(event.getAuthor().getId());
         messageUtils.sendMessage(event.getChannel(), "%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score));
-    }
-
-    private void reportBadQuestion(MessageReceivedEvent event) {
-        //TODO
     }
 
     private void displayTriviaCategories(MessageReceivedEvent event) {
