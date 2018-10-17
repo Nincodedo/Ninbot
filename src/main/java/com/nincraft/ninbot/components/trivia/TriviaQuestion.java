@@ -11,14 +11,14 @@ import java.util.List;
 
 @Data
 public class TriviaQuestion {
-    public String category;
-    public String type;
-    public String difficulty;
-    public String question;
+    private String category;
+    private String type;
+    private String difficulty;
+    private String question;
     @JsonProperty("correct_answer")
-    public String correctAnswer;
+    private String correctAnswer;
     @JsonProperty("incorrect_answers")
-    public List<String> incorrectAnswers;
+    private List<String> incorrectAnswers;
 
 
     public Message build() {
