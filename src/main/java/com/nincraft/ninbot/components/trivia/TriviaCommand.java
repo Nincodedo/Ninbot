@@ -25,7 +25,12 @@ public class TriviaCommand extends AbstractCommand {
         description = "Starts/Stops trivia";
         length = 3;
         checkExactLength = false;
-        helpText = "?";
+        helpText = "Sub commands\n"
+                + "start [ID] - starts trivia in a channel with an optional category ID\n"
+                + "stop - stop trivia in a channel\n"
+                + "categories - list available trivia categories\n"
+                + "score - shows your current score\n"
+                + "leaderboard - shows the top 5 players";
         this.triviaManager = triviaManager;
     }
 
