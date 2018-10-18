@@ -45,10 +45,31 @@ public class TriviaCommand extends AbstractCommand {
             case "score":
                 getPlayerScore(event);
                 break;
+            case "leaderboard":
+                displayLeaderboard(event);
+                break;
             default:
                 messageUtils.reactUnsuccessfulResponse(event.getMessage());
                 break;
         }
+    }
+
+    private void displayLeaderboard(MessageReceivedEvent event) {
+        List<TriviaScore> triviaScores = triviaManager.getPointsForAllPlayers();
+        if (triviaScores.isEmpty()) {
+            return;
+        }
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Trivia Leaderboard");
+        Collections.sort(triviaScores);
+        for (int i = 0; i < triviaScores.size() && i < 5; i++) {
+            TriviaScore triviaScore = triviaScores.get(i);
+            val member = event.getGuild().getMemberById(triviaScore.getUserId());
+            embedBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
+        }
+        messageBuilder.setEmbed(embedBuilder.build());
+        messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 
     private void getPlayerScore(MessageReceivedEvent event) {

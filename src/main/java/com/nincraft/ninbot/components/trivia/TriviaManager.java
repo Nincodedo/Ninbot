@@ -228,4 +228,8 @@ public class TriviaManager {
     int getPlayerScore(String userId) {
         return triviaScoreService.getPoints(userId);
     }
+
+    public List<TriviaScore> getPointsForAllPlayers() {
+        return triviaScoreService.getPointsForAllPlayers();
+    }
 }

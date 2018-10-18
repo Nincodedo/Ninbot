@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.trivia;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class TriviaScoreService {
@@ -26,5 +27,10 @@ public class TriviaScoreService {
     @Transactional
     public int getPoints(String userId) {
         return triviaScoreDao.getPoints(userId);
+    }
+
+    @Transactional
+    public List<TriviaScore> getPointsForAllPlayers() {
+        return triviaScoreDao.getPointsForAllPlayers();
     }
 }

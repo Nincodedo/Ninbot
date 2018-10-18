@@ -5,6 +5,8 @@ import lombok.val;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class TriviaScoreDao extends GenericDao<TriviaScore> {
     public TriviaScoreDao(SessionFactory sessionFactory) {
@@ -56,6 +58,13 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
                 session.persist(triviaScore);
                 session.getTransaction().commit();
             }
+        }
+    }
+
+    public List<TriviaScore> getPointsForAllPlayers() {
+        try (val session = sessionFactory.openSession()) {
+            val query = session.createQuery("FROM TriviaScore ", TriviaScore.class);
+            return query.getResultList();
         }
     }
 }
