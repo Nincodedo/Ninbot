@@ -64,38 +64,7 @@ public class TriviaManager {
                     && unansweredQuestionCount <= triviaUnansweredLimit) {
                 triviaInstanceDao.saveObject(triviaInstance);
                 if (triviaInstance.getTriviaQuestion() != null) {
-                    Timer timer = new Timer();
-                    triviaInstance.setTriviaTimer(timer);
-
-                    val triviaQuestion = triviaInstance.getTriviaQuestion();
-                    triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
-                    val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
-                    jda.addEventListener(triviaAnswerListener);
-                    val channel = jda.getTextChannelById(triviaInstance.getChannelId());
-                    channel.sendMessage(triviaQuestion.build()).queue();
-                    val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceDao, jda);
-                    long time = 30000L;
-                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), 0);
-                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time);
-                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 3), time * 2);
-                    timer.schedule(triviaTask, time * 3);
-                    while (!triviaAnswerListener.isQuestionAnswered() && !triviaTask.isTimeExpired()) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            log.error("oh no", e);
-                        }
-                    }
-                    if (triviaAnswerListener.isQuestionAnswered()) {
-                        unansweredQuestionCount = 0;
-                        timer.cancel();
-                    } else if (triviaAnswerListener.isSomeAnswerOfSorts()) {
-                        unansweredQuestionCount = 0;
-                    } else {
-                        unansweredQuestionCount++;
-                    }
-                    jda.removeEventListener(triviaAnswerListener);
-                    triviaInstance.setTriviaQuestion(null);
+                    unansweredQuestionCount = askTriviaQuestion(triviaInstance, jda, unansweredQuestionCount);
                 } else {
                     triviaInstance.setTriviaQuestion(nextTriviaQuestion(triviaInstance));
                 }
@@ -105,6 +74,42 @@ public class TriviaManager {
             }
         });
         thread.start();
+    }
+
+    private int askTriviaQuestion(TriviaInstance triviaInstance, JDA jda, int unansweredQuestionCount) {
+        Timer timer = new Timer();
+        triviaInstance.setTriviaTimer(timer);
+
+        val triviaQuestion = triviaInstance.getTriviaQuestion();
+        triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
+        val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
+        jda.addEventListener(triviaAnswerListener);
+        val channel = jda.getTextChannelById(triviaInstance.getChannelId());
+        channel.sendMessage(triviaQuestion.build()).queue();
+        val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceDao, jda);
+        long time = 30000L;
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), 0);
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time);
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 3), time * 2);
+        timer.schedule(triviaTask, time * 3);
+        while (!triviaAnswerListener.isQuestionAnswered() && !triviaTask.isTimeExpired()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                log.error("oh no", e);
+            }
+        }
+        if (triviaAnswerListener.isQuestionAnswered()) {
+            unansweredQuestionCount = 0;
+            timer.cancel();
+        } else if (triviaAnswerListener.isSomeAnswerOfSorts()) {
+            unansweredQuestionCount = 0;
+        } else {
+            unansweredQuestionCount++;
+        }
+        jda.removeEventListener(triviaAnswerListener);
+        triviaInstance.setTriviaQuestion(null);
+        return unansweredQuestionCount;
     }
 
     private TriviaQuestion nextTriviaQuestion(TriviaInstance triviaInstance) {
@@ -164,10 +169,6 @@ public class TriviaManager {
                 log.error("Unknown response code");
                 break;
         }
-    }
-
-    private void resetToken() {
-        String s = HTTP_OPENTDB_COM + "api_token.php?command=reset&token=YOURTOKENHERE";
     }
 
     private String buildTriviaUrl(String token, int categoryId) {
