@@ -25,12 +25,12 @@ public class TriviaScoreService {
     }
 
     @Transactional
-    public int getPoints(String userId) {
-        return triviaScoreDao.getPoints(userId);
+    public int getPlayerScore(String userId) {
+        return triviaScoreDao.getPlayerScore(userId);
     }
 
     @Transactional
-    public List<TriviaScore> getPointsForAllPlayers() {
-        return triviaScoreDao.getPointsForAllPlayers();
+    public List<TriviaScore> getScoreForAllPlayers() {
+        return triviaScoreDao.getScoreForAllPlayers();
     }
 }

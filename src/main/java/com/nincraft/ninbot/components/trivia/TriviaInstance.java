@@ -31,7 +31,7 @@ public class TriviaInstance {
     private Timer triviaTimer;
 
 
-    public TriviaInstance(String serverId, String channelId, int categoryId) {
+    TriviaInstance(String serverId, String channelId, int categoryId) {
         this.serverId = serverId;
         this.channelId = channelId;
         this.categoryId = categoryId;

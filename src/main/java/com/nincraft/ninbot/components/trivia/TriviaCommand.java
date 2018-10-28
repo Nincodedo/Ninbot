@@ -19,8 +19,9 @@ import java.util.Map;
 public class TriviaCommand extends AbstractCommand {
 
     private TriviaManager triviaManager;
+    private TriviaScoreService triviaScoreService;
 
-    public TriviaCommand(TriviaManager triviaManager) {
+    public TriviaCommand(TriviaManager triviaManager, TriviaScoreService triviaScoreService) {
         name = "trivia";
         description = "Starts/Stops trivia";
         length = 3;
@@ -32,6 +33,7 @@ public class TriviaCommand extends AbstractCommand {
                 + "score - shows your current score\n"
                 + "leaderboard - shows the top 5 players";
         this.triviaManager = triviaManager;
+        this.triviaScoreService = triviaScoreService;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TriviaCommand extends AbstractCommand {
     }
 
     private void displayLeaderboard(MessageReceivedEvent event) {
-        List<TriviaScore> triviaScores = triviaManager.getPointsForAllPlayers();
+        List<TriviaScore> triviaScores = triviaScoreService.getScoreForAllPlayers();
         if (triviaScores.isEmpty()) {
             return;
         }
@@ -71,14 +73,16 @@ public class TriviaCommand extends AbstractCommand {
         for (int i = 0; i < triviaScores.size() && i < 5; i++) {
             TriviaScore triviaScore = triviaScores.get(i);
             val member = event.getGuild().getMemberById(triviaScore.getUserId());
-            embedBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
+            if (member != null) {
+                embedBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
+            }
         }
         messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 
     private void getPlayerScore(MessageReceivedEvent event) {
-        int score = triviaManager.getPlayerScore(event.getAuthor().getId());
+        int score = triviaScoreService.getPlayerScore(event.getAuthor().getId());
         messageUtils.sendMessage(event.getChannel(), "%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score));
     }
 

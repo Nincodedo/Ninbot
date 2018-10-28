@@ -31,7 +31,7 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
         }
     }
 
-    public int getPoints(String userId) {
+    public int getPlayerScore(String userId) {
         try (val session = sessionFactory.openSession()) {
             int score = 0;
             val query = session.createQuery("FROM TriviaScore where userId = :userId", TriviaScore.class);
@@ -61,7 +61,7 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
         }
     }
 
-    public List<TriviaScore> getPointsForAllPlayers() {
+    public List<TriviaScore> getScoreForAllPlayers() {
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM TriviaScore ", TriviaScore.class);
             return query.getResultList();

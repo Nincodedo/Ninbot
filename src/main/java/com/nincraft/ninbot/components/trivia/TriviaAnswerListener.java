@@ -5,7 +5,7 @@ import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class TriviaListener extends ListenerAdapter {
+public class TriviaAnswerListener extends ListenerAdapter {
 
     private String channelId;
     private String answer;
@@ -15,7 +15,7 @@ public class TriviaListener extends ListenerAdapter {
     private boolean someAnswerOfSorts;
     private TriviaScoreService triviaScoreService;
 
-    public TriviaListener(String channelId, String answer,
+    TriviaAnswerListener(String channelId, String answer,
             TriviaScoreService triviaScoreService) {
         this.channelId = channelId;
         this.answer = answer;

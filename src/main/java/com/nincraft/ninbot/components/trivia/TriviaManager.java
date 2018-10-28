@@ -40,15 +40,15 @@ public class TriviaManager {
         triviaInstanceDao.removeTriviaInChannel(triviaInstance.getChannelId());
     }
 
-    public void stopTrivia(String channelId) {
+    void stopTrivia(String channelId) {
         triviaInstanceDao.removeTriviaInChannel(channelId);
     }
 
-    public boolean isTriviaActiveInChannel(String channelId) {
+    boolean isTriviaActiveInChannel(String channelId) {
         return triviaInstanceDao.isActiveTriviaChannel(channelId);
     }
 
-    public void startTrivia(String channelId, int categoryId, String serverId, JDA jda) {
+    void startTrivia(String channelId, int categoryId, String serverId, JDA jda) {
         TriviaInstance triviaInstance = new TriviaInstance(serverId, channelId, categoryId);
         val token = getTriviaToken();
         triviaInstance.setApiToken(token);
@@ -62,37 +62,39 @@ public class TriviaManager {
             int unansweredQuestionCount = 0;
             while (isTriviaActiveInChannel(triviaInstance.getChannelId())
                     && unansweredQuestionCount <= triviaUnansweredLimit) {
+                triviaInstanceDao.saveObject(triviaInstance);
                 if (triviaInstance.getTriviaQuestion() != null) {
                     Timer timer = new Timer();
                     triviaInstance.setTriviaTimer(timer);
 
                     val triviaQuestion = triviaInstance.getTriviaQuestion();
                     triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
-                    val triviaListener = new TriviaListener(triviaInstance.getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
-                    jda.addEventListener(triviaListener);
+                    val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
+                    jda.addEventListener(triviaAnswerListener);
                     val channel = jda.getTextChannelById(triviaInstance.getChannelId());
                     channel.sendMessage(triviaQuestion.build()).queue();
                     val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceDao, jda);
                     long time = 30000L;
-                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), time);
-                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time * 2);
+                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), 0);
+                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time);
+                    timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 3), time * 2);
                     timer.schedule(triviaTask, time * 3);
-                    while (!triviaListener.isQuestionAnswered() && !triviaTask.isTimeExpired()) {
+                    while (!triviaAnswerListener.isQuestionAnswered() && !triviaTask.isTimeExpired()) {
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
                             log.error("oh no", e);
                         }
                     }
-                    if (triviaListener.isQuestionAnswered()) {
+                    if (triviaAnswerListener.isQuestionAnswered()) {
                         unansweredQuestionCount = 0;
                         timer.cancel();
-                    } else if (triviaListener.isSomeAnswerOfSorts()) {
+                    } else if (triviaAnswerListener.isSomeAnswerOfSorts()) {
                         unansweredQuestionCount = 0;
                     } else {
                         unansweredQuestionCount++;
                     }
-                    jda.removeEventListener(triviaListener);
+                    jda.removeEventListener(triviaAnswerListener);
                     triviaInstance.setTriviaQuestion(null);
                 } else {
                     triviaInstance.setTriviaQuestion(nextTriviaQuestion(triviaInstance));
@@ -223,13 +225,5 @@ public class TriviaManager {
             }
         }
         return triviaCategoryMap;
-    }
-
-    int getPlayerScore(String userId) {
-        return triviaScoreService.getPoints(userId);
-    }
-
-    public List<TriviaScore> getPointsForAllPlayers() {
-        return triviaScoreService.getPointsForAllPlayers();
     }
 }

@@ -11,7 +11,7 @@ public class TriviaInstanceDao extends GenericDao<TriviaInstance> {
         super(sessionFactory);
     }
 
-    public boolean isActiveTriviaChannel(String channelId) {
+    boolean isActiveTriviaChannel(String channelId) {
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM TriviaInstance where channelId = :channelId", TriviaInstance.class);
             query.setParameter("channelId", channelId);
@@ -19,7 +19,7 @@ public class TriviaInstanceDao extends GenericDao<TriviaInstance> {
         }
     }
 
-    public void removeTriviaInChannel(String channelId) {
+    void removeTriviaInChannel(String channelId) {
         try (val session = sessionFactory.openSession()) {
             session.beginTransaction();
             val query = session.createQuery("FROM TriviaInstance where channelId = :channelId", TriviaInstance.class);

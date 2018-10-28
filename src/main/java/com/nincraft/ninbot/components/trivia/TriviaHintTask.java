@@ -32,7 +32,7 @@ class TriviaHintTask extends TimerTask {
 
     private String revealHint(String answer, int hintNumber) {
         StringBuilder newAnswer = new StringBuilder();
-        double percentOfForcedHint = ((hintNumber - 1) * 25) / 100.0;
+        double percentOfForcedHint = ((hintNumber - 1) * 40) / 100.0;
         int numOfLettersToShow = (int) (answer.length() * percentOfForcedHint);
         List<Integer> hintIndexes = getHintIndexList(numOfLettersToShow, answer.length());
         char[] charArray = answer.toCharArray();
