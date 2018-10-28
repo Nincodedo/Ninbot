@@ -9,16 +9,20 @@ import java.util.List;
 
 @Repository
 public class TriviaScoreDao extends GenericDao<TriviaScore> {
+
+    private static final String USER_ID = "userId";
+    private static final String TRIVIA_SCORE_USER_QUERY = "FROM TriviaScore where userId = :userId";
+
     public TriviaScoreDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
-    public int addPoints(String userId, int points) {
+    int addPoints(String userId, int points) {
         try (val session = sessionFactory.openSession()) {
             int newScore = points;
             session.beginTransaction();
-            val query = session.createQuery("FROM TriviaScore where userId = :userId", TriviaScore.class);
-            query.setParameter("userId", userId);
+            val query = session.createQuery(TRIVIA_SCORE_USER_QUERY, TriviaScore.class);
+            query.setParameter(USER_ID, userId);
             val results = query.getResultList();
             if (!results.isEmpty()) {
                 val triviaScore = results.get(0);
@@ -31,11 +35,11 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
         }
     }
 
-    public int getPlayerScore(String userId) {
+    int getPlayerScore(String userId) {
         try (val session = sessionFactory.openSession()) {
             int score = 0;
-            val query = session.createQuery("FROM TriviaScore where userId = :userId", TriviaScore.class);
-            query.setParameter("userId", userId);
+            val query = session.createQuery(TRIVIA_SCORE_USER_QUERY, TriviaScore.class);
+            query.setParameter(USER_ID, userId);
             val results = query.getResultList();
             if (!results.isEmpty()) {
                 val triviaScore = results.get(0);
@@ -45,13 +49,13 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
         }
     }
 
-    public void addUser(String userId) {
+    void addUser(String userId) {
         TriviaScore triviaScore = new TriviaScore();
         triviaScore.setScore(0);
         triviaScore.setUserId(userId);
         try (val session = sessionFactory.openSession()) {
-            val query = session.createQuery("FROM TriviaScore where userId = :userId", TriviaScore.class);
-            query.setParameter("userId", userId);
+            val query = session.createQuery(TRIVIA_SCORE_USER_QUERY, TriviaScore.class);
+            query.setParameter(USER_ID, userId);
             val list = query.getResultList();
             if (list.isEmpty()) {
                 session.beginTransaction();
@@ -61,7 +65,7 @@ public class TriviaScoreDao extends GenericDao<TriviaScore> {
         }
     }
 
-    public List<TriviaScore> getScoreForAllPlayers() {
+    List<TriviaScore> getScoreForAllPlayers() {
         try (val session = sessionFactory.openSession()) {
             val query = session.createQuery("FROM TriviaScore ", TriviaScore.class);
             return query.getResultList();
