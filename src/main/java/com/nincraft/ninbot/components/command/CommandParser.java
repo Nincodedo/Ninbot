@@ -38,6 +38,7 @@ class CommandParser {
             AbstractCommand command = commandHashMap.get(getCommand(message));
             if (command != null) {
                 try {
+                    event.getChannel().sendTyping().queue();
                     command.execute(event);
                 } catch (Exception e) {
                     log.error("Error executing command " + command.getName(), e);
