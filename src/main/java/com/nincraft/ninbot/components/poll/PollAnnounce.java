@@ -56,6 +56,7 @@ class PollAnnounce extends TimerTask {
         }
         message.editMessage(poll.buildClosed()).queue();
         messageUtils.sendMessage(message.getChannel(), poll.getResult());
+        message.unpin().queue();
     }
 
     private String listWinners(List<String> winningChoices) {

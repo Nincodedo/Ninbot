@@ -10,7 +10,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -27,14 +26,14 @@ class PollConsumer implements Consumer<Message> {
 
     @Override
     public void accept(Message message) {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(() -> {
+        Executors.newSingleThreadExecutor().submit(() -> {
             char digitalOneEmoji = '\u0031';
             List<String> choices = poll.getChoices();
             for (int i = 0; i < choices.size(); i++) {
                 message.addReaction(Character.toString(digitalOneEmoji) + "\u20E3").queue();
                 digitalOneEmoji++;
             }
+            message.pin().queue();
             val announceTime = Instant.now().plus(poll.getTimeLength(), ChronoUnit.MINUTES);
             PollAnnounce pollAnnounce = new PollAnnounce(poll, message, messageUtils);
             Timer timer = new Timer();
