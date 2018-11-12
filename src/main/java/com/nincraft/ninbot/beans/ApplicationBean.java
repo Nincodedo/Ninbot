@@ -27,14 +27,12 @@ public class ApplicationBean {
     public JDA jda(List<ListenerAdapter> listenerAdapters) throws InterruptedException {
         JDA jda = null;
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(ninbotToken).buildBlocking();
+            jda = new JDABuilder(AccountType.BOT).setToken(ninbotToken).build();
         } catch (LoginException e) {
             log.error("Failed to login", e);
-        } catch (InterruptedException e) {
-            log.error("Interrupted", e);
-            throw e;
         }
         assert jda != null;
+        jda.awaitReady();
         jda.addEventListener(listenerAdapters.toArray());
         return jda;
     }
