@@ -104,6 +104,11 @@
             <artifactId>commons-text</artifactId>
             <version>1.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.nincodedo</groupId>
+            <artifactId>recastai-java-api</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
@@ -114,6 +119,14 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-nincodedo-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/nincodedo/maven</url>
         </repository>
     </repositories>
     <build>

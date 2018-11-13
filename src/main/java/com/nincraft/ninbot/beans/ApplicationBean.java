@@ -1,5 +1,7 @@
 package com.nincraft.ninbot.beans;
 
+import com.nincodedo.recast.RecastAPI;
+import com.nincodedo.recast.RecastAPIBuilder;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -22,6 +24,9 @@ public class ApplicationBean {
     @Value("${ninbotToken}")
     private String ninbotToken;
 
+    @Value("${recastToken}")
+    private String recastToken;
+
     @Autowired
     @Bean
     public JDA jda(List<ListenerAdapter> listenerAdapters) throws InterruptedException {
@@ -35,5 +40,10 @@ public class ApplicationBean {
         jda.awaitReady();
         jda.addEventListener(listenerAdapters.toArray());
         return jda;
+    }
+
+    @Bean
+    public RecastAPI recastAPI() {
+        return new RecastAPIBuilder(recastToken).build();
     }
 }
