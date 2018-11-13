@@ -37,7 +37,7 @@ public class ConversationListener extends ListenerAdapter {
     }
 
     private boolean isNormalConversation(String message) {
-        return !message.toLowerCase().startsWith("@ninbot");
+        return !message.toLowerCase().startsWith("@ninbot") && message.toLowerCase().contains("ninbot");
     }
 
     private boolean isConversationEnabledChannel(String serverId, String channelId) {
