@@ -12,4 +12,5 @@ public class ConfigConstants {
     public static final String STREAMING_ANNOUNCE_CHANNEL = "streamingAnnounceChannel";
     public static final String ROLE_BLACKLIST = "roleBlacklist";
     public static final String STREAMING_ROLE = "streamingRole";
+    public static final String CONVERSATION_CHANNELS = "conversationChannels";
 }

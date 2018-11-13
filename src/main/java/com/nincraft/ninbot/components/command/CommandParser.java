@@ -45,7 +45,10 @@ class CommandParser {
                     reportError(event, e);
                 }
             } else {
-                messageUtils.reactUnknownResponse(event.getMessage());
+                val channelList = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.CONVERSATION_CHANNELS);
+                if (!channelList.contains(event.getChannel().getId())) {
+                    messageUtils.reactUnknownResponse(event.getMessage());
+                }
             }
         }
     }
