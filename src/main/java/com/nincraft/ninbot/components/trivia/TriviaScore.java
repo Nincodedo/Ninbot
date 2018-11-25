@@ -5,16 +5,15 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TriviaScore")
 @Data
 public class TriviaScore implements Comparable {
     @Id
-    @GeneratedValue
-    @Column(name = "Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private int id;
-    @Column(name = "UserId", nullable = false)
+    @Column(nullable = false)
     private String userId;
-    @Column(name = "Score", nullable = false)
+    @Column(nullable = false)
     private int score;
 
     @Override

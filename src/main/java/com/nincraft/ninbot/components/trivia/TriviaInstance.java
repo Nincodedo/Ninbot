@@ -7,23 +7,19 @@ import java.util.Timer;
 
 @Data
 @Entity
-@Table(name = "TriviaInstance")
 public class TriviaInstance {
     @Id
-    @GeneratedValue
-    @Column(name = "Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private int id;
-    @Column(name = "ChannelId", nullable = false)
+    @Column(nullable = false)
     private String channelId;
-    @Column(name = "ServerID", nullable = false)
+    @Column(nullable = false)
     private String serverId;
-    @Column(name = "CategoryId")
     private int categoryId;
-    @Column(name = "APIToken", nullable = false)
+    @Column(nullable = false)
     private String apiToken;
-    @Column(name = "Question")
     private String question;
-    @Column(name = "Answer")
     private String answer;
     @Transient
     private TriviaQuestion triviaQuestion;

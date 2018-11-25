@@ -8,20 +8,18 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "Countdown")
 @Accessors(chain = true)
 class Countdown {
     @Id
-    @GeneratedValue
-    @Column(name = "Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private int id;
-    @Column(name = "Name", nullable = false)
+    @Column(nullable = false)
     private String name;
-    @Column(name = "EventDate", nullable = false)
+    @Column(nullable = false)
     private LocalDate eventDate;
-    @Column(name = "ServerId", nullable = false)
+    @Column(nullable = false)
     private String serverId;
-    @Column(name = "ChannelId")
     private String channelId;
 
     String buildMessage(long dayDifference) {

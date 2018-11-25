@@ -7,10 +7,9 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "Config")
 public class Config implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private int id;
     @Column(nullable = false)

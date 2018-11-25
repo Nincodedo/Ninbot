@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.config;
 
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,7 +27,12 @@ public class ConfigService {
     }
 
     public Optional<String> getSingleValueByName(String serverId, String configName) {
-        return Optional.ofNullable(getValuesByName(serverId, configName).get(0));
+        val list = getValuesByName(serverId, configName);
+        if (list.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(list.get(0));
+        }
     }
 
     @Transactional

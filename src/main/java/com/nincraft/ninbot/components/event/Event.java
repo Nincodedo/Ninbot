@@ -11,31 +11,21 @@ import java.time.format.DateTimeFormatter;
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name = "GameEvents")
 class Event {
     @Id
-    @GeneratedValue
-    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "Name")
     private String name;
-    @Column(name = "AuthorName")
     private String authorName;
-    @Column(name = "SubscriptionId")
     private int subscriptionId;
-    @Column(name = "GameName")
     private String gameName;
-    @Column(name = "Description")
     private String description;
-    @Column(name = "StartTime")
     private OffsetDateTime startTime;
-    @Column(name = "EndTime")
     private OffsetDateTime endTime;
     @Transient
     private String dateFormat = "yyyy-MM-dd";
     @Transient
     private String timeFormat = "hh:mm a";
-    @Column(name = "ServerId")
     private String serverId;
 
     String buildChannelMessage(String roleId, int minutesBeforeStart) {
