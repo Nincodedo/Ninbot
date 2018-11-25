@@ -11,13 +11,12 @@ import java.io.Serializable;
 public class Config implements Serializable {
     @Id
     @GeneratedValue
-    @Column(name = "Id", nullable = false)
+    @Column(nullable = false)
     private int id;
-    @Column(name = "Key", nullable = false)
-    private String key;
-    @Column(name = "Value")
+    @Column(nullable = false)
+    private String name;
     private String value;
-    @Column(name = "ServerId", nullable = false)
+    @Column(nullable = false)
     private String serverId;
 
     public Config() {
@@ -26,7 +25,7 @@ public class Config implements Serializable {
 
     public Config(String serverId, String configName, String configValue) {
         this.serverId = serverId;
-        this.key = configName;
+        this.name = configName;
         this.value = configValue;
     }
 }

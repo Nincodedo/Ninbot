@@ -66,7 +66,7 @@ public class AdminCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Configs for " + serverName);
         for (val config : configsByServerId) {
-            embedBuilder.addField(config.getKey(), config.getValue(), false);
+            embedBuilder.addField(config.getName(), config.getValue(), false);
         }
         messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());

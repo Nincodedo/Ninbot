@@ -3,14 +3,11 @@ package com.nincraft.ninbot.components.config;
 import com.nincraft.ninbot.components.common.GenericDao;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.TransactionRequiredException;
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,72 +19,44 @@ public class ConfigDao extends GenericDao<Config> {
     private static final String SERVER_ID = "serverId";
 
     @Autowired
-    public ConfigDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public ConfigDao(EntityManager entityManager) {
+        super(entityManager);
     }
 
     List<Config> getConfigByName(String serverId, String configName) {
         log.debug("Getting configs for {} {}", serverId, configName);
-        try (val session = sessionFactory.openSession()) {
-            val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
-            query.setParameter(SERVER_ID, serverId);
-            query.setParameter(CONFIG_NAME, configName);
-            return query.getResultList();
-        }
+        val query = entityManager.createQuery("FROM Config where serverId = :serverId and name = :configName", Config.class);
+        query.setParameter(SERVER_ID, serverId);
+        query.setParameter(CONFIG_NAME, configName);
+        return query.getResultList();
     }
 
     List<String> getValuesByName(String serverId, String configName) {
         log.debug("Getting config values for {} {}", serverId, configName);
-        try (val session = sessionFactory.openSession()) {
-            val query = session.createQuery("FROM Config where serverId = :serverId and key = :configName", Config.class);
-            query.setParameter(SERVER_ID, serverId);
-            query.setParameter(CONFIG_NAME, configName);
-            return query.getResultList().stream().map(Config::getValue).collect(Collectors.toList());
-        }
+        val query = entityManager.createQuery("FROM Config where serverId = :serverId and name = :configName", Config.class);
+        query.setParameter(SERVER_ID, serverId);
+        query.setParameter(CONFIG_NAME, configName);
+        return query.getResultList().stream().map(Config::getValue).collect(Collectors.toList());
     }
 
     void removeConfig(String serverId, String configName, String configValue) {
-        try (val session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            val list = getConfigByName(serverId, configName);
-            list.stream().filter(config -> config.getValue().equals(configValue)).forEach(config ->
-                    session.delete(session.contains(config) ? config : session.merge(config)));
-            session.getTransaction().commit();
-        }
+        val list = getConfigByName(serverId, configName);
+        list.stream().filter(config -> config.getValue().equals(configValue)).forEach(config ->
+                entityManager.remove(entityManager.contains(config) ? config : entityManager.merge(config)));
     }
 
     boolean addConfig(String serverId, String configName, String configValue) {
         Config config = new Config(serverId, configName, configValue);
-        try (val session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(config);
-            transaction.commit();
-        } catch (EntityExistsException | TransactionRequiredException e) {
-            log.error("Failed to set config {} with value {} for server {}", configName, configValue, serverId);
-            log.error(e);
-            return false;
-        }
+        entityManager.persist(config);
         return true;
     }
 
     void removeConfig(Config config) {
-        try (val session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.delete(session.contains(config) ? config : session.merge(config));
-            session.getTransaction().commit();
-        }
+        entityManager.remove(entityManager.contains(config) ? config : entityManager.merge(config));
     }
 
     public boolean addConfig(Config config) {
-        try (val session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(config);
-            session.getTransaction().commit();
-        } catch (EntityExistsException | TransactionRequiredException e) {
-            log.error("Failed to set config {} with value {} for server {}", config.getKey(), config.getValue(), config.getServerId());
-            log.error(e);
-            return false;
-        }
+        entityManager.persist(config);
         return true;
     }
 }
