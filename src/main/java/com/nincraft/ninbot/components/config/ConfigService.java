@@ -22,12 +22,13 @@ public class ConfigService {
     }
 
     @Transactional
-    public List<String> getValuesByName(java.lang.String serverId, java.lang.String configName) {
+    public List<String> getValuesByName(String serverId, String configName) {
         return configDao.getValuesByName(serverId, configName);
     }
 
+    @Transactional
     public Optional<String> getSingleValueByName(String serverId, String configName) {
-        val list = getValuesByName(serverId, configName);
+        val list = configDao.getValuesByName(serverId, configName);
         if (list.isEmpty()) {
             return Optional.empty();
         } else {
