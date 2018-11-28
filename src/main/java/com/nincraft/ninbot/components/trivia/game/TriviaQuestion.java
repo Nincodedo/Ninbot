@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.trivia;
+package com.nincraft.ninbot.components.trivia.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,5 +1,6 @@
-package com.nincraft.ninbot.components.trivia;
+package com.nincraft.ninbot.components.trivia.game;
 
+import com.nincraft.ninbot.components.trivia.TriviaScoreService;
 import lombok.Getter;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

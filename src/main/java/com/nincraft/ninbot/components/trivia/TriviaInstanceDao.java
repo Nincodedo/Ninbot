@@ -12,13 +12,13 @@ public class TriviaInstanceDao extends GenericDao<TriviaInstance> {
         super(entityManager);
     }
 
-    boolean isActiveTriviaChannel(String channelId) {
+    public boolean isActiveTriviaChannel(String channelId) {
         val query = entityManager.createQuery("FROM TriviaInstance where channelId = :channelId", TriviaInstance.class);
         query.setParameter("channelId", channelId);
         return !query.getResultList().isEmpty();
     }
 
-    void removeTriviaInChannel(String channelId) {
+    public void removeTriviaInChannel(String channelId) {
         val query = entityManager.createQuery("FROM TriviaInstance where channelId = :channelId", TriviaInstance.class);
         query.setParameter("channelId", channelId);
         for (val trivia : query.getResultList()) {

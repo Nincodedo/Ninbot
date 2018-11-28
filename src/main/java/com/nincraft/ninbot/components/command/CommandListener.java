@@ -5,7 +5,6 @@ import com.nincraft.ninbot.components.info.HelpCommand;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,8 +13,6 @@ import java.util.List;
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
-    @Value("${debugEnabled:false}")
-    private boolean debugEnabled;
     private MessageUtils messageUtils;
 
     @Autowired
@@ -32,13 +29,9 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (isNinbotMention(event) && checkDebug(event.getChannel().getName())) {
+        if (isNinbotMention(event)) {
             commandParser.parseEvent(event);
         }
-    }
-
-    private boolean checkDebug(String channelName) {
-        return !debugEnabled || channelName.equals("admin-test");
     }
 
     private boolean isNinbotMention(MessageReceivedEvent event) {

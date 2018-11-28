@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.trivia;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.trivia.game.TriviaManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.EmbedBuilder;

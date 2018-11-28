@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.trivia;
 
+import com.nincraft.ninbot.components.trivia.game.TriviaQuestion;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class TriviaInstance {
     private Timer triviaTimer;
 
 
-    TriviaInstance(String serverId, String channelId, int categoryId) {
+    public TriviaInstance(String serverId, String channelId, int categoryId) {
         this.serverId = serverId;
         this.channelId = channelId;
         this.categoryId = categoryId;

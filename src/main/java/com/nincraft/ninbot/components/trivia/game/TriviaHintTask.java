@@ -1,5 +1,7 @@
-package com.nincraft.ninbot.components.trivia;
+package com.nincraft.ninbot.components.trivia.game;
 
+import com.nincraft.ninbot.components.trivia.TriviaInstance;
+import com.nincraft.ninbot.components.trivia.TriviaInstanceDao;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
 

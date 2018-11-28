@@ -1,7 +1,10 @@
-package com.nincraft.ninbot.components.trivia;
+package com.nincraft.ninbot.components.trivia.game;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nincraft.ninbot.components.trivia.TriviaInstance;
+import com.nincraft.ninbot.components.trivia.TriviaInstanceDao;
+import com.nincraft.ninbot.components.trivia.TriviaScoreService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
@@ -40,15 +43,15 @@ public class TriviaManager {
         triviaInstanceDao.removeTriviaInChannel(triviaInstance.getChannelId());
     }
 
-    void stopTrivia(String channelId) {
+    public void stopTrivia(String channelId) {
         triviaInstanceDao.removeTriviaInChannel(channelId);
     }
 
-    boolean isTriviaActiveInChannel(String channelId) {
+    public boolean isTriviaActiveInChannel(String channelId) {
         return triviaInstanceDao.isActiveTriviaChannel(channelId);
     }
 
-    void startTrivia(String channelId, int categoryId, String serverId, JDA jda) {
+    public void startTrivia(String channelId, int categoryId, String serverId, JDA jda) {
         TriviaInstance triviaInstance = new TriviaInstance(serverId, channelId, categoryId);
         val token = getTriviaToken();
         triviaInstance.setApiToken(token);
@@ -211,7 +214,7 @@ public class TriviaManager {
         return Optional.empty();
     }
 
-    Map<Integer, String> getTriviaCategories() {
+    public Map<Integer, String> getTriviaCategories() {
         if (!triviaCategoryMap.isEmpty()) {
             return triviaCategoryMap;
         }
