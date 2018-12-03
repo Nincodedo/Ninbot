@@ -25,6 +25,7 @@ class CommandParser {
     private MessageUtils messageUtils;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
+    private Map<String, String> commandAliasMap = new HashMap<>();
 
     @Autowired
     CommandParser(ConfigService configService, MessageUtils messageUtils) {
@@ -69,9 +70,15 @@ class CommandParser {
     private String getCommand(String message) {
         String[] splitMessage = message.split(" ");
         if (splitMessage.length > 1) {
-            return splitMessage[1] != null ? splitMessage[1].toLowerCase() : StringUtils.EMPTY;
+            val commandName = translateAlias(splitMessage[1]);
+            return commandName != null ? commandName.toLowerCase() : StringUtils.EMPTY;
         }
         return null;
+    }
+
+    private String translateAlias(String alias) {
+        val commandName = commandAliasMap.get(alias);
+        return commandName != null ? commandName : alias;
     }
 
     void addCommands(List<AbstractCommand> commands) {
@@ -80,5 +87,12 @@ class CommandParser {
 
     void addCommand(AbstractCommand command) {
         commandHashMap.put(command.getName(), command);
+    }
+
+    void registerAliases(List<AbstractCommand> commands) {
+        for (val command : commands) {
+            command.getAliases().forEach(alias -> commandAliasMap.put(alias, command.getName()));
+            commandAliasMap.put(command.getName(), command.getName());
+        }
     }
 }

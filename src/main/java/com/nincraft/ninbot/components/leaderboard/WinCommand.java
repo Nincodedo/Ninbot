@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class WinCommand extends AbstractCommand {
         length = 3;
         description = "Report a " + name + " against another user";
         helpText = name + " @Username";
+        aliases = Arrays.asList("won", "beat", "smashed", "owned");
         this.leaderboardService = leaderboardService;
     }
 
