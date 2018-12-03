@@ -34,4 +34,8 @@ public class LeaderboardService {
         val loserEntry = leaderboardEntryDao.getUserEntry(serverId, loser);
         leaderboardEntryDao.recordLoss(loserEntry);
     }
+
+    public void removeAllEntriesForServer(String serverId) {
+        leaderboardEntryDao.removeAllEntriesForServer(serverId);
+    }
 }

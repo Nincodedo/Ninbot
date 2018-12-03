@@ -48,4 +48,10 @@ public class LeaderboardEntryDao extends GenericDao<LeaderboardEntry> {
         }
         return new LeaderboardEntry(serverId, userId);
     }
+
+    public void removeAllEntriesForServer(String serverId) {
+        val allEntries = getAllObjectsByServerId(serverId);
+        allEntries.forEach(leaderboardEntry -> entityManager.remove(leaderboardEntry));
+        entityManager.flush();
+    }
 }

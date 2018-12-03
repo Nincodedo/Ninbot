@@ -20,6 +20,7 @@ public class AdminCommand extends AbstractCommand {
     public AdminCommand(ConfigService configService) {
         length = 3;
         name = "admin";
+        checkExactLength = false;
         description = "Admin commands";
         permissionLevel = RolePermission.ADMIN;
         this.configService = configService;

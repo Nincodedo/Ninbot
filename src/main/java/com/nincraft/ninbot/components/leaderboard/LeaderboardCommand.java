@@ -34,10 +34,43 @@ public class LeaderboardCommand extends AbstractCommand {
             case "":
                 displayLeaderboard(event);
                 break;
+            case "admin":
+                if (userHasPermission(event.getGuild(), event.getAuthor(), RolePermission.ADMIN)) {
+                    adminSubCommandParse(event);
+                } else {
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                }
+                break;
             default:
                 messageUtils.reactUnknownResponse(event.getMessage());
                 break;
         }
+    }
+
+    private void adminSubCommandParse(MessageReceivedEvent event) {
+        val message = event.getMessage().getContentStripped();
+        val splitMessage = message.split(" ");
+        if (splitMessage.length == 4) {
+            runAdminSubCommand(splitMessage[3], event);
+        } else {
+            messageUtils.reactUnknownResponse(event.getMessage());
+        }
+    }
+
+    private void runAdminSubCommand(String command, MessageReceivedEvent event) {
+        switch (command) {
+            case "clear":
+                clearLeaderboard(event);
+                messageUtils.reactSuccessfulResponse(event.getMessage());
+                break;
+            default:
+                messageUtils.reactUnknownResponse(event.getMessage());
+                break;
+        }
+    }
+
+    private void clearLeaderboard(MessageReceivedEvent event) {
+        leaderboardService.removeAllEntriesForServer(event.getGuild().getId());
     }
 
     private void displayLeaderboard(MessageReceivedEvent event) {
@@ -46,9 +79,9 @@ public class LeaderboardCommand extends AbstractCommand {
         list.sort(Comparator.comparingInt(LeaderboardEntry::getWins));
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        val leaderboardName = configService.getSingleValueByName(serverId, ConfigConstants.LEADERBOARD_NAME);
-        if (leaderboardName.isPresent()) {
-            embedBuilder.setTitle(leaderboardName.get());
+        val leaderboardOptional = configService.getSingleValueByName(serverId, ConfigConstants.LEADERBOARD_NAME);
+        if (leaderboardOptional.isPresent()) {
+            embedBuilder.setTitle(leaderboardOptional.get());
         } else {
             embedBuilder.setTitle("Leaderboard");
         }
