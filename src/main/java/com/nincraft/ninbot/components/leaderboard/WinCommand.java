@@ -28,6 +28,7 @@ public class WinCommand extends AbstractCommand {
     protected void executeCommand(MessageReceivedEvent event) {
         val mentionedUsers = event.getMessage().getMentionedUsers();
         List<User> mentionList = mentionedUsers.stream().filter(user -> !user.isBot()).collect(Collectors.toList());
+        mentionList.remove(event.getAuthor());
         if (!mentionList.isEmpty()) {
             val message = event.getMessage();
             messageUtils.reactSuccessfulResponse(message);
@@ -37,6 +38,8 @@ public class WinCommand extends AbstractCommand {
                 val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event.getAuthor().getId(), user.getId());
                 jda.addEventListener(reactionResultListener);
             }
+        } else {
+            messageUtils.reactUnknownResponse(event.getMessage());
         }
     }
 }
