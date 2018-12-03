@@ -18,8 +18,8 @@ public class WinCommand extends AbstractCommand {
     public WinCommand(LeaderboardService leaderboardService) {
         name = "win";
         length = 3;
-        description = "Report a " + name + " against another user";
-        helpText = name + " @Username";
+        description = "Report a win against another user";
+        helpText = "win @Username";
         aliases = Arrays.asList("won", "beat", "smashed", "owned");
         this.leaderboardService = leaderboardService;
     }
