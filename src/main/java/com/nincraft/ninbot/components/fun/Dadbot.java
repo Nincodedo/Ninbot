@@ -35,7 +35,8 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
-        if (channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+        if (!event.getChannelType().isGuild()
+                || channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
         val message = event.getMessage().getContentStripped();
