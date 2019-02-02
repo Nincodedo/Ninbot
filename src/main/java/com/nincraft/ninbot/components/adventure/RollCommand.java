@@ -36,6 +36,6 @@ public class RollCommand extends AbstractCommand {
     private void rollDice(String diceArgs, MessageReceivedEvent event) {
         val parsed = parser.parse(diceArgs);
         val diceCommand = diceArgs.split("d");
-        messageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getValue()));
+        messageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.roll()));
     }
 }
