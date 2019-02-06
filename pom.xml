@@ -58,6 +58,12 @@
             <groupId>com.bernardomg.tabletop</groupId>
             <artifactId>dice</artifactId>
             <version>1.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -123,6 +129,11 @@
             <id>bintray-nincodedo-maven</id>
             <name>bintray</name>
             <url>https://dl.bintray.com/nincodedo/maven</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <name>sonatype-snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
     <build>
