@@ -35,7 +35,7 @@ public abstract class AbstractCommand {
 
     void execute(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
-        if (userHasPermission(event.getGuild(), event.getAuthor())) {
+        if (userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
                 displayHelp(event);
@@ -83,12 +83,9 @@ public abstract class AbstractCommand {
         return name + ": " + description;
     }
 
-    private boolean userHasPermission(Guild guild, User user) {
-        return userHasPermission(guild, user, this.permissionLevel);
-    }
-
     protected boolean userHasPermission(Guild guild, User user, RolePermission rolePermission) {
-        if (RolePermission.EVERYONE.equals(rolePermission)) {
+        if (RolePermission.EVERYONE.equals(rolePermission) || (RolePermission.ADMIN.equals(rolePermission)
+                && guild.getOwner().getUser().equals(user))) {
             return true;
         } else if (RolePermission.OWNER.equals(rolePermission)) {
             return user.getId().equals(RolePermission.OWNER.getRoleName());

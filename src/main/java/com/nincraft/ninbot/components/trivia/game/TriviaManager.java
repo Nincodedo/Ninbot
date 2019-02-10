@@ -128,11 +128,7 @@ public class TriviaManager {
                     val triviaResults = jsonTree.get("results").get(0).toString();
                     val triviaQuestion = objectMapper.readValue(triviaResults, TriviaQuestion.class);
                     triviaQuestion.unescapeFields();
-                    if (!containsBadQuestionPhrase(triviaQuestion.getQuestion())) {
-                        return triviaQuestion;
-                    } else {
-                        return null;
-                    }
+                    return getTriviaQuestion(triviaQuestion);
                 } else {
                     handleResponseCode(responseCode);
                 }
@@ -141,6 +137,14 @@ public class TriviaManager {
             }
         }
         return null;
+    }
+
+    private TriviaQuestion getTriviaQuestion(TriviaQuestion triviaQuestion) {
+        if (!containsBadQuestionPhrase(triviaQuestion.getQuestion())) {
+            return triviaQuestion;
+        } else {
+            return null;
+        }
     }
 
     private boolean containsBadQuestionPhrase(String question) {

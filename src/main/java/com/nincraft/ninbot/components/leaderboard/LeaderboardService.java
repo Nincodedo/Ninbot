@@ -35,7 +35,7 @@ public class LeaderboardService {
         leaderboardEntryDao.recordLoss(loserEntry);
     }
 
-    public void removeAllEntriesForServer(String serverId) {
+    void removeAllEntriesForServer(String serverId) {
         leaderboardEntryDao.removeAllEntriesForServer(serverId);
     }
 }

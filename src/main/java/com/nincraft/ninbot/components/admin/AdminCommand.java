@@ -30,25 +30,13 @@ public class AdminCommand extends AbstractCommand {
     public void executeCommand(MessageReceivedEvent event) {
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "config-add":
-                if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
-                    addConfig(event);
-                } else {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
-                }
+                addConfig(event);
                 break;
             case "config-remove":
-                if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 5)) {
-                    removeConfig(event);
-                } else {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
-                }
+                removeConfig(event);
                 break;
             case "config-list":
-                if (isCommandLengthCorrect(event.getMessage().getContentStripped(), 3)) {
-                    listConfigs(event);
-                } else {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
-                }
+                listConfigs(event);
                 break;
             default:
                 messageUtils.reactUnknownResponse(event.getMessage());
@@ -75,6 +63,10 @@ public class AdminCommand extends AbstractCommand {
 
     private void removeConfig(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
+        if (getCommandLength(message) < 5) {
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            return;
+        }
         Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
         configService.removeConfig(config);
         messageUtils.reactSuccessfulResponse(event.getMessage());
@@ -82,6 +74,10 @@ public class AdminCommand extends AbstractCommand {
 
     private void addConfig(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
+        if (getCommandLength(message) < 5) {
+            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            return;
+        }
         Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
         val isSuccessful = configService.addConfig(config);
         messageUtils.reactAccordingly(event.getMessage(), isSuccessful);
