@@ -3,6 +3,8 @@ package com.nincraft.ninbot.components.command;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +26,7 @@ class CommandParser {
 
     private static final String QUESTION_MARK = "\u2754";
     private ConfigService configService;
+    private ComponentService componentService;
     private LocaleService localeService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
@@ -31,16 +34,21 @@ class CommandParser {
     private ExecutorService executorService;
 
     @Autowired
-    CommandParser(ConfigService configService, LocaleService localeService) {
+    CommandParser(ConfigService configService, LocaleService localeService, ComponentService componentService) {
         this.configService = configService;
         this.localeService = localeService;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
+        this.componentService = componentService;
     }
 
     void parseEvent(MessageReceivedEvent event) {
         String message = event.getMessage().getContentStripped();
         if (StringUtils.isNotBlank(message)) {
-            AbstractCommand command = commandHashMap.get(getCommand(message));
+            String commandName = getCommand(message);
+            if (componentService.isDisabled(commandName, event.getGuild().getId())) {
+                return;
+            }
+            AbstractCommand command = commandHashMap.get(commandName);
             if (command != null) {
                 try {
                     executorService.execute(() -> command.execute(event, localeService.getLocale(event)));
@@ -76,6 +84,7 @@ class CommandParser {
     }
 
     void addCommand(AbstractCommand command) {
+        componentService.registerComponent(command.getName(), ComponentType.COMMAND);
         commandHashMap.put(command.getName(), command);
     }
 

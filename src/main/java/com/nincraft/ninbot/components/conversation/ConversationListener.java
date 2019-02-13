@@ -23,8 +23,8 @@ public class ConversationListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         val channelId = event.getChannel().getId();
         val message = event.getMessage().getContentStripped();
-        if (!event.getAuthor().isBot() && isNormalConversation(message)
-                && isConversationEnabledChannel(event.getGuild().getId(), channelId)) {
+        if (!event.getAuthor().isBot() && isConversationEnabledChannel(event.getGuild().getId(), channelId)
+                && isNormalConversation(message)) {
             val botConversation = recastAPI.startBotConversation(channelId);
             botConversation.addParticipants(event.getAuthor().getName());
             botConversation.getResponse(message).ifPresent(response ->

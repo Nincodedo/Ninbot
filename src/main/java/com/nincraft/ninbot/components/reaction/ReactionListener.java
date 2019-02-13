@@ -1,5 +1,7 @@
 package com.nincraft.ninbot.components.reaction;
 
+import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,18 +14,21 @@ import java.util.List;
 @Log4j2
 public class ReactionListener extends ListenerAdapter {
 
-
     private List<ReactionResponse> reactionResponseList;
+    private ComponentService componentService;
+    private String componentName;
 
     @Autowired
-    public ReactionListener(List<ReactionResponse> reactionResponseList) {
+    public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService) {
         this.reactionResponseList = reactionResponseList;
+        this.componentService = componentService;
     }
 
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot()) {
+        if (!event.getAuthor().isBot()
+                && !componentService.isDisabled(componentName, event.getGuild().getId())) {
             respond(event);
         }
     }
