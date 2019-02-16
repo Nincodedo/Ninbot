@@ -6,5 +6,5 @@ Ninbot is a Discord bot with various silly commands and actions.
 * Announces when your users go live on Twitch
 
 ## Documentation
-* [Commands](commands.md)
-* [Reactions](reactions.md)
+* [Commands](commands/index.md)
+* [Reactions](reactions/index.md)
