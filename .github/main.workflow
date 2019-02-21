@@ -10,7 +10,7 @@ action "Build" {
 
 action "Sonar" {
   uses = "LucaFeger/action-maven-cli@9d8f23af091bd6f5f0c05c942630939b6e53ce44"
-  args = "sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarqube.com -Dsonar.organization=nincraft"
+  args = "sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarqube.com -Dsonar.organization=nincraft -Dsonar.branch.name=$GITHUB_REF"
   needs = ["Build"]
   secrets = ["SONAR_TOKEN"]
 }
