@@ -21,7 +21,7 @@
 
     <properties>
         <build.number>SNAPSHOT</build.number>
-        <log4j.version>2.11.1</log4j.version>
+        <log4j.version>2.11.2</log4j.version>
     </properties>
     <dependencies>
         <dependency>
