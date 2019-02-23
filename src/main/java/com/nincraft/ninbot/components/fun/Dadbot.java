@@ -40,8 +40,8 @@ public class Dadbot extends ListenerAdapter {
             return;
         }
         val message = event.getMessage().getContentStripped();
-        if (StringUtils.isNotBlank(message) && message.split(" ").length >= 1) {
-            String first = message.split(" ")[0];
+        if (StringUtils.isNotBlank(message) && message.split("\\s+").length >= 1) {
+            String first = message.split("\\s+")[0];
             if ((first.equalsIgnoreCase("I'm") || first.equalsIgnoreCase("im")) && checkChance()) {
                 hiImDad(message, event.getChannel());
             }

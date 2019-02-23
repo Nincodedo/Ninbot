@@ -24,7 +24,7 @@ class EventParser {
 
     private Map<String, String> parseMessage(String content) {
         Map<String, String> eventMap = new HashMap<>();
-        val messageList = content.split(" ");
+        val messageList = content.split("\\s+");
         int counter = 3;
         StringBuilder name = new StringBuilder();
         if (content.contains("\"")) {

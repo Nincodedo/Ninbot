@@ -32,7 +32,7 @@ public class SubscribeCommand extends AbstractCommand {
         val channel = event.getChannel();
         if (isCommandLengthCorrect(content)) {
             val server = event.getGuild();
-            val subscribeTo = content.split(" ")[2];
+            val subscribeTo = content.split("\\s+")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server.getController(), role);

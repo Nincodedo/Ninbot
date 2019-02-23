@@ -124,8 +124,8 @@ public class TriviaCommand extends AbstractCommand {
         }
         val message = event.getMessage().getContentStripped();
         int categoryId = 0;
-        if (getCommandLength(message) == 4 && NumberUtils.isParsable(message.split(" ")[3])) {
-            categoryId = Integer.parseInt(message.split(" ")[3]);
+        if (getCommandLength(message) == 4 && NumberUtils.isParsable(message.split("\\s+")[3])) {
+            categoryId = Integer.parseInt(message.split("\\s+")[3]);
         }
         triviaManager.startTrivia(channel.getId(), categoryId, event.getGuild().getId(), event.getJDA());
     }

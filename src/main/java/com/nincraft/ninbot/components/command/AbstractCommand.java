@@ -108,12 +108,12 @@ public abstract class AbstractCommand {
     }
 
     protected int getCommandLength(String content) {
-        return content.split(" ").length;
+        return content.split("\\s+").length;
     }
 
     protected String getSubcommand(String command) {
         if (getCommandLength(command) >= 3) {
-            return command.split(" ")[2].toLowerCase();
+            return command.split("\\s+")[2].toLowerCase();
         } else {
             return "";
         }

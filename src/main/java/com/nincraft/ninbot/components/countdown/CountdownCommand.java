@@ -62,7 +62,7 @@ public class CountdownCommand extends AbstractCommand {
 
     private void setupCountdown(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
-        val splitMessage = message.split(" ");
+        val splitMessage = message.split("\\s+");
         if (splitMessage.length >= 3) {
             val stringDate = splitMessage[2];
             val countdownName = message.substring(message.indexOf(stringDate) + stringDate.length() + 1);

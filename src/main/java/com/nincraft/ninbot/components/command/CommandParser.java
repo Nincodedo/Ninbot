@@ -68,7 +68,7 @@ class CommandParser {
     }
 
     private String getCommand(String message) {
-        String[] splitMessage = message.split(" ");
+        String[] splitMessage = message.split("\\s+");
         if (splitMessage.length > 1) {
             val commandName = translateAlias(splitMessage[1]);
             return commandName != null ? commandName.toLowerCase() : StringUtils.EMPTY;

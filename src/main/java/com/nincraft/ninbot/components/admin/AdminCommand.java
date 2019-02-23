@@ -67,7 +67,7 @@ public class AdminCommand extends AbstractCommand {
             messageUtils.reactUnsuccessfulResponse(event.getMessage());
             return;
         }
-        Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
+        Config config = new Config(event.getGuild().getId(), message.split("\\s+")[3], message.split("\\s+")[4]);
         configService.removeConfig(config);
         messageUtils.reactSuccessfulResponse(event.getMessage());
     }
@@ -78,7 +78,7 @@ public class AdminCommand extends AbstractCommand {
             messageUtils.reactUnsuccessfulResponse(event.getMessage());
             return;
         }
-        Config config = new Config(event.getGuild().getId(), message.split(" ")[3], message.split(" ")[4]);
+        Config config = new Config(event.getGuild().getId(), message.split("\\s+")[3], message.split("\\s+")[4]);
         val isSuccessful = configService.addConfig(config);
         messageUtils.reactAccordingly(event.getMessage(), isSuccessful);
     }

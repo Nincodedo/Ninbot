@@ -49,7 +49,7 @@ public class LeaderboardCommand extends AbstractCommand {
 
     private void adminSubCommandParse(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
-        val splitMessage = message.split(" ");
+        val splitMessage = message.split("\\s+");
         if (splitMessage.length == 4) {
             runAdminSubCommand(splitMessage[3], event);
         } else {
