@@ -1,13 +1,12 @@
 package com.nincraft.ninbot.components.admin;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -51,13 +50,11 @@ public class AdminCommand extends AbstractCommand {
             messageUtils.sendMessage(event.getChannel(), "No configs found for server %s", serverName);
             return;
         }
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Configs for " + serverName);
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("Configs for " + serverName);
         for (val config : configsByServerId) {
-            embedBuilder.addField(config.getName(), config.getValue(), false);
+            messageBuilder.addField(config.getName(), config.getValue(), false);
         }
-        messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 

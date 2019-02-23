@@ -1,9 +1,8 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.MessageUtils;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
@@ -27,16 +26,14 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("List of commands");
-        embedBuilder.setColor(Color.BLUE);
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("List of commands");
+        messageBuilder.setColor(Color.BLUE);
         List<String> keyList = new ArrayList<>(commandMap.keySet());
         Collections.sort(keyList);
         keyList.stream().filter(key -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(key).getPermissionLevel()))
-                .forEach(key -> embedBuilder.addField(key, commandMap.get(key).getDescription(), false));
-        embedBuilder.setFooter("Use \"help\" at the end of any command to get more information about it", null);
-        messageBuilder.setEmbed(embedBuilder.build());
+                .forEach(key -> messageBuilder.addField(key, commandMap.get(key).getDescription(), false));
+        messageBuilder.setFooter("Use \"help\" at the end of any command to get more information about it", null);
         messageUtils.sendPrivateMessage(event.getAuthor(), messageBuilder.build());
         messageUtils.reactSuccessfulResponse(event.getMessage());
     }

@@ -1,11 +1,10 @@
 package com.nincraft.ninbot.components.trivia;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.trivia.game.TriviaManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
@@ -67,18 +66,16 @@ public class TriviaCommand extends AbstractCommand {
         if (triviaScores.isEmpty()) {
             return;
         }
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Trivia Leaderboard");
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("Trivia Leaderboard");
         Collections.sort(triviaScores);
         for (int i = 0; i < triviaScores.size() && i < 5; i++) {
             TriviaScore triviaScore = triviaScores.get(i);
             val member = event.getGuild().getMemberById(triviaScore.getUserId());
             if (member != null) {
-                embedBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
+                messageBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
             }
         }
-        messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 
@@ -89,19 +86,15 @@ public class TriviaCommand extends AbstractCommand {
 
     private void displayTriviaCategories(MessageReceivedEvent event) {
         Map<Integer, String> triviaCategoryMap = triviaManager.getTriviaCategories();
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Trivia Categories");
-        StringBuilder stringBuilder = new StringBuilder();
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("Trivia Categories");
         List<Integer> keyList = new ArrayList<>(triviaCategoryMap.keySet());
         Collections.sort(keyList);
 
         for (val categoryKey : keyList) {
-            stringBuilder.append("ID: ").append(categoryKey).append(" ").append(triviaCategoryMap.get(categoryKey)).append("\n");
+            messageBuilder.appendDescription(String.format("ID: %s %s%n", categoryKey, triviaCategoryMap.get(categoryKey)));
         }
-        embedBuilder.setDescription(stringBuilder.toString());
-        embedBuilder.setFooter("Use the ID to pick a specific category when starting trivia", null);
-        messageBuilder.setEmbed(embedBuilder.build());
+        messageBuilder.setFooter("Use the ID to pick a specific category when starting trivia", null);
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 

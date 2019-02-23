@@ -1,10 +1,9 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
@@ -42,14 +41,12 @@ public class StatsCommand extends AbstractCommand {
 
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         int limit = 5;
-        embedBuilder.setTitle("Top " + limit + " Subscriptions Stats");
+        messageBuilder.setTitle("Top " + limit + " Subscriptions Stats");
         Collections.sort(statList);
-        statList.stream().limit(limit).forEach(stat -> embedBuilder.appendDescription(
+        statList.stream().limit(limit).forEach(stat -> messageBuilder.appendDescription(
                 stat.name + ": " + stat.amount + "\n"));
-        messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(channel, messageBuilder.build());
     }
 

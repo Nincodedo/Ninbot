@@ -1,9 +1,8 @@
 package com.nincraft.ninbot.components.trivia.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.Data;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -22,11 +21,9 @@ public class TriviaQuestion {
 
 
     public Message build() {
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(question);
-        embedBuilder.setAuthor(category);
-        messageBuilder.setEmbed(embedBuilder.build());
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle(question);
+        messageBuilder.setAuthor(category);
         return messageBuilder.build();
     }
 

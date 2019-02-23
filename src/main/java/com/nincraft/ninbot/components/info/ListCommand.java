@@ -1,11 +1,10 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -42,11 +41,9 @@ public class ListCommand extends AbstractCommand {
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
-            MessageBuilder messageBuilder = new MessageBuilder();
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("Users in " + roleName + " subscription");
-            embedBuilder.appendDescription(userNames.toString());
-            messageBuilder.setEmbed(embedBuilder.build());
+            MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+            messageBuilder.setTitle("Users in " + roleName + " subscription");
+            messageBuilder.appendDescription(userNames.toString());
             messageUtils.sendMessage(channel, messageBuilder.build());
         } else {
             messageUtils.reactUnsuccessfulResponse(message);
@@ -58,11 +55,9 @@ public class ListCommand extends AbstractCommand {
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
         List<String> roleBlackList = configService.getValuesByName(guild.getId(), ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Available subscriptions");
-        roleNameList.stream().map(roleName -> roleName + "\n").forEach(embedBuilder::appendDescription);
-        messageBuilder.setEmbed(embedBuilder.build());
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("Available subscriptions");
+        roleNameList.stream().map(roleName -> roleName + "\n").forEach(messageBuilder::appendDescription);
         messageUtils.sendMessage(channel, messageBuilder.build());
     }
 }

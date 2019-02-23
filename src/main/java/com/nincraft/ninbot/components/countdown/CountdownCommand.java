@@ -1,9 +1,8 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -46,17 +45,15 @@ public class CountdownCommand extends AbstractCommand {
     private void listCountdowns(MessageReceivedEvent event) {
         val channel = event.getChannel();
         val list = countdownDao.getAllObjectsByServerId(event.getGuild().getId());
-        MessageBuilder messageBuilder = new MessageBuilder();
-        EmbedBuilder embedBuilder = new EmbedBuilder();
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         if (!list.isEmpty()) {
-            embedBuilder.setTitle("Current Countdowns");
+            messageBuilder.setTitle("Current Countdowns");
             for (val countdown : list) {
-                embedBuilder.addField(countdown.getName(), countdown.getEventDate().toString(), false);
+                messageBuilder.addField(countdown.getName(), countdown.getEventDate().toString(), false);
             }
         } else {
-            embedBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
+            messageBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
         }
-        messageBuilder.setEmbed(embedBuilder.build());
         messageUtils.sendMessage(channel, messageBuilder.build());
     }
 

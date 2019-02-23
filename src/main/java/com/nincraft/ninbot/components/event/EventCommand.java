@@ -1,10 +1,9 @@
 package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -71,15 +70,13 @@ public class EventCommand extends AbstractCommand {
             messageUtils.sendMessage(channel, "No events scheduled");
             return;
         }
-        MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.append("Current scheduled events");
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(BLUE);
+        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        messageBuilder.setTitle("Current scheduled events");
+        messageBuilder.setColor(BLUE);
         for (val event : events) {
-            embedBuilder.addField(event.getName(), event.toString(), true);
+            messageBuilder.addField(event.getName(), event.toString(), true);
         }
-        embedBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
-        messageBuilder.setEmbed(embedBuilder.build());
+        messageBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
         messageUtils.sendMessage(channel, messageBuilder.build());
     }
 }
