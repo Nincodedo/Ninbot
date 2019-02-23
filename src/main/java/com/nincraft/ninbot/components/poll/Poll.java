@@ -37,7 +37,7 @@ class Poll {
     private Message buildPollMessage(String footer) {
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle(title);
-        messageBuilder.setColor(getColor(user.getAvatarUrl()));
+        messageBuilder.setColor(user.getAvatarUrl());
         if (isPollOpen()) {
             messageBuilder.setTimestamp(Instant.now().plus(timeLength, ChronoUnit.MINUTES));
         } else {
@@ -47,39 +47,6 @@ class Poll {
         messageBuilder.addField("Choices", buildPollChoices(), false);
         messageBuilder.setFooter(footer, null);
         return messageBuilder.build();
-    }
-
-    private Color getColor(String avatarUrl) {
-        if (avatarUrl == null) {
-            return Color.BLUE;
-        } else {
-            try {
-                URLConnection connection = new URL(avatarUrl).openConnection();
-                connection.setRequestProperty("User-Agent", "NING/1.0");
-                BufferedImage image = ImageIO.read(connection.getInputStream());
-                return getAverageColor(image);
-            } catch (IOException e) {
-                return Color.BLUE;
-            }
-        }
-    }
-
-    private Color getAverageColor(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int redSum = 0;
-        int greenSum = 0;
-        int blueSum = 0;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Color pixel = new Color(image.getRGB(x, y));
-                redSum += pixel.getRed();
-                greenSum += pixel.getGreen();
-                blueSum += pixel.getBlue();
-            }
-        }
-        int total = width * height;
-        return new Color(redSum / total, greenSum / total, blueSum / total);
     }
 
     private String buildPollChoices() {
