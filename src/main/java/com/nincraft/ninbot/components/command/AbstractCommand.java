@@ -98,15 +98,6 @@ public abstract class AbstractCommand {
 
     protected abstract void executeCommand(MessageReceivedEvent event);
 
-    protected boolean isCommandLengthCorrect(String content, int length) {
-        val commandLength = getCommandLength(content);
-        if (checkExactLength) {
-            return commandLength == length;
-        } else {
-            return commandLength >= length;
-        }
-    }
-
     protected boolean isCommandLengthCorrect(String content) {
         val commandLength = getCommandLength(content);
         if (checkExactLength) {
