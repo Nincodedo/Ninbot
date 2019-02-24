@@ -5,12 +5,6 @@ import lombok.Data;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
