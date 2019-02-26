@@ -4,7 +4,6 @@ import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
@@ -35,16 +34,13 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
-        if (!event.getChannelType().isGuild()
-                || channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+        val message = event.getMessage().getContentStripped();
+        val first = message.split("\\s+")[0];
+        if (!(first.equalsIgnoreCase("I'm") || first.equalsIgnoreCase("im")) || (!event.getChannelType().isGuild())) {
             return;
         }
-        val message = event.getMessage().getContentStripped();
-        if (StringUtils.isNotBlank(message) && message.split("\\s+").length >= 1) {
-            String first = message.split("\\s+")[0];
-            if ((first.equalsIgnoreCase("I'm") || first.equalsIgnoreCase("im")) && checkChance()) {
-                hiImDad(message, event.getChannel());
-            }
+        if (StringUtils.isNotBlank(message) && message.split("\\s+").length >= 1 && checkChance()) {
+            hiImDad(message, event);
         }
     }
 
@@ -53,11 +49,14 @@ public class Dadbot extends ListenerAdapter {
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
-    private void hiImDad(String message, MessageChannel channel) {
+    private void hiImDad(String message, MessageReceivedEvent event) {
+        if (!channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+            return;
+        }
         String stringBuilder = "Hi" +
                 message.substring(message.indexOf(' ')) +
                 ", I'm Dad!";
-        messageUtils.sendMessage(channel, stringBuilder);
+        messageUtils.sendMessage(event.getChannel(), stringBuilder);
     }
 
     private boolean checkChance() {
