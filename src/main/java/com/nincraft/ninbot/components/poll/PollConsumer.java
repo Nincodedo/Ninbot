@@ -30,7 +30,7 @@ class PollConsumer implements Consumer<Message> {
             char digitalOneEmoji = '\u0031';
             List<String> choices = poll.getChoices();
             for (int i = 0; i < choices.size(); i++) {
-                message.addReaction(Character.toString(digitalOneEmoji) + "\u20E3").queue();
+                message.addReaction(digitalOneEmoji + "\u20E3").queue();
                 digitalOneEmoji++;
             }
             message.pin().queue();

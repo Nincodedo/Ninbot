@@ -4,7 +4,7 @@ import lombok.val;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class ReactionResultListener extends ListenerAdapter {
+class ReactionResultListener extends ListenerAdapter {
 
     private String recordType;
     private String messageId;

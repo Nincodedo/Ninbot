@@ -37,7 +37,7 @@ public class StatsCommand extends AbstractCommand {
 
         Map<Role, Integer> roleMap = server.getMembers().stream().flatMap(member -> member.getRoles().stream())
                 .filter(role -> !roleBlackList.contains(role.getName()))
-                .collect(Collectors.toMap(role -> role, role -> 1, (a, b) -> a + b));
+                .collect(Collectors.toMap(role -> role, role -> 1, Integer::sum));
 
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 

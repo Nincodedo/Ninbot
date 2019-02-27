@@ -45,10 +45,9 @@ public class ConfigDao extends GenericDao<Config> {
                 entityManager.remove(entityManager.contains(config) ? config : entityManager.merge(config)));
     }
 
-    boolean addConfig(String serverId, String configName, String configValue) {
+    void addConfig(String serverId, String configName, String configValue) {
         Config config = new Config(serverId, configName, configValue);
         entityManager.persist(config);
-        return true;
     }
 
     void removeConfig(Config config) {

@@ -56,8 +56,4 @@ public class MessageUtils {
     public void sendPrivateMessage(User user, Message message) {
         user.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(message).queue());
     }
-
-    public void sendPrivateMessage(User user, String message) {
-        user.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(message).queue());
-    }
 }

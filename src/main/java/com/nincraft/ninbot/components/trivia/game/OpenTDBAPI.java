@@ -116,7 +116,7 @@ public class OpenTDBAPI implements ITriviaAPI {
         return triviaUrl;
     }
 
-    public String getTriviaToken() {
+    private String getTriviaToken() {
         val jsonOptional = httpGetJson(HTTP_OPENTDB_COM + "api_token.php?command=request");
         if (jsonOptional.isPresent()) {
             val json = jsonOptional.get();

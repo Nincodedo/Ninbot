@@ -52,8 +52,8 @@ public class ConfigService {
     }
 
     @Transactional
-    public boolean addConfig(String serverId, String configName, String configValue) {
-        return configDao.addConfig(serverId, configName, configValue);
+    public void addConfig(String serverId, String configName, String configValue) {
+        configDao.addConfig(serverId, configName, configValue);
     }
 
     @Transactional
