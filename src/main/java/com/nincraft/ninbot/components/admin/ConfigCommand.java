@@ -7,34 +7,44 @@ import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
-public class AdminCommand extends AbstractCommand {
+public class ConfigCommand extends AbstractCommand {
 
     private ConfigService configService;
 
-    public AdminCommand(ConfigService configService) {
+    public ConfigCommand(ConfigService configService) {
         length = 3;
-        name = "admin";
+        name = "config";
         checkExactLength = false;
-        description = "Admin commands";
+        description = "Config commands";
         permissionLevel = RolePermission.ADMIN;
         this.configService = configService;
     }
 
     @Override
     public void executeCommand(MessageReceivedEvent event) {
+        val message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
-            case "config-add":
-                addConfig(event);
+            case "add":
+                if (getCommandLength(message) >= 5) {
+                    addConfig(message, event.getGuild().getId(), event.getMessage());
+                } else {
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                }
                 break;
-            case "config-remove":
-                removeConfig(event);
+            case "remove":
+                if (getCommandLength(message) >= 5) {
+                    removeConfig(message, event.getGuild().getId(), event.getMessage());
+                } else {
+                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                }
                 break;
-            case "config-list":
+            case "list":
                 listConfigs(event);
                 break;
             default:
@@ -58,25 +68,15 @@ public class AdminCommand extends AbstractCommand {
         messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
     }
 
-    private void removeConfig(MessageReceivedEvent event) {
-        val message = event.getMessage().getContentStripped();
-        if (getCommandLength(message) < 5) {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
-            return;
-        }
-        Config config = new Config(event.getGuild().getId(), message.split("\\s+")[3], message.split("\\s+")[4]);
+    private void removeConfig(String messageString, String guildId, Message message) {
+        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
         configService.removeConfig(config);
-        messageUtils.reactSuccessfulResponse(event.getMessage());
+        messageUtils.reactSuccessfulResponse(message);
     }
 
-    private void addConfig(MessageReceivedEvent event) {
-        val message = event.getMessage().getContentStripped();
-        if (getCommandLength(message) < 5) {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
-            return;
-        }
-        Config config = new Config(event.getGuild().getId(), message.split("\\s+")[3], message.split("\\s+")[4]);
+    private void addConfig(String messageString, String guildId, Message message) {
+        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
         val isSuccessful = configService.addConfig(config);
-        messageUtils.reactAccordingly(event.getMessage(), isSuccessful);
+        messageUtils.reactAccordingly(message, isSuccessful);
     }
 }
