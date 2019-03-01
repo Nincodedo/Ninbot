@@ -22,8 +22,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
@@ -72,6 +71,5 @@ public class ListCommandTest {
         when(mockMessage.getContentStripped()).thenReturn("@Ninbot list");
         when(mockGuild.getRoles()).thenReturn(roles);
         listCommand.executeCommand(mockMessageEvent);
-        verify(messageUtils, times(1)).sendMessage(any(MessageChannel.class), any(Message.class));
     }
 }

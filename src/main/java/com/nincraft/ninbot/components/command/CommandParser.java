@@ -26,6 +26,7 @@ class CommandParser {
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
     private Map<String, String> commandAliasMap = new HashMap<>();
+    private static final String QUESTION_MARK = "\u2754";
 
     @Autowired
     CommandParser(ConfigService configService, MessageUtils messageUtils) {
@@ -47,7 +48,7 @@ class CommandParser {
             } else {
                 val channelList = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.CONVERSATION_CHANNELS);
                 if (!channelList.contains(event.getChannel().getId())) {
-                    messageUtils.reactUnknownResponse(event.getMessage());
+                    event.getMessage().addReaction(QUESTION_MARK).queue();
                 }
             }
         }
