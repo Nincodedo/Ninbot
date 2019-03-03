@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.NinbotRunner;
-import com.nincraft.ninbot.components.common.MessageUtils;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.impl.RoleImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,9 +45,6 @@ public class ListCommandTest {
     Guild mockGuild;
 
     @Mock
-    MessageUtils messageUtils;
-
-    @Mock
     ConfigService configService;
 
     @InjectMocks
@@ -58,18 +55,17 @@ public class ListCommandTest {
         roleBlackList.add("admin");
     }
 
-    @Ignore
     @Test
     public void executeCommand() {
-        //listCommand.setMessageUtils(messageUtils);
         List<Role> roles = new ArrayList<>();
-        Role role = new RoleImpl(1L, mockGuild);
+        RoleImpl role = new RoleImpl(1L, mockGuild);
+        role.setName("best");
         roles.add(role);
-        when(mockMessageEvent.getChannel()).thenReturn(mockMessageChannel);
         when(mockMessageEvent.getMessage()).thenReturn(mockMessage);
         when(mockMessageEvent.getGuild()).thenReturn(mockGuild);
         when(mockMessage.getContentStripped()).thenReturn("@Ninbot list");
         when(mockGuild.getRoles()).thenReturn(roles);
-        listCommand.executeCommand(mockMessageEvent);
+        CommandResult commandResult = listCommand.executeCommand(mockMessageEvent);
+        assertEquals("best", commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getDescription().trim());
     }
 }

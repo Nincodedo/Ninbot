@@ -32,7 +32,6 @@ public class ListCommand extends AbstractCommand {
     @Override
     public CommandResult executeCommand(MessageReceivedEvent event) {
         CommandResult commandResult = new CommandResult(event);
-        val channel = event.getChannel();
         val content = event.getMessage().getContentStripped().split("\\s+");
         if (content.length > 2) {
             listUsersInSubscription(content[2], event.getGuild()).ifPresent(commandResult::addChannelAction);

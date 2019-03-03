@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.command;
 
 import com.nincraft.ninbot.components.common.Emojis;
+import lombok.Getter;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class CommandResult {
     private MessageReceivedEvent event;
     private List<Message> privateMessageList;
