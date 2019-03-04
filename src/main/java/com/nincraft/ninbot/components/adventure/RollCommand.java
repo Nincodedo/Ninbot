@@ -1,7 +1,10 @@
 package com.nincraft.ninbot.components.adventure;
 
-import com.bernardomg.tabletop.dice.parser.DefaultDiceNotationExpressionParser;
-import com.bernardomg.tabletop.dice.roller.DefaultRoller;
+import com.bernardomg.tabletop.dice.history.RollHistory;
+import com.bernardomg.tabletop.dice.interpreter.DiceInterpreter;
+import com.bernardomg.tabletop.dice.interpreter.DiceRoller;
+import com.bernardomg.tabletop.dice.parser.DefaultDiceParser;
+import com.bernardomg.tabletop.dice.parser.DiceParser;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -10,14 +13,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class RollCommand extends AbstractCommand {
 
-    private DefaultDiceNotationExpressionParser parser;
+    private final DiceParser parser;
+    
+    private final DiceInterpreter<RollHistory> roller;
 
     public RollCommand() {
         name = "roll";
         checkExactLength = false;
         length = 2;
         description = "Rolls dice which is nice";
-        parser = new DefaultDiceNotationExpressionParser(new DefaultRoller());
+        parser = new DefaultDiceParser();
+        roller = new DiceRoller();
     }
 
     @Override
@@ -34,8 +40,8 @@ public class RollCommand extends AbstractCommand {
     }
 
     private void rollDice(String diceArgs, MessageReceivedEvent event) {
-        val parsed = parser.parse(diceArgs);
+        val parsed = parser.parse(diceArgs, roller);
         val diceCommand = diceArgs.split("d");
-        messageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.roll()));
+        messageUtils.sendMessage(event.getChannel(), "%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getTotalRoll()));
     }
 }
