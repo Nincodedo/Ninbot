@@ -28,10 +28,14 @@ public class TwitchListener extends ListenerAdapter {
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
         if (event instanceof UserUpdateGameEvent) {
             val updateGameEvent = (UserUpdateGameEvent) event;
+            log.info("User Presence Updated: User {}, Old game {}, New game {}", updateGameEvent.getUser(), updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
+            if (updateGameEvent.getNewGame() != null) {
+                log.info("New game URL {}", updateGameEvent.getNewGame().getUrl());
+            }
             if (isNowStreaming(updateGameEvent)) {
                 val serverId = event.getGuild().getId();
                 val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                if (streamingAnnounceUsers.contains(event.getMember().getUser().getId())) {
+                if (streamingAnnounceUsers.contains(updateGameEvent.getUser().getId())) {
                     announceStream(updateGameEvent, serverId);
                 }
             } else if (isNoLongerStreaming(updateGameEvent)) {
