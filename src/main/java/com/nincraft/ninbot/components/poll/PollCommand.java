@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Log4j2
 @Component
@@ -23,23 +22,26 @@ public class PollCommand extends AbstractCommand {
         description = "Creates a new poll. Use poll help for more information";
         length = 4;
         checkExactLength = false;
-        helpText =
-                "Creates a new poll, arguments are (question \"answer 1, answer 2, answer 3...\" pollLengthInMinutes)\n"
-                        +
-                "Example: @Ninbot poll Who stole the cookies from the cookie jar? \"You, me, then who?\" 20\n" +
-                "This would create a poll with three options and it would close after 20 minutes.";
+        //@formatter:off
+        helpText = "Creates a new poll, arguments are (question \"answer 1, answer 2, answer 3...\" "
+                        + "pollLengthInMinutes)\nExample: @Ninbot poll Who stole the cookies from the cookie jar? "
+                        + "\"You, me, then who?\" 20\nThis would create a poll with three options and it would "
+                        + "close after 20 minutes.";
+        //@formatter:on
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
             Poll poll = parsePollMessage(event.getMessage(), event.getAuthor());
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
-                event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll, messageUtils));
+                event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
             } else {
-                messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                commandResult.addUnsuccessfulReaction();
             }
         }
+        return commandResult;
     }
 
     private Poll parsePollMessage(Message message, User user) {

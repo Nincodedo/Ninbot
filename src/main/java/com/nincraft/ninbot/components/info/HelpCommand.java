@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.info;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
@@ -11,23 +10,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class HelpCommand extends AbstractCommand {
 
     private Map<String, AbstractCommand> commandMap;
 
-    public HelpCommand(Map<String, AbstractCommand> commandMap,
-            MessageUtils messageUtils) {
+    public HelpCommand(Map<String, AbstractCommand> commandMap) {
         length = 2;
         name = "help";
         description = "Displays this awesome message";
         this.commandMap = commandMap;
-        this.messageUtils = messageUtils;
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("List of commands");
         messageBuilder.setColor(Color.BLUE);
@@ -36,7 +33,8 @@ public class HelpCommand extends AbstractCommand {
         keyList.stream().filter(key -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(key).getPermissionLevel()))
                 .forEach(key -> messageBuilder.addField(key, commandMap.get(key).getDescription(), false));
         messageBuilder.setFooter("Use \"help\" at the end of any command to get more information about it", null);
-        messageUtils.sendPrivateMessage(event.getAuthor(), messageBuilder.build());
-        messageUtils.reactSuccessfulResponse(event.getMessage());
+        commandResult.addPrivateMessageAction(messageBuilder.build());
+        commandResult.addSuccessfulReaction();
+        return commandResult;
     }
 }

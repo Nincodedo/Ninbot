@@ -18,6 +18,5 @@ public class UnsubscribeCommand extends SubscribeCommand {
     @Override
     void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
         controller.removeRolesFromMember(event.getMember(), role).queue();
-        messageUtils.reactSuccessfulResponse(event.getMessage());
     }
 }

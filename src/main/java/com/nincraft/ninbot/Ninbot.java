@@ -25,6 +25,7 @@ public class Ninbot {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext context) {
         return args -> {
+            log.info("Joined {} server(s)", jda.getGuilds().size());
             schedulableList.forEach(schedule -> schedule.scheduleAll(jda));
             jda.getPresence().setGame(Game.playing("say \"@Ninbot help\" for list of commands"));
         };

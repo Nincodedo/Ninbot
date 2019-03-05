@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.reaction;
 
 import com.nincraft.ninbot.components.common.MessageUtils;
+import lombok.Getter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -24,6 +25,7 @@ public class EmojiReactionResponse implements IReactionResponse {
         }
     }
 
+    @Getter
     private List<String> emojiList;
 
     public EmojiReactionResponse(String response) {

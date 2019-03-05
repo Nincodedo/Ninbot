@@ -1,7 +1,5 @@
 package com.nincraft.ninbot.components.conversation;
 
-import java.util.Optional;
-
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
@@ -25,7 +23,8 @@ public class ConversationCommand extends AbstractCommand {
     }
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val serverId = event.getGuild().getId();
         val conversationChannelList = configService.getValuesByName(serverId, ConfigConstants.CONVERSATION_CHANNELS);
         val channelId = event.getChannel().getId();
@@ -34,6 +33,6 @@ public class ConversationCommand extends AbstractCommand {
         } else {
             configService.removeConfig(serverId, ConfigConstants.CONVERSATION_CHANNELS, channelId);
         }
-        messageUtils.reactSuccessfulResponse(event.getMessage());
+        return commandResult.addSuccessfulReaction();
     }
 }

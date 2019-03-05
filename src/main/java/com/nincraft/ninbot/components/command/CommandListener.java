@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.info.HelpCommand;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -13,19 +12,17 @@ import java.util.List;
 public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
-    private MessageUtils messageUtils;
 
     @Autowired
-    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands, MessageUtils messageUtils) {
+    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands) {
         this.commandParser = commandParser;
-        this.messageUtils = messageUtils;
         addCommands(commands);
     }
 
     private void addCommands(List<AbstractCommand> commands) {
         commandParser.registerAliases(commands);
         commandParser.addCommands(commands);
-        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap(), messageUtils));
+        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap()));
     }
 
     @Override

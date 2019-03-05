@@ -15,10 +15,10 @@ class PollAnnounce extends TimerTask {
     private Message message;
     private MessageUtils messageUtils;
 
-    PollAnnounce(Poll poll, Message message, MessageUtils messageUtils) {
+    PollAnnounce(Poll poll, Message message) {
         this.poll = poll;
         this.message = message;
-        this.messageUtils = messageUtils;
+        this.messageUtils = new MessageUtils();
     }
 
     @Override
