@@ -1,7 +1,5 @@
 package com.nincraft.ninbot.components.twitch;
 
-import java.util.Optional;
-
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -23,18 +21,20 @@ public class TwitchCommand extends AbstractCommand {
     }
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "announce":
-                announceToggle(event);
+                commandResult.addReaction(announceToggle(event));
                 break;
             default:
-                messageUtils.reactUnknownResponse(event.getMessage());
+                commandResult.addUnknownReaction();
                 break;
         }
+        return commandResult;
     }
 
-    private void announceToggle(MessageReceivedEvent event) {
+    private String announceToggle(MessageReceivedEvent event) {
         val userId = event.getAuthor().getId();
         val serverId = event.getGuild().getId();
         val configName = "streamingAnnounceUsers";
@@ -48,6 +48,6 @@ public class TwitchCommand extends AbstractCommand {
             configService.addConfig(serverId, configName, userId);
             responseEmoji = "\uD83D\uDD1B";
         }
-        messageUtils.addReaction(message, responseEmoji);
+        return responseEmoji;
     }
 }

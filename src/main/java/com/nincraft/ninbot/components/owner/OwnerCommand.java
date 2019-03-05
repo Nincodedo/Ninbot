@@ -4,14 +4,12 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.Optional;
 
 @Component
 public class OwnerCommand extends AbstractCommand {
@@ -27,26 +25,27 @@ public class OwnerCommand extends AbstractCommand {
     }
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         if (!event.getMessage().isFromType(ChannelType.PRIVATE)) {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
-            return;
+            return commandResult.addUnsuccessfulReaction();
         }
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "restart":
-                restart(event.getMessage());
+                commandResult.addSuccessfulReaction();
+                restart();
                 break;
             case "logs":
                 showLogs(event.getChannel());
                 break;
             default:
-                messageUtils.reactUnknownResponse(event.getMessage());
+                commandResult.addUnknownReaction();
                 break;
         }
+        return commandResult;
     }
 
-    private void restart(Message message) {
-        messageUtils.reactSuccessfulResponse(message);
+    private void restart() {
         System.exit(0);
     }
 

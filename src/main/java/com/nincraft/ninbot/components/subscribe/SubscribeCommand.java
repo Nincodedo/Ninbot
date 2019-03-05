@@ -6,6 +6,7 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.core.managers.GuildController;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Component
@@ -29,25 +29,28 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val content = event.getMessage().getContentStripped().toLowerCase();
-        val channel = event.getChannel();
         if (isCommandLengthCorrect(content)) {
             val server = event.getGuild();
             val subscribeTo = content.split("\\s+")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server.getController(), role);
+                commandResult.addSuccessfulReaction();
             } else {
-                messageUtils.sendMessage(channel, "Could not find the role \"%s\", contact an admin", subscribeTo);
+                commandResult.addChannelAction(new MessageBuilder()
+                        .appendFormat("Could not find the role \"%s\", contact an admin", subscribeTo)
+                        .build());
             }
         } else {
-            messageUtils.reactUnknownResponse(event.getMessage());
+            commandResult.addUnknownReaction();
         }
+        return commandResult;
     }
 
     void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
-        messageUtils.reactSuccessfulResponse(event.getMessage());
         controller.addRolesToMember(event.getMember(), role).queue();
     }
 

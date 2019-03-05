@@ -1,7 +1,5 @@
 package com.nincraft.ninbot.components.admin;
 
-import java.util.Optional;
-
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
@@ -10,6 +8,7 @@ import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -30,56 +29,56 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":
                 if (getCommandLength(message) >= 5) {
-                    addConfig(message, event.getGuild().getId(), event.getMessage());
+                    commandResult.addCorrectReaction(addConfig(message, event.getGuild().getId()));
                 } else {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    commandResult.addUnsuccessfulReaction();
                 }
                 break;
             case "remove":
                 if (getCommandLength(message) >= 5) {
-                    removeConfig(message, event.getGuild().getId(), event.getMessage());
+                    removeConfig(message, event.getGuild().getId());
+                    commandResult.addSuccessfulReaction();
                 } else {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    commandResult.addUnsuccessfulReaction();
                 }
                 break;
             case "list":
-                listConfigs(event);
+                commandResult.addChannelAction(listConfigs(event));
                 break;
             default:
-                messageUtils.reactUnknownResponse(event.getMessage());
+                commandResult.addUnknownReaction();
                 break;
         }
+        return commandResult;
     }
 
-    private void listConfigs(MessageReceivedEvent event) {
+    private Message listConfigs(MessageReceivedEvent event) {
         val configsByServerId = configService.getConfigsByServerId(event.getGuild().getId());
         val serverName = event.getGuild().getName();
         if (configsByServerId.isEmpty()) {
-            messageUtils.sendMessage(event.getChannel(), "No configs found for server %s", serverName);
-            return;
+            return new MessageBuilder().appendFormat("No configs found for server %s", serverName).build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("Configs for " + serverName);
         for (val config : configsByServerId) {
             messageBuilder.addField(config.getName(), config.getValue(), false);
         }
-        messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
+        return messageBuilder.build();
     }
 
-    private void removeConfig(String messageString, String guildId, Message message) {
+    private void removeConfig(String messageString, String guildId) {
         Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
         configService.removeConfig(config);
-        messageUtils.reactSuccessfulResponse(message);
     }
 
-    private void addConfig(String messageString, String guildId, Message message) {
+    private boolean addConfig(String messageString, String guildId) {
         Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
-        val isSuccessful = configService.addConfig(config);
-        messageUtils.reactAccordingly(message, isSuccessful);
+        return configService.addConfig(config);
     }
 }

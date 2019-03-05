@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,21 +26,23 @@ public class WinCommand extends AbstractCommand {
     }
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val mentionedUsers = event.getMessage().getMentionedUsers();
         List<User> mentionList = mentionedUsers.stream().filter(user -> !user.isBot()).collect(Collectors.toList());
         mentionList.remove(event.getAuthor());
         if (!mentionList.isEmpty()) {
             val message = event.getMessage();
-            messageUtils.reactSuccessfulResponse(message);
-            messageUtils.reactUnsuccessfulResponse(message);
+            commandResult.addSuccessfulReaction();
+            commandResult.addUnsuccessfulReaction();
             for (val user : mentionList) {
                 val jda = event.getJDA();
                 val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event.getAuthor().getId(), user.getId());
                 jda.addEventListener(reactionResultListener);
             }
         } else {
-            messageUtils.reactUnknownResponse(event.getMessage());
+            commandResult.addUnknownReaction();
         }
+        return commandResult;
     }
 }

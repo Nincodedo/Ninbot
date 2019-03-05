@@ -4,13 +4,13 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class DabCommand extends AbstractCommand {
@@ -28,7 +28,8 @@ public class DabCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
             val channel = event.getChannel();
@@ -38,29 +39,27 @@ public class DabCommand extends AbstractCommand {
             int maxDab = 10;
             for (Message message : channel.getIterableHistory()) {
                 if (message.getAuthor().equals(dabUser)) {
-                    dabOnMessage(message, channel);
+                    dabOnMessage(commandResult, message.getGuild());
                     break;
                 }
                 if (count >= maxDab) {
-                    messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                    commandResult.addUnsuccessfulReaction();
                     break;
                 }
                 count++;
             }
         } else {
-            messageUtils.reactUnknownResponse(event.getMessage());
+            commandResult.addUnknownReaction();
         }
+        return commandResult;
     }
 
-    private void dabOnMessage(Message message, MessageChannel channel) {
-        val guild = message.getGuild();
+    private void dabOnMessage(CommandResult commandResult, Guild guild) {
         val critDab = random.nextInt(100) < 5;
         if (critDab) {
-            critResponse.react(message, channel, messageUtils);
+            commandResult.addReaction(critResponse.getEmojiList());
+            commandResult.addReaction(dabResponse.getEmojiList());
         }
-        guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).forEachOrdered(emote -> messageUtils.addReaction(message, emote));
-        if (critDab) {
-            dabResponse.react(message, channel, messageUtils);
-        }
+        commandResult.addReactionEmotes(guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).sorted().collect(Collectors.toList()));
     }
 }

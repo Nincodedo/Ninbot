@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.poll;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
@@ -17,11 +16,9 @@ import java.util.function.Consumer;
 class PollConsumer implements Consumer<Message> {
 
     private Poll poll;
-    private MessageUtils messageUtils;
 
-    PollConsumer(Poll poll, MessageUtils messageUtils) {
+    PollConsumer(Poll poll) {
         this.poll = poll;
-        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -35,7 +32,7 @@ class PollConsumer implements Consumer<Message> {
             }
             message.pin().queue();
             val announceTime = Instant.now().plus(poll.getTimeLength(), ChronoUnit.MINUTES);
-            PollAnnounce pollAnnounce = new PollAnnounce(poll, message, messageUtils);
+            PollAnnounce pollAnnounce = new PollAnnounce(poll, message);
             Timer timer = new Timer();
             timer.schedule(pollAnnounce, Date.from(announceTime));
         });

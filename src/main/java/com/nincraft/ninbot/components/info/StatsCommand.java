@@ -6,7 +6,7 @@ import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,11 +29,12 @@ public class StatsCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
-        displayRoleStats(event.getChannel(), event.getGuild());
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
+        return commandResult.addChannelAction(displayRoleStats(event.getGuild()));
     }
 
-    private void displayRoleStats(MessageChannel channel, Guild server) {
+    private Message displayRoleStats(Guild server) {
         List<String> roleBlackList = configService.getValuesByName(server.getId(), ConfigConstants.ROLE_BLACKLIST);
 
         Map<Role, Integer> roleMap = server.getMembers().stream().flatMap(member -> member.getRoles().stream())
@@ -49,7 +49,7 @@ public class StatsCommand extends AbstractCommand {
         Collections.sort(statList);
         statList.stream().limit(limit).forEach(stat -> messageBuilder.appendDescription(
                 stat.name + ": " + stat.amount + "\n"));
-        messageUtils.sendMessage(channel, messageBuilder.build());
+        return messageBuilder.build();
     }
 
     private class Stat implements Comparable {

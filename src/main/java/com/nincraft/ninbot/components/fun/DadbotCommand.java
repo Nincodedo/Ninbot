@@ -1,15 +1,11 @@
 package com.nincraft.ninbot.components.fun;
 
-import java.util.Optional;
-
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -28,25 +24,27 @@ public class DadbotCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "toggle":
-                toggleBlacklistChannel(event.getGuild().getId(), event.getChannel(), event.getMessage());
+                toggleBlacklistChannel(event.getGuild().getId(), event.getChannel().getId());
+                commandResult.addSuccessfulReaction();
                 break;
             default:
-                messageUtils.reactUnknownResponse(event.getMessage());
+                commandResult.addUnknownReaction();
                 break;
         }
+        return commandResult;
     }
 
-    private void toggleBlacklistChannel(String serverId, MessageChannel channel, Message message) {
+    private void toggleBlacklistChannel(String serverId, String channelId) {
         val channelBlacklist = configService.getValuesByName(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL);
-        if (!channelBlacklist.contains(channel.getId())) {
-            configService.addConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channel.getId());
+        if (!channelBlacklist.contains(channelId)) {
+            configService.addConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channelId);
         } else {
-            configService.removeConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channel.getId());
+            configService.removeConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channelId);
         }
-        messageUtils.reactSuccessfulResponse(message);
     }
 }

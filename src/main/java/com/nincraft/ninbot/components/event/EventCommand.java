@@ -5,14 +5,13 @@ import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
@@ -40,37 +39,37 @@ public class EventCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent messageReceivedEvent) {
+    public CommandResult executeCommand(MessageReceivedEvent messageReceivedEvent) {
+        CommandResult commandResult = new CommandResult(messageReceivedEvent);
         val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
-        val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {
             switch (getSubcommand(content)) {
                 case "list":
-                    listEvents(channel);
+                    commandResult.addChannelAction(listEvents());
                     break;
                 case "plan":
                     planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
+                    commandResult.addSuccessfulReaction();
                     break;
                 default:
-                    messageUtils.reactUnknownResponse(messageReceivedEvent.getMessage());
+                    commandResult.addUnknownReaction();
                     break;
             }
         } else {
-            messageUtils.reactUnknownResponse(messageReceivedEvent.getMessage());
+            commandResult.addUnknownReaction();
         }
+        return commandResult;
     }
 
     private void planEvent(Message message, User author, JDA jda) {
         Event event = eventParser.parsePlanMessage(message, author.getName());
         eventScheduler.addEvent(event, jda);
-        messageUtils.reactSuccessfulResponse(message);
     }
 
-    private void listEvents(MessageChannel channel) {
+    private Message listEvents() {
         val events = eventService.getAllEvents();
         if (events.isEmpty()) {
-            messageUtils.sendMessage(channel, "No events scheduled");
-            return;
+            return new MessageBuilder().append("No events scheduled").build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("Current scheduled events");
@@ -79,6 +78,6 @@ public class EventCommand extends AbstractCommand {
             messageBuilder.addField(event.getName(), event.toString(), true);
         }
         messageBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
-        messageUtils.sendMessage(channel, messageBuilder.build());
+        return messageBuilder.build();
     }
 }

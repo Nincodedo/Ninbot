@@ -1,12 +1,7 @@
 package com.nincraft.ninbot.components.common;
-public enum Emojis
-{
-    CHECK_MARK("\u2705"), QUESTION_MARK("\u2754"), CROSS_X("\u274C");
 
-    private String s;
-
-    Emojis(String s)
-    {
-        this.s = s;
-    }
+public class Emojis {
+    public static final String CHECK_MARK = "\u2705";
+    public static final String QUESTION_MARK = "\u2754";
+    public static final String CROSS_X = "\u274C";
 }

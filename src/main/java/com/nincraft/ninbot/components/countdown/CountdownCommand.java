@@ -4,12 +4,12 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Component
 public class CountdownCommand extends AbstractCommand {
@@ -29,23 +29,24 @@ public class CountdownCommand extends AbstractCommand {
 
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list":
-                listCountdowns(event);
+                commandResult.addChannelAction(listCountdowns(event));
                 break;
             case "":
-                displayHelp(event);
+                commandResult = displayHelp(event);
                 break;
             default:
-                setupCountdown(event);
+                commandResult.addCorrectReaction(setupCountdown(event));
                 break;
         }
+        return commandResult;
     }
 
-    private void listCountdowns(MessageReceivedEvent event) {
-        val channel = event.getChannel();
+    private Message listCountdowns(MessageReceivedEvent event) {
         val list = countdownDao.getAllObjectsByServerId(event.getGuild().getId());
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         if (!list.isEmpty()) {
@@ -56,10 +57,10 @@ public class CountdownCommand extends AbstractCommand {
         } else {
             messageBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
         }
-        messageUtils.sendMessage(channel, messageBuilder.build());
+        return messageBuilder.build();
     }
 
-    private void setupCountdown(MessageReceivedEvent event) {
+    private boolean setupCountdown(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         val splitMessage = message.split("\\s+");
         if (splitMessage.length >= 3) {
@@ -72,9 +73,9 @@ public class CountdownCommand extends AbstractCommand {
                     .setServerId(event.getGuild().getId());
             countdownDao.saveObject(countdown);
             countdownScheduler.scheduleOne(countdown, event.getJDA());
-            messageUtils.reactSuccessfulResponse(event.getMessage());
+            return true;
         } else {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            return false;
         }
     }
 }

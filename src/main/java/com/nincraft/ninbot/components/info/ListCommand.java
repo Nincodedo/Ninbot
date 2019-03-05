@@ -6,7 +6,10 @@ import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -27,18 +30,19 @@ public class ListCommand extends AbstractCommand {
     }
 
     @Override
-    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    public CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val channel = event.getChannel();
         val content = event.getMessage().getContentStripped().split("\\s+");
         if (content.length > 2) {
-            listUsersInSubscription(content[2], event.getGuild(), event.getChannel(), event.getMessage());
+            listUsersInSubscription(content[2], event.getGuild()).ifPresent(commandResult::addChannelAction);
         } else {
-            listSubscriptions(event.getGuild(), channel);
+            commandResult.addChannelAction(listSubscriptions(event.getGuild().getRoles(), event.getGuild().getId()));
         }
+        return commandResult;
     }
 
-    private void listUsersInSubscription(String roleName, Guild guild, MessageChannel channel,
-            Message message) {
+    private Optional<Message> listUsersInSubscription(String roleName, Guild guild) {
         val role = guild.getRolesByName(roleName, true);
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
@@ -46,20 +50,18 @@ public class ListCommand extends AbstractCommand {
             MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
             messageBuilder.setTitle("Users in " + roleName + " subscription");
             messageBuilder.appendDescription(userNames.toString());
-            messageUtils.sendMessage(channel, messageBuilder.build());
-        } else {
-            messageUtils.reactUnsuccessfulResponse(message);
+            return Optional.of(messageBuilder.build());
         }
+        return Optional.empty();
     }
 
-    private void listSubscriptions(Guild guild, MessageChannel channel) {
-        val roleList = guild.getRoles();
+    private Message listSubscriptions(List<Role> roleList, String guildId) {
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
-        List<String> roleBlackList = configService.getValuesByName(guild.getId(), ConfigConstants.ROLE_BLACKLIST);
+        List<String> roleBlackList = configService.getValuesByName(guildId, ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("Available subscriptions");
         roleNameList.stream().map(roleName -> roleName + "\n").forEach(messageBuilder::appendDescription);
-        messageUtils.sendMessage(channel, messageBuilder.build());
+        return messageBuilder.build();
     }
 }

@@ -6,15 +6,13 @@ import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.trivia.game.TriviaManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Log4j2
@@ -39,34 +37,36 @@ public class TriviaCommand extends AbstractCommand {
     }
 
     @Override
-    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+    protected CommandResult executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "start":
-                startTrivia(event);
+                startTrivia(event, commandResult);
                 break;
             case "stop":
-                stopTrivia(event);
+                stopTrivia(event, commandResult);
                 break;
             case "categories":
-                displayTriviaCategories(event);
+                commandResult.addChannelAction(displayTriviaCategories());
                 break;
             case "score":
-                getPlayerScore(event);
+                commandResult.addChannelAction(getPlayerScore(event));
                 break;
             case "leaderboard":
-                displayLeaderboard(event);
+                displayLeaderboard(event).ifPresent(commandResult::addChannelAction);
                 break;
             default:
-                messageUtils.reactUnsuccessfulResponse(event.getMessage());
+                commandResult.addUnsuccessfulReaction();
                 break;
         }
+        return commandResult;
     }
 
-    private void displayLeaderboard(MessageReceivedEvent event) {
+    private Optional<Message> displayLeaderboard(MessageReceivedEvent event) {
         List<TriviaScore> triviaScores = triviaScoreService.getScoreForAllPlayers();
         if (triviaScores.isEmpty()) {
-            return;
+            return Optional.empty();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("Trivia Leaderboard");
@@ -78,15 +78,15 @@ public class TriviaCommand extends AbstractCommand {
                 messageBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
             }
         }
-        messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
+        return Optional.of(messageBuilder.build());
     }
 
-    private void getPlayerScore(MessageReceivedEvent event) {
+    private Message getPlayerScore(MessageReceivedEvent event) {
         int score = triviaScoreService.getPlayerScore(event.getAuthor().getId());
-        messageUtils.sendMessage(event.getChannel(), "%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score));
+        return new MessageBuilder().appendFormat("%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score)).build();
     }
 
-    private void displayTriviaCategories(MessageReceivedEvent event) {
+    private Message displayTriviaCategories() {
         Map<Integer, String> triviaCategoryMap = triviaManager.getTriviaCategories();
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("Trivia Categories");
@@ -97,24 +97,26 @@ public class TriviaCommand extends AbstractCommand {
             messageBuilder.appendDescription(String.format("ID: %s %s%n", categoryKey, triviaCategoryMap.get(categoryKey)));
         }
         messageBuilder.setFooter("Use the ID to pick a specific category when starting trivia", null);
-        messageUtils.sendMessage(event.getChannel(), messageBuilder.build());
+        return messageBuilder.build();
     }
 
 
-    private void stopTrivia(MessageReceivedEvent event) {
+    private void stopTrivia(MessageReceivedEvent event,
+            CommandResult commandResult) {
         if (!triviaManager.isTriviaActiveInChannel(event.getChannel().getId())) {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            commandResult.addUnsuccessfulReaction();
             return;
         }
         triviaManager.stopTrivia(event.getChannel().getId());
-        messageUtils.sendMessage(event.getChannel(), "Trivia has ended.");
-        messageUtils.reactSuccessfulResponse(event.getMessage());
+        commandResult.addChannelAction("Trivia has ended.");
+        commandResult.addSuccessfulReaction();
     }
 
-    private void startTrivia(MessageReceivedEvent event) {
+    private void startTrivia(MessageReceivedEvent event,
+            CommandResult commandResult) {
         val channel = event.getChannel();
         if (triviaManager.isTriviaActiveInChannel(channel.getId())) {
-            messageUtils.reactUnsuccessfulResponse(event.getMessage());
+            commandResult.addUnsuccessfulReaction();
             return;
         }
         val message = event.getMessage().getContentStripped();

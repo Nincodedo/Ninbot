@@ -1,21 +1,17 @@
 package com.nincraft.ninbot.components.command;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
-
 import lombok.Data;
-import lombok.val;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 @Data
@@ -35,19 +31,19 @@ public abstract class AbstractCommand {
         if (userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
-                displayHelp(event).ifPresent(CommandResult::executeActions);
+                displayHelp(event).executeActions();
             } else {
-                executeCommand(event).ifPresent(CommandResult::executeActions);
+                executeCommand(event).executeActions();
             }
         } else {
             log.debug("User {} does not have permission to run {}: {}", event.getAuthor().getName(), name, message);
             new CommandResult(event)
-                    .addAction(Emojis.CROSS_X)
+                    .addUnsuccessfulReaction()
                     .executeActions();
         }
     }
 
-    protected Optional<CommandResult> displayHelp(MessageReceivedEvent event) {
+    protected CommandResult displayHelp(MessageReceivedEvent event) {
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         String help = "Description: ";
         help += helpText != null ? helpText : description;
@@ -60,9 +56,9 @@ public abstract class AbstractCommand {
         }
         messageBuilder.addField(StringUtils.capitalize(name) + " Command Help", help, false);
         CommandResult commandResult = new CommandResult(event);
-        commandResult.addAction(CommandAction.PRIVATE_MESSAGE, messageBuilder.build());
-        commandResult.addAction(Emojis.CHECK_MARK);
-        return Optional.of(commandResult);
+        commandResult.addPrivateMessageAction(messageBuilder.build());
+        commandResult.addSuccessfulReaction();
+        return commandResult;
     }
 
     private String printAliases() {
@@ -95,7 +91,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    protected abstract Optional<CommandResult> executeCommand(MessageReceivedEvent event);
+    protected abstract CommandResult executeCommand(MessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content) {
         val commandLength = getCommandLength(content);
