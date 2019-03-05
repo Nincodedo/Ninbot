@@ -6,7 +6,12 @@ import com.bernardomg.tabletop.dice.interpreter.DiceRoller;
 import com.bernardomg.tabletop.dice.parser.DefaultDiceParser;
 import com.bernardomg.tabletop.dice.parser.DiceParser;
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandAction;
+import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.Emojis;
 import lombok.val;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -27,16 +32,18 @@ public class RollCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
+        CommandResult commandResult = new CommandResult(event);
         val content = event.getMessage().getContentStripped();
         val commandArgs = content.split("\\s+");
         if (commandArgs.length == 2) {
-            rollDice("1d20", event);
+            commandResult.addAction(CommandAction.CHANNEL_MESSAGE, rollDice("1d20", event));
         } else if (commandArgs.length == 3 && commandArgs[2].contains("d")) {
-            rollDice(commandArgs[2], event);
+            commandResult.addAction(CommandAction.CHANNEL_MESSAGE, rollDice(commandArgs[2], event));
         } else {
-            messageUtils.reactUnknownResponse(event.getMessage());
+            commandResult.addAction(Emojis.QUESTION_MARK);
         }
+        return Optional.of(commandResult);
     }
 
     private void rollDice(String diceArgs, MessageReceivedEvent event) {

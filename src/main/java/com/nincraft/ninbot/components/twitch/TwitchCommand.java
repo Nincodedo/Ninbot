@@ -1,6 +1,9 @@
 package com.nincraft.ninbot.components.twitch;
 
+import java.util.Optional;
+
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -20,7 +23,7 @@ public class TwitchCommand extends AbstractCommand {
     }
 
     @Override
-    protected void executeCommand(MessageReceivedEvent event) {
+    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "announce":
                 announceToggle(event);

@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.trivia;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.trivia.game.TriviaManager;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Log4j2
@@ -37,7 +39,7 @@ public class TriviaCommand extends AbstractCommand {
     }
 
     @Override
-    protected void executeCommand(MessageReceivedEvent event) {
+    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "start":

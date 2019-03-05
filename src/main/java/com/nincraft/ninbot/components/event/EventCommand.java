@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.awt.Color.BLUE;
 import static java.time.OffsetDateTime.now;
@@ -38,7 +40,7 @@ public class EventCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent messageReceivedEvent) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent messageReceivedEvent) {
         val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         val channel = messageReceivedEvent.getChannel();
         if (isCommandLengthCorrect(content)) {

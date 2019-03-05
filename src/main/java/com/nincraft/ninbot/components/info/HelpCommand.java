@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class HelpCommand extends AbstractCommand {
 
@@ -25,7 +27,7 @@ public class HelpCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle("List of commands");
         messageBuilder.setColor(Color.BLUE);

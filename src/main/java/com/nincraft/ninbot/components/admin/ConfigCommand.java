@@ -1,6 +1,9 @@
 package com.nincraft.ninbot.components.admin;
 
+import java.util.Optional;
+
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.Config;
@@ -27,7 +30,7 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":

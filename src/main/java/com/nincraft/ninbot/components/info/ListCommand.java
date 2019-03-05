@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +27,7 @@ public class ListCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val channel = event.getChannel();
         val content = event.getMessage().getContentStripped().split("\\s+");
         if (content.length > 2) {

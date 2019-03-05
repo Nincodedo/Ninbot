@@ -1,6 +1,9 @@
 package com.nincraft.ninbot.components.fun;
 
+import java.util.Optional;
+
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -25,7 +28,7 @@ public class DadbotCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "toggle":
