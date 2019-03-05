@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.owner;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.Optional;
 
 @Component
 public class OwnerCommand extends AbstractCommand {
@@ -25,7 +27,7 @@ public class OwnerCommand extends AbstractCommand {
     }
 
     @Override
-    protected void executeCommand(MessageReceivedEvent event) {
+    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         if (!event.getMessage().isFromType(ChannelType.PRIVATE)) {
             messageUtils.reactUnsuccessfulResponse(event.getMessage());
             return;

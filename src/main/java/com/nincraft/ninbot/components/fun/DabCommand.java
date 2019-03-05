@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 
 @Component
 public class DabCommand extends AbstractCommand {
@@ -26,7 +28,7 @@ public class DabCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
             val channel = event.getChannel();

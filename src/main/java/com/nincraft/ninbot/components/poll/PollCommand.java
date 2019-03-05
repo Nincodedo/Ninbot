@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.poll;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Optional;
 
 @Log4j2
 @Component
@@ -30,7 +31,7 @@ public class PollCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
             Poll poll = parsePollMessage(event.getMessage(), event.getAuthor());
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {

@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Component
 public class CountdownCommand extends AbstractCommand {
@@ -27,7 +29,7 @@ public class CountdownCommand extends AbstractCommand {
 
 
     @Override
-    protected void executeCommand(MessageReceivedEvent event) {
+    protected Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list":

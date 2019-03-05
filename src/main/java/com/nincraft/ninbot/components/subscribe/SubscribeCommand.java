@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.core.managers.GuildController;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Component
@@ -27,7 +29,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     @Override
-    public void executeCommand(MessageReceivedEvent event) {
+    public Optional<CommandResult> executeCommand(MessageReceivedEvent event) {
         val content = event.getMessage().getContentStripped().toLowerCase();
         val channel = event.getChannel();
         if (isCommandLengthCorrect(content)) {
