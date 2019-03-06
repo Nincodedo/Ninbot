@@ -39,7 +39,6 @@ public class TwitchCommand extends AbstractCommand {
         val serverId = event.getGuild().getId();
         val configName = "streamingAnnounceUsers";
         val streamingAnnounceUsers = configService.getValuesByName(serverId, configName);
-        val message = event.getMessage();
         String responseEmoji;
         if (streamingAnnounceUsers.contains(userId)) {
             configService.removeConfig(serverId, configName, userId);
