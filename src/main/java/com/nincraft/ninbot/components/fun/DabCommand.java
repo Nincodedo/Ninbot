@@ -1,16 +1,18 @@
 package com.nincraft.ninbot.components.fun;
 
+import java.security.SecureRandom;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
+
 import lombok.val;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import org.springframework.stereotype.Component;
-
-import java.security.SecureRandom;
-import java.util.stream.Collectors;
 
 @Component
 public class DabCommand extends AbstractCommand {
@@ -39,6 +41,7 @@ public class DabCommand extends AbstractCommand {
             int maxDab = 10;
             for (Message message : channel.getIterableHistory()) {
                 if (message.getAuthor().equals(dabUser)) {
+                    commandResult.setOverrideMessage(message);
                     dabOnMessage(commandResult, message.getGuild());
                     break;
                 }
