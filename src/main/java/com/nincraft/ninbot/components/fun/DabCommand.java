@@ -60,6 +60,6 @@ public class DabCommand extends AbstractCommand {
             commandResult.addReaction(critResponse.getEmojiList());
             commandResult.addReaction(dabResponse.getEmojiList());
         }
-        commandResult.addReactionEmotes(guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).sorted().collect(Collectors.toList()));
+        commandResult.addReactionEmotes(guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).collect(Collectors.toList()));
     }
 }
