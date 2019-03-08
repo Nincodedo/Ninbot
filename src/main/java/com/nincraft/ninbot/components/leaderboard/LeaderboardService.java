@@ -14,7 +14,7 @@ public class LeaderboardService {
         this.leaderboardEntryDao = leaderboardEntryDao;
     }
 
-    List<LeaderboardEntry> getAllEntriesForServer(String serverId){
+    List<LeaderboardEntry> getAllEntriesForServer(String serverId) {
         return leaderboardEntryDao.getAllObjectsByServerId(serverId);
     }
 

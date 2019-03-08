@@ -23,7 +23,8 @@ class ReactionResultListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
-        if (!event.getUser().isBot() && !firstUser.equals(event.getUser().getId()) && event.getMessageId().equals(messageId)) {
+        if (!event.getUser().isBot() && !firstUser.equals(event.getUser().getId())
+                && event.getMessageId().equals(messageId)) {
             if (event.getUser().getId().equals(againstUser)) {
                 val emote = event.getReactionEmote().getName();
                 if ("✅".equals(emote)) {

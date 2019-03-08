@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class RollCommand extends AbstractCommand {
 
     private final DiceParser parser;
-    
+
     private final DiceInterpreter<RollHistory> roller;
 
     public RollCommand() {

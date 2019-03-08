@@ -26,16 +26,8 @@ public class DadbotCommand extends AbstractCommand {
     @Override
     public CommandResult executeCommand(MessageReceivedEvent event) {
         CommandResult commandResult = new CommandResult(event);
-        val message = event.getMessage().getContentStripped();
-        switch (getSubcommand(message)) {
-            case "toggle":
-                toggleBlacklistChannel(event.getGuild().getId(), event.getChannel().getId());
-                commandResult.addSuccessfulReaction();
-                break;
-            default:
-                commandResult.addUnknownReaction();
-                break;
-        }
+        toggleBlacklistChannel(event.getGuild().getId(), event.getChannel().getId());
+        commandResult.addSuccessfulReaction();
         return commandResult;
     }
 

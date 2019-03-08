@@ -1,11 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.nincraft.ninbot.components.common.Emojis;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -15,6 +10,10 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 public class CommandResult {
     private MessageReceivedEvent event;
@@ -23,7 +22,7 @@ public class CommandResult {
     private List<String> emojisList;
     private List<Emote> emoteList;
     @Setter
-    private Message              overrideMessage;
+    private Message overrideMessage;
 
     public CommandResult(MessageReceivedEvent event) {
         this.event = event;
@@ -35,8 +34,7 @@ public class CommandResult {
 
     void executeActions() {
         Message eventMessage = event.getMessage();
-        if (overrideMessage != null)
-        {
+        if (overrideMessage != null) {
             eventMessage = overrideMessage;
         }
         for (Message message : privateMessageList) {

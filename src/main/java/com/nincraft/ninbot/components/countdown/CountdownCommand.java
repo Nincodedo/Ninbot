@@ -27,7 +27,6 @@ public class CountdownCommand extends AbstractCommand {
         this.countdownScheduler = countdownScheduler;
     }
 
-
     @Override
     protected CommandResult executeCommand(MessageReceivedEvent event) {
         CommandResult commandResult = new CommandResult(event);

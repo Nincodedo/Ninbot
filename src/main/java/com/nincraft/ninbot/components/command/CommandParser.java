@@ -1,34 +1,31 @@
 package com.nincraft.ninbot.components.command;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
-
-import lombok.Getter;
-import lombok.val;
-import lombok.extern.log4j.Log4j2;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @Component
 class CommandParser {
 
+    private static final String QUESTION_MARK = "\u2754";
     private ConfigService configService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
     private Map<String, String> commandAliasMap = new HashMap<>();
-    private static final String QUESTION_MARK = "\u2754";
 
     @Autowired
-    CommandParser(ConfigService configService)
-    {
+    CommandParser(ConfigService configService) {
         this.configService = configService;
     }
 
