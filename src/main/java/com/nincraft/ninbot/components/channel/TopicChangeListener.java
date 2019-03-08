@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.channel;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -14,11 +13,9 @@ import org.springframework.stereotype.Component;
 public class TopicChangeListener extends ListenerAdapter {
 
     private ConfigService configService;
-    private MessageUtils messageUtils;
 
-    public TopicChangeListener(ConfigService configService, MessageUtils messageUtils) {
+    public TopicChangeListener(ConfigService configService) {
         this.configService = configService;
-        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -30,12 +27,12 @@ public class TopicChangeListener extends ListenerAdapter {
             if (event.getGuild().getMember(event.getJDA().getSelfUser()).getPermissions(eventChannel).contains(Permission.VIEW_AUDIT_LOGS)) {
                 val auditLogs = event.getGuild().getAuditLogs().complete();
                 message = String.format("%s updated topic to %s",
-                        auditLogs.get(0).getUser().getName(),
+                        event.getGuild().getMember(auditLogs.get(0).getUser()).getEffectiveName(),
                         auditLogs.get(0).getChangeByKey("topic").getNewValue());
             } else {
                 message = String.format("Topic updated to %s", event.getNewTopic());
             }
-            messageUtils.sendMessage(eventChannel, message);
+            eventChannel.sendMessage(message).queue();
         }
     }
 }

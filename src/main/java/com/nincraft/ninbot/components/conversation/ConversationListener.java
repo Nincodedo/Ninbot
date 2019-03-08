@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.conversation;
 
 import com.nincodedo.recast.RecastAPI;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -14,12 +13,10 @@ public class ConversationListener extends ListenerAdapter {
 
     private ConfigService configService;
     private RecastAPI recastAPI;
-    private MessageUtils messageUtils;
 
-    public ConversationListener(ConfigService configService, RecastAPI recastAPI, MessageUtils messageUtils) {
+    public ConversationListener(ConfigService configService, RecastAPI recastAPI) {
         this.configService = configService;
         this.recastAPI = recastAPI;
-        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class ConversationListener extends ListenerAdapter {
             val botConversation = recastAPI.startBotConversation(channelId);
             botConversation.addParticipants(event.getAuthor().getName());
             botConversation.getResponse(message).ifPresent(response ->
-                    messageUtils.sendMessage(event.getChannel(), response)
+                    event.getChannel().sendMessage(response).queue()
             );
         }
     }

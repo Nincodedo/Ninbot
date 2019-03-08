@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.common.GenericAnnounce;
 import com.nincraft.ninbot.components.common.ISchedulable;
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -25,12 +24,10 @@ public class CountdownScheduler implements ISchedulable {
 
     private CountdownDao countdownDao;
     private ConfigService configService;
-    private MessageUtils messageUtils;
 
-    public CountdownScheduler(CountdownDao countdownDao, ConfigService configService, MessageUtils messageUtils) {
+    public CountdownScheduler(CountdownDao countdownDao, ConfigService configService) {
         this.countdownDao = countdownDao;
         this.configService = configService;
-        this.messageUtils = messageUtils;
     }
 
     public void scheduleAll(JDA jda) {
@@ -54,7 +51,7 @@ public class CountdownScheduler implements ISchedulable {
                 log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or this countdown", countdown.getName(), countdown.getServerId());
                 return;
             }
-            new Timer().schedule(new GenericAnnounce(jda, messageUtils, announceChannel, countdownMessage),
+            new Timer().schedule(new GenericAnnounce(jda, announceChannel, countdownMessage),
                     Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).plus(1, ChronoUnit.DAYS).toInstant()));
         } else {
             log.debug("Countdown {} is past, removing", countdown.getName());

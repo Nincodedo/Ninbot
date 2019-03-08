@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.twitch;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -17,11 +16,9 @@ import org.springframework.stereotype.Component;
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
-    private MessageUtils messageUtils;
 
-    public TwitchListener(ConfigService configService, MessageUtils messageUtils) {
+    public TwitchListener(ConfigService configService) {
         this.configService = configService;
-        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -70,7 +67,7 @@ public class TwitchListener extends ListenerAdapter {
             val user = updateGameEvent.getUser().getName();
             val url = updateGameEvent.getNewGame().getUrl();
             addRole(guild, guild.getMember(updateGameEvent.getUser()));
-            messageUtils.sendMessage(channel, "%s is streaming! Check them out at %s", user, url);
+            channel.sendMessage(String.format("%s is streaming! Check them out at %s", user, url)).queue();
         });
     }
 

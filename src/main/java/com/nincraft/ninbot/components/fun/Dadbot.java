@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.fun;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -17,13 +16,11 @@ public class Dadbot extends ListenerAdapter {
 
     private Random random;
     private ConfigService configService;
-    private MessageUtils messageUtils;
 
     @Autowired
-    public Dadbot(ConfigService configService, MessageUtils messageUtils) {
+    public Dadbot(ConfigService configService) {
         random = new Random();
         this.configService = configService;
-        this.messageUtils = messageUtils;
     }
 
     @Override
@@ -56,7 +53,7 @@ public class Dadbot extends ListenerAdapter {
         String stringBuilder = "Hi" +
                 message.substring(message.indexOf(' ')) +
                 ", I'm Dad!";
-        messageUtils.sendMessage(event.getChannel(), stringBuilder);
+        event.getChannel().sendMessage(stringBuilder).queue();
     }
 
     private boolean checkChance() {

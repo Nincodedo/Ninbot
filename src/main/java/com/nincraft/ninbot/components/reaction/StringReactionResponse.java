@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.reaction;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -13,7 +12,7 @@ public class StringReactionResponse implements IReactionResponse {
     }
 
     @Override
-    public void react(Message message, MessageChannel channel, MessageUtils messageUtils) {
-        messageUtils.sendMessage(channel, reaction);
+    public void react(Message message, MessageChannel channel) {
+        channel.sendMessage(reaction).queue();
     }
 }

@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.poll;
 
-import com.nincraft.ninbot.components.common.MessageUtils;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
@@ -13,12 +12,10 @@ class PollAnnounce extends TimerTask {
 
     private Poll poll;
     private Message message;
-    private MessageUtils messageUtils;
 
     PollAnnounce(Poll poll, Message message) {
         this.poll = poll;
         this.message = message;
-        this.messageUtils = new MessageUtils();
     }
 
     @Override
@@ -55,7 +52,7 @@ class PollAnnounce extends TimerTask {
                             + pollClosedMessage);
         }
         message.editMessage(poll.buildClosed()).queue();
-        messageUtils.sendMessage(message.getChannel(), poll.getResult());
+        message.getChannel().sendMessage(poll.getResult()).queue();
         message.unpin().queue();
     }
 
