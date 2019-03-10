@@ -55,7 +55,9 @@ public class TwitchListener extends ListenerAdapter {
     }
 
     private boolean isNowStreaming(UserUpdateGameEvent updateGameEvent) {
-        return updateGameEvent.getOldGame() == null && updateGameEvent.getNewGame() != null
+        return (updateGameEvent.getOldGame() == null
+                || updateGameEvent.getOldGame() != null && updateGameEvent.getOldGame().getUrl() == null)
+                && updateGameEvent.getNewGame() != null
                 && updateGameEvent.getNewGame().getUrl() != null;
     }
 
