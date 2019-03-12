@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.user.update.GenericUserPresenceEvent;
@@ -25,9 +26,9 @@ public class TwitchListener extends ListenerAdapter {
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
         if (event instanceof UserUpdateGameEvent) {
             val updateGameEvent = (UserUpdateGameEvent) event;
-            log.info("User Presence Updated: User {}, Old game {}, New game {}", updateGameEvent.getUser(), updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
+            log.debug("User Presence Updated: User {}, Old game {}, New game {}", updateGameEvent.getUser(), updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
             if (updateGameEvent.getNewGame() != null) {
-                log.info("New game URL {}", updateGameEvent.getNewGame().getUrl());
+                log.debug("New game URL {}", updateGameEvent.getNewGame().getUrl());
             }
             if (isNowStreaming(updateGameEvent)) {
                 val serverId = event.getGuild().getId();
@@ -50,15 +51,15 @@ public class TwitchListener extends ListenerAdapter {
     }
 
     private boolean isNoLongerStreaming(UserUpdateGameEvent updateGameEvent) {
-        return updateGameEvent.getNewGame() == null && updateGameEvent.getOldGame() != null
-                && updateGameEvent.getOldGame().getUrl() != null;
+        return checkStreaming(updateGameEvent.getNewGame(), updateGameEvent.getOldGame());
     }
 
     private boolean isNowStreaming(UserUpdateGameEvent updateGameEvent) {
-        return (updateGameEvent.getOldGame() == null
-                || updateGameEvent.getOldGame() != null && updateGameEvent.getOldGame().getUrl() == null)
-                && updateGameEvent.getNewGame() != null
-                && updateGameEvent.getNewGame().getUrl() != null;
+        return checkStreaming(updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
+    }
+
+    private boolean checkStreaming(Game previousGame, Game nextGame) {
+        return (previousGame == null || previousGame.getUrl() == null) && nextGame != null && nextGame.getUrl() != null;
     }
 
     private void announceStream(UserUpdateGameEvent updateGameEvent, String serverId) {
