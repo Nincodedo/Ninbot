@@ -10,3 +10,4 @@ I'm mad|mad
 bidoof|https://www.youtube.com/watch?v=R7c-UNfUWGs
 sorry|!sorry
 not sorry|sory
+neat|neat
