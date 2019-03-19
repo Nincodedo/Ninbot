@@ -60,7 +60,7 @@ public abstract class AbstractCommand {
             help += usageText;
         }
         if (!aliases.isEmpty()) {
-            help += "\n" + resourceBundle.getString("command.help.alias.label") + ": " + printAliases();
+            help += "\n" + resourceBundle.getString("command.help.alias.label") + ": " + getAliasesString();
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
@@ -75,7 +75,7 @@ public abstract class AbstractCommand {
         return resourceBundle.getString(String.format("command.%s.description.text", name));
     }
 
-    private String printAliases() {
+    private String getAliasesString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < aliases.size(); i++) {
             String alias = aliases.get(i);
@@ -119,8 +119,12 @@ public abstract class AbstractCommand {
     }
 
     protected String getSubcommand(String command) {
-        if (getCommandLength(command) >= 3) {
-            return command.split("\\s+")[2].toLowerCase();
+        return getSubcommand(command, 2);
+    }
+
+    protected String getSubcommand(String command, int position) {
+        if (getCommandLength(command) >= position + 1) {
+            return command.split("\\s+")[position].toLowerCase();
         } else {
             return "";
         }
