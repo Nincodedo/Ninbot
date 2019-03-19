@@ -82,8 +82,6 @@ public abstract class AbstractCommand {
         if (RolePermission.EVERYONE.equals(rolePermission) || (RolePermission.ADMIN.equals(rolePermission)
                 && guild.getOwner().getUser().equals(user))) {
             return true;
-        } else if (RolePermission.OWNER.equals(rolePermission)) {
-            return user.getId().equals(RolePermission.OWNER.getRoleName());
         } else {
             val member = guild.getMember(user);
             val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
