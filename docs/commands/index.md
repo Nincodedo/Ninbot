@@ -3,6 +3,7 @@ All commands are prefixed with @Ninbot.
   * [User Commands](#user-commands)
     * [Countdown](#countdown)
     * [Dab](#dab)
+    * [Define](#define)
     * [Events](#events)
     * [Help](#help)
     * [Leaderboard](#leaderboard)
@@ -33,6 +34,13 @@ Adds all dab emojis to the last message of the user named.
 Usage:
 
     @Ninbot dab @Username 
+    
+### Define
+Defines a word.
+
+Usage:
+
+    @Ninbot define Word
     
 ### Events
 List or schedule events.
