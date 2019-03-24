@@ -19,7 +19,6 @@ public class DadbotCommand extends AbstractCommand {
         length = 3;
         checkExactLength = false;
         permissionLevel = RolePermission.MODS;
-        description = "Dad";
         this.configService = configService;
     }
 

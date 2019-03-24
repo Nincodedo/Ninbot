@@ -24,7 +24,6 @@ public class RollCommand extends AbstractCommand {
         name = "roll";
         checkExactLength = false;
         length = 2;
-        description = "Rolls dice which is nice";
         parser = new DefaultDiceParser();
         roller = new DiceRoller();
     }
@@ -48,7 +47,7 @@ public class RollCommand extends AbstractCommand {
         val parsed = parser.parse(diceArgs, roller);
         val diceCommand = diceArgs.split("d");
         MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.appendFormat("%s rolled %s %s sided dice, result %s", event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getTotalRoll()));
+        messageBuilder.appendFormat(resourceBundle.getString("command.roll.result"), event.getAuthor().getName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getTotalRoll()));
         return messageBuilder.build();
     }
 }

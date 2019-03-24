@@ -12,7 +12,6 @@ public class UnsubscribeCommand extends SubscribeCommand {
     public UnsubscribeCommand(ConfigService configService) {
         super(configService);
         name = "unsubscribe";
-        description = "Unsubscribes you from a game for game gathering events";
     }
 
     @Override

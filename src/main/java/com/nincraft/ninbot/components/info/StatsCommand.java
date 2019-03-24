@@ -24,7 +24,6 @@ public class StatsCommand extends AbstractCommand {
     public StatsCommand(ConfigService configService) {
         length = 2;
         name = "stats";
-        description = "Shows Ninbot stats";
         this.configService = configService;
     }
 

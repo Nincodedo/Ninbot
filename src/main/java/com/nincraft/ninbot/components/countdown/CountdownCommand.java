@@ -24,10 +24,8 @@ public class CountdownCommand extends AbstractCommand {
     public CountdownCommand(CountdownDao countdownDao, CountdownScheduler countdownScheduler,
             ConfigService configService) {
         name = "countdown";
-        description = "Setup a countdown to an event";
         length = 2;
         checkExactLength = false;
-        helpText = "Use \"@Ninbot countdown YYYY-MM-DD CountdownName\" to setup a countdown. It will be announced every day leading up to the event.";
         this.countdownDao = countdownDao;
         this.countdownScheduler = countdownScheduler;
         this.configService = configService;
@@ -55,7 +53,7 @@ public class CountdownCommand extends AbstractCommand {
         val list = countdownDao.getAllObjectsByServerId(event.getGuild().getId());
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         if (!list.isEmpty()) {
-            messageBuilder.setTitle("Current Countdowns");
+            messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
             for (val countdown : list) {
                 messageBuilder.addField(countdown.getName(),
                         "Start Time: " + countdown.getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE), false);
@@ -63,7 +61,7 @@ public class CountdownCommand extends AbstractCommand {
             String serverTimezone = getServerTimeZone(event.getGuild().getId());
             messageBuilder.setFooter("All times are shown in " + serverTimezone, null);
         } else {
-            messageBuilder.setTitle("No countdowns are currently scheduled, use \"@Ninbot countdown\" to add your own!");
+            messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.nocountdownsfound"));
         }
         return messageBuilder.build();
     }

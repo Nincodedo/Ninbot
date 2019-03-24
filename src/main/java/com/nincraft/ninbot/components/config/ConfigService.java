@@ -4,13 +4,16 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ConfigService {
 
     private ConfigDao configDao;
+    private Map<String, List<Config>> cachedConfigs = new HashMap<>();
 
     public ConfigService(ConfigDao configDao) {
         this.configDao = configDao;
@@ -18,7 +21,12 @@ public class ConfigService {
 
     @Transactional
     public List<Config> getConfigByName(String serverId, String configName) {
-        return configDao.getConfigByName(serverId, configName);
+        if (cachedConfigs.containsKey(serverId)) {
+            return cachedConfigs.get(serverId);
+        }
+        val listOfConfigs = configDao.getConfigByName(serverId, configName);
+        cachedConfigs.put(serverId, listOfConfigs);
+        return listOfConfigs;
     }
 
     @Transactional

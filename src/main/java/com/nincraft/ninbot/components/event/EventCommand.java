@@ -26,7 +26,6 @@ public class EventCommand extends AbstractCommand {
     public EventCommand(EventService eventService, EventScheduler eventScheduler, ConfigService configService) {
         length = 3;
         name = "events";
-        description = "list/plan events, use events help for more details";
         checkExactLength = false;
         this.eventService = eventService;
         this.eventScheduler = eventScheduler;
@@ -71,15 +70,15 @@ public class EventCommand extends AbstractCommand {
     private Message listEvents(String serverTimezone) {
         val events = eventService.getAllEvents();
         if (events.isEmpty()) {
-            return new MessageBuilder().append("No events scheduled").build();
+            return new MessageBuilder().append(resourceBundle.getString("command.event.list.noeventsfound")).build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle("Current scheduled events");
+        messageBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
         messageBuilder.setColor(BLUE);
         for (val event : events) {
             messageBuilder.addField(event.getName(), event.toString(), true);
         }
-        messageBuilder.setFooter("All times are in GMT " + serverTimezone, null);
+        messageBuilder.setFooter(resourceBundle.getString("command.event.list.footer") + serverTimezone, null);
         return messageBuilder.build();
     }
 

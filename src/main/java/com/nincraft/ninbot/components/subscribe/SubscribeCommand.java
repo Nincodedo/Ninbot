@@ -24,7 +24,6 @@ public class SubscribeCommand extends AbstractCommand {
     public SubscribeCommand(ConfigService configService) {
         length = 3;
         name = "subscribe";
-        description = "Subscribes you to a game for game gathering events";
         this.configService = configService;
     }
 

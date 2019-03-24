@@ -25,7 +25,6 @@ public class ListCommand extends AbstractCommand {
     public ListCommand(ConfigService configService) {
         length = 2;
         name = "list";
-        description = "Displays available games for subscribing";
         this.configService = configService;
     }
 
