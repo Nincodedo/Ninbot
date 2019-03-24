@@ -17,7 +17,6 @@ public class ConversationCommand extends AbstractCommand {
     public ConversationCommand(ConfigService configService) {
         name = "conversation";
         length = 2;
-        description = "Toggles Ninbot conversation mode in a channel";
         permissionLevel = RolePermission.MODS;
         this.configService = configService;
     }

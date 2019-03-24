@@ -22,7 +22,6 @@ public class DabCommand extends AbstractCommand {
     public DabCommand() {
         length = 3;
         name = "dab";
-        description = "Adds all dab emojis to the last message of the user named";
         checkExactLength = false;
         random = new SecureRandom();
     }

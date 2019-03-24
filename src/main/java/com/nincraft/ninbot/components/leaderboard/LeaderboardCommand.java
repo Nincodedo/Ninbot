@@ -23,7 +23,6 @@ public class LeaderboardCommand extends AbstractCommand {
         name = "leaderboard";
         length = 2;
         checkExactLength = false;
-        description = "Displays this server's leaderboard";
         this.leaderboardService = leaderboardService;
         this.configService = configService;
     }

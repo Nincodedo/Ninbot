@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.channel;
 
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Component;
 public class TopicChangeListener extends ListenerAdapter {
 
     private ConfigService configService;
+    private LocaleService localeService;
 
-    public TopicChangeListener(ConfigService configService) {
+    public TopicChangeListener(ConfigService configService, LocaleService localeService) {
         this.configService = configService;
+        this.localeService = localeService;
     }
 
     @Override

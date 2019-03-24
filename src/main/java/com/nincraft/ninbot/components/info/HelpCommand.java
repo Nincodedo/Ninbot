@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.info;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
+import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
@@ -18,7 +19,6 @@ public class HelpCommand extends AbstractCommand {
     public HelpCommand(Map<String, AbstractCommand> commandMap) {
         length = 2;
         name = "help";
-        description = "Displays this awesome message";
         this.commandMap = commandMap;
     }
 
@@ -26,13 +26,17 @@ public class HelpCommand extends AbstractCommand {
     public CommandResult executeCommand(MessageReceivedEvent event) {
         CommandResult commandResult = new CommandResult(event);
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle("List of commands");
+        messageBuilder.setTitle(resourceBundle.getString("command.help.message.title"));
         messageBuilder.setColor(Color.BLUE);
         List<String> keyList = new ArrayList<>(commandMap.keySet());
         Collections.sort(keyList);
-        keyList.stream().filter(key -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(key).getPermissionLevel()))
-                .forEach(key -> messageBuilder.addField(key, commandMap.get(key).getDescription(), false));
-        messageBuilder.setFooter("Use \"help\" at the end of any command to get more information about it", null);
+        keyList.stream().filter(commandName -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(commandName).getPermissionLevel()))
+                .forEach(commandName -> {
+                    val command = commandMap.get(commandName);
+                    command.setResourceBundle(resourceBundle);
+                    messageBuilder.addField(commandName, command.getCommandDescription(commandName), false);
+                });
+        messageBuilder.setFooter(resourceBundle.getString("command.help.message.footer"), null);
         commandResult.addPrivateMessageAction(messageBuilder.build());
         commandResult.addSuccessfulReaction();
         return commandResult;

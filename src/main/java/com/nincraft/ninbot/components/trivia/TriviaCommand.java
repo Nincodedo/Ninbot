@@ -23,7 +23,6 @@ public class TriviaCommand extends AbstractCommand {
 
     public TriviaCommand(TriviaManager triviaManager, TriviaScoreService triviaScoreService) {
         name = "trivia";
-        description = "Starts/Stops trivia";
         length = 3;
         checkExactLength = false;
         helpText = "Sub commands\n"

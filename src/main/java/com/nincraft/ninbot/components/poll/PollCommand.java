@@ -19,7 +19,6 @@ public class PollCommand extends AbstractCommand {
 
     public PollCommand() {
         name = "poll";
-        description = "Creates a new poll. Use poll help for more information";
         length = 4;
         checkExactLength = false;
         //@formatter:off

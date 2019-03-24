@@ -23,7 +23,6 @@ public class ConfigCommand extends AbstractCommand {
         length = 3;
         name = "config";
         checkExactLength = false;
-        description = "Config commands";
         permissionLevel = RolePermission.ADMIN;
         this.configService = configService;
     }
@@ -62,10 +61,10 @@ public class ConfigCommand extends AbstractCommand {
         val configsByServerId = configService.getConfigsByServerId(event.getGuild().getId());
         val serverName = event.getGuild().getName();
         if (configsByServerId.isEmpty()) {
-            return new MessageBuilder().appendFormat("No configs found for server %s", serverName).build();
+            return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"), serverName).build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle("Configs for " + serverName);
+        messageBuilder.setTitle(resourceBundle.getString("command.config.list.title")+" " + serverName);
         for (val config : configsByServerId) {
             messageBuilder.addField(config.getName(), config.getValue(), false);
         }

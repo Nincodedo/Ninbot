@@ -1,7 +1,9 @@
 package com.nincraft.ninbot.components.command;
 
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Log4j2
 @Component
@@ -20,13 +24,17 @@ class CommandParser {
 
     private static final String QUESTION_MARK = "\u2754";
     private ConfigService configService;
+    private LocaleService localeService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
     private Map<String, String> commandAliasMap = new HashMap<>();
+    private ExecutorService executorService;
 
     @Autowired
-    CommandParser(ConfigService configService) {
+    CommandParser(ConfigService configService, LocaleService localeService) {
         this.configService = configService;
+        this.localeService = localeService;
+        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
     }
 
     void parseEvent(MessageReceivedEvent event) {
@@ -35,7 +43,7 @@ class CommandParser {
             AbstractCommand command = commandHashMap.get(getCommand(message));
             if (command != null) {
                 try {
-                    command.execute(event);
+                    executorService.execute(() -> command.execute(event, localeService.getLocale(event)));
                 } catch (Exception e) {
                     log.error("Error executing command " + command.getName(), e);
                 }
