@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Data
 @Entity
@@ -17,7 +18,7 @@ class Countdown {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private LocalDate eventDate;
+    private ZonedDateTime eventDate;
     @Column(nullable = false)
     private String serverId;
     private String channelId;

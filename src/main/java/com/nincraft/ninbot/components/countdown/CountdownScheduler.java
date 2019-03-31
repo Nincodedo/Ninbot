@@ -36,7 +36,7 @@ public class CountdownScheduler implements ISchedulable {
 
     void scheduleOne(Countdown countdown, JDA jda) {
         val countdownDate = countdown.getEventDate();
-        val tomorrowDate = LocalDate.now().plus(1, ChronoUnit.DAYS);
+        val tomorrowDate = LocalDate.now(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).atStartOfDay().atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
             val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
             val countdownMessage = countdown.buildMessage(dayDifference);
@@ -52,7 +52,7 @@ public class CountdownScheduler implements ISchedulable {
                 return;
             }
             new Timer().schedule(new GenericAnnounce(jda, announceChannel, countdownMessage),
-                    Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).plus(1, ChronoUnit.DAYS).toInstant()));
+                    Date.from(LocalDate.now(countdownDate.getZone()).atStartOfDay(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).toInstant()));
         } else {
             log.debug("Countdown {} is past, removing", countdown.getName());
             countdownDao.removeObject(countdown);
