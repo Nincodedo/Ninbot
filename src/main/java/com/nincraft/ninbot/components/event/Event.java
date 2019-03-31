@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -20,8 +21,8 @@ class Event {
     private int subscriptionId;
     private String gameName;
     private String description;
-    private OffsetDateTime startTime;
-    private OffsetDateTime endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     @Transient
     private String dateFormat = "yyyy-MM-dd";
     @Transient

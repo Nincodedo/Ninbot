@@ -3,6 +3,8 @@ package com.nincraft.ninbot.components.event;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -22,14 +24,16 @@ public class EventCommand extends AbstractCommand {
     private EventService eventService;
     private EventScheduler eventScheduler;
     private EventParser eventParser;
+    private ConfigService configService;
 
-    public EventCommand(EventService eventService, EventScheduler eventScheduler) {
+    public EventCommand(EventService eventService, EventScheduler eventScheduler, ConfigService configService) {
         length = 3;
         name = "events";
         description = "list/plan events, use events help for more details";
         checkExactLength = false;
         this.eventService = eventService;
         this.eventScheduler = eventScheduler;
+        this.configService = configService;
         this.eventParser = new EventParser();
         helpText = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
                 "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
@@ -43,12 +47,13 @@ public class EventCommand extends AbstractCommand {
         CommandResult commandResult = new CommandResult(messageReceivedEvent);
         val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
+            val serverTimezone = getServerTimeZone(messageReceivedEvent.getGuild().getId());
             switch (getSubcommand(content)) {
                 case "list":
-                    commandResult.addChannelAction(listEvents());
+                    commandResult.addChannelAction(listEvents(serverTimezone));
                     break;
                 case "plan":
-                    planEvent(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor(), messageReceivedEvent.getJDA());
+                    planEvent(messageReceivedEvent, serverTimezone);
                     commandResult.addSuccessfulReaction();
                     break;
                 default:
@@ -61,12 +66,12 @@ public class EventCommand extends AbstractCommand {
         return commandResult;
     }
 
-    private void planEvent(Message message, User author, JDA jda) {
-        Event event = eventParser.parsePlanMessage(message, author.getName());
-        eventScheduler.addEvent(event, jda);
+    private void planEvent(MessageReceivedEvent messageReceivedEvent, String serverTimezone) {
+        Event event = eventParser.parsePlanMessage(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor().getName(), serverTimezone);
+        eventScheduler.addEvent(event, messageReceivedEvent.getJDA());
     }
 
-    private Message listEvents() {
+    private Message listEvents(String serverTimezone) {
         val events = eventService.getAllEvents();
         if (events.isEmpty()) {
             return new MessageBuilder().append("No events scheduled").build();
@@ -77,7 +82,12 @@ public class EventCommand extends AbstractCommand {
         for (val event : events) {
             messageBuilder.addField(event.getName(), event.toString(), true);
         }
-        messageBuilder.setFooter("All times are in GMT " + now().getOffset(), null);
+        messageBuilder.setFooter("All times are in GMT " + serverTimezone, null);
         return messageBuilder.build();
+    }
+
+    private String getServerTimeZone(String serverId) {
+        return configService.getSingleValueByName(serverId, ConfigConstants.SERVER_TIMEZONE)
+                .orElse(ConfigConstants.DEFAULT_TIMEZONE);
     }
 }
