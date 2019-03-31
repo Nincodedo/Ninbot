@@ -3,21 +3,22 @@ package com.nincraft.ninbot.components.event;
 import lombok.val;
 import net.dv8tion.jda.core.entities.Message;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.time.OffsetDateTime.parse;
+import static java.time.ZonedDateTime.parse;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 class EventParser {
 
-    Event parsePlanMessage(Message message, String author) {
+    Event parsePlanMessage(Message message, String author, String serverTimezone) {
         Event event = new Event();
         Map<String, String> eventMap = parseMessage(message.getContentStripped());
         event.setAuthorName(author)
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME))
+                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME).withZoneSameLocal(ZoneId.of(serverTimezone)))
                 .setServerId(message.getGuild().getId());
         return event;
     }

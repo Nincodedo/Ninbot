@@ -28,13 +28,11 @@ class EventAnnounce extends TimerTask {
         log.info("Running announce for event {}", event.getName());
         val serverId = event.getServerId();
         val announcementServer = jda.getGuildById(serverId);
-        val config = configService.getConfigByName(serverId, ConfigConstants.ANNOUNCE_CHANNEL);
-        if (config.isEmpty()) {
-            log.error("Config not set for server {}, config name {}", serverId, ConfigConstants.ANNOUNCE_CHANNEL);
-            return;
+        val config = configService.getSingleValueByName(serverId, ConfigConstants.ANNOUNCE_CHANNEL);
+        if (config.isPresent()) {
+            val channel = announcementServer.getTextChannelById(config.get());
+            val gameRoleId = announcementServer.getRolesByName(event.getGameName(), true).get(0);
+            channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
         }
-        val channel = announcementServer.getTextChannelById(config.get(0).getValue());
-        val gameRoleId = announcementServer.getRolesByName(event.getGameName(), true).get(0);
-        channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
     }
 }
