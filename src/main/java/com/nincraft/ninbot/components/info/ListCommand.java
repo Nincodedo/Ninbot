@@ -46,7 +46,7 @@ public class ListCommand extends AbstractCommand {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
             MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-            messageBuilder.setTitle("Users in " + roleName + " subscription");
+            messageBuilder.setTitle(String.format(resourceBundle.getString("command.list.usersinsub"), roleName));
             messageBuilder.appendDescription(userNames.toString());
             return Optional.of(messageBuilder.build());
         }
@@ -58,7 +58,7 @@ public class ListCommand extends AbstractCommand {
         List<String> roleBlackList = configService.getValuesByName(guildId, ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle("Available subscriptions");
+        messageBuilder.setTitle(resourceBundle.getString("command.list.availablesubs"));
         roleNameList.stream().map(roleName -> roleName + "\n").forEach(messageBuilder::appendDescription);
         return messageBuilder.build();
     }

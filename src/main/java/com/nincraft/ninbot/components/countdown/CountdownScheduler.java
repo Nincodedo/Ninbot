@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.common.GenericAnnounce;
 import com.nincraft.ninbot.components.common.ISchedulable;
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -23,10 +21,12 @@ public class CountdownScheduler implements ISchedulable {
 
     private CountdownDao countdownDao;
     private ConfigService configService;
+    private LocaleService localeService;
 
-    public CountdownScheduler(CountdownDao countdownDao, ConfigService configService) {
+    public CountdownScheduler(CountdownDao countdownDao, ConfigService configService, LocaleService localeService) {
         this.countdownDao = countdownDao;
         this.configService = configService;
+        this.localeService = localeService;
     }
 
     public void scheduleAll(JDA jda) {
@@ -37,8 +37,9 @@ public class CountdownScheduler implements ISchedulable {
         val countdownDate = countdown.getEventDate();
         val tomorrowDate = LocalDate.now(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).atStartOfDay().atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(countdown.getServerId()));
             val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
-            val countdownMessage = countdown.buildMessage(dayDifference);
+            val countdownMessage = countdown.buildMessage(dayDifference, resourceBundle);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(), ConfigConstants.ANNOUNCE_CHANNEL);
             String announceChannel;

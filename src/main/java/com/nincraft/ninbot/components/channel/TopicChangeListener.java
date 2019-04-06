@@ -10,6 +10,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ResourceBundle;
+
 @Component
 public class TopicChangeListener extends ListenerAdapter {
 
@@ -27,13 +29,14 @@ public class TopicChangeListener extends ListenerAdapter {
         val eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
             String message;
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event));
             if (event.getGuild().getMember(event.getJDA().getSelfUser()).getPermissions(eventChannel).contains(Permission.VIEW_AUDIT_LOGS)) {
                 val auditLogs = event.getGuild().getAuditLogs().complete();
-                message = String.format("%s updated topic to %s",
+                message = String.format(resourceBundle.getString("listener.topic.updated.withpermission"),
                         event.getGuild().getMember(auditLogs.get(0).getUser()).getEffectiveName(),
                         auditLogs.get(0).getChangeByKey("topic").getNewValue());
             } else {
-                message = String.format("Topic updated to %s", event.getNewTopic());
+                message = String.format(resourceBundle.getString("listener.topic.update.nopermission"), event.getNewTopic());
             }
             eventChannel.sendMessage(message).queue();
         }

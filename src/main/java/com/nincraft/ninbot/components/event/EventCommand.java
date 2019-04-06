@@ -76,6 +76,7 @@ public class EventCommand extends AbstractCommand {
         messageBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
         messageBuilder.setColor(BLUE);
         for (val event : events) {
+            event.setResourceBundle(resourceBundle);
             messageBuilder.addField(event.getName(), event.toString(), true);
         }
         messageBuilder.setFooter(resourceBundle.getString("command.event.list.footer") + serverTimezone, null);

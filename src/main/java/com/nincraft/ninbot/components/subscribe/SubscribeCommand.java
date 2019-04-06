@@ -40,7 +40,7 @@ public class SubscribeCommand extends AbstractCommand {
                 commandResult.addSuccessfulReaction();
             } else {
                 commandResult.addChannelAction(new MessageBuilder()
-                        .appendFormat("Could not find the role \"%s\", contact an admin", subscribeTo)
+                        .appendFormat(resourceBundle.getString("command.subscribe.norolefound"), subscribeTo)
                         .build());
             }
         } else {
