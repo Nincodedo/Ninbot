@@ -56,10 +56,11 @@ public class CountdownCommand extends AbstractCommand {
             messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
             for (val countdown : list) {
                 messageBuilder.addField(countdown.getName(),
-                        "Start Time: " + countdown.getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE), false);
+                        resourceBundle.getString("command.countdown.list.starttime")
+                                + countdown.getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE), false);
             }
             String serverTimezone = getServerTimeZone(event.getGuild().getId());
-            messageBuilder.setFooter("All times are shown in " + serverTimezone, null);
+            messageBuilder.setFooter(resourceBundle.getString("command.countdown.list.footer") + serverTimezone, null);
         } else {
             messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.nocountdownsfound"));
         }

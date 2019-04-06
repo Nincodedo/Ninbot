@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.common.ISchedulable;
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -21,13 +22,14 @@ import static java.util.Date.from;
 public class EventScheduler implements ISchedulable {
 
     private EventService eventService;
-
     private ConfigService configService;
+    private LocaleService localeService;
 
     @Autowired
-    public EventScheduler(EventService eventService, ConfigService configService) {
+    public EventScheduler(EventService eventService, ConfigService configService, LocaleService localeService) {
         this.eventService = eventService;
         this.configService = configService;
+        this.localeService = localeService;
     }
 
     public void scheduleAll(JDA jda) {
@@ -66,7 +68,7 @@ public class EventScheduler implements ISchedulable {
 
     private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, JDA jda) {
         if (!eventTime.isBefore(now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, jda), from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, jda, localeService), from(eventTime));
         }
     }
 }

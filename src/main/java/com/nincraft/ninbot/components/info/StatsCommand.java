@@ -44,7 +44,7 @@ public class StatsCommand extends AbstractCommand {
 
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         int limit = 5;
-        messageBuilder.setTitle("Top " + limit + " Subscriptions Stats");
+        messageBuilder.setTitle(String.format(resourceBundle.getString("command.stats.list.title"), limit));
         Collections.sort(statList);
         statList.stream().limit(limit).forEach(stat -> messageBuilder.appendDescription(
                 stat.name + ": " + stat.amount + "\n"));

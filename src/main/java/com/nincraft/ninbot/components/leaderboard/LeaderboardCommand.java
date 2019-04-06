@@ -83,12 +83,9 @@ public class LeaderboardCommand extends AbstractCommand {
         list.sort(Comparator.comparingInt(LeaderboardEntry::getWins));
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         val leaderboardOptional = configService.getSingleValueByName(serverId, ConfigConstants.LEADERBOARD_NAME);
-        if (leaderboardOptional.isPresent()) {
-            messageBuilder.setTitle(leaderboardOptional.get());
-        } else {
-            messageBuilder.setTitle("Leaderboard");
-        }
+        messageBuilder.setTitle(leaderboardOptional.orElse(resourceBundle.getString("command.leaderboard.display.defaulttitle")));
         for (val entry : list) {
+            entry.setResourceBundle(resourceBundle);
             val user = event.getGuild().getMemberById(entry.getUserId());
             messageBuilder.addField(user.getEffectiveName(), entry.getRecord(), false);
         }

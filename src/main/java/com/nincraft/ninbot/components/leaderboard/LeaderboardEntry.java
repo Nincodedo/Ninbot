@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 @Data
 @Entity
@@ -20,6 +21,8 @@ public class LeaderboardEntry implements Serializable {
     private int wins = 0;
     private int ties = 0;
     private int loses = 0;
+    @Transient
+    private ResourceBundle resourceBundle;
 
     public LeaderboardEntry() {
         //no-op
@@ -32,9 +35,9 @@ public class LeaderboardEntry implements Serializable {
 
     String getRecord() {
         if (ties == 0) {
-            return String.format("Wins: %d, Loses: %d", wins, loses);
+            return String.format(resourceBundle.getString("command.leaderboard.display.entry.noties"), wins, loses);
         } else {
-            return String.format("Wins: %d, Loses: %d, Ties: %d", wins, loses, ties);
+            return String.format(resourceBundle.getString("command.leaderboard.display.entry.ties"), wins, loses, ties);
         }
     }
 }

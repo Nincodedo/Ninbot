@@ -8,9 +8,11 @@ import net.dv8tion.jda.core.entities.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Data
 class Poll {
+    ResourceBundle resourceBundle;
     private String title;
     private List<String> choices;
     private String result;
@@ -20,7 +22,7 @@ class Poll {
 
     Message build() {
         pollOpen = true;
-        return buildPollMessage("Poll will close ");
+        return buildPollMessage(resourceBundle.getString("poll.announce.willclose"));
     }
 
     Message buildClosed() {
@@ -37,8 +39,9 @@ class Poll {
         } else {
             messageBuilder.setTimestamp(Instant.now());
         }
-        messageBuilder.setAuthor("Poll by " + user.getName(), null, user.getAvatarUrl());
-        messageBuilder.addField("Choices", buildPollChoices(), false);
+        messageBuilder.setAuthor(
+                resourceBundle.getString("poll.announce.authortext") + user.getName(), null, user.getAvatarUrl());
+        messageBuilder.addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false);
         messageBuilder.setFooter(footer, null);
         return messageBuilder.build();
     }

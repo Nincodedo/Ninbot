@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ResourceBundle;
 
 @Data
 @Entity
@@ -22,13 +23,13 @@ class Countdown {
     private String serverId;
     private String channelId;
 
-    String buildMessage(long dayDifference) {
+    String buildMessage(long dayDifference, ResourceBundle resourceBundle) {
         if (dayDifference == 1) {
-            return String.format("Countdown event %s is tomorrow!", name);
+            return String.format(resourceBundle.getString("countdown.announce.message.tomorrow"), name);
         } else if (dayDifference == 0) {
-            return String.format("Countdown event %s is today!", name);
+            return String.format(resourceBundle.getString("countdown.announce.message.today"), name);
         } else {
-            return String.format("Countdown event %s is in %d days.", name, dayDifference);
+            return String.format(resourceBundle.getString("countdown.announce.message.later"), name, dayDifference);
         }
     }
 }

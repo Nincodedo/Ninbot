@@ -34,6 +34,7 @@ public class PollCommand extends AbstractCommand {
         CommandResult commandResult = new CommandResult(event);
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
             Poll poll = parsePollMessage(event.getMessage(), event.getAuthor());
+            poll.setResourceBundle(resourceBundle);
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
                 event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
             } else {

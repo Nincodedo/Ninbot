@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -36,7 +37,7 @@ public class TwitchCommand extends AbstractCommand {
     private String announceToggle(MessageReceivedEvent event) {
         val userId = event.getAuthor().getId();
         val serverId = event.getGuild().getId();
-        val configName = "streamingAnnounceUsers";
+        val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
         val streamingAnnounceUsers = configService.getValuesByName(serverId, configName);
         String responseEmoji;
         if (streamingAnnounceUsers.contains(userId)) {
