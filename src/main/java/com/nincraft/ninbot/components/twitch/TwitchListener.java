@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.twitch;
 
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -12,14 +13,18 @@ import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
+import java.util.ResourceBundle;
+
 @Component
 @Log4j2
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
+    private LocaleService localeService;
 
-    public TwitchListener(ConfigService configService) {
+    public TwitchListener(ConfigService configService, LocaleService localeService) {
         this.configService = configService;
+        this.localeService = localeService;
     }
 
     @Override
@@ -70,7 +75,8 @@ public class TwitchListener extends ListenerAdapter {
             val user = updateGameEvent.getUser().getName();
             val url = updateGameEvent.getNewGame().getUrl();
             addRole(guild, guild.getMember(updateGameEvent.getUser()));
-            channel.sendMessage(String.format("%s is streaming! Check them out at %s", user, url)).queue();
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
+            channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, url)).queue();
         });
     }
 
