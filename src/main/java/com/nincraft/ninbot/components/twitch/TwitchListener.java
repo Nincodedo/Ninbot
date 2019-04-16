@@ -13,7 +13,9 @@ import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
-import java.util.ResourceBundle;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Component
 @Log4j2
@@ -21,10 +23,12 @@ public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
     private LocaleService localeService;
+    private List<String> cooldownList;
 
     public TwitchListener(ConfigService configService, LocaleService localeService) {
         this.configService = configService;
         this.localeService = localeService;
+        this.cooldownList = new ArrayList<>();
     }
 
     @Override
@@ -35,14 +39,20 @@ public class TwitchListener extends ListenerAdapter {
             if (updateGameEvent.getNewGame() != null) {
                 log.debug("New game URL {}", updateGameEvent.getNewGame().getUrl());
             }
+            val serverId = event.getGuild().getId();
+            val userId = updateGameEvent.getUser().getId();
+            String serverUserId = serverId + "-" + userId;
             if (isNowStreaming(updateGameEvent)) {
-                val serverId = event.getGuild().getId();
                 val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                if (streamingAnnounceUsers.contains(updateGameEvent.getUser().getId())) {
+                if (!cooldownList.contains(serverUserId) && streamingAnnounceUsers.contains(userId)) {
+                    Timer timer = new Timer();
                     announceStream(updateGameEvent, serverId);
+                    cooldownList.add(serverUserId);
+                    timer.schedule(new TwitchAnnounceCooldown(serverUserId), Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
                 }
             } else if (isNoLongerStreaming(updateGameEvent)) {
                 removeRole(updateGameEvent.getGuild(), updateGameEvent.getMember());
+                cooldownList.remove(serverUserId);
             }
         }
     }
@@ -86,5 +96,19 @@ public class TwitchListener extends ListenerAdapter {
             val streamingRole = guild.getRoleById(roleId);
             guild.getController().addSingleRoleToMember(member, streamingRole).queue();
         });
+    }
+
+    class TwitchAnnounceCooldown extends TimerTask {
+
+        private String serverUserId;
+
+        TwitchAnnounceCooldown(String serverUserId) {
+            this.serverUserId = serverUserId;
+        }
+
+        @Override
+        public void run() {
+            cooldownList.remove(serverUserId);
+        }
     }
 }
