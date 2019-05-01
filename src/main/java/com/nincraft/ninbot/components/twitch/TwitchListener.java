@@ -83,10 +83,11 @@ public class TwitchListener extends ListenerAdapter {
             val guild = updateGameEvent.getGuild();
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
             val user = updateGameEvent.getUser().getName();
+            val gameName = updateGameEvent.getNewGame().getName();
             val url = updateGameEvent.getNewGame().getUrl();
             addRole(guild, guild.getMember(updateGameEvent.getUser()));
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
-            channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, url)).queue();
+            channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url)).queue();
         });
     }
 
