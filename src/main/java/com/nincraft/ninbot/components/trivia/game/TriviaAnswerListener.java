@@ -3,8 +3,8 @@ package com.nincraft.ninbot.components.trivia.game;
 import com.nincraft.ninbot.components.trivia.TriviaScoreService;
 import lombok.Getter;
 import lombok.val;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class TriviaAnswerListener extends ListenerAdapter {
 

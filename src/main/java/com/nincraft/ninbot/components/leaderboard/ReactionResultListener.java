@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.leaderboard;
 
 import lombok.val;
-import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 class ReactionResultListener extends ListenerAdapter {
 
@@ -42,6 +42,6 @@ class ReactionResultListener extends ListenerAdapter {
     }
 
     private void clearReactions(MessageReactionAddEvent event) {
-        event.getChannel().getMessageById(event.getMessageId()).complete().clearReactions().queue();
+        event.getChannel().retrieveMessageById(event.getMessageId()).complete().clearReactions().queue();
     }
 }

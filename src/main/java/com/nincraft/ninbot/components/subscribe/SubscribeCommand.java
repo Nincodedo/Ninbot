@@ -6,11 +6,10 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class SubscribeCommand extends AbstractCommand {
             val subscribeTo = content.split("\\s+")[2];
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
-                addOrRemoveSubscription(event, server.getController(), role);
+                addOrRemoveSubscription(event, server, role);
                 commandResult.addSuccessfulReaction();
             } else {
                 commandResult.addChannelAction(new MessageBuilder()
@@ -49,8 +48,8 @@ public class SubscribeCommand extends AbstractCommand {
         return commandResult;
     }
 
-    void addOrRemoveSubscription(MessageReceivedEvent event, GuildController controller, Role role) {
-        controller.addRolesToMember(event.getMember(), role).queue();
+    void addOrRemoveSubscription(MessageReceivedEvent event, Guild guild, Role role) {
+        guild.addRoleToMember(event.getMember(), role).queue();
     }
 
     private boolean isValidSubscribeRole(Role role, String serverId) {

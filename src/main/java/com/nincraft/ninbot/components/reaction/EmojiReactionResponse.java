@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.reaction;
 
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

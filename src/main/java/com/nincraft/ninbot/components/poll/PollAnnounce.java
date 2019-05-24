@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.poll;
 
 import lombok.val;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ class PollAnnounce extends TimerTask {
     }
 
     private void announcePollResults() {
-        val newMessage = message.getChannel().getMessageById(message.getId()).complete();
+        val newMessage = message.getChannel().retrieveMessageById(message.getId()).complete();
         int highCount = 0;
         List<String> winningChoices = new ArrayList<>();
         List<MessageReaction> reactions = newMessage.getReactions();

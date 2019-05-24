@@ -3,14 +3,15 @@ package com.nincraft.ninbot.components.twitch;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.events.user.update.GenericUserPresenceEvent;
-import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
+import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
+import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -22,38 +23,36 @@ import java.util.*;
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
+    private Set<SlimMember> streamingMembers;
     private LocaleService localeService;
-    private List<String> cooldownList;
+    private List<SlimMember> cooldownList;
 
     public TwitchListener(ConfigService configService, LocaleService localeService) {
         this.configService = configService;
         this.localeService = localeService;
+        this.streamingMembers = new HashSet<>();
         this.cooldownList = new ArrayList<>();
     }
 
     @Override
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
-        if (event instanceof UserUpdateGameEvent) {
-            val updateGameEvent = (UserUpdateGameEvent) event;
-            log.debug("User Presence Updated: User {}, Old game {}, New game {}", updateGameEvent.getUser(), updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
-            if (updateGameEvent.getNewGame() != null) {
-                log.debug("New game URL {}", updateGameEvent.getNewGame().getUrl());
-            }
-            val serverId = event.getGuild().getId();
-            val userId = updateGameEvent.getUser().getId();
-            String serverUserId = serverId + "-" + userId;
-            if (isNowStreaming(updateGameEvent)) {
-                val streamingAnnounceUsers = configService.getValuesByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                if (!cooldownList.contains(serverUserId) && streamingAnnounceUsers.contains(userId)) {
+        SlimMember member = new SlimMember(event.getMember().getId(), event.getGuild().getId());
+        if (event instanceof UserActivityStartEvent) {
+            if (!streamingMembers.contains(member)) {
+                val activityStartEvent = (UserActivityStartEvent) event;
+                val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild().getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
+                if (!cooldownList.contains(member) && streamingAnnounceUser.contains(member.getUserId())) {
                     Timer timer = new Timer();
-                    announceStream(updateGameEvent, serverId);
-                    cooldownList.add(serverUserId);
-                    timer.schedule(new TwitchAnnounceCooldown(serverUserId), Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
+                    announceStream(activityStartEvent);
+                    streamingMembers.add(member);
+                    timer.schedule(new TwitchAnnounceCooldown(member), Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
                 }
-            } else if (isNoLongerStreaming(updateGameEvent)) {
-                removeRole(updateGameEvent.getGuild(), updateGameEvent.getMember());
-                cooldownList.remove(serverUserId);
             }
+        } else if (event instanceof UserActivityEndEvent && streamingMembers.contains(member)
+                && event.getMember().getActivities().isEmpty()) {
+            removeRole(event.getGuild(), event.getMember());
+            streamingMembers.remove(member);
+            cooldownList.remove(member);
         }
     }
 
@@ -61,31 +60,21 @@ public class TwitchListener extends ListenerAdapter {
         val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
-            guild.getController().removeSingleRoleFromMember(member, streamingRole).queue();
+            guild.removeRoleFromMember(member, streamingRole).queue();
         });
     }
 
-    private boolean isNoLongerStreaming(UserUpdateGameEvent updateGameEvent) {
-        return checkStreaming(updateGameEvent.getNewGame(), updateGameEvent.getOldGame());
-    }
 
-    private boolean isNowStreaming(UserUpdateGameEvent updateGameEvent) {
-        return checkStreaming(updateGameEvent.getOldGame(), updateGameEvent.getNewGame());
-    }
-
-    private boolean checkStreaming(Game previousGame, Game nextGame) {
-        return (previousGame == null || previousGame.getUrl() == null) && nextGame != null && nextGame.getUrl() != null;
-    }
-
-    private void announceStream(UserUpdateGameEvent updateGameEvent, String serverId) {
+    private void announceStream(UserActivityStartEvent userActivityStartEvent) {
+        val serverId = userActivityStartEvent.getGuild().getId();
         val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
-            val guild = updateGameEvent.getGuild();
+            val guild = userActivityStartEvent.getGuild();
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            val user = updateGameEvent.getUser().getName();
-            val gameName = updateGameEvent.getNewGame().getName();
-            val url = updateGameEvent.getNewGame().getUrl();
-            addRole(guild, guild.getMember(updateGameEvent.getUser()));
+            val user = userActivityStartEvent.getUser().getName();
+            val url = userActivityStartEvent.getNewActivity().getUrl();
+            val gameName = userActivityStartEvent.getNewActivity().getName();
+            addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
             channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url)).queue();
         });
@@ -95,21 +84,32 @@ public class TwitchListener extends ListenerAdapter {
         val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
-            guild.getController().addSingleRoleToMember(member, streamingRole).queue();
+            guild.addRoleToMember(member, streamingRole).queue();
         });
+    }
+
+    @Data
+    class SlimMember {
+        String userId;
+        String guildId;
+
+        SlimMember(String userId, String guildId) {
+            this.userId = userId;
+            this.guildId = guildId;
+        }
     }
 
     class TwitchAnnounceCooldown extends TimerTask {
 
-        private String serverUserId;
+        private SlimMember slimMember;
 
-        TwitchAnnounceCooldown(String serverUserId) {
-            this.serverUserId = serverUserId;
+        TwitchAnnounceCooldown(SlimMember slimMember) {
+            this.slimMember = slimMember;
         }
 
         @Override
         public void run() {
-            cooldownList.remove(serverUserId);
+            cooldownList.remove(slimMember);
         }
     }
 }
