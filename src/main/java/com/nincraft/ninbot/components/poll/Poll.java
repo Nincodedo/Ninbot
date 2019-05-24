@@ -2,10 +2,10 @@ package com.nincraft.ninbot.components.poll;
 
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.Data;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

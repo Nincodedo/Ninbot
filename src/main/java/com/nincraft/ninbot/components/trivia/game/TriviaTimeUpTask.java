@@ -4,7 +4,7 @@ import com.nincraft.ninbot.components.trivia.TriviaInstance;
 import com.nincraft.ninbot.components.trivia.TriviaInstanceRepository;
 import lombok.Getter;
 import lombok.val;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.api.JDA;
 
 import java.util.TimerTask;
 

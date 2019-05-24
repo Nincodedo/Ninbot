@@ -2,7 +2,7 @@ package com.nincraft.ninbot.components.poll;
 
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

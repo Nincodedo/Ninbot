@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.event;
 
 import lombok.val;
-import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.time.ZoneId;
 import java.util.HashMap;
