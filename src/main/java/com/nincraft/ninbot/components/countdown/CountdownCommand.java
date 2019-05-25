@@ -17,16 +17,16 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class CountdownCommand extends AbstractCommand {
 
-    private CountdownDao countdownDao;
+    private CountdownRepository countdownRepository;
     private CountdownScheduler countdownScheduler;
     private ConfigService configService;
 
-    public CountdownCommand(CountdownDao countdownDao, CountdownScheduler countdownScheduler,
+    public CountdownCommand(CountdownRepository countdownRepository, CountdownScheduler countdownScheduler,
             ConfigService configService) {
         name = "countdown";
         length = 2;
         checkExactLength = false;
-        this.countdownDao = countdownDao;
+        this.countdownRepository = countdownRepository;
         this.countdownScheduler = countdownScheduler;
         this.configService = configService;
     }
@@ -50,7 +50,7 @@ public class CountdownCommand extends AbstractCommand {
     }
 
     private Message listCountdowns(MessageReceivedEvent event) {
-        val list = countdownDao.getAllObjectsByServerId(event.getGuild().getId());
+        val list = countdownRepository.findByServerId(event.getGuild().getId());
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         if (!list.isEmpty()) {
             messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
@@ -79,7 +79,7 @@ public class CountdownCommand extends AbstractCommand {
                     .setEventDate(LocalDate.parse(stringDate, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay(serverTimezone))
                     .setName(countdownName)
                     .setServerId(event.getGuild().getId());
-            countdownDao.saveObject(countdown);
+            countdownRepository.save(countdown);
             countdownScheduler.scheduleOne(countdown, event.getJDA());
             return true;
         } else {

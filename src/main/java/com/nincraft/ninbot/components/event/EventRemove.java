@@ -5,15 +5,15 @@ import java.util.TimerTask;
 class EventRemove extends TimerTask {
 
     private Event event;
-    private EventService eventService;
+    private EventRepository eventRepository;
 
-    EventRemove(Event event, EventService eventService) {
+    EventRemove(Event event, EventRepository eventRepository) {
         this.event = event;
-        this.eventService = eventService;
+        this.eventRepository = eventRepository;
     }
 
     @Override
     public void run() {
-        eventService.removeEvent(event);
+        eventRepository.delete(event);
     }
 }

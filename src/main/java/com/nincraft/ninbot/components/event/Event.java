@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
     private String authorName;
     private int subscriptionId;

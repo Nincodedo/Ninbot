@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class CountdownScheduler implements ISchedulable {
 
-    private CountdownDao countdownDao;
+    private CountdownRepository countdownRepository;
     private ConfigService configService;
     private LocaleService localeService;
 
-    public CountdownScheduler(CountdownDao countdownDao, ConfigService configService, LocaleService localeService) {
-        this.countdownDao = countdownDao;
+    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService, LocaleService localeService) {
+        this.countdownRepository = countdownRepository;
         this.configService = configService;
         this.localeService = localeService;
     }
@@ -55,7 +55,7 @@ public class CountdownScheduler implements ISchedulable {
                     Date.from(LocalDate.now(countdownDate.getZone()).atStartOfDay(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).toInstant()));
         } else {
             log.debug("Countdown {} is past, removing", countdown.getName());
-            countdownDao.removeObject(countdown);
+            countdownRepository.delete(countdown);
         }
     }
 
@@ -69,7 +69,7 @@ public class CountdownScheduler implements ISchedulable {
 
         @Override
         public void run() {
-            countdownDao.getAllObjects().forEach(countdown -> scheduleOne(countdown, jda));
+            countdownRepository.findAll().forEach(countdown -> scheduleOne(countdown, jda));
         }
     }
 }

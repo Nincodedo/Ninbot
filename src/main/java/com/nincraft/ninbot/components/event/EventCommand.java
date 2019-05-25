@@ -12,22 +12,24 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import static java.awt.Color.BLUE;
 
 @Component
 public class EventCommand extends AbstractCommand {
 
-    private EventService eventService;
+    private EventRepository eventRepository;
     private EventScheduler eventScheduler;
     private EventParser eventParser;
     private ConfigService configService;
 
-    public EventCommand(EventService eventService, EventScheduler eventScheduler, ConfigService configService) {
+    public EventCommand(EventRepository eventRepository, EventScheduler eventScheduler, ConfigService configService) {
         length = 3;
         name = "events";
         checkExactLength = false;
-        this.eventService = eventService;
+        this.eventRepository = eventRepository;
         this.eventScheduler = eventScheduler;
         this.configService = configService;
         this.eventParser = new EventParser();
@@ -68,14 +70,16 @@ public class EventCommand extends AbstractCommand {
     }
 
     private Message listEvents(String serverTimezone) {
-        val events = eventService.getAllEvents();
-        if (events.isEmpty()) {
+        val eventList = new ArrayList<Event>();
+        eventRepository.findAll().forEach(eventList::add);
+        eventList.sort(Comparator.comparing(Event::getStartTime));
+        if (eventList.isEmpty()) {
             return new MessageBuilder().append(resourceBundle.getString("command.event.list.noeventsfound")).build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
         messageBuilder.setColor(BLUE);
-        for (val event : events) {
+        for (val event : eventList) {
             event.setResourceBundle(resourceBundle);
             messageBuilder.addField(event.getName(), event.toString(), true);
         }

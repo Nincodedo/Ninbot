@@ -21,7 +21,7 @@ public class LeaderboardService {
     void recordResult(String serverId, String recordType, String firstUser, String againstUser) {
         String winner;
         String loser;
-        if (recordType.equals("win")) {
+        if ("win".equals(recordType)) {
             winner = firstUser;
             loser = againstUser;
         } else {

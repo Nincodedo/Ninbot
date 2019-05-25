@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Timer;
 
 import static java.time.Instant.now;
@@ -21,25 +23,27 @@ import static java.util.Date.from;
 @Component
 public class EventScheduler implements ISchedulable {
 
-    private EventService eventService;
+    private EventRepository eventRepository;
     private ConfigService configService;
     private LocaleService localeService;
 
     @Autowired
-    public EventScheduler(EventService eventService, ConfigService configService, LocaleService localeService) {
-        this.eventService = eventService;
+    public EventScheduler(EventRepository eventRepository, ConfigService configService, LocaleService localeService) {
+        this.eventRepository = eventRepository;
         this.configService = configService;
         this.localeService = localeService;
     }
 
     public void scheduleAll(JDA jda) {
         log.trace("scheduling events");
-        val events = eventService.getAllEvents();
-        events.forEach(event -> scheduleOne(event, jda));
+        val eventList = new ArrayList<Event>();
+        eventRepository.findAll().forEach(eventList::add);
+        eventList.sort(Comparator.comparing(Event::getStartTime));
+        eventList.forEach(event -> scheduleOne(event, jda));
     }
 
     void addEvent(Event event, JDA jda) {
-        eventService.addEvent(event);
+        eventRepository.save(event);
         scheduleOne(event, jda);
     }
 
@@ -56,13 +60,13 @@ public class EventScheduler implements ISchedulable {
         if (eventEndTime.isBefore(now()) ||
                 (event.getEndTime() == null && eventStartTime.plus(1, DAYS).isBefore(now()))) {
             log.debug("Removing event {}, the end time is passed", event.getName());
-            new EventRemove(event, eventService).run();
+            new EventRemove(event, eventRepository).run();
         } else {
             Timer timer = new Timer();
             log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
             scheduleOne(event, timer, eventStartTime, 0, jda);
             scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, jda);
-            timer.schedule(new EventRemove(event, eventService), from(eventEndTime));
+            timer.schedule(new EventRemove(event, eventRepository), from(eventEndTime));
         }
     }
 
