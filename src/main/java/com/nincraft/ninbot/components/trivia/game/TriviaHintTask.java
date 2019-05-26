@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.trivia.game;
 
 import com.nincraft.ninbot.components.trivia.TriviaInstance;
-import com.nincraft.ninbot.components.trivia.TriviaInstanceDao;
+import com.nincraft.ninbot.components.trivia.TriviaInstanceRepository;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
 
@@ -10,14 +10,15 @@ import java.util.*;
 class TriviaHintTask extends TimerTask {
 
     private TriviaInstance triviaInstance;
-    private TriviaInstanceDao triviaInstanceDao;
+    private TriviaInstanceRepository triviaInstanceRepository;
     private JDA jda;
     private int hintNumber;
     private Random random;
 
-    TriviaHintTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao, JDA jda, int hintNumber) {
+    TriviaHintTask(TriviaInstance triviaInstance, TriviaInstanceRepository triviaInstanceRepository, JDA jda,
+            int hintNumber) {
         this.triviaInstance = triviaInstance;
-        this.triviaInstanceDao = triviaInstanceDao;
+        this.triviaInstanceRepository = triviaInstanceRepository;
         this.jda = jda;
         this.hintNumber = hintNumber;
         random = new Random();
@@ -25,7 +26,7 @@ class TriviaHintTask extends TimerTask {
 
     @Override
     public void run() {
-        if (triviaInstanceDao.isActiveTriviaChannel(triviaInstance.getChannelId())) {
+        if (triviaInstanceRepository.existsByChannelId(triviaInstance.getChannelId())) {
             val answer = triviaInstance.getAnswer();
             String hint = revealHint(answer, hintNumber);
             jda.getTextChannelById(triviaInstance.getChannelId()).sendMessage("Hint! " + hint).queue();

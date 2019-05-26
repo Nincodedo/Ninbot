@@ -1,36 +1,47 @@
 package com.nincraft.ninbot.components.trivia;
 
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TriviaScoreService {
 
-    private TriviaScoreDao triviaScoreDao;
+    private TriviaScoreRepository triviaScoreRepository;
 
-    public TriviaScoreService(TriviaScoreDao triviaScoreDao) {
-        this.triviaScoreDao = triviaScoreDao;
+    public TriviaScoreService(TriviaScoreRepository triviaScoreRepository) {
+        this.triviaScoreRepository = triviaScoreRepository;
     }
 
     @Transactional
     public void addUser(String userId) {
-        triviaScoreDao.addUser(userId);
+        triviaScoreRepository.save(new TriviaScore(userId));
     }
 
     @Transactional
     public int addPoints(String userId, int points) {
-        return triviaScoreDao.addPoints(userId, points);
+        val triviaScore = triviaScoreRepository.getFirstByUserId(userId);
+        if (triviaScore.isPresent()) {
+            triviaScore.get().setScore(triviaScore.get().getScore() + points);
+            return triviaScore.get().getScore();
+        } else {
+            return 0;
+        }
     }
 
     @Transactional
     public int getPlayerScore(String userId) {
-        return triviaScoreDao.getPlayerScore(userId);
+        val triviaScore = triviaScoreRepository.getFirstByUserId(userId);
+        return triviaScore.map(TriviaScore::getScore).orElse(0);
     }
 
     @Transactional
     public List<TriviaScore> getScoreForAllPlayers() {
-        return triviaScoreDao.getScoreForAllPlayers();
+        List<TriviaScore> triviaScores = new ArrayList<>();
+        triviaScoreRepository.findAll().forEach(triviaScores::add);
+        return triviaScores;
     }
 }

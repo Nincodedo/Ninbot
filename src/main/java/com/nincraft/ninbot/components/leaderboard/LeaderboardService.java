@@ -8,14 +8,14 @@ import java.util.List;
 @Service
 public class LeaderboardService {
 
-    private LeaderboardEntryDao leaderboardEntryDao;
+    private LeaderboardEntryRepository leaderboardEntryRepository;
 
-    public LeaderboardService(LeaderboardEntryDao leaderboardEntryDao) {
-        this.leaderboardEntryDao = leaderboardEntryDao;
+    public LeaderboardService(LeaderboardEntryRepository leaderboardEntryRepository) {
+        this.leaderboardEntryRepository = leaderboardEntryRepository;
     }
 
     List<LeaderboardEntry> getAllEntriesForServer(String serverId) {
-        return leaderboardEntryDao.getAllObjectsByServerId(serverId);
+        return leaderboardEntryRepository.getAllByServerId(serverId);
     }
 
     void recordResult(String serverId, String recordType, String firstUser, String againstUser) {
@@ -28,14 +28,19 @@ public class LeaderboardService {
             winner = againstUser;
             loser = firstUser;
         }
-        val winnerEntry = leaderboardEntryDao.getUserEntry(serverId, winner);
-        leaderboardEntryDao.recordWin(winnerEntry);
+        val winnerEntry = leaderboardEntryRepository.
+                getFirstByServerIdAndUserId(serverId, winner).orElseGet(() -> new LeaderboardEntry(serverId, winner));
 
-        val loserEntry = leaderboardEntryDao.getUserEntry(serverId, loser);
-        leaderboardEntryDao.recordLoss(loserEntry);
+        winnerEntry.setWins(winnerEntry.getWins() + 1);
+        leaderboardEntryRepository.save(winnerEntry);
+
+        val loserEntry = leaderboardEntryRepository.
+                getFirstByServerIdAndUserId(serverId, loser).orElseGet(() -> new LeaderboardEntry(serverId, loser));
+        loserEntry.setLoses(loserEntry.getLoses() + 1);
+        leaderboardEntryRepository.save(loserEntry);
     }
 
     void removeAllEntriesForServer(String serverId) {
-        leaderboardEntryDao.removeAllEntriesForServer(serverId);
+        leaderboardEntryRepository.deleteAllByServerId(serverId);
     }
 }

@@ -1,71 +1,69 @@
 package com.nincraft.ninbot.components.config;
 
 import lombok.val;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConfigService {
 
-    private ConfigDao configDao;
-    private Map<String, List<Config>> cachedConfigs = new HashMap<>();
+    private ConfigRepository configRepository;
 
-    public ConfigService(ConfigDao configDao) {
-        this.configDao = configDao;
+    public ConfigService(ConfigRepository configRepository) {
+        this.configRepository = configRepository;
     }
 
     @Transactional
+    @Cacheable("configs-by-name")
     public List<Config> getConfigByName(String serverId, String configName) {
-        if (cachedConfigs.containsKey(serverId)) {
-            return cachedConfigs.get(serverId);
-        }
-        val listOfConfigs = configDao.getConfigByName(serverId, configName);
-        cachedConfigs.put(serverId, listOfConfigs);
-        return listOfConfigs;
+        return configRepository.getConfigsByServerIdAndName(serverId, configName);
     }
 
     @Transactional
     public List<String> getValuesByName(String serverId, String configName) {
-        return configDao.getValuesByName(serverId, configName);
+        val list = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        return list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Transactional
     public Optional<String> getSingleValueByName(String serverId, String configName) {
-        val list = configDao.getValuesByName(serverId, configName);
-        if (list.isEmpty()) {
+        val list = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        val valueList = list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
+        if (valueList.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.ofNullable(list.get(0));
+            return Optional.ofNullable(valueList.get(0));
         }
     }
 
     @Transactional
     public void removeConfig(Config config) {
-        configDao.removeConfig(config);
+        configRepository.delete(config);
     }
 
     @Transactional
     public void removeConfig(String serverId, String configName, String configValue) {
-        configDao.removeConfig(serverId, configName, configValue);
+        configRepository.delete(new Config(serverId, configName, configValue));
     }
 
     @Transactional
-    public boolean addConfig(Config config) {
-        return configDao.addConfig(config);
+    public void addConfig(Config config) {
+        configRepository.save(config);
     }
 
     @Transactional
     public void addConfig(String serverId, String configName, String configValue) {
-        configDao.addConfig(serverId, configName, configValue);
+        configRepository.save(new Config(serverId, configName, configValue));
     }
 
     @Transactional
     public List<Config> getConfigsByServerId(String serverId) {
-        return configDao.getAllObjectsByServerId(serverId);
+        return configRepository.getConfigsByServerId(serverId);
     }
 }

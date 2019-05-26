@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.trivia.game;
 
 import com.nincraft.ninbot.components.trivia.TriviaInstance;
-import com.nincraft.ninbot.components.trivia.TriviaInstanceDao;
+import com.nincraft.ninbot.components.trivia.TriviaInstanceRepository;
 import lombok.Getter;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
@@ -11,22 +11,22 @@ import java.util.TimerTask;
 public class TriviaTimeUpTask extends TimerTask {
 
     private TriviaInstance triviaInstance;
-    private TriviaInstanceDao triviaInstanceDao;
+    private TriviaInstanceRepository triviaInstanceRepository;
     private JDA jda;
     @Getter
     private boolean timeExpired;
 
-    TriviaTimeUpTask(TriviaInstance triviaInstance, TriviaInstanceDao triviaInstanceDao,
+    TriviaTimeUpTask(TriviaInstance triviaInstance, TriviaInstanceRepository triviaInstanceRepository,
             JDA jda) {
         this.triviaInstance = triviaInstance;
-        this.triviaInstanceDao = triviaInstanceDao;
+        this.triviaInstanceRepository = triviaInstanceRepository;
         this.jda = jda;
         this.timeExpired = false;
     }
 
     @Override
     public void run() {
-        if (triviaInstanceDao.isActiveTriviaChannel(triviaInstance.getChannelId())) {
+        if (triviaInstanceRepository.existsByChannelId(triviaInstance.getChannelId())) {
             val channel = jda.getTextChannelById(triviaInstance.getChannelId());
             channel.sendMessage(String.format("Time is up! The correct answer was %s", triviaInstance.getAnswer())).queue();
             timeExpired = true;

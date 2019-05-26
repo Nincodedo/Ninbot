@@ -12,7 +12,7 @@ public class TriviaInstance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int id;
+    private Long id;
     @Column(nullable = false)
     private String channelId;
     @Column(nullable = false)

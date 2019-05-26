@@ -34,7 +34,8 @@ public class ConfigCommand extends AbstractCommand {
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":
                 if (getCommandLength(message) >= 5) {
-                    commandResult.addCorrectReaction(addConfig(message, event.getGuild().getId()));
+                    addConfig(message, event.getGuild().getId());
+                    commandResult.addSuccessfulReaction();
                 } else {
                     commandResult.addUnsuccessfulReaction();
                 }
@@ -76,8 +77,8 @@ public class ConfigCommand extends AbstractCommand {
         configService.removeConfig(config);
     }
 
-    private boolean addConfig(String messageString, String guildId) {
+    private void addConfig(String messageString, String guildId) {
         Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
-        return configService.addConfig(config);
+        configService.addConfig(config);
     }
 }

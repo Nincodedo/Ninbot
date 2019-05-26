@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.trivia.game;
 
 import com.nincraft.ninbot.components.trivia.TriviaInstance;
-import com.nincraft.ninbot.components.trivia.TriviaInstanceDao;
+import com.nincraft.ninbot.components.trivia.TriviaInstanceRepository;
 import com.nincraft.ninbot.components.trivia.TriviaScoreService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -15,14 +15,14 @@ import java.util.Timer;
 @Component
 public class TriviaManager {
 
-    private TriviaInstanceDao triviaInstanceDao;
+    private TriviaInstanceRepository triviaInstanceRepository;
     private TriviaScoreService triviaScoreService;
     private int triviaUnansweredLimit = 3;
     private ITriviaAPI triviaAPI;
 
-    public TriviaManager(TriviaInstanceDao triviaInstanceDao, TriviaScoreService triviaScoreService,
+    public TriviaManager(TriviaInstanceRepository triviaInstanceRepository, TriviaScoreService triviaScoreService,
             ITriviaAPI triviaAPI) {
-        this.triviaInstanceDao = triviaInstanceDao;
+        this.triviaInstanceRepository = triviaInstanceRepository;
         this.triviaScoreService = triviaScoreService;
         this.triviaAPI = triviaAPI;
     }
@@ -31,21 +31,21 @@ public class TriviaManager {
         triviaInstance.getTriviaTimer().cancel();
         jda.getTextChannelById(triviaInstance.getChannelId()).sendMessage(
                 "Trivia has ended. No answers from the last " + triviaUnansweredLimit + " questions").queue();
-        triviaInstanceDao.removeTriviaInChannel(triviaInstance.getChannelId());
+        triviaInstanceRepository.deleteByChannelId(triviaInstance.getChannelId());
     }
 
     public void stopTrivia(String channelId) {
-        triviaInstanceDao.removeTriviaInChannel(channelId);
+        triviaInstanceRepository.deleteByChannelId(channelId);
     }
 
     public boolean isTriviaActiveInChannel(String channelId) {
-        return triviaInstanceDao.isActiveTriviaChannel(channelId);
+        return triviaInstanceRepository.existsByChannelId(channelId);
     }
 
     public void startTrivia(String channelId, int categoryId, String serverId, JDA jda) {
         TriviaInstance triviaInstance = new TriviaInstance(serverId, channelId, categoryId);
         triviaInstance.setTriviaQuestion(triviaAPI.nextTriviaQuestion(triviaInstance));
-        triviaInstanceDao.saveObject(triviaInstance);
+        triviaInstanceRepository.save(triviaInstance);
         startTriviaLoop(triviaInstance, jda);
     }
 
@@ -54,7 +54,7 @@ public class TriviaManager {
             int unansweredQuestionCount = 0;
             while (isTriviaActiveInChannel(triviaInstance.getChannelId())
                     && unansweredQuestionCount <= triviaUnansweredLimit) {
-                triviaInstanceDao.saveObject(triviaInstance);
+                triviaInstanceRepository.save(triviaInstance);
                 if (triviaInstance.getTriviaQuestion() != null) {
                     unansweredQuestionCount = askTriviaQuestion(triviaInstance, jda, unansweredQuestionCount);
                 } else {
@@ -78,11 +78,11 @@ public class TriviaManager {
         jda.addEventListener(triviaAnswerListener);
         val channel = jda.getTextChannelById(triviaInstance.getChannelId());
         channel.sendMessage(triviaQuestion.build()).queue();
-        val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceDao, jda);
+        val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceRepository, jda);
         long time = 30000L;
-        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 1), 0);
-        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 2), time);
-        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceDao, jda, 3), time * 2);
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 1), 0);
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 2), time);
+        timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 3), time * 2);
         timer.schedule(triviaTask, time * 3);
         while (!triviaAnswerListener.isQuestionAnswered() && !triviaTask.isTimeExpired()) {
             try {

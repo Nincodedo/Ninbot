@@ -13,7 +13,7 @@ public class LeaderboardEntry implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int id;
+    private Long id;
     @Column(nullable = false)
     private String serverId;
     @Column(nullable = false)

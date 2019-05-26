@@ -1,0 +1,10 @@
+package com.nincraft.ninbot.components.config;
+
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
+
+public interface ConfigRepository extends CrudRepository<Config, Long> {
+    List<Config> getConfigsByServerIdAndName(String serverId, String name);
+    List<Config> getConfigsByServerId(String serverId);
+}
