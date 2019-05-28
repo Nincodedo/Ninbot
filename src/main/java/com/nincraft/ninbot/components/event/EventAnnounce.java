@@ -5,7 +5,7 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.ResourceBundle;
 import java.util.TimerTask;
@@ -14,17 +14,17 @@ import java.util.TimerTask;
 class EventAnnounce extends TimerTask {
 
     private Event event;
-    private JDA jda;
+    private Guild guild;
     private int minutesBeforeStart;
     private ConfigService configService;
     private LocaleService localeService;
 
-    EventAnnounce(Event event, int minutesBeforeStart, ConfigService configService, JDA jda,
+    EventAnnounce(Event event, int minutesBeforeStart, ConfigService configService, Guild guild,
             LocaleService localeService) {
         this.event = event;
         this.minutesBeforeStart = minutesBeforeStart;
         this.configService = configService;
-        this.jda = jda;
+        this.guild = guild;
         this.localeService = localeService;
     }
 
@@ -32,11 +32,10 @@ class EventAnnounce extends TimerTask {
     public void run() {
         log.debug("Running announce for event {}", event.getName());
         val serverId = event.getServerId();
-        val announcementServer = jda.getGuildById(serverId);
         val config = configService.getSingleValueByName(serverId, ConfigConstants.ANNOUNCE_CHANNEL);
         config.ifPresent(announceChannelId -> {
-            val channel = announcementServer.getTextChannelById(announceChannelId);
-            val gameRoleId = announcementServer.getRolesByName(event.getGameName(), true).get(0);
+            val channel = guild.getTextChannelById(announceChannelId);
+            val gameRoleId = guild.getRolesByName(event.getGameName(), true).get(0);
             event.setResourceBundle(ResourceBundle.getBundle("lang", localeService.getLocale(serverId)));
             channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
         });

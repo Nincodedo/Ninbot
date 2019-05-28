@@ -6,6 +6,7 @@ import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,15 +65,16 @@ public class EventScheduler implements Schedulable {
         } else {
             Timer timer = new Timer();
             log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
-            scheduleOne(event, timer, eventStartTime, 0, jda);
-            scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, jda);
+            val guild = jda.getGuildById(event.getServerId());
+            scheduleOne(event, timer, eventStartTime, 0, guild);
+            scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, guild);
             timer.schedule(new EventRemove(event, eventRepository), from(eventEndTime));
         }
     }
 
-    private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, JDA jda) {
+    private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, Guild guild) {
         if (!eventTime.isBefore(now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, jda, localeService), from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, guild, localeService), from(eventTime));
         }
     }
 }
