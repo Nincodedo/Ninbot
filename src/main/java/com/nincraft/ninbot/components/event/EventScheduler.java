@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.common.ISchedulable;
+import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +21,7 @@ import static java.util.Date.from;
 
 @Log4j2
 @Component
-public class EventScheduler implements ISchedulable {
+public class EventScheduler implements Schedulable {
 
     private EventRepository eventRepository;
     private ConfigService configService;

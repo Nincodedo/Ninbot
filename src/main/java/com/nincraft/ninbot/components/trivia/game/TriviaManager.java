@@ -18,10 +18,10 @@ public class TriviaManager {
     private TriviaInstanceRepository triviaInstanceRepository;
     private TriviaScoreService triviaScoreService;
     private int triviaUnansweredLimit = 3;
-    private ITriviaAPI triviaAPI;
+    private TriviaAPI triviaAPI;
 
     public TriviaManager(TriviaInstanceRepository triviaInstanceRepository, TriviaScoreService triviaScoreService,
-            ITriviaAPI triviaAPI) {
+            TriviaAPI triviaAPI) {
         this.triviaInstanceRepository = triviaInstanceRepository;
         this.triviaScoreService = triviaScoreService;
         this.triviaAPI = triviaAPI;

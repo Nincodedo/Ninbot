@@ -3,7 +3,7 @@ package com.nincraft.ninbot.components.reaction;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
-public class StringReactionResponse implements IReactionResponse {
+public class StringReactionResponse implements ReactionResponse {
 
     private String reaction;
 

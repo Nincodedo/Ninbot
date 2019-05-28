@@ -12,9 +12,9 @@ import java.util.Map;
 @Component
 public class DefineCommand extends AbstractCommand {
 
-    private IDefineWordAPI defineWordAPI;
+    private DefineWordAPI defineWordAPI;
 
-    public DefineCommand(IDefineWordAPI defineWordAPI) {
+    public DefineCommand(DefineWordAPI defineWordAPI) {
         name = "define";
         length = 3;
         checkExactLength = false;

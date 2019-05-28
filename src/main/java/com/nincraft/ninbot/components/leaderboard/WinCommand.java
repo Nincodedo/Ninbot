@@ -34,11 +34,11 @@ public class WinCommand extends AbstractCommand {
             val message = event.getMessage();
             commandResult.addSuccessfulReaction();
             commandResult.addUnsuccessfulReaction();
-            for (val user : mentionList) {
+            mentionList.forEach(user -> {
                 val jda = event.getJDA();
                 val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event.getAuthor().getId(), user.getId());
                 jda.addEventListener(reactionResultListener);
-            }
+            });
         } else {
             commandResult.addUnknownReaction();
         }

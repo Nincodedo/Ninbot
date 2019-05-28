@@ -59,16 +59,14 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private Message listConfigs(MessageReceivedEvent event) {
-        val configsByServerId = configService.getConfigsByServerId(event.getGuild().getId());
+        val configList = configService.getConfigsByServerId(event.getGuild().getId());
         val serverName = event.getGuild().getName();
-        if (configsByServerId.isEmpty()) {
+        if (configList.isEmpty()) {
             return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"), serverName).build();
         }
         MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         messageBuilder.setTitle(resourceBundle.getString("command.config.list.title")+" " + serverName);
-        for (val config : configsByServerId) {
-            messageBuilder.addField(config.getName(), config.getValue(), false);
-        }
+        configList.forEach(config -> messageBuilder.addField(config.getName(), config.getValue(), false));
         return messageBuilder.build();
     }
 

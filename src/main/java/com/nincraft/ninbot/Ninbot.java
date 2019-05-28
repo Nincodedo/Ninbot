@@ -1,6 +1,6 @@
 package com.nincraft.ninbot;
 
-import com.nincraft.ninbot.components.common.ISchedulable;
+import com.nincraft.ninbot.components.common.Schedulable;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Game;
@@ -20,7 +20,7 @@ public class Ninbot {
     private JDA jda;
 
     @Autowired
-    private List<ISchedulable> schedulableList;
+    private List<Schedulable> schedulableList;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext context) {

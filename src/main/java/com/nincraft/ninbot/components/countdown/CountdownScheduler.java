@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.common.GenericAnnounce;
-import com.nincraft.ninbot.components.common.ISchedulable;
+import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Log4j2
-public class CountdownScheduler implements ISchedulable {
+public class CountdownScheduler implements Schedulable {
 
     private CountdownRepository countdownRepository;
     private ConfigService configService;
@@ -38,8 +38,9 @@ public class CountdownScheduler implements ISchedulable {
         val tomorrowDate = LocalDate.now(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).atStartOfDay().atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(countdown.getServerId()));
+            countdown.setResourceBundle(resourceBundle);
             val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
-            val countdownMessage = countdown.buildMessage(dayDifference, resourceBundle);
+            val countdownMessage = countdown.buildMessage(dayDifference);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(), ConfigConstants.ANNOUNCE_CHANNEL);
             String announceChannel;

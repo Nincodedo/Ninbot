@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmojiReactionResponse implements IReactionResponse {
+public class EmojiReactionResponse implements ReactionResponse {
 
     private static Map<String, String> letterMap;
 

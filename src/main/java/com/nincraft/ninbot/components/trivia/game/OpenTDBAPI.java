@@ -17,7 +17,7 @@ import java.util.*;
 
 @Log4j2
 @Component
-public class OpenTDBAPI implements ITriviaAPI {
+public class OpenTDBAPI implements TriviaAPI {
 
     private static final String HTTP_OPENTDB_COM = "http://opentdb.com/";
     private Map<Integer, String> triviaCategoryMap;

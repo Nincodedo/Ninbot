@@ -22,8 +22,10 @@ class Countdown {
     @Column(nullable = false)
     private String serverId;
     private String channelId;
+    @Transient
+    private ResourceBundle resourceBundle;
 
-    String buildMessage(long dayDifference, ResourceBundle resourceBundle) {
+    String buildMessage(long dayDifference) {
         if (dayDifference == 1) {
             return String.format(resourceBundle.getString("countdown.announce.message.tomorrow"), name);
         } else if (dayDifference == 0) {

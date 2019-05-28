@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Log4j2
 @Component
-public class UDDefineWordAPI implements IDefineWordAPI {
+public class UDDefineWordAPI implements DefineWordAPI {
 
     private String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
 

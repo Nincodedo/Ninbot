@@ -21,7 +21,7 @@ public class ReactionListener extends ListenerAdapter {
 
     private static List<String> badCharacters = Arrays.asList(" ", "!", ":");
 
-    private Map<String, IReactionResponse> responseMap = new HashMap<>();
+    private Map<String, ReactionResponse> responseMap = new HashMap<>();
 
     public ReactionListener() {
         loadResponseMap();
@@ -38,7 +38,7 @@ public class ReactionListener extends ListenerAdapter {
         }
     }
 
-    private IReactionResponse generateResponse(String response) {
+    private ReactionResponse generateResponse(String response) {
         if (isCanEmoji(response)) {
             return new EmojiReactionResponse(response);
         } else {

@@ -56,7 +56,7 @@ public class PollCommand extends AbstractCommand {
             poll.setChoices(Arrays.asList(pollOptions.split(", ")));
             val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
-                poll.setTimeLength(Long.valueOf(timeString));
+                poll.setTimeLength(Long.parseLong(timeString));
             } else {
                 poll.setTimeLength(5L);
             }

@@ -29,7 +29,7 @@ public class TopicChangeListener extends ListenerAdapter {
         val eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
             String message;
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event));
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event.getGuild().getId()));
             if (event.getGuild().getMember(event.getJDA().getSelfUser()).getPermissions(eventChannel).contains(Permission.VIEW_AUDIT_LOGS)) {
                 val auditLogs = event.getGuild().getAuditLogs().complete();
                 message = String.format(resourceBundle.getString("listener.topic.updated.withpermission"),
