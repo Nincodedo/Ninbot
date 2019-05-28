@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
