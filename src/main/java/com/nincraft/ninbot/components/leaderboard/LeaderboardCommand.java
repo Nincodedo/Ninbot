@@ -2,11 +2,12 @@ package com.nincraft.ninbot.components.leaderboard;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -81,14 +82,14 @@ public class LeaderboardCommand extends AbstractCommand {
         val serverId = event.getGuild().getId();
         val list = leaderboardService.getAllEntriesForServer(serverId);
         list.sort(Comparator.comparingInt(LeaderboardEntry::getWins));
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
         val leaderboardOptional = configService.getSingleValueByName(serverId, ConfigConstants.LEADERBOARD_NAME);
-        messageBuilder.setTitle(leaderboardOptional.orElse(resourceBundle.getString("command.leaderboard.display.defaulttitle")));
+        embedBuilder.setTitle(leaderboardOptional.orElse(resourceBundle.getString("command.leaderboard.display.defaulttitle")));
         for (val entry : list) {
             entry.setResourceBundle(resourceBundle);
             val user = event.getGuild().getMemberById(entry.getUserId());
-            messageBuilder.addField(user.getEffectiveName(), entry.getRecord(), false);
+            embedBuilder.addField(user.getEffectiveName(), entry.getRecord(), false);
         }
-        return messageBuilder.build();
+        return new MessageBuilder(embedBuilder).build();
     }
 }

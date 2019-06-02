@@ -2,10 +2,11 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -45,10 +46,10 @@ public class ListCommand extends AbstractCommand {
         if (!role.isEmpty()) {
             val users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
-            MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-            messageBuilder.setTitle(String.format(resourceBundle.getString("command.list.usersinsub"), roleName));
-            messageBuilder.appendDescription(userNames.toString());
-            return Optional.of(messageBuilder.build());
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle(String.format(resourceBundle.getString("command.list.usersinsub"), roleName));
+            embedBuilder.appendDescription(userNames.toString());
+            return Optional.of(new MessageBuilder(embedBuilder).build());
         }
         return Optional.empty();
     }
@@ -57,9 +58,9 @@ public class ListCommand extends AbstractCommand {
         List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
         List<String> roleBlackList = configService.getValuesByName(guildId, ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle(resourceBundle.getString("command.list.availablesubs"));
-        roleNameList.stream().map(roleName -> roleName + "\n").forEach(messageBuilder::appendDescription);
-        return messageBuilder.build();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(resourceBundle.getString("command.list.availablesubs"));
+        roleNameList.stream().map(roleName -> roleName + "\n").forEach(embedBuilder::appendDescription);
+        return new MessageBuilder(embedBuilder).build();
     }
 }

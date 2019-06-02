@@ -1,10 +1,10 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -47,7 +47,6 @@ public abstract class AbstractCommand {
     }
 
     protected CommandResult displayHelp(MessageReceivedEvent event) {
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
         String help = resourceBundle.getString("command.help.description.label") + ": ";
         help += resourceBundle.containsKey(String.format("command.%s.help.text", name)) ? resourceBundle.getString(
                 String.format("command.%s.help.text", name)) : getCommandDescription(name);
@@ -58,9 +57,10 @@ public abstract class AbstractCommand {
         if (!aliases.isEmpty()) {
             help += "\n" + resourceBundle.getString("command.help.alias.label") + ": " + printAliases();
         }
-        messageBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command.help.title")), help, false);
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command.help.title")), help, false);
         CommandResult commandResult = new CommandResult(event);
-        commandResult.addPrivateMessageAction(messageBuilder.build());
+        commandResult.addPrivateMessageAction(embedBuilder.build());
         commandResult.addSuccessfulReaction();
         return commandResult;
     }

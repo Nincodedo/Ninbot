@@ -2,12 +2,12 @@ package com.nincraft.ninbot.components.admin;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -64,10 +64,10 @@ public class ConfigCommand extends AbstractCommand {
         if (configList.isEmpty()) {
             return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"), serverName).build();
         }
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle(resourceBundle.getString("command.config.list.title")+" " + serverName);
-        configList.forEach(config -> messageBuilder.addField(config.getName(), config.getValue(), false));
-        return messageBuilder.build();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(resourceBundle.getString("command.config.list.title") + " " + serverName);
+        configList.forEach(config -> embedBuilder.addField(config.getName(), config.getValue(), false));
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private void removeConfig(String messageString, String guildId) {

@@ -2,10 +2,11 @@ package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -51,20 +52,20 @@ public class CountdownCommand extends AbstractCommand {
 
     private Message listCountdowns(MessageReceivedEvent event) {
         val list = countdownRepository.findByServerId(event.getGuild().getId());
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
         if (!list.isEmpty()) {
-            messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
+            embedBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
             for (val countdown : list) {
-                messageBuilder.addField(countdown.getName(),
+                embedBuilder.addField(countdown.getName(),
                         resourceBundle.getString("command.countdown.list.starttime")
                                 + countdown.getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE), false);
             }
             String serverTimezone = getServerTimeZone(event.getGuild().getId());
-            messageBuilder.setFooter(resourceBundle.getString("command.countdown.list.footer") + serverTimezone, null);
+            embedBuilder.setFooter(resourceBundle.getString("command.countdown.list.footer") + serverTimezone, null);
         } else {
-            messageBuilder.setTitle(resourceBundle.getString("command.countdown.list.nocountdownsfound"));
+            embedBuilder.setTitle(resourceBundle.getString("command.countdown.list.nocountdownsfound"));
         }
-        return messageBuilder.build();
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private boolean setupCountdown(MessageReceivedEvent event) {

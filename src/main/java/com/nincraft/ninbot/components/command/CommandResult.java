@@ -4,10 +4,7 @@ import com.nincraft.ninbot.components.common.Emojis;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -60,7 +57,11 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult addPrivateMessageAction(Message message) {
+    public CommandResult addPrivateMessageAction(MessageEmbed messageEmbed) {
+        return addPrivateMessageAction(new MessageBuilder(messageEmbed).build());
+    }
+
+    private CommandResult addPrivateMessageAction(Message message) {
         privateMessageList.add(message);
         return this;
     }

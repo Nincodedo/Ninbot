@@ -2,9 +2,10 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
@@ -42,13 +43,13 @@ public class StatsCommand extends AbstractCommand {
 
         List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
 
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
         int limit = 5;
-        messageBuilder.setTitle(String.format(resourceBundle.getString("command.stats.list.title"), limit));
+        embedBuilder.setTitle(String.format(resourceBundle.getString("command.stats.list.title"), limit));
         Collections.sort(statList);
-        statList.stream().limit(limit).forEach(stat -> messageBuilder.appendDescription(
+        statList.stream().limit(limit).forEach(stat -> embedBuilder.appendDescription(
                 stat.name + ": " + stat.amount + "\n"));
-        return messageBuilder.build();
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private class Stat implements Comparable {

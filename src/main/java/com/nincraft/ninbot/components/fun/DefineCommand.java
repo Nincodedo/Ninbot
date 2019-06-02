@@ -2,7 +2,8 @@ package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -33,10 +34,10 @@ public class DefineCommand extends AbstractCommand {
     }
 
     private Message buildMessage(Map<String, String> definition, String word) {
-        MessageBuilderHelper messageBuilderHelper = new MessageBuilderHelper();
-        messageBuilderHelper.setTitle("Definition of " + word);
-        messageBuilderHelper.addField(word, definition.get("definition").split("\n")[0], false);
-        messageBuilderHelper.addField("Find out more", definition.get("permalink"), false);
-        return messageBuilderHelper.build();
+        return new MessageBuilder(
+                new EmbedBuilder()
+                        .setTitle("Definition of " + word)
+                        .addField(word, definition.get("definition").split("\n")[0], false)
+                        .addField("Find out more", definition.get("permalink"), false)).build();
     }
 }

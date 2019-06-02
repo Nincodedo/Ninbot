@@ -2,10 +2,10 @@ package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -76,15 +76,15 @@ public class EventCommand extends AbstractCommand {
         if (eventList.isEmpty()) {
             return new MessageBuilder().append(resourceBundle.getString("command.event.list.noeventsfound")).build();
         }
-        MessageBuilderHelper messageBuilder = new MessageBuilderHelper();
-        messageBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
-        messageBuilder.setColor(BLUE);
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
+        embedBuilder.setColor(BLUE);
         for (val event : eventList) {
             event.setResourceBundle(resourceBundle);
-            messageBuilder.addField(event.getName(), event.toString(), true);
+            embedBuilder.addField(event.getName(), event.toString(), true);
         }
-        messageBuilder.setFooter(resourceBundle.getString("command.event.list.footer") + serverTimezone, null);
-        return messageBuilder.build();
+        embedBuilder.setFooter(resourceBundle.getString("command.event.list.footer") + serverTimezone, null);
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private String getServerTimeZone(String serverId) {
