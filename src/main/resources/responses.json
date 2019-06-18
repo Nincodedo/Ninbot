@@ -1,0 +1,79 @@
+{
+  "responses": [
+    {
+      "response": "same",
+      "target": "same",
+      "type": "exact"
+    },
+    {
+      "response": "That's right!",
+      "target": "meowth",
+      "type": "exact"
+    },
+    {
+      "response": "thanks :3",
+      "target": "good bot",
+      "type": "exact"
+    },
+    {
+      "response": ":(",
+      "target": "bad bot",
+      "type": "exact"
+    },
+    {
+      "response": "thanks",
+      "target": "me too",
+      "type": "exact"
+    },
+    {
+      "response": "F",
+      "target": "Press f to pay respects",
+      "type": "exact"
+    },
+    {
+      "response": "F",
+      "target": "F",
+      "type": "exact"
+    },
+    {
+      "response": "F",
+      "target": "rip",
+      "type": "exact"
+    },
+    {
+      "response": "mad",
+      "target": "I'm mad",
+      "type": "exact"
+    },
+    {
+      "response": "https://www.youtube.com/watch?v=R7c-UNfUWGs",
+      "target": "bidoof",
+      "type": "exact"
+    },
+    {
+      "response": "!sorry",
+      "target": "sorry",
+      "type": "exact"
+    },
+    {
+      "response": "sory",
+      "target": "not sorry",
+      "type": "exact"
+    },
+    {
+      "response": "neat",
+      "target": "neat",
+      "type": "exact"
+    },
+    {
+      "response": "nice",
+      "target": "nice",
+      "type": "exact"
+    },
+    {
+      "response": "nice",
+      "target": "69",
+      "type": "contains"
+    }
+  ]
+}
