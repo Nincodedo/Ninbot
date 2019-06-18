@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmojiReactionResponse implements ReactionResponse {
+public class EmojiReactionResponse extends ReactionResponse {
 
     private static Map<String, String> letterMap;
 
@@ -27,15 +27,27 @@ public class EmojiReactionResponse implements ReactionResponse {
     @Getter
     private List<String> emojiList;
 
+    public EmojiReactionResponse(ReactionResponse reactionResponse) {
+        this.response = reactionResponse.getResponse();
+        this.target = reactionResponse.getTarget();
+        this.type = reactionResponse.getType();
+        addEmojis();
+    }
+
     public EmojiReactionResponse(String response) {
-        emojiList = new ArrayList<>();
-        for (char c : response.toCharArray()) {
-            emojiList.add(getLetterEmoji(c));
-        }
+        this.response = response;
+        addEmojis();
     }
 
     private static String getLetterEmoji(char c) {
         return letterMap.get(Character.toString(c).toUpperCase());
+    }
+
+    private void addEmojis() {
+        emojiList = new ArrayList<>();
+        for (char c : response.toCharArray()) {
+            emojiList.add(getLetterEmoji(c));
+        }
     }
 
     @Override
