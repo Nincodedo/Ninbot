@@ -6,10 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,9 +25,9 @@ public class ReactionsReader {
     @Bean
     List<ReactionResponse> reactionResponseList() {
         try {
-            String jsonString = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader()
-                    .getResource("responses.json")
-                    .toURI())));
+
+            String jsonString = readFromInputStream(getClass().getClassLoader()
+                    .getResourceAsStream("responses.json"));
             ObjectMapper objectMapper = new ObjectMapper();
             List<ReactionResponse> reactionResponseList = objectMapper.readValue(objectMapper.readTree(jsonString)
                     .get("responses")
@@ -37,11 +37,23 @@ public class ReactionsReader {
                     .map(this::generateResponse)
                     .sorted(Comparator.comparing(ReactionResponse::getType).reversed())
                     .collect(Collectors.toList());
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             log.error("Failed to load reaction responses JSON", e);
         }
         return new ArrayList<>();
     }
+
+    private String readFromInputStream(InputStream inputStream) throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
+    }
+
 
     private ReactionResponse generateResponse(ReactionResponse response) {
         if (isCanEmoji(response.getResponse())) {
