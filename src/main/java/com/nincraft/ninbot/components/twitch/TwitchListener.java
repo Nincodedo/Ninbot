@@ -3,7 +3,7 @@ package com.nincraft.ninbot.components.twitch;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
-import lombok.Data;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Activity;
@@ -26,6 +26,7 @@ public class TwitchListener extends ListenerAdapter {
     private ConfigService configService;
     private Set<SlimMember> streamingMembers;
     private LocaleService localeService;
+    @Setter
     private List<SlimMember> cooldownList;
 
     public TwitchListener(ConfigService configService, LocaleService localeService) {
@@ -102,17 +103,6 @@ public class TwitchListener extends ListenerAdapter {
                 guild.addRoleToMember(member, streamingRole).queue();
             }
         });
-    }
-
-    @Data
-    class SlimMember {
-        String userId;
-        String guildId;
-
-        SlimMember(String userId, String guildId) {
-            this.userId = userId;
-            this.guildId = guildId;
-        }
     }
 
     class TwitchAnnounceCooldown extends TimerTask {
