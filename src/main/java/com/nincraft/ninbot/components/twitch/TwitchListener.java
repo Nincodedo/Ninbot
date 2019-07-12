@@ -24,6 +24,7 @@ import java.util.*;
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
+    @Setter
     private Set<SlimMember> streamingMembers;
     private LocaleService localeService;
     @Setter

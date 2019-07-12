@@ -5,6 +5,7 @@ import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -78,7 +79,7 @@ public class TwitchListenerTest {
     }
 
     @Test
-    public void userNotStreamingOtherActivity() {
+    public void userNotStreamingStartsOtherActivity() {
         UserActivityStartEvent userActivityStartEvent = Mockito.mock(UserActivityStartEvent.class);
         Member member = Mockito.mock(Member.class);
         Guild guild = Mockito.mock(Guild.class);
@@ -117,5 +118,28 @@ public class TwitchListenerTest {
         twitchListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(0)).queue();
         Mockito.verify(auditableRestAction, times(0)).queue();
+    }
+
+    @Test
+    public void userStopsStreaming() {
+        UserActivityEndEvent userActivityEndEvent = Mockito.mock(UserActivityEndEvent.class);
+        Member member = Mockito.mock(Member.class);
+        Guild guild = Mockito.mock(Guild.class);
+        MessageAction messageAction = Mockito.mock(MessageAction.class);
+        AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
+        Role streamingRole = Mockito.mock(Role.class);
+        when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
+        when(userActivityEndEvent.getMember()).thenReturn(member);
+        when(member.getId()).thenReturn("123");
+        when(userActivityEndEvent.getGuild()).thenReturn(guild);
+        when(guild.getId()).thenReturn("123");
+        when(guild.getRoleById("123")).thenReturn(streamingRole);
+        when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
+        Set<SlimMember> streamingMembers = new HashSet<>();
+        streamingMembers.add(new SlimMember("123", "123"));
+        twitchListener.setStreamingMembers(streamingMembers);
+        twitchListener.onGenericUserPresence(userActivityEndEvent);
+        Mockito.verify(messageAction, times(0)).queue();
+        Mockito.verify(auditableRestAction, times(1)).queue();
     }
 }
