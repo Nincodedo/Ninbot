@@ -4,7 +4,7 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
@@ -45,19 +45,22 @@ public class DabCommand extends AbstractCommand {
         for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
                 commandResult.setOverrideMessage(message);
-                dabOnMessage(commandResult, message.getGuild());
+                dabOnMessage(commandResult, event.getJDA());
                 return;
             }
         }
         commandResult.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(CommandResult commandResult, Guild guild) {
+    private void dabOnMessage(CommandResult commandResult, JDA jda) {
         val critDab = random.nextInt(100) < 5;
         if (critDab) {
             commandResult.addReaction(critResponse.getEmojiList());
             commandResult.addReaction(dabResponse.getEmojiList());
         }
-        commandResult.addReactionEmotes(guild.getEmotes().stream().filter(emote -> emote.getName().contains("dab")).collect(Collectors.toList()));
+        commandResult.addReactionEmotes(random.ints(10, 0, jda.getEmotes().size())
+                .mapToObj(value -> jda.getEmotes().get(value))
+                .filter(emote -> emote.getName().contains("dab"))
+                .collect(Collectors.toList()));
     }
 }
