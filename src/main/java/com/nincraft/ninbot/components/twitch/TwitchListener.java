@@ -6,6 +6,7 @@ import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
@@ -40,12 +41,18 @@ public class TwitchListener extends ListenerAdapter {
         if (event instanceof UserActivityStartEvent) {
             if (!streamingMembers.contains(member)) {
                 val activityStartEvent = (UserActivityStartEvent) event;
-                val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild().getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                if (!cooldownList.contains(member) && streamingAnnounceUser.contains(member.getUserId())) {
+                val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild()
+                        .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
+                val isStreaming = ((UserActivityStartEvent) event).getNewActivity()
+                        .getType()
+                        .equals(Activity.ActivityType.STREAMING);
+                if (!cooldownList.contains(member) && streamingAnnounceUser.contains(member.getUserId())
+                        && isStreaming) {
                     Timer timer = new Timer();
                     announceStream(activityStartEvent);
                     streamingMembers.add(member);
-                    timer.schedule(new TwitchAnnounceCooldown(member), Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
+                    timer.schedule(new TwitchAnnounceCooldown(member), Date.from(Instant.now()
+                            .plus(30, ChronoUnit.MINUTES)));
                 }
             }
         } else if (event instanceof UserActivityEndEvent && streamingMembers.contains(member)
@@ -60,7 +67,9 @@ public class TwitchListener extends ListenerAdapter {
         val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
-            guild.removeRoleFromMember(member, streamingRole).queue();
+            if (streamingRole != null) {
+                guild.removeRoleFromMember(member, streamingRole).queue();
+            }
         });
     }
 
@@ -74,9 +83,14 @@ public class TwitchListener extends ListenerAdapter {
             val user = userActivityStartEvent.getUser().getName();
             val url = userActivityStartEvent.getNewActivity().getUrl();
             val gameName = userActivityStartEvent.getNewActivity().getName();
-            addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
-            channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url)).queue();
+            if (url != null) {
+                addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
+                ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
+                if (channel != null) {
+                    channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url))
+                            .queue();
+                }
+            }
         });
     }
 
@@ -84,7 +98,9 @@ public class TwitchListener extends ListenerAdapter {
         val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
-            guild.addRoleToMember(member, streamingRole).queue();
+            if (streamingRole != null) {
+                guild.addRoleToMember(member, streamingRole).queue();
+            }
         });
     }
 
