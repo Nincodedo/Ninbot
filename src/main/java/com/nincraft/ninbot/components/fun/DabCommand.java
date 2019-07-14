@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -58,9 +59,15 @@ public class DabCommand extends AbstractCommand {
             commandResult.addReaction(critResponse.getEmojiList());
             commandResult.addReaction(dabResponse.getEmojiList());
         }
-        commandResult.addReactionEmotes(random.ints(10, 0, jda.getEmotes().size())
-                .mapToObj(value -> jda.getEmotes().get(value))
+
+        val list = jda.getEmotes().stream()
                 .filter(emote -> emote.getName().contains("dab"))
+                .collect(Collectors.toList());
+
+        Collections.shuffle(list);
+
+        commandResult.addReactionEmotes(list.stream()
+                .limit(10)
                 .collect(Collectors.toList()));
     }
 }
