@@ -43,6 +43,11 @@ public class ConfigService {
     }
 
     @Transactional
+    public Optional<Config> getConfigByServerIdAndName(String serverId, String configName){
+        return configRepository.getConfigByServerIdAndName(serverId, configName);
+    }
+
+    @Transactional
     public void removeConfig(Config config) {
         configRepository.delete(config);
     }

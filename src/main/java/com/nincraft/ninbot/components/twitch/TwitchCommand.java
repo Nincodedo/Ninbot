@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -42,10 +43,10 @@ public class TwitchCommand extends AbstractCommand {
         String responseEmoji;
         if (streamingAnnounceUsers.contains(userId)) {
             configService.removeConfig(serverId, configName, userId);
-            responseEmoji = "\uD83D\uDCF4";
+            responseEmoji = Emojis.OFF;
         } else {
             configService.addConfig(serverId, configName, userId);
-            responseEmoji = "\uD83D\uDD1B";
+            responseEmoji = Emojis.ON;
         }
         return responseEmoji;
     }

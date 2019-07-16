@@ -15,6 +15,8 @@ All commands are prefixed with @Ninbot.
     * [Subscribe/Unsubscribe](#subscribeunsubscribe)
     * [Trivia](#trivia)
     * [Twitch](#twitch)
+  * [Mods Commands](#mod-commands)
+    * [Topic Change Announcement](#topic-change-announcement)
   * [Admin Commands](#admin-commands)
     * [Config](#config)
     * [Leaderboard](#admin-leaderboard)
@@ -174,6 +176,15 @@ Toggles your going live announcement.
 Usage:
 
     @Ninbot twitch announce
+    
+    
+## Mod Commands
+###Topic Change Announcement
+Toggles topic change announcements.
+
+Usage:
+
+    @Ninbot topic-change
     
 ## Admin Commands
 ### Config
