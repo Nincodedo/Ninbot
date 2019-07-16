@@ -180,7 +180,7 @@ Usage:
     
 ## Mod Commands
 ###Topic Change Announcement
-Toggles topic change announcements.
+Toggles topic change announcements in the current channel.
 
 Usage:
 
