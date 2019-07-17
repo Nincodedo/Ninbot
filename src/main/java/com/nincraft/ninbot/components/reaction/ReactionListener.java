@@ -1,11 +1,8 @@
 package com.nincraft.ninbot.components.reaction;
 
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
