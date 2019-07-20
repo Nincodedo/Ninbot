@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.twitch;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.Emojis;
+import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -26,7 +27,7 @@ public class TwitchCommand extends AbstractCommand {
         CommandResult commandResult = new CommandResult(event);
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "announce":
-                commandResult.addReaction(announceToggle(event));
+                announceToggle(commandResult);
                 break;
             default:
                 commandResult.addUnknownReaction();
@@ -35,19 +36,23 @@ public class TwitchCommand extends AbstractCommand {
         return commandResult;
     }
 
-    private String announceToggle(MessageReceivedEvent event) {
+    private void announceToggle(CommandResult commandResult) {
+        val event = commandResult.getEvent();
         val userId = event.getAuthor().getId();
         val serverId = event.getGuild().getId();
         val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
-        val streamingAnnounceUsers = configService.getValuesByName(serverId, configName);
-        String responseEmoji;
-        if (streamingAnnounceUsers.contains(userId)) {
-            configService.removeConfig(serverId, configName, userId);
-            responseEmoji = Emojis.OFF;
-        } else {
-            configService.addConfig(serverId, configName, userId);
-            responseEmoji = Emojis.ON;
+        val streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
+        boolean foundUser = false;
+        for (Config config : streamingAnnounceUsers) {
+            if (config.getValue().equals(userId)) {
+                configService.removeConfig(config);
+                commandResult.addReaction(Emojis.OFF);
+                foundUser = true;
+            }
         }
-        return responseEmoji;
+        if (!foundUser) {
+            configService.addConfig(serverId, configName, userId);
+            commandResult.addReaction(Emojis.ON);
+        }
     }
 }
