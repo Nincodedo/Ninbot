@@ -1,14 +1,18 @@
 package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.common.LocaleService;
+import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
@@ -29,10 +33,12 @@ public class TwitchListener extends ListenerAdapter {
     private LocaleService localeService;
     @Setter
     private List<SlimMember> cooldownList;
+    private TwitchAPI twitchAPI;
 
-    public TwitchListener(ConfigService configService, LocaleService localeService) {
+    public TwitchListener(ConfigService configService, LocaleService localeService, TwitchAPI twitchAPI) {
         this.configService = configService;
         this.localeService = localeService;
+        this.twitchAPI = twitchAPI;
         this.streamingMembers = new HashSet<>();
         this.cooldownList = new ArrayList<>();
     }
@@ -84,16 +90,33 @@ public class TwitchListener extends ListenerAdapter {
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
             val user = userActivityStartEvent.getUser().getName();
             val url = userActivityStartEvent.getNewActivity().getUrl();
-            val gameName = userActivityStartEvent.getNewActivity().getName();
+            val activity = userActivityStartEvent.getNewActivity();
+            String gameName = activity.getName();
+            if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
+                gameName = activity.asRichPresence().getDetails();
+            }
             if (url != null) {
                 addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
                 if (channel != null) {
-                    channel.sendMessage(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url))
+                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, user, url, gameName, serverId))
                             .queue();
                 }
             }
         });
+    }
+
+    private Message buildStreamAnnounceMessage(UserActivityStartEvent userActivityStartEvent, String user,
+            String url, String gameName, String serverId) {
+        String iconUrl = twitchAPI.getBoxArtUrl(gameName);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
+        return new MessageBuilder(new EmbedBuilder()
+                .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url), userActivityStartEvent
+                        .getUser()
+                        .getAvatarUrl(), url)
+                .setFooter(String.format("Currently streaming %s", gameName), iconUrl)
+                .setTitle(String.format("Watch them play %s!", gameName))
+                .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()))
+        ).build();
     }
 
     private void addRole(Guild guild, Member member) {

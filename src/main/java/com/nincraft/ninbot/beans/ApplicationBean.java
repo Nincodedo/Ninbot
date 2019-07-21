@@ -1,5 +1,7 @@
 package com.nincraft.ninbot.beans;
 
+import com.github.twitch4j.helix.TwitchHelix;
+import com.github.twitch4j.helix.TwitchHelixBuilder;
 import com.nincodedo.recast.RecastAPI;
 import com.nincodedo.recast.RecastAPIBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +29,12 @@ public class ApplicationBean {
     @Value("${recastToken}")
     private String recastToken;
 
+    @Value("twitchClientId")
+    private String twitchClientId;
+
+    @Value("twitchClientSecret")
+    private String twitchClientSecret;
+
     @Autowired
     @Bean
     public JDA jda(List<ListenerAdapter> listenerAdapters) throws InterruptedException {
@@ -45,5 +53,10 @@ public class ApplicationBean {
     @Bean
     public RecastAPI recastAPI() {
         return new RecastAPIBuilder(recastToken).build();
+    }
+
+    @Bean
+    public TwitchHelix twitchHelix() {
+        return TwitchHelixBuilder.builder().withClientId(twitchClientId).withClientSecret(twitchClientSecret).build();
     }
 }

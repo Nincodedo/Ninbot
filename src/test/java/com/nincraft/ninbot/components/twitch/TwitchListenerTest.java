@@ -21,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,9 @@ public class TwitchListenerTest {
 
     @Mock
     LocaleService localeService;
+
+    @Mock
+    TwitchAPI twitchAPI;
 
     @InjectMocks
     TwitchListener twitchListener;
@@ -70,9 +74,10 @@ public class TwitchListenerTest {
         when(localeService.getLocale("123")).thenReturn(new Locale("en"));
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getTextChannelById("123")).thenReturn(textChannel);
-        when(textChannel.sendMessage(Mockito.any(String.class))).thenReturn(messageAction);
+        when(textChannel.sendMessage(Mockito.any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
+        when(twitchAPI.getBoxArtUrl(anyString())).thenReturn(null);
         twitchListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(1)).queue();
         Mockito.verify(auditableRestAction, times(1)).queue();
