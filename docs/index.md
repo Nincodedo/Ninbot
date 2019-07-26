@@ -8,3 +8,4 @@ Ninbot is a Discord bot with various silly commands and actions.
 ## Documentation
 * [Commands](commands/index.md)
 * [Reactions](reactions/index.md)
+* [Automatic Actions](actions/index.md)
