@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.channel;
 
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Component
+@Log4j2
 public class TempVoiceChannelManager extends ListenerAdapter {
 
     private TempVoiceChannelRepository repository;
@@ -29,6 +31,10 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         val guild = event.getGuild();
         val user = event.getMember();
+        log.trace("onGuildVoiceJoin - hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
+        log.trace("onGuildVoiceJoin - channel join {} is temp creator: {}", event.getChannelJoined().getName(), event.getChannelJoined()
+                .getName()
+                .startsWith("➕"));
         if (hasPermission(guild, Permission.MANAGE_CHANNEL) && event.getChannelJoined()
                 .getName()
                 .startsWith("➕")) {
@@ -39,7 +45,9 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     private void createTemporaryChannel(GuildVoiceJoinEvent event, Guild guild, Member user) {
         val joinedChannel = event.getChannelJoined();
         val channelNameType = joinedChannel.getName().substring(2);
-        createVoiceChannel(guild, joinedChannel, String.format("%s's %s", user.getEffectiveName(), channelNameType))
+        val channelName = String.format("%s's %s", user.getEffectiveName(), channelNameType);
+        log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(), guild.getId());
+        createVoiceChannel(guild, joinedChannel, channelName)
                 .queue(voiceChannel -> {
                     guild.moveVoiceMember(user, voiceChannel).queue();
                     val position = event.getChannelJoined().getPosition();
