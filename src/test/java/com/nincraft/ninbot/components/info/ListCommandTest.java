@@ -4,10 +4,8 @@ import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.internal.entities.RoleImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +15,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 public class ListCommandTest extends NinbotTest {
@@ -53,6 +51,11 @@ public class ListCommandTest extends NinbotTest {
         when(message.getContentStripped()).thenReturn("@Ninbot list");
         when(mockGuild.getRoles()).thenReturn(roles);
         CommandResult commandResult = listCommand.executeCommand(messageEvent);
-        assertEquals("best", commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getDescription().trim());
+        assertThat(commandResult.getChannelMessageList()
+                .get(0)
+                .getEmbeds()
+                .get(0)
+                .getDescription()
+                .trim()).isEqualToIgnoringCase("best");
     }
 }
