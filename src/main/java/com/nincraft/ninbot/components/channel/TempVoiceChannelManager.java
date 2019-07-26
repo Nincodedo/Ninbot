@@ -50,6 +50,8 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(), guild.getId());
         createVoiceChannel(guild, joinedChannel, channelName)
                 .queue(voiceChannel -> {
+                    TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
+                    repository.save(channel);
                     guild.moveVoiceMember(user, voiceChannel).queue();
                     val position = event.getChannelJoined().getPosition();
                     modifyVoiceChannelPositions(guild, joinedChannel)
@@ -60,8 +62,6 @@ public class TempVoiceChannelManager extends ListenerAdapter {
                             .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS, Permission.PRIORITY_SPEAKER,
                                     Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS, Permission.VOICE_DEAF_OTHERS))
                             .queue();
-                    TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
-                    repository.save(channel);
                 });
     }
 
