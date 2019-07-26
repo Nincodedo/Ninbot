@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.channel;
 
+import com.nincraft.ninbot.components.common.Emojis;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
@@ -34,10 +35,10 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         log.trace("onGuildVoiceJoin - hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
         log.trace("onGuildVoiceJoin - channel join {} is temp creator: {}", event.getChannelJoined().getName(), event.getChannelJoined()
                 .getName()
-                .startsWith("➕"));
+                .startsWith(Emojis.PLUS));
         if (hasPermission(guild, Permission.MANAGE_CHANNEL) && event.getChannelJoined()
                 .getName()
-                .startsWith("➕")) {
+                .startsWith(Emojis.PLUS)) {
             createTemporaryChannel(event, guild, user);
         }
     }
