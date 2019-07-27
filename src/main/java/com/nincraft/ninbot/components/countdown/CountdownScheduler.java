@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.common.GenericAnnounce;
-import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.common.LocaleService;
+import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +23,8 @@ public class CountdownScheduler implements Schedulable {
     private ConfigService configService;
     private LocaleService localeService;
 
-    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService, LocaleService localeService) {
+    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService,
+            LocaleService localeService) {
         this.countdownRepository = countdownRepository;
         this.configService = configService;
         this.localeService = localeService;
@@ -35,11 +36,18 @@ public class CountdownScheduler implements Schedulable {
 
     void scheduleOne(Countdown countdown, JDA jda) {
         val countdownDate = countdown.getEventDate();
-        val tomorrowDate = LocalDate.now(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).atStartOfDay().atZone(countdownDate.getZone());
+        val tomorrowDate = LocalDate.now(countdownDate.getZone())
+                .plus(1, ChronoUnit.DAYS)
+                .atStartOfDay()
+                .atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
+            val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
+            if (dayDifference > 7 && dayDifference % 7 != 0) {
+                log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
+                return;
+            }
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(countdown.getServerId()));
             countdown.setResourceBundle(resourceBundle);
-            val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
             val countdownMessage = countdown.buildMessage(dayDifference);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(), ConfigConstants.ANNOUNCE_CHANNEL);
@@ -49,11 +57,15 @@ public class CountdownScheduler implements Schedulable {
             } else if (configChannelOptional.isPresent()) {
                 announceChannel = configChannelOptional.get();
             } else {
-                log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or this countdown", countdown.getName(), countdown.getServerId());
+                log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or this countdown", countdown
+                        .getName(), countdown.getServerId());
                 return;
             }
             new Timer().schedule(new GenericAnnounce(jda, announceChannel, countdownMessage),
-                    Date.from(LocalDate.now(countdownDate.getZone()).atStartOfDay(countdownDate.getZone()).plus(1, ChronoUnit.DAYS).toInstant()));
+                    Date.from(LocalDate.now(countdownDate.getZone())
+                            .atStartOfDay(countdownDate.getZone())
+                            .plus(1, ChronoUnit.DAYS)
+                            .toInstant()));
         } else {
             log.debug("Countdown {} is past, removing", countdown.getName());
             countdownRepository.delete(countdown);
