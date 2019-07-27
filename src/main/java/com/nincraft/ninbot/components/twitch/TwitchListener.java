@@ -90,14 +90,14 @@ public class TwitchListener extends ListenerAdapter {
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
             val user = userActivityStartEvent.getUser().getName();
             val url = userActivityStartEvent.getNewActivity().getUrl();
-            val activity = userActivityStartEvent.getNewActivity();
-            String gameName = activity.getName();
-            if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
-                gameName = activity.asRichPresence().getDetails();
-            }
             if (url != null) {
                 addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
                 if (channel != null) {
+                    val activity = userActivityStartEvent.getNewActivity();
+                    String gameName = activity.getName();
+                    if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
+                        gameName = activity.asRichPresence().getDetails();
+                    }
                     channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, user, url, gameName, serverId))
                             .queue();
                 }
