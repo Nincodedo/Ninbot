@@ -24,8 +24,11 @@ public class ComponentService {
     }
 
     public void registerComponent(String name, ComponentType componentType) {
-        Component component = new Component(name, componentType);
-        componentRepository.save(component);
+        val componentOptional = componentRepository.findByNameAndType(name, componentType);
+        if (!componentOptional.isPresent()) {
+            Component component = new Component(name, componentType);
+            componentRepository.save(component);
+        }
     }
 
     void disableComponent(String name, String serverId) {
