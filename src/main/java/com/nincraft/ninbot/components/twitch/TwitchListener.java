@@ -88,35 +88,38 @@ public class TwitchListener extends ListenerAdapter {
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
             val guild = userActivityStartEvent.getGuild();
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            val user = userActivityStartEvent.getUser().getName();
-            val url = userActivityStartEvent.getNewActivity().getUrl();
-            if (url != null) {
+            val username = userActivityStartEvent.getUser().getName();
+            val streamingUrl = userActivityStartEvent.getNewActivity().getUrl();
+            if (streamingUrl != null) {
                 addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
                 if (channel != null) {
                     val activity = userActivityStartEvent.getNewActivity();
                     String gameName = activity.getName();
+                    String streamTitle = gameName;
                     if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
                         gameName = activity.asRichPresence().getDetails();
                     }
-                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, user, url, gameName, serverId))
+                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl, gameName, streamTitle, serverId))
                             .queue();
                 }
             }
         });
     }
 
-    private Message buildStreamAnnounceMessage(UserActivityStartEvent userActivityStartEvent, String user,
-            String url, String gameName, String serverId) {
+    private Message buildStreamAnnounceMessage(UserActivityStartEvent userActivityStartEvent, String username,
+            String streamingUrl, String gameName, String streamTitle, String serverId) {
         String iconUrl = twitchAPI.getBoxArtUrl(gameName);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
-        return new MessageBuilder(new EmbedBuilder()
-                .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), user, gameName, url), userActivityStartEvent
+        val embedMessage = new EmbedBuilder()
+                .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), username, gameName, streamingUrl), streamingUrl, userActivityStartEvent
                         .getUser()
-                        .getAvatarUrl(), url)
-                .setFooter(String.format("Currently streaming %s", gameName), iconUrl)
-                .setTitle(String.format("Watch them play %s!", gameName))
-                .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()))
-        ).build();
+                        .getAvatarUrl())
+                .setTitle(streamTitle)
+                .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()));
+        if (iconUrl != null) {
+            embedMessage.setFooter("", iconUrl);
+        }
+        return new MessageBuilder(embedMessage).build();
     }
 
     private void addRole(Guild guild, Member member) {
