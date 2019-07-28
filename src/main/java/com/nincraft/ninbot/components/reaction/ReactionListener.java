@@ -1,7 +1,6 @@
 package com.nincraft.ninbot.components.reaction;
 
 import com.nincraft.ninbot.components.config.component.ComponentService;
-import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -22,6 +21,7 @@ public class ReactionListener extends ListenerAdapter {
     public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService) {
         this.reactionResponseList = reactionResponseList;
         this.componentService = componentService;
+        this.componentName = "reaction-listener";
     }
 
 

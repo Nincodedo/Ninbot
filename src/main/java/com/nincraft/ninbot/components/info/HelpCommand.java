@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,11 +16,14 @@ import java.util.Map;
 public class HelpCommand extends AbstractCommand {
 
     private Map<String, AbstractCommand> commandMap;
+    private ComponentService componentService;
 
-    public HelpCommand(Map<String, AbstractCommand> commandMap) {
+    public HelpCommand(Map<String, AbstractCommand> commandMap,
+            ComponentService componentService) {
         length = 2;
         name = "help";
         this.commandMap = commandMap;
+        this.componentService = componentService;
     }
 
     @Override
@@ -33,7 +37,8 @@ public class HelpCommand extends AbstractCommand {
         keyList.stream()
                 .filter(commandName -> userHasPermission(event.getGuild(), event.getAuthor(),
                         commandMap.get(commandName)
-                        .getPermissionLevel()))
+                                .getPermissionLevel()))
+                .filter(commandName -> !componentService.isDisabled(commandName, event.getGuild().getId()))
                 .forEach(commandName -> {
                     val command = commandMap.get(commandName);
                     command.setResourceBundle(resourceBundle);

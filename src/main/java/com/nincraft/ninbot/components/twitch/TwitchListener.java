@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -31,20 +32,28 @@ public class TwitchListener extends ListenerAdapter {
     @Setter
     private Set<SlimMember> streamingMembers;
     private LocaleService localeService;
+    private ComponentService componentService;
     @Setter
     private List<SlimMember> cooldownList;
     private TwitchAPI twitchAPI;
+    private String componentName;
 
-    public TwitchListener(ConfigService configService, LocaleService localeService, TwitchAPI twitchAPI) {
+    public TwitchListener(ConfigService configService, LocaleService localeService, TwitchAPI twitchAPI,
+            ComponentService componentService) {
         this.configService = configService;
         this.localeService = localeService;
+        this.componentService = componentService;
         this.twitchAPI = twitchAPI;
         this.streamingMembers = new HashSet<>();
         this.cooldownList = new ArrayList<>();
+        this.componentName = "twitch-announce";
     }
 
     @Override
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
+        if (componentService.isDisabled(componentName, event.getGuild().getId())) {
+            return;
+        }
         SlimMember member = new SlimMember(event.getMember().getId(), event.getGuild().getId());
         if (event instanceof UserActivityStartEvent) {
             if (!streamingMembers.contains(member)) {

@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.conversation;
 import com.nincodedo.recast.RecastAPI;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,15 +13,22 @@ import org.springframework.stereotype.Component;
 public class ConversationListener extends ListenerAdapter {
 
     private ConfigService configService;
+    private ComponentService componentService;
     private RecastAPI recastAPI;
+    private String componentName;
 
-    public ConversationListener(ConfigService configService, RecastAPI recastAPI) {
+    public ConversationListener(ConfigService configService, ComponentService componentService, RecastAPI recastAPI) {
         this.configService = configService;
+        this.componentService = componentService;
         this.recastAPI = recastAPI;
+        this.componentName = "conversation-listener";
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        if (componentService.isDisabled(componentName, event.getGuild().getId())) {
+            return;
+        }
         val channelId = event.getChannel().getId();
         val message = event.getMessage().getContentStripped();
         if (!event.getAuthor().isBot() && isConversationEnabledChannel(event.getGuild().getId(), channelId)
