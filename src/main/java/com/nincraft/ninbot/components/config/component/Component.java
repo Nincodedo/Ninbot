@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.config.component;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ public class Component {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
+    @EqualsAndHashCode.Exclude
     private long id;
     @Column(nullable = false)
     private String name;

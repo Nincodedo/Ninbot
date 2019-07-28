@@ -40,7 +40,7 @@ public class ComponentService {
         }
     }
 
-    private List<DisabledComponents> getDisabledComponents(Component component, String serverId) {
+    List<DisabledComponents> getDisabledComponents(Component component, String serverId) {
         return disabledComponentsRepository.findByComponentAndServerId(component, serverId);
     }
 
@@ -53,5 +53,9 @@ public class ComponentService {
         val component = componentRepository.findByName(name);
         getDisabledComponents(component, serverId).forEach(disabledComponents ->
                 disabledComponentsRepository.delete(disabledComponents));
+    }
+
+    public List<DisabledComponents> getDisabledComponents(String serverId) {
+        return disabledComponentsRepository.findByServerId(serverId);
     }
 }

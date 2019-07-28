@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DisabledComponentsRepository extends CrudRepository<DisabledComponents, Long> {
     List<DisabledComponents> findByComponentAndServerId(Component component, String serverId);
+
+    List<DisabledComponents> findByServerId(String serverId);
 }

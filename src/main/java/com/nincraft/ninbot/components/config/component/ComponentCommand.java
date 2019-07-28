@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -31,7 +32,7 @@ public class ComponentCommand extends AbstractCommand {
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list":
-                commandResult.addChannelAction(listComponents());
+                commandResult.addChannelAction(listComponents(event.getGuild().getId()));
                 break;
             case "disable":
                 disableComponent(event);
@@ -58,13 +59,23 @@ public class ComponentCommand extends AbstractCommand {
         componentService.disableComponent(componentName, event.getGuild().getId());
     }
 
-    private Message listComponents() {
+    private Message listComponents(String serverId) {
         val components = componentService.getAllComponents();
+        val disabledComponents = componentService.getDisabledComponents(serverId);
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        StringBuilder stringBuilder = new StringBuilder();
         components.sort(Comparator.comparing(com.nincraft.ninbot.components.config.component.Component::getName));
-        components.forEach(component -> stringBuilder.append(component).append(" "));
-        embedBuilder.addField("Components", stringBuilder.toString(), false);
+        components.forEach(component -> {
+            String enabledText = "Enabled";
+            for (DisabledComponents disabledComponent : disabledComponents) {
+                if (disabledComponent.getComponent().equals(component)) {
+                    enabledText = "Disabled";
+                }
+            }
+            embedBuilder.addField(
+                    component.getName() + " - " + enabledText, WordUtils.capitalizeFully(component.getType()
+                            .toString()), true);
+        });
+        embedBuilder.setTitle("Components");
         return new MessageBuilder(embedBuilder).build();
     }
 }
