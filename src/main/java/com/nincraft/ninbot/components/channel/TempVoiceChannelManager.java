@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.order.ChannelOrderAction;
@@ -30,33 +31,33 @@ public class TempVoiceChannelManager extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
-        val guild = event.getGuild();
-        val user = event.getMember();
-        log.trace("onGuildVoiceJoin - hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
-        log.trace("onGuildVoiceJoin - channel join {} is temp creator: {}", event.getChannelJoined()
-                .getName(), event.getChannelJoined()
-                .getName()
+        checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
+    }
+
+    private void checkIfShouldCreateTempChannel(Guild guild, Member member, VoiceChannel channelJoined) {
+        log.trace("hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
+        log.trace("channel join {} is temp creator: {}", channelJoined
+                .getName(), channelJoined.getName()
                 .startsWith(Emojis.PLUS));
-        if (hasPermission(guild, Permission.MANAGE_CHANNEL) && event.getChannelJoined()
+        if (hasPermission(guild, Permission.MANAGE_CHANNEL) && channelJoined
                 .getName()
                 .startsWith(Emojis.PLUS)) {
-            createTemporaryChannel(event, guild, user);
+            createTemporaryChannel(channelJoined, guild, member);
         }
     }
 
-    private void createTemporaryChannel(GuildVoiceJoinEvent event, Guild guild, Member user) {
-        val joinedChannel = event.getChannelJoined();
-        val channelNameType = joinedChannel.getName().substring(2);
+    private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member user) {
+        val channelNameType = channelJoined.getName().substring(2);
         val channelName = String.format("%s's %s", user.getEffectiveName(), channelNameType);
         log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(),
                 guild.getId());
-        createVoiceChannel(guild, joinedChannel, channelName)
+        createVoiceChannel(guild, channelJoined, channelName)
                 .queue(voiceChannel -> {
                     TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
                     repository.save(channel);
                     guild.moveVoiceMember(user, voiceChannel).queue();
-                    val position = event.getChannelJoined().getPosition();
-                    modifyVoiceChannelPositions(guild, joinedChannel)
+                    val position = channelJoined.getPosition();
+                    modifyVoiceChannelPositions(guild, channelJoined)
                             .selectPosition(voiceChannel)
                             .moveTo(position + 1)
                             .queue();
@@ -87,13 +88,21 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     }
 
     @Override
+    public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
+        checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
+        checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
+    }
+
+    @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        val guild = event.getGuild();
-        val voiceChannel = event.getChannelLeft();
+        checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
+    }
+
+    private void checkIfShouldDeleteTempChannel(Guild guild, VoiceChannel voiceChannel) {
         if (isTemporaryChannel(voiceChannel.getId()) && hasPermission(guild, Permission.MANAGE_CHANNEL)
                 && voiceChannel.getMembers()
                 .isEmpty()) {
-            deleteTemporaryChannel(event, voiceChannel);
+            deleteTemporaryChannel(voiceChannel);
         }
     }
 
@@ -101,11 +110,11 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         return repository.findByVoiceChannelId(voiceChannelId).isPresent();
     }
 
-    private void deleteTemporaryChannel(GuildVoiceLeaveEvent event, VoiceChannel voiceChannel) {
+    private void deleteTemporaryChannel(VoiceChannel voiceChannel) {
         voiceChannel.delete()
                 .queue(
                         avoid ->
-                                repository.findByVoiceChannelId(event.getChannelLeft().getId())
+                                repository.findByVoiceChannelId(voiceChannel.getId())
                                         .ifPresent(tempVoiceChannel2 -> repository.delete(tempVoiceChannel2))
                 );
     }
