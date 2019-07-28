@@ -1,6 +1,7 @@
 # Commands
 All commands are prefixed with @Ninbot.
   * [User Commands](#user-commands)
+    * [Component](#component)
     * [Countdown](#countdown)
     * [Dab](#dab)
     * [Define](#define)
@@ -22,6 +23,17 @@ All commands are prefixed with @Ninbot.
     * [Leaderboard](#admin-leaderboard)
 
 ## User Commands
+
+### Component
+List/Enable/Disable individual components of Ninbot
+
+Usage:
+
+    @Ninbot component list
+    
+    @Ninbot component disable COMPONENTNAME
+    
+    @Ninbot component enable COMPONENTNAME
 
 ### Countdown
 Setup a countdown that will be announced every day leading up to the event.
