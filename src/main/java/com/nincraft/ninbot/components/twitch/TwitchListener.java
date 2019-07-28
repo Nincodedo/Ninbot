@@ -63,8 +63,7 @@ public class TwitchListener extends ListenerAdapter {
                             .plus(30, ChronoUnit.MINUTES)));
                 }
             }
-        } else if (event instanceof UserActivityEndEvent && streamingMembers.contains(member)
-                && event.getMember().getActivities().isEmpty()) {
+        } else if (event instanceof UserActivityEndEvent && event.getMember().getActivities().isEmpty()) {
             removeRole(event.getGuild(), event.getMember());
             streamingMembers.remove(member);
             cooldownList.remove(member);
