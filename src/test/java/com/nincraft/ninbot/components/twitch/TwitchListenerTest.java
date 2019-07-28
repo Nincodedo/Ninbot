@@ -4,6 +4,7 @@ import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
@@ -35,6 +36,9 @@ public class TwitchListenerTest {
 
     @Mock
     LocaleService localeService;
+
+    @Mock
+    ComponentService componentService;
 
     @Mock
     TwitchAPI twitchAPI;

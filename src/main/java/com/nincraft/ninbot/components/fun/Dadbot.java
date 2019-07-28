@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -16,16 +17,21 @@ public class Dadbot extends ListenerAdapter {
 
     private Random random;
     private ConfigService configService;
+    private ComponentService componentService;
+    private String componentName;
 
     @Autowired
-    public Dadbot(ConfigService configService) {
+    public Dadbot(ConfigService configService, ComponentService componentService) {
         random = new Random();
         this.configService = configService;
+        componentName = "dad";
+        this.componentService = componentService;
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot()) {
+        if (!event.getAuthor().isBot()
+                && !componentService.isDisabled(componentName, event.getGuild().getId())) {
             parseMessage(event);
         }
     }

@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.components.channel;
 
 import com.nincraft.ninbot.components.common.Emojis;
+import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
@@ -24,9 +26,15 @@ import java.util.Arrays;
 public class TempVoiceChannelManager extends ListenerAdapter {
 
     private TempVoiceChannelRepository repository;
+    private ComponentService componentService;
+    private String componentName;
 
-    public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository) {
+    public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository,
+            ComponentService componentService) {
         this.repository = tempVoiceChannelRepository;
+        this.componentService = componentService;
+        this.componentName = "voice-channel-manager";
+        componentService.registerComponent(componentName, ComponentType.ACTION);
     }
 
     @Override
@@ -35,6 +43,9 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     }
 
     private void checkIfShouldCreateTempChannel(Guild guild, Member member, VoiceChannel channelJoined) {
+        if (componentService.isDisabled(componentName, guild.getId())) {
+            return;
+        }
         log.trace("hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
         log.trace("channel join {} is temp creator: {}", channelJoined
                 .getName(), channelJoined.getName()
@@ -99,6 +110,9 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     }
 
     private void checkIfShouldDeleteTempChannel(Guild guild, VoiceChannel voiceChannel) {
+        if (componentService.isDisabled(componentName, guild.getId())) {
+            return;
+        }
         if (isTemporaryChannel(voiceChannel.getId()) && hasPermission(guild, Permission.MANAGE_CHANNEL)
                 && voiceChannel.getMembers()
                 .isEmpty()) {

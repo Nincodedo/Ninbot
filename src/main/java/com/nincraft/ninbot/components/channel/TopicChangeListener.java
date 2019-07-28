@@ -3,6 +3,8 @@ package com.nincraft.ninbot.components.channel;
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
@@ -17,14 +19,23 @@ public class TopicChangeListener extends ListenerAdapter {
 
     private ConfigService configService;
     private LocaleService localeService;
+    private ComponentService componentService;
+    private String componentName;
 
-    public TopicChangeListener(ConfigService configService, LocaleService localeService) {
+    public TopicChangeListener(ConfigService configService, LocaleService localeService,
+            ComponentService componentService) {
         this.configService = configService;
         this.localeService = localeService;
+        this.componentService = componentService;
+        this.componentName = "topic-change";
+        componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
 
     @Override
     public void onTextChannelUpdateTopic(TextChannelUpdateTopicEvent event) {
+        if (componentService.isDisabled(componentName, event.getGuild().getId())) {
+            return;
+        }
         val channelIds = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
         val eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
