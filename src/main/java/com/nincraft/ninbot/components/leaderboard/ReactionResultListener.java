@@ -30,8 +30,10 @@ class ReactionResultListener extends ListenerAdapter {
                 if ("✅".equals(emote)) {
                     leaderboardService.recordResult(event.getGuild().getId(), recordType, firstUser, againstUser);
                     clearReactions(event);
+                    event.getJDA().removeEventListener(this);
                 } else if ("❌".equals(emote)) {
                     clearReactions(event);
+                    event.getJDA().removeEventListener(this);
                 } else {
                     event.getReaction().removeReaction().queue();
                 }
