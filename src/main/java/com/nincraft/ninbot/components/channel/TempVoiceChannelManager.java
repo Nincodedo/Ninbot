@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.channel;
 
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
@@ -33,6 +34,7 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
         this.componentName = "voice-channel-manager";
+        componentService.registerComponent(componentName, ComponentType.ACTION);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     }
 
     private void checkIfShouldCreateTempChannel(Guild guild, Member member, VoiceChannel channelJoined) {
-    	if (componentService.isDisabled(componentName, guild.getId())) {
+        if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
         log.trace("hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
@@ -108,7 +110,7 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     }
 
     private void checkIfShouldDeleteTempChannel(Guild guild, VoiceChannel voiceChannel) {
-		if (componentService.isDisabled(componentName, guild.getId())) {
+        if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
         if (isTemporaryChannel(voiceChannel.getId()) && hasPermission(guild, Permission.MANAGE_CHANNEL)

@@ -4,6 +4,7 @@ import com.nincodedo.recast.RecastAPI;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -22,6 +23,7 @@ public class ConversationListener extends ListenerAdapter {
         this.componentService = componentService;
         this.recastAPI = recastAPI;
         this.componentName = "conversation-listener";
+        componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
 
     @Override

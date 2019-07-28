@@ -5,6 +5,7 @@ import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -47,6 +48,7 @@ public class TwitchListener extends ListenerAdapter {
         this.streamingMembers = new HashSet<>();
         this.cooldownList = new ArrayList<>();
         this.componentName = "twitch-announce";
+        componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
 
     @Override
