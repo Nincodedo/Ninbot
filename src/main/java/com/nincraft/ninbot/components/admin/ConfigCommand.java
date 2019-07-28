@@ -48,6 +48,14 @@ public class ConfigCommand extends AbstractCommand {
                     commandResult.addUnsuccessfulReaction();
                 }
                 break;
+            case "update":
+                if(getCommandLength(message) >= 5){
+                    updateConfig(message, event.getGuild().getId());
+                    commandResult.addSuccessfulReaction();
+                }else {
+                    commandResult.addUnsuccessfulReaction();
+                }
+                break;
             case "list":
                 commandResult.addChannelAction(listConfigs(event));
                 break;
@@ -56,6 +64,11 @@ public class ConfigCommand extends AbstractCommand {
                 break;
         }
         return commandResult;
+    }
+
+    private void updateConfig(String messageString, String guildId) {
+        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
+        configService.updateConfig(config);
     }
 
     private Message listConfigs(MessageReceivedEvent event) {

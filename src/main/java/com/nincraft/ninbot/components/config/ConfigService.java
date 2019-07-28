@@ -43,7 +43,7 @@ public class ConfigService {
     }
 
     @Transactional
-    public Optional<Config> getConfigByServerIdAndName(String serverId, String configName){
+    public Optional<Config> getConfigByServerIdAndName(String serverId, String configName) {
         return configRepository.getConfigByServerIdAndName(serverId, configName);
     }
 
@@ -70,5 +70,13 @@ public class ConfigService {
     @Transactional
     public List<Config> getConfigsByServerId(String serverId) {
         return configRepository.getConfigsByServerId(serverId);
+    }
+
+    @Transactional
+    public void updateConfig(Config config) {
+        configRepository.getConfigByServerIdAndName(config.getServerId(), config.getName()).ifPresent(oldConfig -> {
+            oldConfig.setValue(config.getValue());
+            configRepository.save(oldConfig);
+        });
     }
 }
