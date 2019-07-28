@@ -144,7 +144,10 @@ public class OpenTDBAPI implements TriviaAPI {
             val json = jsonOptional.get();
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                objectMapper.readTree(json).get("trivia_categories").forEach(jsonNode -> triviaCategoryMap.put(jsonNode.get("id").asInt(), jsonNode.get("name").asText()));
+                objectMapper.readTree(json)
+                        .get("trivia_categories")
+                        .forEach(jsonNode -> triviaCategoryMap.put(jsonNode.get("id").asInt(), jsonNode.get("name")
+                                .asText()));
             } catch (IOException e) {
                 log.error("Unable to read trivia response", e);
             }

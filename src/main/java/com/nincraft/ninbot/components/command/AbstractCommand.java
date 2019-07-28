@@ -58,7 +58,8 @@ public abstract class AbstractCommand {
             help += "\n" + resourceBundle.getString("command.help.alias.label") + ": " + printAliases();
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command.help.title")), help, false);
+        embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
+                + ".help.title")), help, false);
         CommandResult commandResult = new CommandResult(event);
         commandResult.addPrivateMessageAction(embedBuilder.build());
         commandResult.addSuccessfulReaction();

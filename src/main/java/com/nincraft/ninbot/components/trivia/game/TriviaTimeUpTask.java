@@ -28,7 +28,8 @@ public class TriviaTimeUpTask extends TimerTask {
     public void run() {
         if (triviaInstanceRepository.existsByChannelId(triviaInstance.getChannelId())) {
             val channel = jda.getTextChannelById(triviaInstance.getChannelId());
-            channel.sendMessage(String.format("Time is up! The correct answer was %s", triviaInstance.getAnswer())).queue();
+            channel.sendMessage(String.format("Time is up! The correct answer was %s", triviaInstance.getAnswer()))
+                    .queue();
             timeExpired = true;
         }
     }

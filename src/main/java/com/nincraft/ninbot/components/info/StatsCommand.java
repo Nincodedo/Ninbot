@@ -41,7 +41,10 @@ public class StatsCommand extends AbstractCommand {
                 .filter(role -> !roleBlackList.contains(role.getName()))
                 .collect(Collectors.toMap(role -> role, role -> 1, Integer::sum));
 
-        List<Stat> statList = roleMap.keySet().stream().map(role -> new Stat(role.getName(), roleMap.get(role))).collect(Collectors.toList());
+        List<Stat> statList = roleMap.keySet()
+                .stream()
+                .map(role -> new Stat(role.getName(), roleMap.get(role)))
+                .collect(Collectors.toList());
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         int limit = 5;

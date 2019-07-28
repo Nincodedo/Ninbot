@@ -28,7 +28,8 @@ public class UDDefineWordAPI implements DefineWordAPI {
 
             HttpResponse response = client.execute(get);
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> responseMap = mapper.readValue(EntityUtils.toString(response.getEntity()), new TypeReference<Map<String, Object>>() {
+            Map<String, Object> responseMap = mapper.readValue(EntityUtils.toString(response.getEntity()),
+                    new TypeReference<Map<String, Object>>() {
             });
             return (Map<String, String>) ((ArrayList) responseMap.get("list")).get(0);
 

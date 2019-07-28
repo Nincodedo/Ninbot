@@ -83,7 +83,8 @@ public class TwitchListener extends ListenerAdapter {
 
     private void announceStream(UserActivityStartEvent userActivityStartEvent) {
         val serverId = userActivityStartEvent.getGuild().getId();
-        val streamingAnnounceChannel = configService.getSingleValueByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
+        val streamingAnnounceChannel = configService.getSingleValueByName(serverId,
+                ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
             val guild = userActivityStartEvent.getGuild();
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
@@ -98,7 +99,8 @@ public class TwitchListener extends ListenerAdapter {
                     if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
                         gameName = activity.asRichPresence().getDetails();
                     }
-                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl, gameName, streamTitle, serverId))
+                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl,
+                            gameName, streamTitle, serverId))
                             .queue();
                 }
             }
@@ -110,7 +112,8 @@ public class TwitchListener extends ListenerAdapter {
         String iconUrl = twitchAPI.getBoxArtUrl(gameName);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
         val embedMessage = new EmbedBuilder()
-                .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), username, gameName, streamingUrl), streamingUrl, userActivityStartEvent
+                .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), username, gameName,
+                        streamingUrl), streamingUrl, userActivityStartEvent
                         .getUser()
                         .getAvatarUrl())
                 .setTitle(streamTitle)

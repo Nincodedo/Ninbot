@@ -77,7 +77,8 @@ public class CountdownCommand extends AbstractCommand {
             ZoneId serverTimezone = ZoneId.of(getServerTimeZone(event.getGuild().getId()));
             Countdown countdown = new Countdown();
             countdown.setChannelId(event.getChannel().getId())
-                    .setEventDate(LocalDate.parse(stringDate, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay(serverTimezone))
+                    .setEventDate(LocalDate.parse(stringDate, DateTimeFormatter.ISO_LOCAL_DATE)
+                            .atStartOfDay(serverTimezone))
                     .setName(countdownName)
                     .setServerId(event.getGuild().getId());
             countdownRepository.save(countdown);

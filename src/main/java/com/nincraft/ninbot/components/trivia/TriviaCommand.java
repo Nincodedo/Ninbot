@@ -82,7 +82,8 @@ public class TriviaCommand extends AbstractCommand {
 
     private Message getPlayerScore(MessageReceivedEvent event) {
         int score = triviaScoreService.getPlayerScore(event.getAuthor().getId());
-        return new MessageBuilder().appendFormat("%s, your score is %s", event.getMember().getEffectiveName(), Integer.toString(score)).build();
+        return new MessageBuilder().appendFormat("%s, your score is %s", event.getMember()
+                .getEffectiveName(), Integer.toString(score)).build();
     }
 
     private Message displayTriviaCategories() {
@@ -93,7 +94,8 @@ public class TriviaCommand extends AbstractCommand {
         Collections.sort(keyList);
 
         for (val categoryKey : keyList) {
-            embedBuilder.appendDescription(String.format("ID: %s %s%n", categoryKey, triviaCategoryMap.get(categoryKey)));
+            embedBuilder.appendDescription(String.format("ID: %s %s%n", categoryKey,
+                    triviaCategoryMap.get(categoryKey)));
         }
         embedBuilder.setFooter("Use the ID to pick a specific category when starting trivia", null);
         return new MessageBuilder(embedBuilder).build();

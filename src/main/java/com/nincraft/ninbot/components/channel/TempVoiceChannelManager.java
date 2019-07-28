@@ -33,7 +33,8 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         val guild = event.getGuild();
         val user = event.getMember();
         log.trace("onGuildVoiceJoin - hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
-        log.trace("onGuildVoiceJoin - channel join {} is temp creator: {}", event.getChannelJoined().getName(), event.getChannelJoined()
+        log.trace("onGuildVoiceJoin - channel join {} is temp creator: {}", event.getChannelJoined()
+                .getName(), event.getChannelJoined()
                 .getName()
                 .startsWith(Emojis.PLUS));
         if (hasPermission(guild, Permission.MANAGE_CHANNEL) && event.getChannelJoined()
@@ -47,7 +48,8 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         val joinedChannel = event.getChannelJoined();
         val channelNameType = joinedChannel.getName().substring(2);
         val channelName = String.format("%s's %s", user.getEffectiveName(), channelNameType);
-        log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(), guild.getId());
+        log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(),
+                guild.getId());
         createVoiceChannel(guild, joinedChannel, channelName)
                 .queue(voiceChannel -> {
                     TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
@@ -60,7 +62,8 @@ public class TempVoiceChannelManager extends ListenerAdapter {
                             .queue();
                     voiceChannel.createPermissionOverride(user)
                             .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS, Permission.PRIORITY_SPEAKER,
-                                    Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS, Permission.VOICE_DEAF_OTHERS))
+                                    Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                                    Permission.VOICE_DEAF_OTHERS))
                             .queue();
                 });
     }

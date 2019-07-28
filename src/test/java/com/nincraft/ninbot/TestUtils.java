@@ -16,10 +16,24 @@ public class TestUtils {
     }
 
     public static boolean containsEmbeddedName(CommandResult commandResult, String name) {
-        return commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getFields().get(0).getName().contains(name);
+        return commandResult.getChannelMessageList()
+                .get(0)
+                .getEmbeds()
+                .get(0)
+                .getFields()
+                .get(0)
+                .getName()
+                .contains(name);
     }
 
     public static boolean containsEmbeddedValue(CommandResult commandResult, String value) {
-        return commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getFields().get(0).getValue().contains(value);
+        return commandResult.getChannelMessageList()
+                .get(0)
+                .getEmbeds()
+                .get(0)
+                .getFields()
+                .get(0)
+                .getValue()
+                .contains(value);
     }
 }

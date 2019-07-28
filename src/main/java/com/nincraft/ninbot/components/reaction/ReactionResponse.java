@@ -1,8 +1,8 @@
 package com.nincraft.ninbot.components.reaction;
 
+import lombok.Data;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import lombok.Data;
 
 @Data
 class ReactionResponse {

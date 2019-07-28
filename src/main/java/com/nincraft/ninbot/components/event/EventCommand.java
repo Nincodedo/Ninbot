@@ -65,7 +65,8 @@ public class EventCommand extends AbstractCommand {
     }
 
     private void planEvent(MessageReceivedEvent messageReceivedEvent, String serverTimezone) {
-        Event event = eventParser.parsePlanMessage(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor().getName(), serverTimezone);
+        Event event = eventParser.parsePlanMessage(messageReceivedEvent.getMessage(), messageReceivedEvent.getAuthor()
+                .getName(), serverTimezone);
         eventScheduler.addEvent(event, messageReceivedEvent.getJDA());
     }
 

@@ -74,7 +74,8 @@ public class TriviaManager {
 
         val triviaQuestion = triviaInstance.getTriviaQuestion();
         triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
-        val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
+        val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer()
+                , triviaScoreService);
         jda.addEventListener(triviaAnswerListener);
         val channel = jda.getTextChannelById(triviaInstance.getChannelId());
         channel.sendMessage(triviaQuestion.build()).queue();

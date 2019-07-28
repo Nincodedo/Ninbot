@@ -49,10 +49,10 @@ public class ConfigCommand extends AbstractCommand {
                 }
                 break;
             case "update":
-                if(getCommandLength(message) >= 5){
+                if (getCommandLength(message) >= 5) {
                     updateConfig(message, event.getGuild().getId());
                     commandResult.addSuccessfulReaction();
-                }else {
+                } else {
                     commandResult.addUnsuccessfulReaction();
                 }
                 break;
@@ -75,7 +75,9 @@ public class ConfigCommand extends AbstractCommand {
         val configList = configService.getConfigsByServerId(event.getGuild().getId());
         val serverName = event.getGuild().getName();
         if (configList.isEmpty()) {
-            return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"), serverName).build();
+            return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"),
+                    serverName)
+                    .build();
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.config.list.title") + " " + serverName);

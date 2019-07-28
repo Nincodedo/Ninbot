@@ -48,7 +48,8 @@ class CommandParser {
                     log.error("Error executing command " + command.getName(), e);
                 }
             } else {
-                val channelList = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.CONVERSATION_CHANNELS);
+                val channelList = configService.getValuesByName(event.getGuild()
+                        .getId(), ConfigConstants.CONVERSATION_CHANNELS);
                 if (!channelList.contains(event.getChannel().getId())) {
                     event.getMessage().addReaction(QUESTION_MARK).queue();
                 }

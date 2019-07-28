@@ -33,7 +33,11 @@ public class TriviaAnswerListener extends ListenerAdapter {
             if (message.equalsIgnoreCase(answer)) {
                 triviaScoreService.addUser(event.getAuthor().getId());
                 int newScore = triviaScoreService.addPoints(event.getAuthor().getId(), 1);
-                event.getChannel().sendMessage(String.format("%s got it right! It was %s. They now have %s point(s)", event.getMember().getEffectiveName(), answer, newScore)).queue();
+                event.getChannel()
+                        .sendMessage(String.format("%s got it right! It was %s. They now have %s point(s)",
+                                event.getMember()
+                                .getEffectiveName(), answer, newScore))
+                        .queue();
                 event.getJDA().removeEventListener(this);
                 questionAnswered = true;
             }

@@ -30,7 +30,10 @@ public class HelpCommand extends AbstractCommand {
                 .setColor(Color.BLUE);
         List<String> keyList = new ArrayList<>(commandMap.keySet());
         Collections.sort(keyList);
-        keyList.stream().filter(commandName -> userHasPermission(event.getGuild(), event.getAuthor(), commandMap.get(commandName).getPermissionLevel()))
+        keyList.stream()
+                .filter(commandName -> userHasPermission(event.getGuild(), event.getAuthor(),
+                        commandMap.get(commandName)
+                        .getPermissionLevel()))
                 .forEach(commandName -> {
                     val command = commandMap.get(commandName);
                     command.setResourceBundle(resourceBundle);

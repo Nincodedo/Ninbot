@@ -46,18 +46,21 @@ public class CountdownScheduler implements Schedulable {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
             }
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(countdown.getServerId()));
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang",
+                    localeService.getLocale(countdown.getServerId()));
             countdown.setResourceBundle(resourceBundle);
             val countdownMessage = countdown.buildMessage(dayDifference);
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
-            val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(), ConfigConstants.ANNOUNCE_CHANNEL);
+            val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(),
+                    ConfigConstants.ANNOUNCE_CHANNEL);
             String announceChannel;
             if (announceChannelOptional.isPresent()) {
                 announceChannel = announceChannelOptional.get();
             } else if (configChannelOptional.isPresent()) {
                 announceChannel = configChannelOptional.get();
             } else {
-                log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or this countdown", countdown
+                log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or "
+                        + "this countdown", countdown
                         .getName(), countdown.getServerId());
                 return;
             }

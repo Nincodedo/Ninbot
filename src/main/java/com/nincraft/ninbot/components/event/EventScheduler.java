@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.event;
 
-import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.common.LocaleService;
+import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -74,7 +74,8 @@ public class EventScheduler implements Schedulable {
 
     private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, Guild guild) {
         if (!eventTime.isBefore(now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, guild, localeService), from(eventTime));
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, guild, localeService),
+                    from(eventTime));
         }
     }
 }

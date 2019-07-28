@@ -89,7 +89,7 @@ public class ConfigCommandTest extends NinbotTest {
     @Test
     public void testListSubcommand() {
         List<Config> configList = new ArrayList<>();
-        configList.add(new Config("1", "name","value"));
+        configList.add(new Config("1", "name", "value"));
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config list");
         when(messageEvent.getGuild()).thenReturn(guild);

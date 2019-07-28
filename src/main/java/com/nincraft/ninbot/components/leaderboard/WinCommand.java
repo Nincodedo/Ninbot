@@ -36,7 +36,9 @@ public class WinCommand extends AbstractCommand {
             commandResult.addUnsuccessfulReaction();
             mentionList.forEach(user -> {
                 val jda = event.getJDA();
-                val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event.getAuthor().getId(), user.getId());
+                val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event
+                        .getAuthor()
+                        .getId(), user.getId());
                 jda.addEventListener(reactionResultListener);
             });
         } else {
