@@ -19,7 +19,7 @@ public class TwitchAPI {
 
     String getBoxArtUrl(String gameName) {
         try {
-            val gameResults = twitchHelix.getGames(null, Arrays.asList(gameName), null).execute();
+            val gameResults = twitchHelix.getGames(null, null, Arrays.asList(gameName)).execute();
             if (gameResults.getGames().isEmpty()) {
                 return null;
             } else {
