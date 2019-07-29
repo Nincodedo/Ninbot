@@ -29,10 +29,10 @@ public class ApplicationBean {
     @Value("${recastToken}")
     private String recastToken;
 
-    @Value("twitchClientId")
+    @Value("${twitchClientId}")
     private String twitchClientId;
 
-    @Value("twitchClientSecret")
+    @Value("${twitchClientSecret}")
     private String twitchClientSecret;
 
     @Autowired
