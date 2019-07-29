@@ -84,8 +84,8 @@ public class LeaderboardCommand extends AbstractCommand {
         list.sort(Comparator.comparingInt(LeaderboardEntry::getWins));
         EmbedBuilder embedBuilder = new EmbedBuilder();
         val leaderboardOptional = configService.getSingleValueByName(serverId, ConfigConstants.LEADERBOARD_NAME);
-        embedBuilder.setTitle(leaderboardOptional.orElse(resourceBundle.getString("command.leaderboard.display"
-                + ".defaulttitle")));
+        embedBuilder.setTitle(leaderboardOptional.orElse(
+                resourceBundle.getString("command.leaderboard.display.defaulttitle")));
         for (val entry : list) {
             entry.setResourceBundle(resourceBundle);
             val user = event.getGuild().getMemberById(entry.getUserId());

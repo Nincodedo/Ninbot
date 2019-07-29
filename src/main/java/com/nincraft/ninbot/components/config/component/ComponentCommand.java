@@ -65,17 +65,17 @@ public class ComponentCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         components.sort(Comparator.comparing(com.nincraft.ninbot.components.config.component.Component::getName));
         components.forEach(component -> {
-            String enabledText = "Enabled";
+            String enabledText = resourceBundle.getString("command.component.enabled");
             for (DisabledComponents disabledComponent : disabledComponents) {
                 if (disabledComponent.getComponent().equals(component)) {
-                    enabledText = "Disabled";
+                    enabledText = resourceBundle.getString("command.component.disabled");
                 }
             }
             embedBuilder.addField(
                     component.getName() + " - " + enabledText, WordUtils.capitalizeFully(component.getType()
                             .toString()), true);
         });
-        embedBuilder.setTitle("Components");
+        embedBuilder.setTitle(resourceBundle.getString("command.component.listtitle"));
         return new MessageBuilder(embedBuilder).build();
     }
 }

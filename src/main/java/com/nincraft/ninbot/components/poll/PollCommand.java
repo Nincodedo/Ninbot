@@ -21,12 +21,6 @@ public class PollCommand extends AbstractCommand {
         name = "poll";
         length = 4;
         checkExactLength = false;
-        //@formatter:off
-        helpText = "Creates a new poll, arguments are (question \"answer 1, answer 2, answer 3...\" "
-                        + "pollLengthInMinutes)\nExample: @Ninbot poll Who stole the cookies from the cookie jar? "
-                        + "\"You, me, then who?\" 20\nThis would create a poll with three options and it would "
-                        + "close after 20 minutes.";
-        //@formatter:on
     }
 
     @Override

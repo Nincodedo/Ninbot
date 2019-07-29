@@ -39,16 +39,20 @@ class PollAnnounce extends TimerTask {
                 winningChoices.add(poll.getChoices().get(i));
             }
         }
+        val resourceBundle = poll.getResourceBundle();
 
-        String pollClosedMessage = " The poll is now closed.";
+        String pollClosedMessage = resourceBundle.getString("poll.announce.closed");
         if (highCount <= 1) {
-            poll.setResult("No one voted in this poll." + pollClosedMessage);
+            poll.setResult(resourceBundle.getString("poll.announce.noonevoted") + pollClosedMessage);
         } else if (winningChoices.size() == 1) {
-            poll.setResult("\"" + winningChoices.get(0) + "\" had the most votes with " + (highCount - 1) + " vote(s)."
-                    + pollClosedMessage);
+            poll.setResult(
+                    "\"" + winningChoices.get(0) + "\"" + resourceBundle.getString("poll.announce.hadmostvotes") + (
+                            highCount - 1) + resourceBundle.getString("poll.announce.votes")
+                            + pollClosedMessage);
         } else if (winningChoices.size() > 1) {
             poll.setResult(
-                    "It's a tie! " + listWinners(winningChoices) + " won with " + (highCount - 1) + " vote(s) each."
+                    String.format(resourceBundle.getString("poll.announce.tie"), listWinners(winningChoices), (highCount
+                            - 1))
                             + pollClosedMessage);
         }
         message.editMessage(poll.buildClosed()).queue();
