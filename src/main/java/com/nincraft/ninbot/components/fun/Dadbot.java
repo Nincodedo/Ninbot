@@ -46,7 +46,9 @@ public class Dadbot extends ListenerAdapter {
     private void parseMessage(MessageReceivedEvent event) {
         val message = event.getMessage().getContentStripped();
         val first = message.split("\\s+")[0];
-        if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction")) || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction"))) || (!event.getChannelType().isGuild())) {
+        if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
+                || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
+                || (!event.getChannelType().isGuild())) {
             return;
         }
         if (StringUtils.isNotBlank(message) && message.split("\\s+").length >= 1 && checkChance()) {

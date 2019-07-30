@@ -16,7 +16,8 @@ public class CommandListener extends ListenerAdapter {
     private ComponentService componentService;
 
     @Autowired
-    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands, ComponentService componentService) {
+    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands,
+            ComponentService componentService) {
         this.commandParser = commandParser;
         this.componentService = componentService;
         addCommands(commands);
