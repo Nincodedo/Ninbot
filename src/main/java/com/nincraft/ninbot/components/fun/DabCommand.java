@@ -4,7 +4,6 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
