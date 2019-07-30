@@ -122,7 +122,7 @@
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j</artifactId>
-            <version>1.0.0-alpha.15</version>
+            <version>1.0.0-alpha.16</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
