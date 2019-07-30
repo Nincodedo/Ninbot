@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.requests.restaction.order.OrderAction;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Log4j2
@@ -66,17 +67,18 @@ public class TempVoiceChannelManager extends ListenerAdapter {
                 .queue(voiceChannel -> {
                     TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
                     repository.save(channel);
-                    guild.moveVoiceMember(user, voiceChannel).queue();
-                    val position = channelJoined.getPosition();
-                    modifyVoiceChannelPositions(guild, channelJoined)
-                            .selectPosition(voiceChannel)
-                            .moveTo(position + 1)
-                            .queue();
-                    voiceChannel.createPermissionOverride(user)
-                            .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS, Permission.PRIORITY_SPEAKER,
-                                    Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                                    Permission.VOICE_DEAF_OTHERS))
-                            .queue();
+                    guild.moveVoiceMember(user, voiceChannel).queue(aVoid -> {
+                        val position = channelJoined.getPosition();
+                        modifyVoiceChannelPositions(guild, channelJoined)
+                                .selectPosition(voiceChannel)
+                                .moveTo(position + 1)
+                                .queue(aVoid1 -> voiceChannel.createPermissionOverride(user)
+                                        .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                                                Permission.PRIORITY_SPEAKER,
+                                                Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                                                Permission.VOICE_DEAF_OTHERS))
+                                        .queue());
+                    });
                 });
     }
 
@@ -126,11 +128,9 @@ public class TempVoiceChannelManager extends ListenerAdapter {
 
     private void deleteTemporaryChannel(VoiceChannel voiceChannel) {
         voiceChannel.delete()
-                .queue(
-                        avoid ->
-                                repository.findByVoiceChannelId(voiceChannel.getId())
-                                        .ifPresent(tempVoiceChannel2 -> repository.delete(tempVoiceChannel2))
-                );
+                .queueAfter(10, TimeUnit.SECONDS, avoid ->
+                        repository.findByVoiceChannelId(voiceChannel.getId())
+                                .ifPresent(tempVoiceChannel2 -> repository.delete(tempVoiceChannel2)));
     }
 
     private boolean hasPermission(Guild guild, Permission permission) {
