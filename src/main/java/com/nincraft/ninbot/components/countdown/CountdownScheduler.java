@@ -7,7 +7,7 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,11 +30,11 @@ public class CountdownScheduler implements Schedulable {
         this.localeService = localeService;
     }
 
-    public void scheduleAll(JDA jda) {
-        new Timer().scheduleAtFixedRate(new Scheduler(jda), new Date(), TimeUnit.DAYS.toMillis(1));
+    public void scheduleAll(ShardManager shardManager) {
+        new Timer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
     }
 
-    void scheduleOne(Countdown countdown, JDA jda) {
+    void scheduleOne(Countdown countdown, ShardManager shardManager) {
         val countdownDate = countdown.getEventDate();
         val tomorrowDate = LocalDate.now(countdownDate.getZone())
                 .plus(1, ChronoUnit.DAYS)
@@ -64,7 +64,7 @@ public class CountdownScheduler implements Schedulable {
                         .getName(), countdown.getServerId());
                 return;
             }
-            new Timer().schedule(new GenericAnnounce(jda, announceChannel, countdownMessage),
+            new Timer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),
                     Date.from(LocalDate.now(countdownDate.getZone())
                             .atStartOfDay(countdownDate.getZone())
                             .plus(1, ChronoUnit.DAYS)
@@ -77,15 +77,15 @@ public class CountdownScheduler implements Schedulable {
 
     class Scheduler extends TimerTask {
 
-        private JDA jda;
+        private ShardManager shardManager;
 
-        Scheduler(JDA jda) {
-            this.jda = jda;
+        Scheduler(ShardManager shardManager) {
+            this.shardManager = shardManager;
         }
 
         @Override
         public void run() {
-            countdownRepository.findAll().forEach(countdown -> scheduleOne(countdown, jda));
+            countdownRepository.findAll().forEach(countdown -> scheduleOne(countdown, shardManager));
         }
     }
 }

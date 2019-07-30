@@ -82,7 +82,7 @@ public class CountdownCommand extends AbstractCommand {
                     .setName(countdownName)
                     .setServerId(event.getGuild().getId());
             countdownRepository.save(countdown);
-            countdownScheduler.scheduleOne(countdown, event.getJDA());
+            countdownScheduler.scheduleOne(countdown, event.getJDA().getShardManager());
             return true;
         } else {
             return false;

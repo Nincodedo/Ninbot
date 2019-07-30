@@ -5,10 +5,9 @@ import com.github.twitch4j.helix.TwitchHelixBuilder;
 import com.nincodedo.recast.RecastAPI;
 import com.nincodedo.recast.RecastAPIBuilder;
 import lombok.extern.log4j.Log4j2;
-import net.dv8tion.jda.api.AccountType;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,17 +36,15 @@ public class ApplicationBean {
 
     @Autowired
     @Bean
-    public JDA jda(List<ListenerAdapter> listenerAdapters) throws InterruptedException {
-        JDA jda = null;
+    public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(ninbotToken).build();
+            DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder(ninbotToken);
+            builder.addEventListeners(listenerAdapters.toArray());
+            return builder.build();
         } catch (LoginException e) {
             log.error("Failed to login", e);
         }
-        assert jda != null;
-        jda.awaitReady();
-        jda.addEventListener(listenerAdapters.toArray());
-        return jda;
+        return null;
     }
 
     @Bean

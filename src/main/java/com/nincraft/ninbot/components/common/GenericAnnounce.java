@@ -1,23 +1,23 @@
 package com.nincraft.ninbot.components.common;
 
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import java.util.TimerTask;
 
 public class GenericAnnounce extends TimerTask {
 
-    private JDA jda;
+    private ShardManager shardManager;
     private String announceChannel;
     private String announceMessage;
 
-    public GenericAnnounce(JDA jda, String announceChannel, String announceMessage) {
-        this.jda = jda;
+    public GenericAnnounce(ShardManager shardManager, String announceChannel, String announceMessage) {
+        this.shardManager = shardManager;
         this.announceChannel = announceChannel;
         this.announceMessage = announceMessage;
     }
 
     @Override
     public void run() {
-        jda.getTextChannelById(announceChannel).sendMessage(announceMessage).queue();
+        shardManager.getTextChannelById(announceChannel).sendMessage(announceMessage).queue();
     }
 }

@@ -7,6 +7,7 @@ import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -46,21 +47,21 @@ public class DabCommand extends AbstractCommand {
         for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
                 commandResult.setOverrideMessage(message);
-                dabOnMessage(commandResult, event.getJDA());
+                dabOnMessage(commandResult, event.getJDA().getShardManager());
                 return;
             }
         }
         commandResult.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(CommandResult commandResult, JDA jda) {
+    private void dabOnMessage(CommandResult commandResult, ShardManager shardManager) {
         val critDab = random.nextInt(100) < 5;
         if (critDab) {
             commandResult.addReaction(critResponse.getEmojiList());
             commandResult.addReaction(dabResponse.getEmojiList());
         }
 
-        val list = jda.getEmotes().stream()
+        val list = shardManager.getEmotes().stream()
                 .filter(emote -> emote.getName().contains("dab"))
                 .collect(Collectors.toList());
 

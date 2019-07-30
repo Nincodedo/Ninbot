@@ -5,8 +5,8 @@ import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,20 +35,20 @@ public class EventScheduler implements Schedulable {
         this.localeService = localeService;
     }
 
-    public void scheduleAll(JDA jda) {
+    public void scheduleAll(ShardManager shardManager) {
         log.trace("scheduling events");
         val eventList = new ArrayList<Event>();
         eventRepository.findAll().forEach(eventList::add);
         eventList.sort(Comparator.comparing(Event::getStartTime));
-        eventList.forEach(event -> scheduleOne(event, jda));
+        eventList.forEach(event -> scheduleOne(event, shardManager));
     }
 
-    void addEvent(Event event, JDA jda) {
+    void addEvent(Event event, ShardManager shardManager) {
         eventRepository.save(event);
-        scheduleOne(event, jda);
+        scheduleOne(event, shardManager);
     }
 
-    private void scheduleOne(Event event, JDA jda) {
+    private void scheduleOne(Event event, ShardManager shardManager) {
         Instant eventStartTime = event.getStartTime().toInstant();
         int minutesBeforeStart = 30;
         Instant eventEarlyReminder = event.getStartTime().toInstant().minus(minutesBeforeStart, MINUTES);
@@ -65,7 +65,7 @@ public class EventScheduler implements Schedulable {
         } else {
             Timer timer = new Timer();
             log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
-            val guild = jda.getGuildById(event.getServerId());
+            val guild = shardManager.getGuildById(event.getServerId());
             scheduleOne(event, timer, eventStartTime, 0, guild);
             scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, guild);
             timer.schedule(new EventRemove(event, eventRepository), from(eventEndTime));

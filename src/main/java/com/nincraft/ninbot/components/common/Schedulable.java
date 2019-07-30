@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.common;
 
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 public interface Schedulable {
-    void scheduleAll(JDA jda);
+    void scheduleAll(ShardManager shardManager);
 }
