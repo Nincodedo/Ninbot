@@ -19,12 +19,16 @@ public class TwitchAPI {
 
     String getBoxArtUrl(String gameName) {
         try {
+            log.trace("Attempting to get boxart for {}", gameName);
             val gameResults = twitchHelix.getGames(null, null, Arrays.asList(gameName)).execute();
+            log.trace("Found {} results from Twitch", gameResults.getGames().size());
             if (gameResults.getGames().isEmpty()) {
+                log.trace("Found nothing, returning null");
                 return null;
             } else {
-                String boxartUrl = gameResults.getGames().get(0).getBoxArtUrl();
-                return boxartUrl.replace("-{width}x{height}", "");
+                String boxartUrl = gameResults.getGames().get(0).getBoxArtUrl().replace("-{width}x{height}", "");
+                log.trace("Found boxart, returning {}", boxartUrl);
+                return boxartUrl;
             }
         } catch (Exception e) {
             log.error("Failed to get boxart from Twitch API", e);
