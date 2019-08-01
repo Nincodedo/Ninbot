@@ -130,7 +130,7 @@ public class TwitchListener extends ListenerAdapter {
                 .setTitle(streamTitle)
                 .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()));
         if (iconUrl != null) {
-            embedMessage.setFooter("", iconUrl);
+            embedMessage.setFooter(gameName, iconUrl);
         }
         return new MessageBuilder(embedMessage).build();
     }
