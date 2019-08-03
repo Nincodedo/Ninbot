@@ -55,7 +55,7 @@ public class StatsCommand extends AbstractCommand {
         return new MessageBuilder(embedBuilder).build();
     }
 
-    private class Stat implements Comparable {
+    private static class Stat implements Comparable {
         private String name;
         private int amount;
 

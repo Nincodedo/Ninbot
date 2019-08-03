@@ -19,11 +19,10 @@ import java.util.Map;
 @Component
 public class UDDefineWordAPI implements DefineWordAPI {
 
-    private String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
-
     @Override
     public Map<String, String> defineWord(String word) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
             HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, "UTF-8"));
 
             HttpResponse response = client.execute(get);

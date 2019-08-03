@@ -40,7 +40,7 @@ public class ComponentService {
         }
     }
 
-    List<DisabledComponents> getDisabledComponents(Component component, String serverId) {
+    private List<DisabledComponents> getDisabledComponents(Component component, String serverId) {
         return disabledComponentsRepository.findByComponentAndServerId(component, serverId);
     }
 
