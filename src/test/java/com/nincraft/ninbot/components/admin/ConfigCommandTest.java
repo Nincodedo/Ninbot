@@ -7,7 +7,6 @@ import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +14,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +34,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config test");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
-        Assert.assertTrue(TestUtils.containsEmoji(commandResult, Emojis.QUESTION_MARK));
+        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.QUESTION_MARK);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(guild.getId()).thenReturn("1");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
         verify(configService).addConfig(new Config("1", "name", "value"));
-        Assert.assertTrue(TestUtils.containsEmoji(commandResult, Emojis.CHECK_MARK));
+        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CHECK_MARK);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config add name");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
-        Assert.assertTrue(TestUtils.containsEmoji(commandResult, Emojis.CROSS_X));
+        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CROSS_X);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config remove name");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
-        Assert.assertTrue(TestUtils.containsEmoji(commandResult, Emojis.CROSS_X));
+        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CROSS_X);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(guild.getId()).thenReturn("1");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
         verify(configService).removeConfig(new Config("1", "name", "value"));
-        Assert.assertTrue(TestUtils.containsEmoji(commandResult, Emojis.CHECK_MARK));
+        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CHECK_MARK);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ConfigCommandTest extends NinbotTest {
         when(guild.getId()).thenReturn("1");
         when(guild.getName()).thenReturn("Test Server");
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
-        Assert.assertTrue(TestUtils.containsMessage(commandResult, "Test Server"));
+        assertThat(TestUtils.returnMessage(commandResult)).contains("Test Server");
     }
 
     @Test
@@ -97,8 +97,8 @@ public class ConfigCommandTest extends NinbotTest {
         when(guild.getName()).thenReturn("Test Server");
         when(configService.getConfigsByServerId("1")).thenReturn(configList);
         CommandResult commandResult = configCommand.executeCommand(messageEvent);
-        Assert.assertTrue(TestUtils.containsEmbeddedTitle(commandResult, "Test Server"));
-        Assert.assertTrue(TestUtils.containsEmbeddedName(commandResult, "name"));
-        Assert.assertTrue(TestUtils.containsEmbeddedValue(commandResult, "value"));
+        assertThat(TestUtils.returnEmbeddedTitle(commandResult)).contains("Test Server");
+        assertThat(TestUtils.returnEmbeddedName(commandResult)).isEqualToIgnoringCase("name");
+        assertThat(TestUtils.returnEmbeddedValue(commandResult)).isEqualToIgnoringCase("value");
     }
 }

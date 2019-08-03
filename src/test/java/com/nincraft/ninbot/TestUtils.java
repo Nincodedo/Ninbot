@@ -2,38 +2,42 @@ package com.nincraft.ninbot;
 
 import com.nincraft.ninbot.components.command.CommandResult;
 
+import java.util.List;
+
 public class TestUtils {
-    public static boolean containsEmoji(CommandResult commandResult, String emoji) {
-        return commandResult.getEmojisList().contains(emoji);
+    public static List<String> returnEmoji(CommandResult commandResult) {
+        return commandResult.getEmojisList();
     }
 
-    public static boolean containsMessage(CommandResult commandResult, String messageText) {
-        return commandResult.getChannelMessageList().get(0).getContentRaw().contains(messageText);
+    public static String returnMessage(CommandResult commandResult) {
+        return commandResult.getChannelMessageList().get(0).getContentRaw();
     }
 
-    public static boolean containsEmbeddedTitle(CommandResult commandResult, String titleText) {
-        return commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getTitle().contains(titleText);
+    public static String returnEmbeddedTitle(CommandResult commandResult) {
+        return commandResult.getChannelMessageList().get(0).getEmbeds().get(0).getTitle();
     }
 
-    public static boolean containsEmbeddedName(CommandResult commandResult, String name) {
+    public static String returnEmbeddedName(CommandResult commandResult) {
         return commandResult.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
                 .get(0)
                 .getFields()
                 .get(0)
-                .getName()
-                .contains(name);
+                .getName();
     }
 
-    public static boolean containsEmbeddedValue(CommandResult commandResult, String value) {
+    public static String returnEmbeddedValue(CommandResult commandResult) {
         return commandResult.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
                 .get(0)
                 .getFields()
                 .get(0)
-                .getValue()
-                .contains(value);
+                .getValue();
+    }
+
+    public static String returnPrivateMessageEmbededName(CommandResult commandResult) {
+        return commandResult.getPrivateMessageList().get(0).getEmbeds().get(0).getFields().get(0).getName();
     }
 }
