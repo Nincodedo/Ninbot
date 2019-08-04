@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.config.component;
 
 import lombok.val;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,7 @@ public class ComponentService {
         return disabledComponentsRepository.findByComponentAndServerId(component, serverId);
     }
 
+    @Cacheable("disabled-component")
     public boolean isDisabled(String name, String serverId) {
         val component = componentRepository.findByName(name);
         return !getDisabledComponents(component, serverId).isEmpty();
@@ -55,6 +57,7 @@ public class ComponentService {
                 disabledComponentsRepository.delete(disabledComponents));
     }
 
+    @Cacheable("disabled-server-component")
     public List<DisabledComponents> getDisabledComponents(String serverId) {
         return disabledComponentsRepository.findByServerId(serverId);
     }

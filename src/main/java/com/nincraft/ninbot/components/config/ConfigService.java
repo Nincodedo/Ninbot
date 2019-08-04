@@ -26,6 +26,7 @@ public class ConfigService {
     }
 
     @Transactional
+    @Cacheable("config-values-by-name")
     public List<String> getValuesByName(String serverId, String configName) {
         val list = configRepository.getConfigsByServerIdAndName(serverId, configName);
         return list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
