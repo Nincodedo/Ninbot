@@ -14,7 +14,7 @@ public class TurnipPrices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    private int seed;
+    private Long seed;
     @CreatedDate
     private LocalDateTime created;
     @LastModifiedDate

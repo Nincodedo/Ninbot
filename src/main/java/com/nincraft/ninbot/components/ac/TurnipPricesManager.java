@@ -1,13 +1,37 @@
 package com.nincraft.ninbot.components.ac;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Component
 public class TurnipPricesManager {
 
+    private TurnipPricesRepository turnipPricesRepository;
 
-    public List<Integer> getRandomTurnipPricesList(TurnipPattern turnipPattern, long seed) {
+    public TurnipPricesManager(TurnipPricesRepository turnipPricesRepository) {
+        this.turnipPricesRepository = turnipPricesRepository;
+    }
+
+    public void generateNewWeek() {
+        Random random = new Random();
+        turnipPricesRepository.deleteAll();
+        TurnipPrices turnipPrices = new TurnipPrices();
+        turnipPrices.setSeed(random.nextLong());
+        turnipPricesRepository.save(turnipPrices);
+    }
+
+    public List<Integer> getTurnipPricesList(TurnipPattern turnipPattern, long seed) {
+        if (turnipPattern.equals(TurnipPattern.RANDOM)) {
+            return getRandomTurnipPricesList(turnipPattern, seed);
+        } else {
+            return getAllOtherTurnipPricesList(turnipPattern, seed);
+        }
+    }
+
+    private List<Integer> getRandomTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         List<Integer> turnipPrices = new ArrayList<>();
         Random random = new Random(seed);
         for (int i = 0; i < 12; i++) {
@@ -16,7 +40,7 @@ public class TurnipPricesManager {
         return turnipPrices;
     }
 
-    public List<Integer> getTurnipPricesList(TurnipPattern turnipPattern, long seed) {
+    private List<Integer> getAllOtherTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         List<Integer> turnipPrices = new ArrayList<>();
         Random random = new Random(seed);
         int spikeDay = 0;
@@ -74,5 +98,10 @@ public class TurnipPricesManager {
             spikeDays.add(i);
         }
         return spikeDays;
+    }
+
+    int getSundayTurnipPrices(long seed) {
+        Random random = new Random(seed);
+        return random.nextInt(20) + 90;
     }
 }

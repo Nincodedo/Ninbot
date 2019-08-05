@@ -11,7 +11,10 @@ public class Villager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String discordId;
-    private int turnipsOwned;
-    private int bellsTotal;
+    @Column(nullable = false)
+    private String discordServerId;
+    private int turnipsOwned = 0;
+    private int bellsTotal = 2000;
 }
