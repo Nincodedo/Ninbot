@@ -10,20 +10,22 @@ import java.util.Random;
 public class TurnipPricesManager {
 
     private TurnipPricesRepository turnipPricesRepository;
+    private Random random;
 
     public TurnipPricesManager(TurnipPricesRepository turnipPricesRepository) {
         this.turnipPricesRepository = turnipPricesRepository;
+        this.random = new Random();
+
     }
 
-    public void generateNewWeek() {
-        Random random = new Random();
+    void generateNewWeek() {
         turnipPricesRepository.deleteAll();
         TurnipPrices turnipPrices = new TurnipPrices();
         turnipPrices.setSeed(random.nextLong());
         turnipPricesRepository.save(turnipPrices);
     }
 
-    public List<Integer> getTurnipPricesList(TurnipPattern turnipPattern, long seed) {
+    List<Integer> getTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         if (turnipPattern.equals(TurnipPattern.RANDOM)) {
             return getRandomTurnipPricesList(turnipPattern, seed);
         } else {
@@ -33,44 +35,45 @@ public class TurnipPricesManager {
 
     private List<Integer> getRandomTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         List<Integer> turnipPrices = new ArrayList<>();
-        Random random = new Random(seed);
+        Random randomFromSeed = new Random(seed);
         for (int i = 0; i < 12; i++) {
-            turnipPrices.add(random.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase());
+            turnipPrices.add(randomFromSeed.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase());
         }
         return turnipPrices;
     }
 
     private List<Integer> getAllOtherTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         List<Integer> turnipPrices = new ArrayList<>();
-        Random random = new Random(seed);
+        Random randomFromSeed = new Random(seed);
         int spikeDay = 0;
         if (turnipPattern.equals(TurnipPattern.BIG_SPIKE)) {
-            spikeDay = random.nextInt(8) + 2;
+            spikeDay = randomFromSeed.nextInt(8) + 2;
         } else if (turnipPattern.equals(TurnipPattern.SMALL_SPIKE)) {
-            spikeDay = random.nextInt(8) + 1;
+            spikeDay = randomFromSeed.nextInt(8) + 1;
         }
         List<Integer> spikeDays = getSpikeDays(turnipPattern.getSpikeCount(), spikeDay);
-        int previous = random.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase();
+        int previous = randomFromSeed.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase();
         int previousSpike = 0;
         int maxPosition = 0;
         for (int i = 0; i < 12; i++) {
             if (spikeDays.contains(i)) {
                 if (previousSpike == 0) {
-                    previousSpike = random.nextInt(turnipPattern.getSpikeUpperBound()) + turnipPattern.getSpikeBase();
+                    previousSpike =
+                            randomFromSeed.nextInt(turnipPattern.getSpikeUpperBound()) + turnipPattern.getSpikeBase();
                 } else {
                     previousSpike = (int) (previousSpike
-                            + random.nextInt(turnipPattern.getSpikeUpperBound()) / turnipPattern.getDivisor());
+                            + randomFromSeed.nextInt(turnipPattern.getSpikeUpperBound()) / turnipPattern.getDivisor());
                     maxPosition = i;
                 }
                 turnipPrices.add(previousSpike);
             } else {
                 turnipPrices.add(previous);
             }
-            previous = previous - (random.nextInt(5) + 2);
+            previous = previous - (randomFromSeed.nextInt(5) + 2);
         }
 
 
-        setDecreasingPostSpikeDays(turnipPattern, turnipPrices, random, maxPosition);
+        setDecreasingPostSpikeDays(turnipPattern, turnipPrices, randomFromSeed, maxPosition);
 
         return turnipPrices;
     }
@@ -101,7 +104,6 @@ public class TurnipPricesManager {
     }
 
     int getSundayTurnipPrices(long seed) {
-        Random random = new Random(seed);
-        return random.nextInt(20) + 90;
+        return new Random(seed).nextInt(20) + 90;
     }
 }
