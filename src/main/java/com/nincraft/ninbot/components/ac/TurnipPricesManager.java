@@ -106,4 +106,8 @@ public class TurnipPricesManager {
     int getSundayTurnipPrices(long seed) {
         return new Random(seed).nextInt(20) + 90;
     }
+
+    public List<TurnipPrices> findAll() {
+        return turnipPricesRepository.findAll();
+    }
 }

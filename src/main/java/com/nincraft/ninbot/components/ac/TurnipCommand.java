@@ -5,7 +5,6 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
-import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -20,20 +19,16 @@ import java.time.LocalDateTime;
 @Component
 public class TurnipCommand extends AbstractCommand {
 
-    private TurnipPricesRepository turnipPricesRepository;
     private TurnipPricesManager turnipPricesManager;
     private VillagerManager villagerManager;
 
-    public TurnipCommand(TurnipPricesRepository turnipPricesRepository, TurnipPricesManager turnipPricesManager,
-            VillagerManager villagerManager) {
+    public TurnipCommand(TurnipPricesManager turnipPricesManager, VillagerManager villagerManager) {
         name = "turnips";
         length = 3;
         checkExactLength = false;
-        this.turnipPricesRepository = turnipPricesRepository;
         this.turnipPricesManager = turnipPricesManager;
         this.villagerManager = villagerManager;
     }
-
 
     @Override
     protected CommandResult executeCommand(MessageReceivedEvent event) {
@@ -55,14 +50,6 @@ public class TurnipCommand extends AbstractCommand {
             case "wallet":
                 commandResult.addChannelAction(getVillagerBells(event));
                 break;
-            case "admin":
-                if (userHasPermission(event.getGuild(), event.getAuthor(), RolePermission.ADMIN)) {
-                    turnipPricesManager.generateNewWeek();
-                    commandResult.addSuccessfulReaction();
-                } else {
-                    commandResult.addUnsuccessfulReaction();
-                }
-                break;
             default:
                 commandResult = displayHelp(event);
                 break;
@@ -76,12 +63,17 @@ public class TurnipCommand extends AbstractCommand {
         if (villagerOptional.isPresent()) {
             val villager = villagerOptional.get();
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle(String.format("%s's Wallet", event.getMember().getEffectiveName()));
-            embedBuilder.addField("Bells", Integer.toString(villager.getBellsTotal()), false);
-            embedBuilder.addField("White Turnips", Integer.toString(villager.getTurnipsOwned()), false);
+            embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.wallet.title"),
+                    event.getMember().getEffectiveName()));
+            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.bells.title"),
+                    Integer.toString(villager
+                            .getBellsTotal()), false);
+            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.whiteturnips.title"),
+                    Integer.toString(villager
+                            .getTurnipsOwned()), false);
             return new MessageBuilder(embedBuilder).build();
         }
-        return new MessageBuilder().append("No villager found! Use \"@Ninbot turnips join\" to join the town!").build();
+        return new MessageBuilder().append(resourceBundle.getString("command.turnips.wallet.novillager")).build();
     }
 
     private boolean joinTurnipEvent(MessageReceivedEvent event) {
@@ -101,15 +93,16 @@ public class TurnipCommand extends AbstractCommand {
             long seed = getSeed(event.getGuild().getIdLong());
             int currentPrice = getCurrentPrice(seed);
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("Current Turnip Selling Prices");
-            embedBuilder.addField("White Turnips", String.format("%d bells per turnip", currentPrice), false);
+            embedBuilder.setTitle(resourceBundle.getString("command.turnips.list.title"));
+            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.whiteturnips.title"),
+                    String.format(resourceBundle.getString("command.turnips.list.bellsper"), currentPrice), false);
             return new MessageBuilder(embedBuilder).build();
         }
         return null;
     }
 
     private long getSeed(long serverId) {
-        return turnipPricesRepository.findAll().get(0).getSeed() + serverId;
+        return turnipPricesManager.findAll().get(0).getSeed() + serverId;
     }
 
     private int getCurrentPrice(long seed) {
@@ -128,10 +121,7 @@ public class TurnipCommand extends AbstractCommand {
                 WebhookClient client = builder.build();
                 WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
                 messageBuilder.append(String.format(
-                        "Well, hello there, kiddo. I've been selling turnips here on Sunday "
-                                + "morns for 'bout 60 years now. Maybe even more! So anyway, today the asking"
-                                + " price "
-                                + "is %d Bells per turnip. I sell them in bunches of 10.", turnipPrice));
+                        resourceBundle.getString("command.turnips.list.sunday.joan"), turnipPrice));
                 client.send(messageBuilder.build());
                 client.close();
             }
