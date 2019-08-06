@@ -29,7 +29,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot()
+        if (event.isFromGuild() && !event.getAuthor().isBot()
                 && !componentService.isDisabled(componentName, event.getGuild().getId())) {
             respond(event);
         }

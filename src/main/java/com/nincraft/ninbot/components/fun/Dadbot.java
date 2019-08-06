@@ -36,7 +36,7 @@ public class Dadbot extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot()
+        if (event.isFromGuild() &&  !event.getAuthor().isBot()
                 && !componentService.isDisabled(componentName, event.getGuild().getId())) {
             resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event.getGuild().getId()));
             parseMessage(event);
