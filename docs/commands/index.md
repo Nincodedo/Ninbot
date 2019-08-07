@@ -15,6 +15,7 @@ All commands are prefixed with @Ninbot.
     * [Stats](#stats)
     * [Subscribe/Unsubscribe](#subscribeunsubscribe)
     * [Trivia](#trivia)
+    * [Turnips](#turnips)
     * [Twitch](#twitch)
   * [Mods Commands](#mod-commands)
     * [Topic Change Announcement](#topic-change-announcement)
@@ -178,6 +179,45 @@ Shows the top 5 trivia players.
 Usage:
 
     @Ninbot trivia leaderboard
+    
+### Turnips
+Buy/Sell turnips like in Animal Crossing. Any turnips will rot after a week so be sure to sell them before Sunday.
+#### Subcommands
+##### Join
+Join the stalk market system. You need to do this once to create your villager profile. Villagers start with 2000 Bells.
+
+Usage:
+
+    @Ninbot turnips join
+    
+##### Buy
+Buy an amount of turnips. You can only buy turnips on Sundays.
+
+Usage:
+
+    @Ninbot turnips buy NUMBER
+    
+##### Sell
+Sell an amount of turnips. You cannot sell turnips on Sundays.
+
+Usage:
+
+    @Ninbot turnips sell NUMBER
+    
+##### Price
+Shows the current price of turnips. On Sundays, shows how much you can buy turnips for.
+Every other day it shows how much you can sell them for. Each individual server has it's own prices every day.
+
+Usage:
+
+    @Ninbot turnips price
+
+##### Wallet
+Shows your current inventory, including your Bells and turnips.
+
+Usage:
+
+    @Ninbot turnips wallet
     
 ### Twitch
 Twitch related commands.
