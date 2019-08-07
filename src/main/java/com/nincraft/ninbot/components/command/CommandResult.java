@@ -40,9 +40,11 @@ public class CommandResult {
             privateChannel.sendMessage(message).queue();
         }
         for (Message message : channelMessageList) {
-            MessageChannel messageChannel = event.getChannel();
-            messageChannel.sendTyping().queue();
-            messageChannel.sendMessage(message).queue();
+            if (message != null) {
+                MessageChannel messageChannel = event.getChannel();
+                messageChannel.sendTyping().queue();
+                messageChannel.sendMessage(message).queue();
+            }
         }
         for (String emoji : emojisList) {
             eventMessage.addReaction(emoji).queue();
