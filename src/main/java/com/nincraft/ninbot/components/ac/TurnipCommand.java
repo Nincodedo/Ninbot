@@ -80,6 +80,7 @@ public class TurnipCommand extends AbstractCommand {
         if (!villagerManager.findByDiscordId(event.getAuthor().getId()).isPresent()) {
             Villager villager = new Villager();
             villager.setDiscordId(event.getAuthor().getId());
+            villager.setDiscordServerId(event.getGuild().getId());
             villagerManager.save(villager);
             return true;
         }
