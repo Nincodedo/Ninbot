@@ -62,7 +62,7 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private void hiImDad(String message, MessageReceivedEvent event) {
-        if (!channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+        if (channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
         String stringBuilder = resourceBundle.getString("listener.dad.hi") +
@@ -72,6 +72,6 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private boolean checkChance() {
-        return random.nextInt(100) < 10;
+        return random.nextInt(100) < 100;
     }
 }
