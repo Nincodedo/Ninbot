@@ -40,6 +40,7 @@ public class ApplicationBean {
         try {
             DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder(ninbotToken);
             builder.addEventListeners(listenerAdapters.toArray());
+            builder.setShardsTotal(-1);
             return builder.build();
         } catch (LoginException e) {
             log.error("Failed to login", e);

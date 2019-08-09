@@ -29,8 +29,15 @@ public class Ninbot {
             val shards = shardManager.getShards();
             log.info("Starting Ninbot with {} shard(s)", shards.size());
             shardManager.getShards()
-                    .forEach(jda -> log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo()
-                            .getShardId(), jda.getGuilds().size()));
+                    .forEach(jda -> {
+                        try {
+                            jda.awaitReady();
+                            log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo()
+                                    .getShardId(), jda.getGuilds().size());
+                        } catch (InterruptedException e) {
+                            log.error("Failed to wait for shard to start", e);
+                        }
+                    });
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
             shardManager.setActivity(Activity.playing("say \"@Ninbot help\" for list of commands"));
         };
