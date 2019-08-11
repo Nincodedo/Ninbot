@@ -136,7 +136,7 @@ public class TurnipCommand extends AbstractCommand {
         val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
         if (villagerOptional.isPresent()) {
             val villager = villagerOptional.get();
-            int turnipPrice = turnipPricesManager.getSundayTurnipPrices(getSeed(event.getGuild().getIdLong()));
+            int turnipPrice = getCurrentPrice(getSeed(event.getGuild().getIdLong()));
             val message = event.getMessage().getContentStripped();
             int selling = 0;
             if (getCommandLength(message) > 3) {
@@ -156,7 +156,7 @@ public class TurnipCommand extends AbstractCommand {
         if (villagerOptional.isPresent()) {
             val villager = villagerOptional.get();
             long seed = getSeed(event.getGuild().getIdLong());
-            int currentPrice = getCurrentPrice(seed);
+            int currentPrice = turnipPricesManager.getSundayTurnipPrices(seed);
             val message = event.getMessage().getContentStripped();
             int amountBuying = 0;
             if (getCommandLength(message) > 3) {
