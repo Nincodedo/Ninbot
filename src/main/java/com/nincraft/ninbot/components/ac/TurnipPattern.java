@@ -11,7 +11,7 @@ public enum TurnipPattern {
     private int spikeUpperBound;
     private int spikeBase;
     private int spikeCount;
-    private int upperBound = 100;
+    private int upperBound = 49;
     private int base = 50;
     private double divisor;
 
