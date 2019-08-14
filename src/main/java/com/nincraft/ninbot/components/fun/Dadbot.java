@@ -72,6 +72,6 @@ public class Dadbot extends ListenerAdapter {
     }
 
     private boolean checkChance() {
-        return random.nextInt(100) < 100;
+        return random.nextInt(100) < 10;
     }
 }
