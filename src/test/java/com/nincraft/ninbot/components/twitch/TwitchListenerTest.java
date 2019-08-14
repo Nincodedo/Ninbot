@@ -43,13 +43,11 @@ public class TwitchListenerTest {
     @Mock
     TwitchAPI twitchAPI;
 
+    @Mock
+    StreamingMemberRepository streamingMemberRepository;
+
     @InjectMocks
     TwitchListener twitchListener;
-
-    @Before
-    public void before() {
-        twitchListener.setCooldownList(new ArrayList<>());
-    }
 
     @Test
     public void userStartsStreamingNotAlreadyStreamingNoCooldown() {
@@ -115,8 +113,6 @@ public class TwitchListenerTest {
         Activity activity = Mockito.mock(Activity.class);
         MessageAction messageAction = Mockito.mock(MessageAction.class);
         AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
-        SlimMember slimMember = new SlimMember("123", "123");
-        twitchListener.setCooldownList(Collections.singletonList(slimMember));
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
@@ -144,9 +140,6 @@ public class TwitchListenerTest {
         when(guild.getId()).thenReturn("123");
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
-        Set<SlimMember> streamingMembers = new HashSet<>();
-        streamingMembers.add(new SlimMember("123", "123"));
-        twitchListener.setStreamingMembers(streamingMembers);
         twitchListener.onGenericUserPresence(userActivityEndEvent);
         Mockito.verify(messageAction, times(0)).queue();
         Mockito.verify(auditableRestAction, times(1)).queue();

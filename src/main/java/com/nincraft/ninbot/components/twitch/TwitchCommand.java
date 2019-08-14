@@ -30,7 +30,7 @@ public class TwitchCommand extends AbstractCommand {
                 announceToggle(commandResult);
                 break;
             default:
-                commandResult.addUnknownReaction();
+                commandResult = displayHelp(event);
                 break;
         }
         return commandResult;

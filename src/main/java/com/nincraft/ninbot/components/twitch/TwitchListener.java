@@ -6,7 +6,6 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 import com.nincraft.ninbot.components.config.component.ComponentType;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,30 +22,29 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Date;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 @Log4j2
 public class TwitchListener extends ListenerAdapter {
 
     private ConfigService configService;
-    @Setter
-    private Set<SlimMember> streamingMembers;
     private LocaleService localeService;
     private ComponentService componentService;
-    @Setter
-    private List<SlimMember> cooldownList;
+    private StreamingMemberRepository streamingMemberRepository;
     private TwitchAPI twitchAPI;
     private String componentName;
 
     public TwitchListener(ConfigService configService, LocaleService localeService, TwitchAPI twitchAPI,
-            ComponentService componentService) {
+            ComponentService componentService, StreamingMemberRepository streamingMemberRepository) {
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;
         this.twitchAPI = twitchAPI;
-        this.streamingMembers = new HashSet<>();
-        this.cooldownList = new ArrayList<>();
+        this.streamingMemberRepository = streamingMemberRepository;
         this.componentName = "twitch-announce";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
@@ -56,28 +54,31 @@ public class TwitchListener extends ListenerAdapter {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        SlimMember member = new SlimMember(event.getMember().getId(), event.getGuild().getId());
+        val userId = event.getMember().getId();
+        val guildId = event.getGuild().getId();
         if (event instanceof UserActivityStartEvent) {
-            if (!streamingMembers.contains(member)) {
+            val optionalStreamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId);
+            if (!optionalStreamingMember.isPresent()) {
+                StreamingMember streamingMember = new StreamingMember(userId, guildId);
                 val activityStartEvent = (UserActivityStartEvent) event;
                 val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild()
                         .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 val isStreaming = ((UserActivityStartEvent) event).getNewActivity()
                         .getType()
                         .equals(Activity.ActivityType.STREAMING);
-                if (!cooldownList.contains(member) && streamingAnnounceUser.contains(member.getUserId())
+                if (streamingAnnounceUser.contains(streamingMember.getUserId())
                         && isStreaming) {
+                    streamingMemberRepository.save(streamingMember);
                     Timer timer = new Timer();
                     announceStream(activityStartEvent);
-                    streamingMembers.add(member);
-                    timer.schedule(new TwitchAnnounceCooldown(member), Date.from(Instant.now()
+                    timer.schedule(new TwitchAnnounceCooldown(streamingMember), Date.from(Instant.now()
                             .plus(30, ChronoUnit.MINUTES)));
                 }
             }
         } else if (event instanceof UserActivityEndEvent && event.getMember().getActivities().isEmpty()) {
             removeRole(event.getGuild(), event.getMember());
-            streamingMembers.remove(member);
-            cooldownList.remove(member);
+            streamingMemberRepository.findByUserIdAndGuildId(userId, guildId)
+                    .ifPresent(streamingMember -> streamingMemberRepository.delete(streamingMember));
         }
     }
 
@@ -147,15 +148,15 @@ public class TwitchListener extends ListenerAdapter {
 
     class TwitchAnnounceCooldown extends TimerTask {
 
-        private SlimMember slimMember;
+        private StreamingMember streamingMember;
 
-        TwitchAnnounceCooldown(SlimMember slimMember) {
-            this.slimMember = slimMember;
+        TwitchAnnounceCooldown(StreamingMember streamingMember) {
+            this.streamingMember = streamingMember;
         }
 
         @Override
         public void run() {
-            cooldownList.remove(slimMember);
+            streamingMemberRepository.delete(streamingMember);
         }
     }
 }
