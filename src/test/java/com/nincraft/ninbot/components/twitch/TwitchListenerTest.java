@@ -79,7 +79,6 @@ public class TwitchListenerTest {
         when(textChannel.sendMessage(Mockito.any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
-        when(twitchAPI.getBoxArtUrl(anyString())).thenReturn(null);
         twitchListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(1)).queue();
         Mockito.verify(auditableRestAction, times(1)).queue();

@@ -35,15 +35,13 @@ public class TwitchListener extends ListenerAdapter {
     private LocaleService localeService;
     private ComponentService componentService;
     private StreamingMemberRepository streamingMemberRepository;
-    private TwitchAPI twitchAPI;
     private String componentName;
 
-    public TwitchListener(ConfigService configService, LocaleService localeService, TwitchAPI twitchAPI,
+    public TwitchListener(ConfigService configService, LocaleService localeService,
             ComponentService componentService, StreamingMemberRepository streamingMemberRepository) {
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;
-        this.twitchAPI = twitchAPI;
         this.streamingMemberRepository = streamingMemberRepository;
         this.componentName = "twitch-announce";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
@@ -110,18 +108,26 @@ public class TwitchListener extends ListenerAdapter {
                     String streamTitle = gameName;
                     if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
                         gameName = activity.asRichPresence().getDetails();
+                        log.trace("Rich activity found, updating game name");
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl,
                             gameName, streamTitle, serverId))
                             .queue();
+                    log.trace("Queued stream message for {} to channel {}", username, channel.getId());
+                } else {
+                    log.trace("Announcement channel was null, not announcing stream for {} on server {}", username,
+                            guild
+                                    .getId());
                 }
+            } else {
+                log.trace("Streaming url was null???");
             }
         });
     }
 
     private Message buildStreamAnnounceMessage(UserActivityStartEvent userActivityStartEvent, String username,
             String streamingUrl, String gameName, String streamTitle, String serverId) {
-        String iconUrl = twitchAPI.getBoxArtUrl(gameName);
+        log.trace("Building stream announce message for {} server {}", username, serverId);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
         val embedMessage = new EmbedBuilder()
                 .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), username, gameName,
@@ -130,9 +136,6 @@ public class TwitchListener extends ListenerAdapter {
                         .getAvatarUrl())
                 .setTitle(streamTitle)
                 .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()));
-        if (iconUrl != null) {
-            log.trace("Setting boxart with game {} and URL {}", gameName, iconUrl);
-        }
         return new MessageBuilder(embedMessage).build();
     }
 
@@ -141,7 +144,10 @@ public class TwitchListener extends ListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
+                log.trace("Adding role {} to {}", streamingRole.getName(), member.getEffectiveName());
                 guild.addRoleToMember(member, streamingRole).queue();
+            } else {
+                log.trace("Could not add role ID {} for {}", roleId, member.getEffectiveName());
             }
         });
     }
