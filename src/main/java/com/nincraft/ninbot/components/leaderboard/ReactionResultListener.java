@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.leaderboard;
 
+import com.nincraft.ninbot.components.common.Emojis;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -27,11 +28,11 @@ class ReactionResultListener extends ListenerAdapter {
                 && event.getMessageId().equals(messageId)) {
             if (event.getUser().getId().equals(againstUser)) {
                 val emote = event.getReactionEmote().getName();
-                if ("✅".equals(emote)) {
+                if (Emojis.CHECK_MARK.equals(emote)) {
                     leaderboardService.recordResult(event.getGuild().getId(), recordType, firstUser, againstUser);
                     clearReactions(event);
                     event.getJDA().removeEventListener(this);
-                } else if ("❌".equals(emote)) {
+                } else if (Emojis.CROSS_X.equals(emote)) {
                     clearReactions(event);
                     event.getJDA().removeEventListener(this);
                 } else {
