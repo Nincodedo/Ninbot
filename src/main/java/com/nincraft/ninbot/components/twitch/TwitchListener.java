@@ -22,10 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Component
 @Log4j2
@@ -73,11 +70,16 @@ public class TwitchListener extends ListenerAdapter {
                             .plus(30, ChronoUnit.MINUTES)));
                 }
             }
-        } else if (event instanceof UserActivityEndEvent && event.getMember().getActivities().isEmpty()) {
+        } else if (event instanceof UserActivityEndEvent && hasNoStreamingActivity(event.getMember().getActivities())) {
             removeRole(event.getGuild(), event.getMember());
             streamingMemberRepository.findByUserIdAndGuildId(userId, guildId)
                     .ifPresent(streamingMember -> streamingMemberRepository.delete(streamingMember));
         }
+    }
+
+    private boolean hasNoStreamingActivity(List<Activity> activities) {
+        return activities.stream()
+                .noneMatch(activity -> activity != null && Activity.ActivityType.STREAMING.equals(activity.getType()));
     }
 
     private void removeRole(Guild guild, Member member) {
