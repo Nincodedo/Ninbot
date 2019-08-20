@@ -45,6 +45,7 @@ public class TurnipCommand extends AbstractCommand {
                 commandResult.addCorrectReaction(sellTurnips(event));
                 break;
             case "price":
+            case "prices":
                 commandResult.addChannelAction(listTurnipPrices(event));
                 break;
             case "wallet":
