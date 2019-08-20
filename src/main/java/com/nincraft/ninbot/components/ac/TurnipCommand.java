@@ -67,11 +67,9 @@ public class TurnipCommand extends AbstractCommand {
             embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.wallet.title"),
                     event.getMember().getEffectiveName()));
             embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.bells.title"),
-                    Integer.toString(villager
-                            .getBellsTotal()), false);
+                    String.format("%,d", villager.getBellsTotal()), false);
             embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.whiteturnips.title"),
-                    Integer.toString(villager
-                            .getTurnipsOwned()), false);
+                    String.format("%,d", villager.getTurnipsOwned()), false);
             return new MessageBuilder(embedBuilder).build();
         }
         return new MessageBuilder().append(resourceBundle.getString("command.turnips.wallet.novillager")).build();
