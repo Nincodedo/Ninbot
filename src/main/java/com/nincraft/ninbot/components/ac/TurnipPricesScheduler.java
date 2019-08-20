@@ -1,6 +1,8 @@
 package com.nincraft.ninbot.components.ac;
 
 import com.nincraft.ninbot.components.common.Schedulable;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 @Component
 public class TurnipPricesScheduler implements Schedulable {
 
@@ -35,6 +38,7 @@ public class TurnipPricesScheduler implements Schedulable {
             calendar.add(Calendar.DATE, 1);
         }
         Date nextSunday = calendar.getTime();
+        log.trace("Scheduling turnips price reset for {}", nextSunday);
         new Timer().scheduleAtFixedRate(new TurnipTasks(), nextSunday, TimeUnit.DAYS.toMillis(7));
     }
 
@@ -42,9 +46,12 @@ public class TurnipPricesScheduler implements Schedulable {
     private class TurnipTasks extends TimerTask {
         @Override
         public void run() {
+            log.trace("Running turnips price reset");
             TurnipPrices turnipPrices = turnipPricesRepository.findAll().get(0);
             if (turnipPrices.getCreated().getDayOfMonth() != LocalDate.now().getDayOfMonth()) {
-                villagerRepository.findAll().forEach(villager -> {
+                val villagerList = villagerRepository.findAll();
+                log.trace("Resetting turnip counts for {} villagers", villagerList.size());
+                villagerList.forEach(villager -> {
                     villager.setTurnipsOwned(0);
                     villagerRepository.save(villager);
                 });

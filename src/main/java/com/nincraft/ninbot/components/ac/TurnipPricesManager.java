@@ -1,11 +1,13 @@
 package com.nincraft.ninbot.components.ac;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Log4j2
 @Component
 public class TurnipPricesManager {
 
@@ -23,6 +25,7 @@ public class TurnipPricesManager {
         TurnipPrices turnipPrices = new TurnipPrices();
         turnipPrices.setSeed(random.nextLong());
         turnipPricesRepository.save(turnipPrices);
+        log.trace("Seed set for next turnip price week");
     }
 
     List<Integer> getTurnipPricesList(TurnipPattern turnipPattern, long seed) {
