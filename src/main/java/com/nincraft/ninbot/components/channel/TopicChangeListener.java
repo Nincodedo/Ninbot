@@ -4,7 +4,6 @@ import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
-import com.nincraft.ninbot.components.config.component.ComponentType;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
@@ -28,7 +27,6 @@ public class TopicChangeListener extends ListenerAdapter {
         this.localeService = localeService;
         this.componentService = componentService;
         this.componentName = "topic-change";
-        componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
 
     @Override
