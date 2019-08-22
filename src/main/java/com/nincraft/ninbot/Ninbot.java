@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
@@ -39,7 +40,13 @@ public class Ninbot {
                         }
                     });
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
-            shardManager.setActivity(Activity.playing("say \"@Ninbot help\" for list of commands"));
+            setNinbotActivity();
         };
+    }
+
+
+    @Scheduled(fixedRate = 3600000)
+    private void setNinbotActivity() {
+        shardManager.setActivity(Activity.playing("say \"@Ninbot help\" for list of commands"));
     }
 }
