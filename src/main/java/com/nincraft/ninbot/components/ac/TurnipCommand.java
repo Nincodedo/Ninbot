@@ -51,12 +51,32 @@ public class TurnipCommand extends AbstractCommand {
             case "wallet":
                 commandResult.addChannelAction(getVillagerBells(event));
                 break;
+            case "leaderboard":
+                commandResult.addChannelAction(getLeaderboard(event));
+                break;
             default:
                 commandResult = displayHelp(event);
                 break;
         }
 
         return commandResult;
+    }
+
+    private Message getLeaderboard(MessageReceivedEvent event) {
+        val villagerList = villagerManager.getTopTenBellVillagers();
+        if (villagerList.isEmpty()) {
+            return null;
+        }
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.leaderboard.title"),
+                villagerList.size()));
+        for (val villager : villagerList) {
+            val user = event.getJDA().getShardManager().getUserById(villager.getDiscordId());
+            if (user != null) {
+                embedBuilder.addField(user.getName(), villager.getBellsTotalFormatted(), false);
+            }
+        }
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private Message getVillagerBells(MessageReceivedEvent event) {

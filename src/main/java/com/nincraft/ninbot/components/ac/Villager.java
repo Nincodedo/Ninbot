@@ -17,4 +17,9 @@ public class Villager {
     private String discordServerId;
     private int turnipsOwned = 0;
     private int bellsTotal = 2000;
+
+
+    public String getBellsTotalFormatted() {
+        return String.format("%,d", getBellsTotal());
+    }
 }

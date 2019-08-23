@@ -2,7 +2,10 @@ package com.nincraft.ninbot.components.ac;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class VillagerManager {
@@ -40,5 +43,13 @@ public class VillagerManager {
             return true;
         }
         return false;
+    }
+
+    List<Villager> getTopTenBellVillagers() {
+        return villagerRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingInt(Villager::getBellsTotal))
+                .limit(10)
+                .collect(Collectors.toList());
     }
 }

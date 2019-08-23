@@ -1,11 +1,12 @@
 package com.nincraft.ninbot.components.ac;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface VillagerRepository extends CrudRepository<Villager, Long> {
+public interface VillagerRepository extends PagingAndSortingRepository<Villager, Long> {
     Optional<Villager> findByDiscordId(String discordId);
+
     List<Villager> findAll();
 }
