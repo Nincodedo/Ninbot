@@ -48,7 +48,7 @@ public class VillagerManager {
     List<Villager> getTopTenBellVillagers() {
         return villagerRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparingInt(Villager::getBellsTotal))
+                .sorted(Comparator.comparingInt(Villager::getBellsTotal).reversed())
                 .limit(10)
                 .collect(Collectors.toList());
     }
