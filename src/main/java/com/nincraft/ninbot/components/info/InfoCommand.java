@@ -11,7 +11,6 @@ import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -35,7 +34,8 @@ public class InfoCommand extends AbstractCommand {
         embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(), false);
         val uptime = metricsEndpoint.metric("process.uptime", null);
         val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
-        embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(uptimeMilliseconds), false);
+        embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(uptimeMilliseconds),
+                false);
         commandResult.addChannelAction(new MessageBuilder(embedBuilder).build());
         return commandResult;
     }
