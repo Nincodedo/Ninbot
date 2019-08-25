@@ -36,7 +36,7 @@ public class VillagerManager {
     }
 
     boolean buyTurnips(Villager villager, int amountBuying, int currentPrice) {
-        if (amountBuying > 0 && villager.getBellsTotal() >= currentPrice * amountBuying) {
+        if (amountBuying > 0 && amountBuying % 10 == 0 && villager.getBellsTotal() >= currentPrice * amountBuying) {
             villager.setTurnipsOwned(villager.getTurnipsOwned() + amountBuying);
             villager.setBellsTotal(villager.getBellsTotal() - amountBuying * currentPrice);
             villagerRepository.save(villager);
