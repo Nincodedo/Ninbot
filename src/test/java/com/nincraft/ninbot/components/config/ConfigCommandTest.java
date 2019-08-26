@@ -8,7 +8,7 @@ import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigCommand;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 

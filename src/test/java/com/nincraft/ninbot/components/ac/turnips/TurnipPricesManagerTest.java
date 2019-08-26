@@ -2,7 +2,7 @@ package com.nincraft.ninbot.components.ac.turnips;
 
 import com.nincraft.ninbot.NinbotTest;
 import lombok.val;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import static org.assertj.core.api.Assertions.assertThat;

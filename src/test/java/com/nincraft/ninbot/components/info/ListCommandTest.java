@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.internal.entities.RoleImpl;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -35,7 +35,7 @@ public class ListCommandTest extends NinbotTest {
     @InjectMocks
     ListCommand listCommand;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         roleBlackList.add("admin");
     }
