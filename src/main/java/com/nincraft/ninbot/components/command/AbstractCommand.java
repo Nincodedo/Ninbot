@@ -31,7 +31,13 @@ public abstract class AbstractCommand {
         val message = event.getMessage().getContentStripped();
         resourceBundle = ResourceBundle.getBundle("lang", serverLocale);
         if (userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
-            log.info("Executing command {} by {}: {}", name, event.getAuthor().getName(), message);
+            if (event.isFromGuild()) {
+                log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
+                        .getName(), event.getGuild().getId(), message);
+            } else {
+                log.info("Executing command {} by {} in channel type {}: {}", name, event.getAuthor()
+                        .getName(), event.getChannelType(), message);
+            }
             if (getSubcommand(message).equalsIgnoreCase("help")) {
                 displayHelp(event).executeActions();
             } else {
