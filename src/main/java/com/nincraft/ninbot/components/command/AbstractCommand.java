@@ -30,21 +30,21 @@ public abstract class AbstractCommand {
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();
         resourceBundle = ResourceBundle.getBundle("lang", serverLocale);
-        if (userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
-            if (event.isFromGuild()) {
-                log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
-                        .getName(), event.getGuild().getId(), message);
-            } else {
-                log.info("Executing command {} by {} in channel type {}: {}", name, event.getAuthor()
-                        .getName(), event.getChannelType(), message);
-            }
+        if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
+            log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
+                    .getName(), event.getGuild().getId(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
                 displayHelp(event).executeActions();
             } else {
                 executeCommand(event).executeActions();
             }
+        } else if (!event.isFromGuild()) {
+            log.warn("User executed command from outside of a Guild. Name: {}, Channel ID: {}", event.getAuthor()
+                    .getName(), event.getChannel().getId());
+            event.getChannel().sendMessage("Ninbot only processes commands on servers").queue();
         } else {
-            log.debug("User {} does not have permission to run {}: {}", event.getAuthor().getName(), name, message);
+            log.debug("User {} does not have permission to run {} on server {}: {}", event.getAuthor()
+                    .getName(), name, event.getGuild().getId(), message);
             new CommandResult(event)
                     .addUnsuccessfulReaction()
                     .executeActions();
