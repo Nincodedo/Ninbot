@@ -19,7 +19,6 @@ public class DefineCommand extends AbstractCommand {
         name = "define";
         length = 3;
         checkExactLength = false;
-        helpText = "@Ninbot define WORD";
         this.defineWordAPI = defineWordAPI;
     }
 

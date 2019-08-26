@@ -19,7 +19,6 @@ public class TwitchCommand extends AbstractCommand {
         name = "twitch";
         length = 2;
         this.configService = configService;
-        helpText = "Access Twitch related commands\n\"twitch announce\" toggles your Twitch going live announcement";
     }
 
     @Override

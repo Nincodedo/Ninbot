@@ -23,7 +23,6 @@ public abstract class AbstractCommand {
     protected String name;
     protected RolePermission permissionLevel = RolePermission.EVERYONE;
     protected boolean checkExactLength = true;
-    protected String helpText;
     protected String usageText;
     protected List<String> aliases = new ArrayList<>();
     protected ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);

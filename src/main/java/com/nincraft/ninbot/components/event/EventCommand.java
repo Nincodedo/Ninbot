@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -33,11 +32,6 @@ public class EventCommand extends AbstractCommand {
         this.eventScheduler = eventScheduler;
         this.configService = configService;
         this.eventParser = new EventParser();
-        helpText = "Use \"@Ninbot events plan\" to add an event to the schedule\n" +
-                "Parameters: @Ninbot events plan \"Event Name\" StartTime GameName\n" +
-                "Note: event name must be in quotes if it is longer than one word\n" +
-                "Event times are in GMT -6, formatted \"" + LocalDate.now().getYear() + "-01-31T12:00:00-06:00\" "
-                + "for January 31st " + LocalDate.now().getYear() + " at noon";
     }
 
     @Override
