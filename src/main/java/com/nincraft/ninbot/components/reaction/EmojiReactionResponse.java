@@ -27,7 +27,7 @@ public class EmojiReactionResponse extends ReactionResponse {
     @Getter
     private List<String> emojiList;
 
-    public EmojiReactionResponse(ReactionResponse reactionResponse) {
+    EmojiReactionResponse(ReactionResponse reactionResponse) {
         this.response = reactionResponse.getResponse();
         this.target = reactionResponse.getTarget();
         this.type = reactionResponse.getType();

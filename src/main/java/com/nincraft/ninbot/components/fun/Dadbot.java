@@ -25,7 +25,6 @@ public class Dadbot extends ListenerAdapter {
     private LocaleService localeService;
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
 
-    @Autowired
     public Dadbot(ConfigService configService, ComponentService componentService, LocaleService localeService) {
         random = new Random();
         this.configService = configService;

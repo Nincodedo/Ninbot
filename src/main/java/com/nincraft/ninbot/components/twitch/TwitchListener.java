@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -63,6 +64,7 @@ public class TwitchListener extends ListenerAdapter {
                         .equals(Activity.ActivityType.STREAMING);
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())
                         && isStreaming) {
+                    streamingMember.setStarted(LocalDateTime.now());
                     streamingMemberRepository.save(streamingMember);
                     Timer timer = new Timer();
                     announceStream(activityStartEvent);

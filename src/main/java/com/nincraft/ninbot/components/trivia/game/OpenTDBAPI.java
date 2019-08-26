@@ -22,10 +22,12 @@ public class OpenTDBAPI implements TriviaAPI {
     private static final String HTTP_OPENTDB_COM = "http://opentdb.com/";
     private Map<Integer, String> triviaCategoryMap;
     private List<String> badPhraseList;
+    private ObjectMapper objectMapper;
 
-    public OpenTDBAPI() {
+    public OpenTDBAPI(ObjectMapper objectMapper) {
         triviaCategoryMap = new HashMap<>();
         this.badPhraseList = Arrays.asList("which of", "which one of");
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -38,7 +40,6 @@ public class OpenTDBAPI implements TriviaAPI {
         if (jsonOptional.isPresent()) {
             try {
                 val json = jsonOptional.get();
-                ObjectMapper objectMapper = new ObjectMapper();
                 val jsonTree = objectMapper.readTree(json);
                 val responseCode = jsonTree.get("response_code").asInt();
                 if (responseCode == 0) {
@@ -120,7 +121,6 @@ public class OpenTDBAPI implements TriviaAPI {
         val jsonOptional = httpGetJson(HTTP_OPENTDB_COM + "api_token.php?command=request");
         if (jsonOptional.isPresent()) {
             val json = jsonOptional.get();
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 Map<String, Object> map = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
                 });
@@ -142,7 +142,6 @@ public class OpenTDBAPI implements TriviaAPI {
         val jsonOptional = httpGetJson(HTTP_OPENTDB_COM + "api_category.php");
         if (jsonOptional.isPresent()) {
             val json = jsonOptional.get();
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 objectMapper.readTree(json)
                         .get("trivia_categories")

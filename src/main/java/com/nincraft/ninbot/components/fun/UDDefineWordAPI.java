@@ -19,6 +19,12 @@ import java.util.Map;
 @Component
 public class UDDefineWordAPI implements DefineWordAPI {
 
+    private ObjectMapper objectMapper;
+
+    public UDDefineWordAPI(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public Map<String, String> defineWord(String word) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
@@ -26,10 +32,9 @@ public class UDDefineWordAPI implements DefineWordAPI {
             HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, "UTF-8"));
 
             HttpResponse response = client.execute(get);
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> responseMap = mapper.readValue(EntityUtils.toString(response.getEntity()),
+            Map<String, Object> responseMap = objectMapper.readValue(EntityUtils.toString(response.getEntity()),
                     new TypeReference<Map<String, Object>>() {
-            });
+                    });
             return (Map<String, String>) ((ArrayList) responseMap.get("list")).get(0);
 
         } catch (IOException e) {
