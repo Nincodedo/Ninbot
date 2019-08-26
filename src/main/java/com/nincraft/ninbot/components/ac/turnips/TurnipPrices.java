@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

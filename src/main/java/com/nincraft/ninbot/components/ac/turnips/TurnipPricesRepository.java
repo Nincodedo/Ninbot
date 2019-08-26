@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
 import org.springframework.data.repository.CrudRepository;
 

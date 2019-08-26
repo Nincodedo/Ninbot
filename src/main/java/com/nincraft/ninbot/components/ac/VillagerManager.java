@@ -17,7 +17,7 @@ public class VillagerManager {
     }
 
 
-    boolean sellTurnips(Villager villager, int amountSelling, int turnipPrice) {
+    public boolean sellTurnips(Villager villager, int amountSelling, int turnipPrice) {
         if (amountSelling > 0 && villager.getTurnipsOwned() >= amountSelling) {
             villager.setTurnipsOwned(villager.getTurnipsOwned() - amountSelling);
             villager.setBellsTotal(villager.getBellsTotal() + amountSelling * turnipPrice);
@@ -27,7 +27,7 @@ public class VillagerManager {
         return false;
     }
 
-    Optional<Villager> findByDiscordId(String discordId) {
+    public Optional<Villager> findByDiscordId(String discordId) {
         return villagerRepository.findByDiscordId(discordId);
     }
 
@@ -35,7 +35,7 @@ public class VillagerManager {
         villagerRepository.save(villager);
     }
 
-    boolean buyTurnips(Villager villager, int amountBuying, int currentPrice) {
+    public boolean buyTurnips(Villager villager, int amountBuying, int currentPrice) {
         if (amountBuying > 0 && amountBuying % 10 == 0 && villager.getBellsTotal() >= currentPrice * amountBuying) {
             villager.setTurnipsOwned(villager.getTurnipsOwned() + amountBuying);
             villager.setBellsTotal(villager.getBellsTotal() - amountBuying * currentPrice);
@@ -45,7 +45,7 @@ public class VillagerManager {
         return false;
     }
 
-    List<Villager> getTopTenBellVillagers() {
+    public List<Villager> getTopTenBellVillagers() {
         return villagerRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingInt(Villager::getBellsTotal).reversed())

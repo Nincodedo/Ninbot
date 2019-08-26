@@ -1,5 +1,6 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
+import com.nincraft.ninbot.components.ac.VillagerRepository;
 import com.nincraft.ninbot.components.common.Schedulable;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

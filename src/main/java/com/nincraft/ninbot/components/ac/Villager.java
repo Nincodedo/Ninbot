@@ -18,7 +18,6 @@ public class Villager {
     private int turnipsOwned = 0;
     private int bellsTotal = 2000;
 
-
     public String getBellsTotalFormatted() {
         return String.format("%,d", getBellsTotal());
     }

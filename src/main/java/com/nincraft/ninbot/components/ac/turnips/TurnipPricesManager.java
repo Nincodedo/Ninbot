@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -50,9 +50,9 @@ public class TurnipPricesManager {
         Random randomFromSeed = new Random(seed);
         int spikeDay = 0;
         if (turnipPattern.equals(TurnipPattern.BIG_SPIKE)) {
-            spikeDay = randomFromSeed.nextInt(8) + 2;
+            spikeDay = new Random(seed).nextInt(8) + 2;
         } else if (turnipPattern.equals(TurnipPattern.SMALL_SPIKE)) {
-            spikeDay = randomFromSeed.nextInt(8) + 1;
+            spikeDay = new Random(seed).nextInt(8) + 1;
         }
         List<Integer> spikeDays = getSpikeDays(turnipPattern.getSpikeCount(), spikeDay);
         int previous = randomFromSeed.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase();
