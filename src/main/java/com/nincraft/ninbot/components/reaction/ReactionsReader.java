@@ -20,12 +20,6 @@ import java.util.stream.Collectors;
 @Component
 public class ReactionsReader {
 
-    private ObjectMapper objectMapper;
-
-    public ReactionsReader(ObjectMapper objectMapper){
-        this.objectMapper = objectMapper;
-    }
-
     private static List<String> badCharacters = Arrays.asList(" ", "!", ":");
 
     @Bean
@@ -34,6 +28,7 @@ public class ReactionsReader {
 
             String jsonString = readFromInputStream(getClass().getClassLoader()
                     .getResourceAsStream("responses.json"));
+            ObjectMapper objectMapper = new ObjectMapper();
             List<ReactionResponse> reactionResponseList = objectMapper.readValue(objectMapper.readTree(jsonString)
                     .get("responses")
                     .toString(), objectMapper.getTypeFactory()

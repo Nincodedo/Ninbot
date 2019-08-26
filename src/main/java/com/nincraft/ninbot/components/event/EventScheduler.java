@@ -36,7 +36,7 @@ public class EventScheduler implements Schedulable {
     }
 
     public void scheduleAll(ShardManager shardManager) {
-        log.trace("Scheduling all events");
+        log.trace("scheduling events");
         val eventList = new ArrayList<Event>();
         eventRepository.findAll().forEach(eventList::add);
         eventList.sort(Comparator.comparing(Event::getStartTime));
