@@ -55,7 +55,9 @@ public class ConfigService {
 
     @Transactional
     public void removeConfig(String serverId, String configName, String configValue) {
-        configRepository.delete(new Config(serverId, configName, configValue));
+        configRepository.getConfigByServerIdAndNameAndValue(serverId, configName, configValue).ifPresent(config ->
+                configRepository.delete(config)
+        );
     }
 
     @Transactional

@@ -1,10 +1,8 @@
-package com.nincraft.ninbot.components.admin;
+package com.nincraft.ninbot.components.config;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.RolePermission;
-import com.nincraft.ninbot.components.config.Config;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;

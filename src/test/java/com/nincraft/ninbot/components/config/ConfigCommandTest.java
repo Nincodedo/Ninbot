@@ -1,10 +1,11 @@
-package com.nincraft.ninbot.components.admin;
+package com.nincraft.ninbot.components.config;
 
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.Config;
+import com.nincraft.ninbot.components.config.ConfigCommand;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import org.junit.Test;
