@@ -67,7 +67,7 @@ public class DabCommand extends AbstractCommand {
         Collections.shuffle(list);
 
         commandResult.addReactionEmotes(list.stream()
-                .limit(10)
+                .limit(20)
                 .collect(Collectors.toList()));
     }
 }
