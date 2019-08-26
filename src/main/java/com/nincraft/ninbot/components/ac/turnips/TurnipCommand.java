@@ -1,8 +1,10 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.nincraft.ninbot.components.ac.Villager;
+import com.nincraft.ninbot.components.ac.VillagerManager;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import lombok.val;
@@ -48,11 +50,13 @@ public class TurnipCommand extends AbstractCommand {
             case "prices":
                 commandResult.addChannelAction(listTurnipPrices(event));
                 break;
-            case "wallet":
-                commandResult.addChannelAction(getVillagerBells(event));
-                break;
             case "leaderboard":
                 commandResult.addChannelAction(getLeaderboard(event));
+                break;
+            case "inv":
+            case "inventory":
+            case "wallet":
+                commandResult.addChannelAction(getVillagerInventory(event));
                 break;
             default:
                 commandResult = displayHelp(event);
@@ -60,6 +64,22 @@ public class TurnipCommand extends AbstractCommand {
         }
 
         return commandResult;
+    }
+
+    private Message getVillagerInventory(MessageReceivedEvent event) {
+        val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
+        if (villagerOptional.isPresent()) {
+            val villager = villagerOptional.get();
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.wallet.title"),
+                    event.getMember().getEffectiveName()));
+            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.bells.title"),
+                    String.format("%,d", villager.getBellsTotal()), false);
+            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.whiteturnips.title"),
+                    String.format("%,d", villager.getTurnipsOwned()), false);
+            return new MessageBuilder(embedBuilder).build();
+        }
+        return new MessageBuilder().append(resourceBundle.getString("command.turnips.wallet.novillager")).build();
     }
 
     private Message getLeaderboard(MessageReceivedEvent event) {
@@ -77,22 +97,6 @@ public class TurnipCommand extends AbstractCommand {
             }
         }
         return new MessageBuilder(embedBuilder).build();
-    }
-
-    private Message getVillagerBells(MessageReceivedEvent event) {
-        val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
-        if (villagerOptional.isPresent()) {
-            val villager = villagerOptional.get();
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.wallet.title"),
-                    event.getMember().getEffectiveName()));
-            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.bells.title"),
-                    String.format("%,d", villager.getBellsTotal()), false);
-            embedBuilder.addField(resourceBundle.getString("command.turnips.wallet.whiteturnips.title"),
-                    String.format("%,d", villager.getTurnipsOwned()), false);
-            return new MessageBuilder(embedBuilder).build();
-        }
-        return new MessageBuilder().append(resourceBundle.getString("command.turnips.wallet.novillager")).build();
     }
 
     private boolean joinTurnipEvent(MessageReceivedEvent event) {
@@ -136,7 +140,7 @@ public class TurnipCommand extends AbstractCommand {
         int turnipPrice = turnipPricesManager.getSundayTurnipPrices(
                 getSeed(event.getGuild().getIdLong()));
         event.getGuild().retrieveWebhooks().queue(webhooks -> webhooks.forEach(webhook -> {
-            if (webhook.getName().equalsIgnoreCase("joan")) {
+            if (webhook.getName().equalsIgnoreCase("joan") && webhook.getChannel().equals(event.getTextChannel())) {
                 WebhookClientBuilder builder = new WebhookClientBuilder(webhook.getUrl());
                 WebhookClient client = builder.build();
                 WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();

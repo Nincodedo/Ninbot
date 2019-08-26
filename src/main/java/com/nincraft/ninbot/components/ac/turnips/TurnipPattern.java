@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.ac;
+package com.nincraft.ninbot.components.ac.turnips;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import java.util.Random;
 
 @Getter
 public enum TurnipPattern {
-    DECREASING, BIG_SPIKE(3, 100, 400, 1.5), SMALL_SPIKE(4, 65, 175, 5), RANDOM(150, 50);
+    DECREASING, BIG_SPIKE(3, 100, 400, 1.5), SMALL_SPIKE(4, 65, 175, 4), RANDOM(150, 50);
 
     private int spikeUpperBound;
     private int spikeBase;

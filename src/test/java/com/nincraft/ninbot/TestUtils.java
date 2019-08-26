@@ -40,4 +40,8 @@ public class TestUtils {
     public static String returnPrivateMessageEmbededName(CommandResult commandResult) {
         return commandResult.getPrivateMessageList().get(0).getEmbeds().get(0).getFields().get(0).getName();
     }
+
+    public static String returnPrivateMessage(CommandResult commandResults) {
+        return commandResults.getPrivateMessageList().get(0).getContentRaw();
+    }
 }

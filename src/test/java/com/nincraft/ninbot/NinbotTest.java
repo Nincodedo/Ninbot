@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
