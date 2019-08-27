@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -27,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -35,17 +36,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = NinbotRunner.class, initializers = {TurnipCommandTest.Initializer.class})
+@ContextConfiguration(classes = NinbotRunner.class, initializers = {TurnipCommandTestIT.Initializer.class})
 @TestPropertySource("classpath:application.properties")
 @Log4j2
-public class TurnipCommandTest {
+@Testcontainers
+public class TurnipCommandTestIT {
 
-    @ClassRule
-    public static MySQLContainer mySQLContainer = new MySQLContainer();
-
-    static {
-        mySQLContainer.start();
-    }
+    @Container
+    private static final MySQLContainer mySQLContainer = new MySQLContainer();
 
     @Mock
     public MessageReceivedEvent messageEvent;
