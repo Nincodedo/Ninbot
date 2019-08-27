@@ -9,7 +9,7 @@ jobs:
     - name: Update permissions on mvnw
       run: chmod 700 mvnw
     - name: Package
-      run: ./mvnw clean package
+      run: ./mvnw clean package -P git-commit
     - name: Sonar
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
