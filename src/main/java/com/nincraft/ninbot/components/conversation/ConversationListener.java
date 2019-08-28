@@ -28,7 +28,8 @@ public class ConversationListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isFromGuild() && componentService.isDisabled(componentName, event.getGuild().getId())) {
+        if ((event.isFromGuild() && componentService.isDisabled(componentName, event.getGuild().getId()))
+                || !event.isFromGuild()) {
             return;
         }
         val channelId = event.getChannel().getId();
