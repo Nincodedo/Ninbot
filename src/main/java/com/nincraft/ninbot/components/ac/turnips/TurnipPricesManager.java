@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.ac.turnips;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +25,7 @@ public class TurnipPricesManager {
         turnipPricesRepository.deleteAll();
         TurnipPrices turnipPrices = new TurnipPrices();
         turnipPrices.setSeed(random.nextLong());
+        turnipPrices.setCreated(LocalDateTime.now());
         turnipPricesRepository.save(turnipPrices);
         log.trace("Seed set for next turnip price week");
     }
