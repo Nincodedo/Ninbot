@@ -53,7 +53,7 @@ public class TurnipPricesScheduler implements Schedulable {
                 val villagerList = villagerRepository.findAll();
                 log.trace("Resetting turnip counts for {} villagers", villagerList.size());
                 villagerList.forEach(villager -> {
-                    villager.setTurnipsOwned(0);
+                    villager.setTurnipsOwned(10);
                     villagerRepository.save(villager);
                 });
                 turnipPricesManager.generateNewWeek();
