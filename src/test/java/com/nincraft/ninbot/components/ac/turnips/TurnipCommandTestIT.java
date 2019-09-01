@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.ac.turnips;
 
 import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.TestUtils;
+import com.nincraft.ninbot.components.ac.Villager;
 import com.nincraft.ninbot.components.ac.VillagerManager;
 import com.nincraft.ninbot.components.ac.VillagerRepository;
 import com.nincraft.ninbot.components.common.Emojis;
@@ -56,6 +57,8 @@ public class TurnipCommandTestIT {
     @Autowired
     VillagerManager villagerManager;
     @Autowired
+    TurnipPricesManager turnipPricesManager;
+    @Autowired
     TurnipCommand turnipCommand;
 
     @Test
@@ -85,8 +88,24 @@ public class TurnipCommandTestIT {
 
     @Test
     public void executeBuyCommand() {
+        Villager villager = new Villager();
+        villager.setBellsTotal(2000);
+        villager.setDiscordId("2");
+        villager.setDiscordServerId("2");
+        villager.setTurnipsOwned(0);
+        villagerManager.save(villager);
+        turnipPricesManager.generateNewWeek();
+
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
+        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            User author = Mockito.mock(User.class);
+            Guild guild = Mockito.mock(Guild.class);
+            when(messageEvent.getAuthor()).thenReturn(author);
+            when(author.getId()).thenReturn("2");
+            when(messageEvent.getGuild()).thenReturn(guild);
+            when(guild.getIdLong()).thenReturn(1L);
+        }
         val commandResults = turnipCommand.executeCommand(messageEvent);
         if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
