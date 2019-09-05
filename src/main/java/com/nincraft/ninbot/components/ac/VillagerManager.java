@@ -18,7 +18,7 @@ public class VillagerManager {
 
 
     public boolean sellTurnips(Villager villager, int amountSelling, int turnipPrice) {
-        if (amountSelling > 0 && villager.getTurnipsOwned() >= amountSelling) {
+        if (amountSelling > 0 && amountSelling % 10 == 0 && villager.getTurnipsOwned() >= amountSelling) {
             villager.setTurnipsOwned(villager.getTurnipsOwned() - amountSelling);
             villager.setBellsTotal(villager.getBellsTotal() + amountSelling * turnipPrice);
             villagerRepository.save(villager);

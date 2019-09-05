@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -163,7 +164,12 @@ public class TurnipCommand extends AbstractCommand {
             val message = event.getMessage().getContentStripped();
             int selling = 0;
             if (getCommandLength(message) > 3) {
-                selling = Integer.parseInt(message.split("\\s+")[3]);
+                String sellAmount = message.split("\\s+")[3];
+                if(StringUtils.isNumeric(sellAmount)) {
+                    selling = Integer.parseInt(message.split("\\s+")[3]);
+                } else if ("max".equals(sellAmount)) {
+                    selling = villager.getTurnipsOwned();
+                }
             }
             return villagerManager.sellTurnips(villager, selling, turnipPrice);
         } else {
@@ -181,12 +187,22 @@ public class TurnipCommand extends AbstractCommand {
             long seed = getSeed(event.getGuild().getIdLong());
             int currentPrice = turnipPricesManager.getSundayTurnipPrices(seed);
             val message = event.getMessage().getContentStripped();
-            int amountBuying = 0;
-            if (getCommandLength(message) > 3) {
-                amountBuying = Integer.parseInt(message.split("\\s+")[3]);
-            }
+            int amountBuying = getAmountBuying(villager, currentPrice, message);
             return villagerManager.buyTurnips(villager, amountBuying, currentPrice);
         }
         return false;
+    }
+
+    private int getAmountBuying(Villager villager, int currentPrice, String message) {
+        int amountBuying = 0;
+        if (getCommandLength(message) > 3) {
+            String buyAmount = message.split("\\s+")[3];
+            if(StringUtils.isNumeric(buyAmount)) {
+                amountBuying = Integer.parseInt(message.split("\\s+")[3]);
+            } else if("max".equals(buyAmount)) {
+                amountBuying = villager.getBellsTotal()/currentPrice/10*10;
+            }
+        }
+        return amountBuying;
     }
 }
