@@ -38,7 +38,7 @@ public class TurnipPricesManager {
         }
     }
 
-    private List<Integer> getRandomTurnipPricesList(TurnipPattern turnipPattern, long seed) {
+    List<Integer> getRandomTurnipPricesList(TurnipPattern turnipPattern, long seed) {
         List<Integer> turnipPrices = new ArrayList<>();
         Random randomFromSeed = new Random(seed);
         for (int i = 0; i < 12; i++) {
@@ -52,9 +52,9 @@ public class TurnipPricesManager {
         Random randomFromSeed = new Random(seed);
         int spikeDay = 0;
         if (turnipPattern.equals(TurnipPattern.BIG_SPIKE)) {
-            spikeDay = new Random(seed).nextInt(8) + 2;
+            spikeDay = new Random(seed).nextInt(6) + 2;
         } else if (turnipPattern.equals(TurnipPattern.SMALL_SPIKE)) {
-            spikeDay = new Random(seed).nextInt(8) + 1;
+            spikeDay = new Random(seed).nextInt(7) + 1;
         }
         List<Integer> spikeDays = getSpikeDays(turnipPattern.getSpikeCount(), spikeDay);
         int previous = randomFromSeed.nextInt(turnipPattern.getUpperBound()) + turnipPattern.getBase();
@@ -74,9 +74,16 @@ public class TurnipPricesManager {
             } else {
                 turnipPrices.add(previous);
             }
-            previous = previous - (randomFromSeed.nextInt(5) + 2);
+            int nextPrice = previous - (randomFromSeed.nextInt(4) + 2);
+            if (nextPrice > 0) {
+                previous = nextPrice;
+            } else {
+                previous = previous / 2;
+            }
+            if (previous <= 0) {
+                previous = 1;
+            }
         }
-
 
         setDecreasingPostSpikeDays(turnipPattern, turnipPrices, randomFromSeed, maxPosition);
 
