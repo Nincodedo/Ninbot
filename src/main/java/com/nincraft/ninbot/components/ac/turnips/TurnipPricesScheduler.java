@@ -38,6 +38,10 @@ public class TurnipPricesScheduler implements Schedulable {
         while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
             calendar.add(Calendar.DATE, 1);
         }
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         Date nextSunday = calendar.getTime();
         log.trace("Scheduling turnips price reset for {}", nextSunday);
         new Timer().scheduleAtFixedRate(new TurnipTasks(), nextSunday, TimeUnit.DAYS.toMillis(7));
