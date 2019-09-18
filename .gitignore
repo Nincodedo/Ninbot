@@ -7,3 +7,5 @@
 /data/
 *.log
 *.gz
+/sourcetrail_dependencies/
+Ninbot.src*
