@@ -4,13 +4,16 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -66,7 +69,16 @@ public class DabCommand extends AbstractCommand {
 
         Collections.shuffle(list);
 
-        commandResult.addReactionEmotes(list.stream()
+        List<String> emoteNameList = new ArrayList<>();
+        List<Emote> emoteList = new ArrayList<>();
+        for (val emote : list) {
+            if (!emoteNameList.contains(emote.getName())) {
+                emoteNameList.add(emote.getName());
+                emoteList.add(emote);
+            }
+        }
+
+        commandResult.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
     }
