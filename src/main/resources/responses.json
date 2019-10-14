@@ -74,6 +74,10 @@
       "response": "nice",
       "target": "69",
       "type": "contains"
-    }
+    },
+    {
+      "response": "https://www.youtube.com/watch?v=njqW60xCwIA",
+      "target": "sad_violin",
+      "type": "contains"
   ]
 }
