@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.config;
 
 import lombok.val;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -49,11 +50,13 @@ public class ConfigService {
     }
 
     @Transactional
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name"})
     public void removeConfig(Config config) {
         configRepository.delete(config);
     }
 
     @Transactional
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name"})
     public void removeConfig(String serverId, String configName, String configValue) {
         configRepository.getConfigByServerIdAndNameAndValue(serverId, configName, configValue).ifPresent(config ->
                 configRepository.delete(config)
@@ -61,11 +64,13 @@ public class ConfigService {
     }
 
     @Transactional
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name"})
     public void addConfig(Config config) {
         configRepository.save(config);
     }
 
     @Transactional
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name"})
     public void addConfig(String serverId, String configName, String configValue) {
         configRepository.save(new Config(serverId, configName, configValue));
     }
@@ -76,6 +81,7 @@ public class ConfigService {
     }
 
     @Transactional
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name"})
     public void updateConfig(Config config) {
         configRepository.getConfigByServerIdAndName(config.getServerId(), config.getName()).ifPresent(oldConfig -> {
             oldConfig.setValue(config.getValue());
