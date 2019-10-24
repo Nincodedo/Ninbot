@@ -6,6 +6,7 @@ import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
@@ -49,15 +50,23 @@ public class DabCommand extends AbstractCommand {
         for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
                 commandResult.setOverrideMessage(message);
-                dabOnMessage(commandResult, event.getJDA().getShardManager());
+                dabOnMessage(commandResult, event.getJDA().getShardManager(), event.getAuthor());
                 return;
             }
         }
         commandResult.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(CommandResult commandResult, ShardManager shardManager) {
-        val critDab = random.nextInt(100) < 5;
+    private void dabOnMessage(CommandResult commandResult, ShardManager shardManager,
+            User commandUser) {
+        int dabCritPercentChance = 5;
+        for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
+            if (member.getId().equals(commandUser.getId())) {
+                dabCritPercentChance = dabCritPercentChance * 2;
+            }
+        }
+
+        val critDab = random.nextInt(100) < dabCritPercentChance;
         if (critDab) {
             commandResult.addReaction(critResponse.getEmojiList());
             commandResult.addReaction(dabResponse.getEmojiList());
