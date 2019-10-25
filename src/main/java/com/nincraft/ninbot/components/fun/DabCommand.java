@@ -63,6 +63,7 @@ public class DabCommand extends AbstractCommand {
         for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
             if (member.getId().equals(commandUser.getId())) {
                 dabCritPercentChance = dabCritPercentChance * 2;
+                break;
             }
         }
 
