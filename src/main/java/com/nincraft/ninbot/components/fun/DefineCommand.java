@@ -27,8 +27,13 @@ public class DefineCommand extends AbstractCommand {
         CommandResult commandResult = new CommandResult(event);
         String word = event.getMessage().getContentStripped().substring(("@Ninbot " + name + " ").length());
         Map<String, String> definition = defineWordAPI.defineWord(word);
-        Message message = buildMessage(definition, word);
-        commandResult.addChannelAction(message);
+        if (definition == null) {
+            commandResult.addUnsuccessfulReaction();
+        } else {
+            Message message = buildMessage(definition, word);
+            commandResult.addChannelAction(message);
+
+        }
         return commandResult;
     }
 

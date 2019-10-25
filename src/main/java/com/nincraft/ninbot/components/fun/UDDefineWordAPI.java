@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -29,8 +30,13 @@ public class UDDefineWordAPI implements DefineWordAPI {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> responseMap = mapper.readValue(EntityUtils.toString(response.getEntity()),
                     new TypeReference<Map<String, Object>>() {
-            });
-            return (Map<String, String>) ((ArrayList) responseMap.get("list")).get(0);
+                    });
+            List responseList = (ArrayList) responseMap.get("list");
+            if (!responseList.isEmpty()) {
+                return (Map<String, String>) responseList.get(0);
+            } else {
+                return null;
+            }
 
         } catch (IOException e) {
             log.error("HttpGet Failed", e);
