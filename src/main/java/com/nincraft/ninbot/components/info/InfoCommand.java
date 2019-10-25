@@ -36,6 +36,12 @@ public class InfoCommand extends AbstractCommand {
         val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
         embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(uptimeMilliseconds),
                 false);
+        embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
+                String.format(resourceBundle.getString("command.info.githublink.value"), "https://github"
+                        + ".com/Nincodedo/Ninbot"),
+                false);
+        embedBuilder.addField(resourceBundle.getString("command.info.githublink.issues"),
+                "https://github.com/Nincodedo/Ninbot/issues/new/choose", false);
         commandResult.addChannelAction(new MessageBuilder(embedBuilder).build());
         return commandResult;
     }
