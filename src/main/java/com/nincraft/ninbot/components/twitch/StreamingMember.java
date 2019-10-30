@@ -27,5 +27,6 @@ class StreamingMember {
     StreamingMember(String userId, String guildId) {
         this.userId = userId;
         this.guildId = guildId;
+        this.started = LocalDateTime.now();
     }
 }

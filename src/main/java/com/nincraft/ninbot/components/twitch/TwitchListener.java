@@ -20,9 +20,10 @@ import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Log4j2
@@ -52,8 +53,17 @@ public class TwitchListener extends ListenerAdapter {
         val userId = event.getMember().getId();
         val guildId = event.getGuild().getId();
         if (event instanceof UserActivityStartEvent) {
+            log.trace("UserActivityStartEvent, userId: {}, guildId: {}", userId, guildId);
             val optionalStreamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId);
-            if (!optionalStreamingMember.isPresent()) {
+            if (optionalStreamingMember.isPresent()) {
+                log.trace("Streamer found in DB");
+                val streamingMember = optionalStreamingMember.get();
+                if (streamingMember.getStarted().isBefore(LocalDateTime.now().minus(24, ChronoUnit.HOURS))) {
+                    log.trace("Old, removing {}", streamingMember.getUserId());
+                    streamingMemberRepository.delete(streamingMember);
+                }
+            } else {
+                log.trace("Streamer not found in DB, creating a new Streaming Member and attempting announcement");
                 StreamingMember streamingMember = new StreamingMember(userId, guildId);
                 val activityStartEvent = (UserActivityStartEvent) event;
                 val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild()
@@ -64,10 +74,7 @@ public class TwitchListener extends ListenerAdapter {
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())
                         && isStreaming) {
                     streamingMemberRepository.save(streamingMember);
-                    Timer timer = new Timer();
                     announceStream(activityStartEvent);
-                    timer.schedule(new TwitchAnnounceCooldown(streamingMember), Date.from(Instant.now()
-                            .plus(30, ChronoUnit.MINUTES)));
                 }
             }
         } else if (event instanceof UserActivityEndEvent && hasNoStreamingActivity(event.getMember().getActivities())) {
@@ -110,7 +117,7 @@ public class TwitchListener extends ListenerAdapter {
                     String streamTitle = gameName;
                     if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
                         gameName = activity.asRichPresence().getDetails();
-                        log.trace("Rich activity found, updating game name");
+                        log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl,
                             gameName, streamTitle, serverId))
@@ -152,19 +159,5 @@ public class TwitchListener extends ListenerAdapter {
                 log.trace("Could not add role ID {} for {}", roleId, member.getEffectiveName());
             }
         });
-    }
-
-    class TwitchAnnounceCooldown extends TimerTask {
-
-        private StreamingMember streamingMember;
-
-        TwitchAnnounceCooldown(StreamingMember streamingMember) {
-            this.streamingMember = streamingMember;
-        }
-
-        @Override
-        public void run() {
-            streamingMemberRepository.delete(streamingMember);
-        }
     }
 }
