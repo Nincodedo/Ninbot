@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 class StreamingMember {
     @CreatedDate
-    LocalDateTime started;
+    private LocalDateTime started;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
