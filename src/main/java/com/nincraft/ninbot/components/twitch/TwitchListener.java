@@ -119,8 +119,8 @@ public class TwitchListener extends ListenerAdapter {
                         gameName = activity.asRichPresence().getDetails();
                         log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                     }
-                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent, username, streamingUrl,
-                            gameName, streamTitle, serverId))
+                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent.getUser()
+                            .getAvatarUrl(), username, streamingUrl, gameName, streamTitle, serverId))
                             .queue();
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
@@ -134,17 +134,15 @@ public class TwitchListener extends ListenerAdapter {
         });
     }
 
-    private Message buildStreamAnnounceMessage(UserActivityStartEvent userActivityStartEvent, String username,
+    Message buildStreamAnnounceMessage(String avatarUrl, String username,
             String streamingUrl, String gameName, String streamTitle, String serverId) {
         log.trace("Building stream announce message for {} server {}", username, serverId);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
         val embedMessage = new EmbedBuilder()
                 .setAuthor(String.format(resourceBundle.getString("listener.twitch.announce"), username, gameName,
-                        streamingUrl), streamingUrl, userActivityStartEvent
-                        .getUser()
-                        .getAvatarUrl())
+                        streamingUrl), streamingUrl, avatarUrl)
                 .setTitle(streamTitle)
-                .setColor(MessageBuilderHelper.getColor(userActivityStartEvent.getUser().getAvatarUrl()));
+                .setColor(MessageBuilderHelper.getColor(avatarUrl));
         return new MessageBuilder(embedMessage).build();
     }
 

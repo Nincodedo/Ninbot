@@ -47,6 +47,7 @@ public class TwitchCommand extends AbstractCommand {
                 configService.removeConfig(config);
                 commandResult.addReaction(Emojis.OFF);
                 foundUser = true;
+                break;
             }
         }
         if (!foundUser) {
