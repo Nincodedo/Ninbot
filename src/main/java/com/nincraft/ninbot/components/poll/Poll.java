@@ -4,8 +4,8 @@ import com.nincraft.ninbot.components.common.MessageBuilderHelper;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +19,7 @@ class Poll {
     private List<String> choices;
     private String result;
     private long timeLength;
-    private User user;
+    private Member member;
     private boolean pollOpen;
 
     Message build() {
@@ -35,14 +35,15 @@ class Poll {
     private Message buildPollMessage(String footer) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(title);
-        embedBuilder.setColor(MessageBuilderHelper.getColor(user.getAvatarUrl()));
+        embedBuilder.setColor(MessageBuilderHelper.getColor(member.getUser().getAvatarUrl()));
         if (isPollOpen()) {
             embedBuilder.setTimestamp(Instant.now().plus(timeLength, ChronoUnit.MINUTES));
         } else {
             embedBuilder.setTimestamp(Instant.now());
         }
         embedBuilder.setAuthor(
-                resourceBundle.getString("poll.announce.authortext") + user.getName(), null, user.getAvatarUrl());
+                resourceBundle.getString("poll.announce.authortext") + member.getEffectiveName(),
+                null, member.getUser().getAvatarUrl());
         embedBuilder.addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false);
         embedBuilder.setFooter(footer, null);
         return new MessageBuilder(embedBuilder).build();

@@ -4,8 +4,8 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.command.CommandResult;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class PollCommand extends AbstractCommand {
     public CommandResult executeCommand(MessageReceivedEvent event) {
         CommandResult commandResult = new CommandResult(event);
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
-            Poll poll = parsePollMessage(event.getMessage(), event.getAuthor());
+            Poll poll = parsePollMessage(event.getMessage(), event.getMember());
             poll.setResourceBundle(resourceBundle);
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
                 event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
@@ -38,9 +38,9 @@ public class PollCommand extends AbstractCommand {
         return commandResult;
     }
 
-    private Poll parsePollMessage(Message message, User user) {
+    private Poll parsePollMessage(Message message, Member member) {
         Poll poll = new Poll();
-        poll.setUser(user);
+        poll.setMember(member);
         val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         poll.setChoices(new ArrayList<>());
         if (pollMessage.contains("\"")) {
