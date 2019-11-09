@@ -38,6 +38,9 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean isNinbotMention(MessageReceivedEvent event) {
         return !event.getAuthor().isBot()
-                && event.getMessage().getContentStripped().toLowerCase().startsWith("@ninbot");
+                && event.getMessage()
+                .getContentStripped()
+                .toLowerCase()
+                .startsWith("@" + event.getGuild().getMember(event.getJDA().getSelfUser()).getEffectiveName());
     }
 }

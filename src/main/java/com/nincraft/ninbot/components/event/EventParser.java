@@ -18,7 +18,8 @@ class EventParser {
         event.setAuthorName(author)
                 .setGameName(eventMap.get("gameName"))
                 .setName(eventMap.get("name"))
-                .setStartTime(parse(eventMap.get("startTime"), ISO_OFFSET_DATE_TIME).withZoneSameLocal(ZoneId.of(serverTimezone)))
+                .setStartTime(parse(eventMap.get("startTime"),
+                        ISO_OFFSET_DATE_TIME).withZoneSameLocal(ZoneId.of(serverTimezone)))
                 .setServerId(message.getGuild().getId());
         return event;
     }

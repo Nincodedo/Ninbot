@@ -20,27 +20,21 @@ class Poll {
     private String result;
     private long timeLength;
     private Member member;
-    private boolean pollOpen;
 
     Message build() {
-        pollOpen = true;
-        return buildPollMessage(resourceBundle.getString("poll.announce.willclose"));
+        return buildPollMessage(resourceBundle.getString("poll.announce.willclose"), Instant.now()
+                .plus(timeLength, ChronoUnit.MINUTES));
     }
 
     Message buildClosed() {
-        pollOpen = false;
-        return buildPollMessage(result);
+        return buildPollMessage(result, Instant.now());
     }
 
-    private Message buildPollMessage(String footer) {
+    private Message buildPollMessage(String footer, Instant timestamp) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(title);
         embedBuilder.setColor(MessageBuilderHelper.getColor(member.getUser().getAvatarUrl()));
-        if (isPollOpen()) {
-            embedBuilder.setTimestamp(Instant.now().plus(timeLength, ChronoUnit.MINUTES));
-        } else {
-            embedBuilder.setTimestamp(Instant.now());
-        }
+        embedBuilder.setTimestamp(timestamp);
         embedBuilder.setAuthor(
                 resourceBundle.getString("poll.announce.authortext") + member.getEffectiveName(),
                 null, member.getUser().getAvatarUrl());

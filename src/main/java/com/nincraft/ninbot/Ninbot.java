@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.common.Schedulable;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +26,20 @@ public class Ninbot {
     @Autowired
     private List<Schedulable> schedulableList;
 
+    private static void logGuildInformation(Guild guild) {
+        double botPercentage = guild.getMembers()
+                .stream()
+                .filter(member -> member.getUser().isBot())
+                .count() / (double) guild.getMembers().size();
+        log.info("Server ID: {}, Name: {}, Owner: {}, Member Count: {}, Bot ratio: {}",
+                guild.getId(), guild
+                        .getName(), guild.getOwner()
+                        .getUser()
+                        .getName(), guild.getMembers()
+                        .size(), NumberFormat.getPercentInstance()
+                        .format(botPercentage));
+    }
+
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext context) {
         return args -> {
@@ -37,19 +52,7 @@ public class Ninbot {
                             log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo()
                                     .getShardId(), jda.getGuilds().size());
                             jda.getGuilds()
-                                    .forEach(guild -> {
-                                        double botPercentage = guild.getMembers()
-                                                .stream()
-                                                .filter(member -> member.getUser().isBot())
-                                                .count() / (double) guild.getMembers().size();
-                                        log.info("Server ID: {}, Name: {}, Owner: {}, Member Count: {}, Bot ratio: {}",
-                                                guild.getId(), guild
-                                                        .getName(), guild.getOwner()
-                                                        .getUser()
-                                                        .getName(), guild.getMembers()
-                                                        .size(), NumberFormat.getPercentInstance()
-                                                        .format(botPercentage));
-                                    });
+                                    .forEach(Ninbot::logGuildInformation);
                         } catch (InterruptedException e) {
                             log.error("Failed to wait for shard to start", e);
                         }
