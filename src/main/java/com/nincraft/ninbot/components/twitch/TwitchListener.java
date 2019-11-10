@@ -51,6 +51,12 @@ public class TwitchListener extends ListenerAdapter {
         val guild = event.getGuild();
         val guildId = guild.getId();
         if (event instanceof UserActivityStartEvent) {
+            val isStreaming = ((UserActivityStartEvent) event).getNewActivity()
+                    .getType()
+                    .equals(Activity.ActivityType.STREAMING);
+            if (!isStreaming) {
+                return;
+            }
             log.trace("UserActivityStartEvent, userId: {}, guildId: {}", userId, guildId);
             val optionalStreamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId);
             if (optionalStreamingMember.isPresent()) {
@@ -66,11 +72,8 @@ public class TwitchListener extends ListenerAdapter {
                 val activityStartEvent = (UserActivityStartEvent) event;
                 val streamingAnnounceUser = configService.getValuesByName(activityStartEvent.getGuild()
                         .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                val isStreaming = ((UserActivityStartEvent) event).getNewActivity()
-                        .getType()
-                        .equals(Activity.ActivityType.STREAMING);
-                if (streamingAnnounceUser.contains(streamingMember.getUserId())
-                        && isStreaming) {
+
+                if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
                     streamingMemberRepository.save(streamingMember);
                     announceStream(guild, activityStartEvent.getNewActivity(), activityStartEvent.getUser());
                 }
