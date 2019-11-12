@@ -10,7 +10,10 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
@@ -48,8 +51,7 @@ public class TwitchListener extends ListenerAdapter {
             return;
         }
         val userId = event.getMember().getId();
-        val guild = event.getGuild();
-        val guildId = guild.getId();
+        val guildId = event.getGuild().getId();
         if (event instanceof UserActivityStartEvent) {
             val isStreaming = ((UserActivityStartEvent) event).getNewActivity()
                     .getType()
@@ -75,7 +77,7 @@ public class TwitchListener extends ListenerAdapter {
 
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
                     streamingMemberRepository.save(streamingMember);
-                    announceStream(guild, activityStartEvent.getNewActivity(), activityStartEvent.getUser());
+                    announceStream(activityStartEvent);
                 }
             }
         } else if (event instanceof UserActivityEndEvent && hasNoStreamingActivity(event.getMember().getActivities())) {
@@ -101,30 +103,33 @@ public class TwitchListener extends ListenerAdapter {
     }
 
 
-    private void announceStream(Guild guild, Activity activity, User user) {
-        val guildId = guild.getId();
-        val streamingAnnounceChannel = configService.getSingleValueByName(guildId,
+    private void announceStream(UserActivityStartEvent userActivityStartEvent) {
+        val serverId = userActivityStartEvent.getGuild().getId();
+        val streamingAnnounceChannel = configService.getSingleValueByName(serverId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
+            val guild = userActivityStartEvent.getGuild();
             val channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            val username = user.getName();
-            val streamingUrl = activity.getUrl();
+            val username = userActivityStartEvent.getUser().getName();
+            val streamingUrl = userActivityStartEvent.getNewActivity().getUrl();
             if (streamingUrl != null) {
-                addRole(guild, guild.getMember(user));
+                addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
                 if (channel != null) {
+                    val activity = userActivityStartEvent.getNewActivity();
                     String gameName = activity.getName();
                     String streamTitle = gameName;
                     if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
                         gameName = activity.asRichPresence().getDetails();
                         log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                     }
-                    channel.sendMessage(buildStreamAnnounceMessage(user.getAvatarUrl(), username, streamingUrl,
-                            gameName, streamTitle, guildId))
+                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent.getUser()
+                            .getAvatarUrl(), username, streamingUrl, gameName, streamTitle, serverId))
                             .queue();
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
                     log.trace("Announcement channel was null, not announcing stream for {} on server {}", username,
-                            guildId);
+                            guild
+                                    .getId());
                 }
             } else {
                 log.trace("Streaming url was null???");

@@ -35,9 +35,7 @@ public class ConversationListener extends ListenerAdapter {
         val channelId = event.getChannel().getId();
         val message = event.getMessage().getContentStripped();
         if (!event.getAuthor().isBot() && isConversationEnabledChannel(event.getGuild().getId(), channelId)
-                && isNormalConversation(message, event.getGuild()
-                .getMember(event.getJDA().getSelfUser())
-                .getEffectiveName().toLowerCase())) {
+                && isNormalConversation(message)) {
             val botConversation = recastAPI.startBotConversation(channelId);
             botConversation.addParticipants(event.getAuthor().getName());
             botConversation.getResponse(message).ifPresent(response ->
@@ -46,8 +44,8 @@ public class ConversationListener extends ListenerAdapter {
         }
     }
 
-    private boolean isNormalConversation(String message, String botName) {
-        return !message.toLowerCase().startsWith("@" + botName) && message.toLowerCase().contains(botName);
+    private boolean isNormalConversation(String message) {
+        return !message.toLowerCase().startsWith("@ninbot") && message.toLowerCase().contains("ninbot");
     }
 
     private boolean isConversationEnabledChannel(String serverId, String channelId) {
