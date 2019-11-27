@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
+import net.dv8tion.jda.api.entities.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,13 +25,6 @@ import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
@@ -70,6 +64,7 @@ public class TwitchListenerTest {
         TextChannel textChannel = Mockito.mock(TextChannel.class);
         MessageAction messageAction = Mockito.mock(MessageAction.class);
         Role streamingRole = Mockito.mock(Role.class);
+        RichPresence richPresence = Mockito.mock(RichPresence.class);
         AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
@@ -82,8 +77,10 @@ public class TwitchListenerTest {
         when(activity.getType()).thenReturn(Activity.ActivityType.STREAMING);
         when(userActivityStartEvent.getUser()).thenReturn(user);
         when(user.getName()).thenReturn("Nin");
+        when(activity.isRich()).thenReturn(true);
+        when(activity.asRichPresence()).thenReturn(richPresence);
         when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
-        when(activity.getName()).thenReturn("Zeldo Breath of the Wild 2");
+        when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
         when(localeService.getLocale("123")).thenReturn(new Locale("en"));
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getTextChannelById("123")).thenReturn(textChannel);

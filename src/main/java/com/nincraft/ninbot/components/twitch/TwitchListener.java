@@ -116,16 +116,16 @@ public class TwitchListener extends ListenerAdapter {
                 addRole(guild, guild.getMember(userActivityStartEvent.getUser()));
                 if (channel != null) {
                     val activity = userActivityStartEvent.getNewActivity();
-                    String gameName = activity.getName();
-                    String streamTitle = gameName;
-                    if (activity.isRich() && activity.asRichPresence().getDetails() != null) {
-                        gameName = activity.asRichPresence().getDetails();
+                    if (activity.isRich() && activity.asRichPresence().getState() != null) {
+                        val richActivity = activity.asRichPresence();
+                        String gameName = richActivity.getState();
+                        String streamTitle = richActivity.getDetails();
                         log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
+                        channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent.getUser()
+                                .getAvatarUrl(), username, streamingUrl, gameName, streamTitle, serverId))
+                                .queue();
+                        log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                     }
-                    channel.sendMessage(buildStreamAnnounceMessage(userActivityStartEvent.getUser()
-                            .getAvatarUrl(), username, streamingUrl, gameName, streamTitle, serverId))
-                            .queue();
-                    log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
                     log.trace("Announcement channel was null, not announcing stream for {} on server {}", username,
                             guild
