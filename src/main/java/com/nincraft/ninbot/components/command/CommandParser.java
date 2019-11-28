@@ -20,11 +20,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.nincraft.ninbot.components.common.Emojis.QUESTION_MARK;
+
 @Log4j2
 @Component
 class CommandParser {
 
-    private static final String QUESTION_MARK = "\u2754";
     private ConfigService configService;
     private ComponentService componentService;
     private LocaleService localeService;

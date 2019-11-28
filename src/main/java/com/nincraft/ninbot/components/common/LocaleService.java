@@ -15,7 +15,7 @@ public class LocaleService {
 
     public LocaleService(ConfigService configService) {
         this.configService = configService;
-        defaultLocale = Locale.ENGLISH;
+        this.defaultLocale = Locale.ENGLISH;
     }
 
     public Locale getLocale(MessageReceivedEvent event) {
