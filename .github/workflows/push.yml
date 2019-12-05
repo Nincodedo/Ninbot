@@ -15,3 +15,8 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./mvnw sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref }} --no-transfer-progress
+    - name: GitHub Docker Action
+      uses: matootie/github-docker@v1.0.1
+      with:
+         username: nincodedo
+         personalAccessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
