@@ -4,7 +4,7 @@ COPY pom.xml .
 RUN mvn -e -B dependency:resolve
 COPY src ./src
 COPY .git ./.git
-RUN mvn verify -P git-commit,integration --no-transfer-progress
+RUN mvn package -P git-commit --no-transfer-progress
 
 FROM openjdk:8-jre-alpine
 COPY --from=build /app/target/ninbot-1.0-SNAPSHOT.jar /
