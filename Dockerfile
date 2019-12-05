@@ -3,6 +3,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn -e -B dependency:resolve
 COPY src ./src
+COPY .git ./.git
 RUN mvn verify -P git-commit,integration --no-transfer-progress
 
 FROM openjdk:8-jre-alpine
