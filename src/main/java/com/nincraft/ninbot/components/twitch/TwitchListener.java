@@ -82,8 +82,6 @@ public class TwitchListener extends ListenerAdapter {
             }
         } else if (event instanceof UserActivityEndEvent && hasNoStreamingActivity(event.getMember().getActivities())) {
             removeRole(event.getGuild(), event.getMember());
-            streamingMemberRepository.findByUserIdAndGuildId(userId, guildId)
-                    .ifPresent(streamingMember -> streamingMemberRepository.delete(streamingMember));
         }
     }
 
