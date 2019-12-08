@@ -1,4 +1,4 @@
-FROM maven:3.6-jdk-8-alpine AS build
+FROM maven:3.6.3-jdk-8-slim AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -e -B dependency:resolve
