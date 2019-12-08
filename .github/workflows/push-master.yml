@@ -1,0 +1,45 @@
+on:
+  push:
+    branches: 
+      - master
+name: Master Build/Deploy
+env:
+  GCLOUD_PROJECT: ${{ secrets.GCLOUD_PROJECT }}
+  GCLOUD_EMAIL: ${{ secrets.GCLOUD_EMAIL }}
+  GITHUB_SHA: ${{ github.sha }}
+  IMAGE: ninbot
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Update permissions on mvnw
+      run: chmod 700 mvnw
+    - name: Package
+      run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
+    - name: Sonar
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./mvnw sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref }} --no-transfer-progress
+    - name: GitHub Docker Action
+      uses: matootie/github-docker@v1.0.1
+      with:
+         username: nincodedo
+         personalAccessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GCLOUD_EMAIL }}
+        service_account_key: ${{ secrets.GCLOUD_KEY }}
+    - run: |
+        gcloud auth configure-docker
+    - name: Build
+      run: |        
+        docker build -t gcr.io/"$GCLOUD_PROJECT"/"$IMAGE":"$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" .
+    - name: Publish
+      run: |
+        docker push gcr.io/$GCLOUD_PROJECT/$IMAGE:$GITHUB_SHA
