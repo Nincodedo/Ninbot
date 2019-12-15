@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -64,10 +65,7 @@ public class TwitchListener extends ListenerAdapter {
             if (optionalStreamingMember.isPresent()) {
                 log.trace("Streamer found in DB");
                 val streamingMember = optionalStreamingMember.get();
-                if (streamingMember.getStarted().isBefore(LocalDateTime.now().minus(24, ChronoUnit.HOURS))) {
-                    log.trace("Old, removing {}", streamingMember.getUserId());
-                    streamingMemberRepository.delete(streamingMember);
-                }
+                deleteOldStreams(streamingMember);
             } else {
                 log.trace("Streamer not found in DB, creating a new Streaming Member and attempting announcement");
                 StreamingMember streamingMember = new StreamingMember(userId, guildId);
@@ -83,6 +81,20 @@ public class TwitchListener extends ListenerAdapter {
         } else if (event instanceof UserActivityEndEvent && hasNoStreamingActivity(event.getMember().getActivities())) {
             removeRole(event.getGuild(), event.getMember());
         }
+    }
+
+    private void deleteOldStreams(StreamingMember streamingMember) {
+        if (streamingMember.getStarted().isBefore(LocalDateTime.now().minus(24, ChronoUnit.HOURS))) {
+            log.trace("Old, removing {}", streamingMember.getUserId());
+            streamingMemberRepository.delete(streamingMember);
+        }
+    }
+
+    //twice a day
+    @Scheduled(fixedRate = 43200000L)
+    private void deleteOldStreams() {
+        log.trace("Running scheduled delete of old streams");
+        streamingMemberRepository.findAll().forEach(this::deleteOldStreams);
     }
 
     private boolean hasNoStreamingActivity(List<Activity> activities) {
