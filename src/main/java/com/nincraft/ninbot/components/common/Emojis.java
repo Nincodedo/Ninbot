@@ -10,4 +10,5 @@ public class Emojis {
     public static final String OFF = "\uD83D\uDCF4";
     public static final String ON = "\uD83D\uDD1B";
     public static final String PLUS = "\u2795";
+    public static final String SICK_FACE = "\uD83E\uDD22";
 }
