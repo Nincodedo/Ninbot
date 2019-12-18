@@ -214,10 +214,10 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>13</source>
+                    <target>13</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -264,6 +264,9 @@
                     <excludes>
                         <exclude>**/*IT</exclude>
                     </excludes>
+                    <argLine>
+                        --enable-preview
+                    </argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -313,6 +316,9 @@
                                     <includes>
                                         <include>**/*IT</include>
                                     </includes>
+                                    <argLine>
+                                        --enable-preview
+                                    </argLine>
                                 </configuration>
                             </execution>
                         </executions>
@@ -325,6 +331,9 @@
                             <includes>
                                 <include>**/*IT</include>
                             </includes>
+                            <argLine>
+                                --enable-preview
+                            </argLine>
                         </configuration>
                         <executions>
                             <execution>
