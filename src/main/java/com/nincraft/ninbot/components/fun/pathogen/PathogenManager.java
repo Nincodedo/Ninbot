@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.fun.pathogen;
 
 import com.nincraft.ninbot.components.common.Emojis;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Log4j2
 @Component
@@ -29,16 +32,21 @@ public class PathogenManager {
     private Random todayRandom;
     private Random random;
     private String roleName = "infected";
+    @Getter
+    private int wordListLength = 30;
 
     public PathogenManager() {
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
-
     }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void setRandomSeed() {
         this.todayRandom = new Random(LocalDate.now().toEpochDay());
+    }
+
+    public void setRandomSeed(long seed) {
+        this.todayRandom = new Random(seed);
     }
 
 
@@ -69,7 +77,7 @@ public class PathogenManager {
 
     @GetMapping("/wordlist")
     @ResponseBody
-    public List<String> getWordList() {
+    public Set<String> getWordList() {
         setRandomSeed();
         try {
             List<String> list = new ArrayList<>();
@@ -81,15 +89,12 @@ public class PathogenManager {
                     line = null;
                 }
             }
-            List<String> shortList = new ArrayList<>();
-            for (int i = 0; i < 30; i++) {
-                shortList.add(list.get(todayRandom.nextInt(list.size())));
-            }
-            return shortList;
-
+            return IntStream.range(0, wordListLength)
+                    .mapToObj(i -> list.remove(todayRandom.nextInt(list.size())))
+                    .collect(Collectors.toSet());
         } catch (IOException e) {
             log.error("Failed to read list of common words", e);
-            return new ArrayList<>();
+            return new HashSet<>();
         }
     }
 }
