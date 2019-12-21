@@ -2,8 +2,8 @@ package com.nincraft.ninbot.beans;
 
 import com.github.twitch4j.helix.TwitchHelix;
 import com.github.twitch4j.helix.TwitchHelixBuilder;
-import com.nincodedo.recast.RecastAPI;
-import com.nincodedo.recast.RecastAPIBuilder;
+import com.nincodedo.sapconversational.SAPConversationalAIAPI;
+import com.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -25,8 +25,8 @@ public class ApplicationBean {
     @Value("${ninbotToken}")
     private String ninbotToken;
 
-    @Value("${recastToken}")
-    private String recastToken;
+    @Value("${sapToken}")
+    private String sapToken;
 
     @Value("${twitchClientId}")
     private String twitchClientId;
@@ -49,8 +49,8 @@ public class ApplicationBean {
     }
 
     @Bean
-    public RecastAPI recastAPI() {
-        return new RecastAPIBuilder(recastToken).build();
+    public SAPConversationalAIAPI sapConversationalAIAPI() {
+        return new SAPConversationalAIAPIBuilder(sapToken).build();
     }
 
     @Bean
