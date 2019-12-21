@@ -1,11 +1,13 @@
 package com.nincraft.ninbot.components.users.birthday;
 
+import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.common.GenericAnnounce;
 import com.nincraft.ninbot.components.common.Schedulable;
 import com.nincraft.ninbot.components.users.NinbotUser;
 import com.nincraft.ninbot.components.users.UserRepository;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Component;
@@ -32,12 +34,12 @@ public class BirthdayScheduler implements Schedulable {
         new Timer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
     }
 
-    private void scheduleBirthdayAnnouncement(NinbotUser ninbotUser, ShardManager shardManager) {
+    void scheduleBirthdayAnnouncement(NinbotUser ninbotUser, ShardManager shardManager) {
         if (DateUtils.isSameDay(ninbotUser.getBirthday(), Date.from(LocalDate.now()
                 .plus(1, ChronoUnit.DAYS)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()))) {
-            String birthdayMessage = buildMessage(ninbotUser, shardManager);
+            Message birthdayMessage = buildMessage(ninbotUser, shardManager);
             new Timer().schedule(new GenericAnnounce(shardManager, "497392348192571392", birthdayMessage),
                     Date.from(LocalDate.now(ZoneId.systemDefault())
                             .atStartOfDay(ZoneId.systemDefault())
@@ -46,13 +48,15 @@ public class BirthdayScheduler implements Schedulable {
         }
     }
 
-    private String buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
+    private Message buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
         MessageBuilder messageBuilder = new MessageBuilder();
         val user = shardManager.getUserById(ninbotUser.getId());
         messageBuilder.append("It's ");
         messageBuilder.append(user);
-        messageBuilder.append(" birthday today!");
-        return "";
+        messageBuilder.append(" birthday today! ");
+        messageBuilder.append(
+                Emojis.BIRTHDAY_CAKE + " " + Emojis.PARTY_FACE + " " + Emojis.BALLOON + " " + Emojis.PARTY_POPPER);
+        return messageBuilder.build();
     }
 
     class Scheduler extends TimerTask {
