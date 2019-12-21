@@ -34,7 +34,7 @@ public class PathogenSpreadListener extends ListenerAdapter {
             return;
         }
         event.getChannel().getHistoryAround(event.getMessage(), 5).queue(messageHistory -> {
-            Map<User, Message> surroundingUsers = new HashMap();
+            Map<User, Message> surroundingUsers = new HashMap<>();
             messageHistory.getRetrievedHistory().forEach(message -> surroundingUsers.put(message.getAuthor(), message));
             pathogenManager.spread(event.getGuild(), surroundingUsers);
         });

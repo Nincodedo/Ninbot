@@ -11,4 +11,8 @@ public class Emojis {
     public static final String ON = "\uD83D\uDD1B";
     public static final String PLUS = "\u2795";
     public static final String SICK_FACE = "\uD83E\uDD22";
+    public static final String PARTY_FACE = "\uD83E\uDD73";
+    public static final String BIRTHDAY_CAKE = "\uD83C\uDF82";
+    public static final String BALLOON = "\uD83C\uDF88";
+    public static final String PARTY_POPPER = "\uD83C\uDF89";
 }
