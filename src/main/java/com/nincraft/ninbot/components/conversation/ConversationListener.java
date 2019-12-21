@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.conversation;
 
-import com.nincodedo.recast.RecastAPI;
+import com.nincodedo.sapconversational.SAPConversationalAIAPI;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
@@ -15,13 +15,14 @@ public class ConversationListener extends ListenerAdapter {
 
     private ConfigService configService;
     private ComponentService componentService;
-    private RecastAPI recastAPI;
+    private SAPConversationalAIAPI sapConversationalAIAPI;
     private String componentName;
 
-    public ConversationListener(ConfigService configService, ComponentService componentService, RecastAPI recastAPI) {
+    public ConversationListener(ConfigService configService, ComponentService componentService,
+            SAPConversationalAIAPI sapConversationalAIAPI) {
         this.configService = configService;
         this.componentService = componentService;
-        this.recastAPI = recastAPI;
+        this.sapConversationalAIAPI = sapConversationalAIAPI;
         this.componentName = "conversation-listener";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
@@ -36,7 +37,7 @@ public class ConversationListener extends ListenerAdapter {
         val message = event.getMessage().getContentStripped();
         if (!event.getAuthor().isBot() && isConversationEnabledChannel(event.getGuild().getId(), channelId)
                 && isNormalConversation(message)) {
-            val botConversation = recastAPI.startBotConversation(channelId);
+            val botConversation = sapConversationalAIAPI.startBotConversation(channelId);
             botConversation.addParticipants(event.getAuthor().getName());
             botConversation.getResponse(message).ifPresent(response ->
                     event.getChannel().sendMessage(response).queue()

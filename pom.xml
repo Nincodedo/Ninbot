@@ -117,8 +117,8 @@
         </dependency>
         <dependency>
             <groupId>com.nincodedo</groupId>
-            <artifactId>recastai-java-api</artifactId>
-            <version>0.0.2</version>
+            <artifactId>sap-conversational-ai-java-api</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
