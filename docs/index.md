@@ -4,6 +4,7 @@ Ninbot is a Discord bot with various silly commands and actions.
 * Commands for scheduling events, playing trivia, and dabbing on your friends
 * Acts like the father you never had in your life but wish you did
 * Announces when your users go live on Twitch
+* Infects you and your friends with a non-lethal infection
 
 ## Documentation
 
