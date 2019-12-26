@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.trivia;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.trivia.game.TriviaManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -30,30 +30,18 @@ public class TriviaCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "start":
-                startTrivia(event, commandResult);
-                break;
-            case "stop":
-                stopTrivia(event, commandResult);
-                break;
-            case "categories":
-                commandResult.addChannelAction(displayTriviaCategories());
-                break;
-            case "score":
-                commandResult.addChannelAction(getPlayerScore(event));
-                break;
-            case "leaderboard":
-                displayLeaderboard(event).ifPresent(commandResult::addChannelAction);
-                break;
-            default:
-                commandResult.addUnsuccessfulReaction();
-                break;
+            case "start" -> startTrivia(event, messageAction);
+            case "stop" -> stopTrivia(event, messageAction);
+            case "categories" -> messageAction.addChannelAction(displayTriviaCategories());
+            case "score" -> messageAction.addChannelAction(getPlayerScore(event));
+            case "leaderboard" -> displayLeaderboard(event).ifPresent(messageAction::addChannelAction);
+            default -> messageAction.addUnsuccessfulReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 
     private Optional<Message> displayLeaderboard(MessageReceivedEvent event) {
@@ -97,21 +85,21 @@ public class TriviaCommand extends AbstractCommand {
 
 
     private void stopTrivia(MessageReceivedEvent event,
-            CommandResult commandResult) {
+            MessageAction messageAction) {
         if (!triviaManager.isTriviaActiveInChannel(event.getChannel().getId())) {
-            commandResult.addUnsuccessfulReaction();
+            messageAction.addUnsuccessfulReaction();
             return;
         }
         triviaManager.stopTrivia(event.getChannel().getId());
-        commandResult.addChannelAction("Trivia has ended.");
-        commandResult.addSuccessfulReaction();
+        messageAction.addChannelAction("Trivia has ended.");
+        messageAction.addSuccessfulReaction();
     }
 
     private void startTrivia(MessageReceivedEvent event,
-            CommandResult commandResult) {
+            MessageAction messageAction) {
         val channel = event.getChannel();
         if (triviaManager.isTriviaActiveInChannel(channel.getId())) {
-            commandResult.addUnsuccessfulReaction();
+            messageAction.addUnsuccessfulReaction();
             return;
         }
         val message = event.getMessage().getContentStripped();

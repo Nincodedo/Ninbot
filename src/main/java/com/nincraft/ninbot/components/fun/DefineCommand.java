@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,18 +23,18 @@ public class DefineCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         String word = event.getMessage().getContentStripped().substring(("@Ninbot " + name + " ").length());
         Map<String, String> definition = defineWordAPI.defineWord(word);
         if (definition == null) {
-            commandResult.addUnsuccessfulReaction();
+            messageAction.addUnsuccessfulReaction();
         } else {
             Message message = buildMessage(definition, word);
-            commandResult.addChannelAction(message);
+            messageAction.addChannelAction(message);
 
         }
-        return commandResult;
+        return messageAction;
     }
 
     private Message buildMessage(Map<String, String> definition, String word) {

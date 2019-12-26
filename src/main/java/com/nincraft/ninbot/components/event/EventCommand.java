@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -35,27 +35,23 @@ public class EventCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent messageReceivedEvent) {
-        CommandResult commandResult = new CommandResult(messageReceivedEvent);
+    public MessageAction executeCommand(MessageReceivedEvent messageReceivedEvent) {
+        MessageAction messageAction = new MessageAction(messageReceivedEvent);
         val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
             val serverTimezone = getServerTimeZone(messageReceivedEvent.getGuild().getId());
             switch (getSubcommand(content)) {
-                case "list":
-                    commandResult.addChannelAction(listEvents(serverTimezone));
-                    break;
-                case "plan":
+                case "list" -> messageAction.addChannelAction(listEvents(serverTimezone));
+                case "plan" -> {
                     planEvent(messageReceivedEvent, serverTimezone);
-                    commandResult.addSuccessfulReaction();
-                    break;
-                default:
-                    commandResult.addUnknownReaction();
-                    break;
+                    messageAction.addSuccessfulReaction();
+                }
+                default -> messageAction.addUnknownReaction();
             }
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 
     private void planEvent(MessageReceivedEvent messageReceivedEvent, String serverTimezone) {

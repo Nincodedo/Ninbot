@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.twitch;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.Config;
 import com.nincraft.ninbot.components.config.ConfigConstants;
@@ -22,21 +22,17 @@ public class TwitchCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         switch (getSubcommand(event.getMessage().getContentStripped())) {
-            case "announce":
-                announceToggle(commandResult);
-                break;
-            default:
-                commandResult = displayHelp(event);
-                break;
+            case "announce" -> announceToggle(messageAction);
+            default -> messageAction = displayHelp(event);
         }
-        return commandResult;
+        return messageAction;
     }
 
-    private void announceToggle(CommandResult commandResult) {
-        val event = commandResult.getEvent();
+    private void announceToggle(MessageAction messageAction) {
+        val event = messageAction.getEvent();
         val userId = event.getAuthor().getId();
         val serverId = event.getGuild().getId();
         val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
@@ -45,14 +41,14 @@ public class TwitchCommand extends AbstractCommand {
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {
                 configService.removeConfig(config);
-                commandResult.addReaction(Emojis.OFF);
+                messageAction.addReaction(Emojis.OFF);
                 foundUser = true;
                 break;
             }
         }
         if (!foundUser) {
             configService.addConfig(serverId, configName, userId);
-            commandResult.addReaction(Emojis.ON);
+            messageAction.addReaction(Emojis.ON);
         }
     }
 }

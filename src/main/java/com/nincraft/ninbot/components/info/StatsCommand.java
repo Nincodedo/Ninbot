@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,9 +29,9 @@ public class StatsCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
-        return commandResult.addChannelAction(displayRoleStats(event.getGuild()));
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
+        return messageAction.addChannelAction(displayRoleStats(event.getGuild()));
     }
 
     private Message displayRoleStats(Guild server) {

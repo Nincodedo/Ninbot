@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -27,8 +27,8 @@ public class HelpCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.help.message.title"))
                 .setColor(Color.BLUE);
@@ -49,8 +49,8 @@ public class HelpCommand extends AbstractCommand {
                     }
                 });
         embedBuilder.setFooter(resourceBundle.getString("command.help.message.footer"), null);
-        commandResult.addPrivateMessageAction(embedBuilder.build())
+        messageAction.addPrivateMessageAction(embedBuilder.build())
                 .addSuccessfulReaction();
-        return commandResult;
+        return messageAction;
     }
 }

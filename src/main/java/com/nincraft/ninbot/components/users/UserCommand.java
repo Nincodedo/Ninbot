@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.users;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -26,17 +26,17 @@ public class UserCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "birthday":
-                commandResult.addCorrectReaction(updateBirthday(event));
+                messageAction.addCorrectReaction(updateBirthday(event));
                 break;
             default:
                 break;
         }
-        return commandResult;
+        return messageAction;
     }
 
     private boolean updateBirthday(MessageReceivedEvent event) {

@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.poll;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Member;
@@ -24,18 +24,18 @@ public class PollCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
             Poll poll = parsePollMessage(event.getMessage(), event.getMember());
             poll.setResourceBundle(resourceBundle);
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
                 event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
             } else {
-                commandResult.addUnsuccessfulReaction();
+                messageAction.addUnsuccessfulReaction();
             }
         }
-        return commandResult;
+        return messageAction;
     }
 
     private Poll parsePollMessage(Message message, Member member) {

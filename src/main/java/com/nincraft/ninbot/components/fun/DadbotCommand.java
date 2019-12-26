@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -23,11 +23,11 @@ public class DadbotCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         toggleBlacklistChannel(event.getGuild().getId(), event.getChannel().getId());
-        commandResult.addSuccessfulReaction();
-        return commandResult;
+        messageAction.addSuccessfulReaction();
+        return messageAction;
     }
 
     private void toggleBlacklistChannel(String serverId, String channelId) {

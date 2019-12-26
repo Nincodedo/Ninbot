@@ -2,7 +2,7 @@ package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.TestUtils;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.JDA;
@@ -48,8 +48,8 @@ class EventCommandTest extends NinbotTest {
         event.setStartTime(Instant.now().atZone(ZoneId.of("GMT")));
         eventList.add(event);
         when(eventRepository.findAll()).thenReturn(eventList);
-        CommandResult commandResult = eventCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmbeddedTitle(commandResult)).isEqualTo("Current scheduled events");
+        MessageAction messageAction = eventCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnEmbeddedTitle(messageAction)).isEqualTo("Current scheduled events");
     }
 
     @Test
@@ -59,8 +59,8 @@ class EventCommandTest extends NinbotTest {
         when(message.getContentStripped()).thenReturn("@Ninbot events list");
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
-        CommandResult commandResult = eventCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnMessage(commandResult)).isEqualTo("No events scheduled");
+        MessageAction messageAction = eventCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnMessage(messageAction)).isEqualTo("No events scheduled");
     }
 
     @Test
@@ -75,7 +75,7 @@ class EventCommandTest extends NinbotTest {
         when(guild.getId()).thenReturn("1");
         when(messageEvent.getAuthor()).thenReturn(user);
         when(messageEvent.getJDA()).thenReturn(jda);
-        CommandResult commandResult = eventCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CHECK_MARK);
+        MessageAction messageAction = eventCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnEmoji(messageAction)).contains(Emojis.CHECK_MARK);
     }
 }

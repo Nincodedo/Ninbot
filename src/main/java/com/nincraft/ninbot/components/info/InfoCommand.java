@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -27,8 +27,8 @@ public class InfoCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.info.title"));
         embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(), false);
@@ -42,8 +42,8 @@ public class InfoCommand extends AbstractCommand {
                 false);
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.issues"),
                 "https://github.com/Nincodedo/Ninbot/issues/new/choose", false);
-        commandResult.addChannelAction(new MessageBuilder(embedBuilder).build());
-        return commandResult;
+        messageAction.addChannelAction(new MessageBuilder(embedBuilder).build());
+        return messageAction;
     }
 
     private String getDurationString(long uptimeMilliseconds) {

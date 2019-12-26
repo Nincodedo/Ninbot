@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -27,8 +27,8 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val content = event.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
             val server = event.getGuild();
@@ -36,16 +36,16 @@ public class SubscribeCommand extends AbstractCommand {
             val role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server, role);
-                commandResult.addSuccessfulReaction();
+                messageAction.addSuccessfulReaction();
             } else {
-                commandResult.addChannelAction(new MessageBuilder()
+                messageAction.addChannelAction(new MessageBuilder()
                         .appendFormat(resourceBundle.getString("command.subscribe.norolefound"), subscribeTo)
                         .build());
             }
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 
     void addOrRemoveSubscription(MessageReceivedEvent event, Guild guild, Role role) {

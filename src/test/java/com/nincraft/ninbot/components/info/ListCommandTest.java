@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.NinbotTest;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -50,8 +50,8 @@ public class ListCommandTest extends NinbotTest {
         when(messageEvent.getGuild()).thenReturn(mockGuild);
         when(message.getContentStripped()).thenReturn("@Ninbot list");
         when(mockGuild.getRoles()).thenReturn(roles);
-        CommandResult commandResult = listCommand.executeCommand(messageEvent);
-        assertThat(commandResult.getChannelMessageList()
+        MessageAction messageAction = listCommand.executeCommand(messageEvent);
+        assertThat(messageAction.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
                 .get(0)

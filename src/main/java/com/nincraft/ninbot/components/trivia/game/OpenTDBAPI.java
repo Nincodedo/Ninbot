@@ -76,21 +76,11 @@ public class OpenTDBAPI implements TriviaAPI {
 
     private void handleResponseCode(int responseCode) {
         switch (responseCode) {
-            case 1:
-                log.error("No results from API");
-                break;
-            case 2:
-                log.error("Invalid parameter");
-                break;
-            case 3:
-                log.error("Session token not found, generate a new one");
-                break;
-            case 4:
-                log.error("Session token has run out of trivia");
-                break;
-            default:
-                log.error("Unknown response code");
-                break;
+            case 1 -> log.error("No results from API");
+            case 2 -> log.error("Invalid parameter");
+            case 3 -> log.error("Session token not found, generate a new one");
+            case 4 -> log.error("Session token has run out of trivia");
+            default -> log.error("Unknown response code");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -45,13 +46,13 @@ public abstract class AbstractCommand {
         } else {
             log.debug("User {} does not have permission to run {} on server {}: {}", event.getAuthor()
                     .getName(), name, event.getGuild().getId(), message);
-            new CommandResult(event)
+            new MessageAction(event)
                     .addUnsuccessfulReaction()
                     .executeActions();
         }
     }
 
-    protected CommandResult displayHelp(MessageReceivedEvent event) {
+    protected MessageAction displayHelp(MessageReceivedEvent event) {
         String help = resourceBundle.getString("command.help.description.label") + ": ";
         help += resourceBundle.containsKey(String.format("command.%s.help.text", name)) ? resourceBundle.getString(
                 String.format("command.%s.help.text", name)) : getCommandDescription(name);
@@ -65,10 +66,10 @@ public abstract class AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
                 + ".help.title")), help, false);
-        CommandResult commandResult = new CommandResult(event);
-        commandResult.addPrivateMessageAction(embedBuilder.build());
-        commandResult.addSuccessfulReaction();
-        return commandResult;
+        MessageAction messageAction = new MessageAction(event);
+        messageAction.addPrivateMessageAction(embedBuilder.build());
+        messageAction.addSuccessfulReaction();
+        return messageAction;
     }
 
     public String getCommandDescription(String name) {
@@ -103,7 +104,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    protected abstract CommandResult executeCommand(MessageReceivedEvent event);
+    protected abstract MessageAction executeCommand(MessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content) {
         val commandLength = getCommandLength(content);

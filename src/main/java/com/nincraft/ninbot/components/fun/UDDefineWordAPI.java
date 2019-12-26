@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class UDDefineWordAPI implements DefineWordAPI {
     public Map<String, String> defineWord(String word) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
-            HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, "UTF-8"));
+            HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, StandardCharsets.UTF_8));
 
             HttpResponse response = client.execute(get);
             ObjectMapper mapper = new ObjectMapper();

@@ -1,10 +1,12 @@
-package com.nincraft.ninbot.components.command;
+package com.nincraft.ninbot.components.common;
 
-import com.nincraft.ninbot.components.common.Emojis;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class CommandResult {
+public class MessageAction {
     private MessageReceivedEvent event;
     private List<Message> privateMessageList;
     private List<Message> channelMessageList;
@@ -21,23 +23,28 @@ public class CommandResult {
     @Setter
     private Message overrideMessage;
 
-    public CommandResult(MessageReceivedEvent event) {
-        this.event = event;
+    public MessageAction() {
         privateMessageList = new ArrayList<>();
         emojisList = new ArrayList<>();
         emoteList = new ArrayList<>();
         channelMessageList = new ArrayList<>();
     }
 
-    void executeActions() {
+    public MessageAction(MessageReceivedEvent event) {
+        this();
+        this.event = event;
+    }
+
+    public void executeActions() {
         Message eventMessage = event.getMessage();
         if (overrideMessage != null) {
             eventMessage = overrideMessage;
         }
         for (Message message : privateMessageList) {
-            PrivateChannel privateChannel = event.getAuthor().openPrivateChannel().complete();
-            privateChannel.sendTyping().queue();
-            privateChannel.sendMessage(message).queue();
+            event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                privateChannel.sendTyping().queue();
+                privateChannel.sendMessage(message).queue();
+            });
         }
         for (Message message : channelMessageList) {
             if (message != null) {
@@ -54,46 +61,46 @@ public class CommandResult {
         }
     }
 
-    public CommandResult addChannelAction(Message message) {
+    public MessageAction addChannelAction(Message message) {
         channelMessageList.add(message);
         return this;
     }
 
-    public CommandResult addPrivateMessageAction(MessageEmbed messageEmbed) {
+    public MessageAction addPrivateMessageAction(MessageEmbed messageEmbed) {
         return addPrivateMessageAction(new MessageBuilder(messageEmbed).build());
     }
 
-    private CommandResult addPrivateMessageAction(Message message) {
+    private MessageAction addPrivateMessageAction(Message message) {
         privateMessageList.add(message);
         return this;
     }
 
-    public CommandResult addReaction(List<String> emoji) {
+    public MessageAction addReaction(List<String> emoji) {
         emojisList.addAll(emoji);
         return this;
     }
 
-    public CommandResult addReaction(String... emoji) {
+    public MessageAction addReaction(String... emoji) {
         emojisList.addAll(Arrays.asList(emoji));
         return this;
     }
 
-    public CommandResult addUnsuccessfulReaction() {
+    public MessageAction addUnsuccessfulReaction() {
         addReaction(Emojis.CROSS_X);
         return this;
     }
 
-    public CommandResult addUnknownReaction() {
+    public MessageAction addUnknownReaction() {
         addReaction(Emojis.QUESTION_MARK);
         return this;
     }
 
-    public CommandResult addSuccessfulReaction() {
+    public MessageAction addSuccessfulReaction() {
         addReaction(Emojis.CHECK_MARK);
         return this;
     }
 
-    public CommandResult addCorrectReaction(boolean isSuccessful) {
+    public MessageAction addCorrectReaction(boolean isSuccessful) {
         if (isSuccessful) {
             addSuccessfulReaction();
         } else {
@@ -102,12 +109,12 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult addReactionEmotes(List<Emote> emotes) {
+    public MessageAction addReactionEmotes(List<Emote> emotes) {
         emoteList.addAll(emotes);
         return this;
     }
 
-    public CommandResult addChannelAction(String message) {
+    public MessageAction addChannelAction(String message) {
         channelMessageList.add(new MessageBuilder().append(message).build());
         return this;
     }

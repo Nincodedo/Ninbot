@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.config.component;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,26 +27,22 @@ public class ComponentCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "list":
-                commandResult.addChannelAction(listComponents(event.getGuild().getId()));
-                break;
-            case "disable":
+            case "list" -> messageAction.addChannelAction(listComponents(event.getGuild().getId()));
+            case "disable" -> {
                 disableComponent(event);
-                commandResult.addSuccessfulReaction();
-                break;
-            case "enable":
+                messageAction.addSuccessfulReaction();
+            }
+            case "enable" -> {
                 enableComponent(event);
-                commandResult.addSuccessfulReaction();
-                break;
-            default:
-                commandResult = displayHelp(event);
-                break;
+                messageAction.addSuccessfulReaction();
+            }
+            default -> messageAction = displayHelp(event);
         }
-        return commandResult;
+        return messageAction;
     }
 
     private void enableComponent(MessageReceivedEvent event) {

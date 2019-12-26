@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.fun;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Emote;
@@ -32,32 +32,32 @@ public class DabCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
-            doDabarinos(event, commandResult);
+            doDabarinos(event, messageAction);
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 
-    private void doDabarinos(MessageReceivedEvent event, CommandResult commandResult) {
+    private void doDabarinos(MessageReceivedEvent event, MessageAction messageAction) {
         val channel = event.getChannel();
         val mentionedUsers = event.getMessage().getMentionedUsers();
         val dabUser = mentionedUsers.get(mentionedUsers.size() - 1);
         for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
-                commandResult.setOverrideMessage(message);
-                dabOnMessage(commandResult, event.getJDA().getShardManager(), event.getAuthor());
+                messageAction.setOverrideMessage(message);
+                dabOnMessage(messageAction, event.getJDA().getShardManager(), event.getAuthor());
                 return;
             }
         }
-        commandResult.addUnsuccessfulReaction();
+        messageAction.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(CommandResult commandResult, ShardManager shardManager,
+    private void dabOnMessage(MessageAction messageAction, ShardManager shardManager,
             User commandUser) {
         int dabCritPercentChance = 5;
         for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
@@ -69,8 +69,8 @@ public class DabCommand extends AbstractCommand {
 
         val critDab = random.nextInt(100) < dabCritPercentChance;
         if (critDab) {
-            commandResult.addReaction(critResponse.getEmojiList());
-            commandResult.addReaction(dabResponse.getEmojiList());
+            messageAction.addReaction(critResponse.getEmojiList());
+            messageAction.addReaction(dabResponse.getEmojiList());
         }
 
         val list = shardManager.getEmotes().stream()
@@ -88,7 +88,7 @@ public class DabCommand extends AbstractCommand {
             }
         }
 
-        commandResult.addReactionEmotes(emoteList.stream()
+        messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
     }

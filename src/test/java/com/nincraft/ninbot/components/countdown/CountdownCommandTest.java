@@ -2,7 +2,7 @@ package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.TestUtils;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.Emojis;
 import net.dv8tion.jda.api.entities.Guild;
 import org.junit.jupiter.api.Test;
@@ -25,9 +25,9 @@ public class CountdownCommandTest extends NinbotTest {
     public void testHelpCommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot countdown");
-        CommandResult commandResult = countdownCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmoji(commandResult)).contains(Emojis.CHECK_MARK);
-        assertThat(TestUtils.returnPrivateMessageEmbededName(commandResult)).contains("Countdown Command Help");
+        MessageAction messageAction = countdownCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnEmoji(messageAction)).contains(Emojis.CHECK_MARK);
+        assertThat(TestUtils.returnPrivateMessageEmbededName(messageAction)).contains("Countdown Command Help");
     }
 
     @Test
@@ -37,8 +37,8 @@ public class CountdownCommandTest extends NinbotTest {
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(message.getContentStripped()).thenReturn("@Ninbot countdown list");
-        CommandResult commandResult = countdownCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmbeddedTitle(commandResult)).isEqualTo("No countdowns are currently scheduled, "
+        MessageAction messageAction = countdownCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnEmbeddedTitle(messageAction)).isEqualTo("No countdowns are currently scheduled, "
                 + "use \"@Ninbot countdown\" to add your own!");
     }
 
@@ -49,8 +49,8 @@ public class CountdownCommandTest extends NinbotTest {
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(message.getContentStripped()).thenReturn("@Ninbot countdown list");
-        CommandResult commandResult = countdownCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmbeddedTitle(commandResult)).isEqualTo("No countdowns are currently scheduled, "
+        MessageAction messageAction = countdownCommand.executeCommand(messageEvent);
+        assertThat(TestUtils.returnEmbeddedTitle(messageAction)).isEqualTo("No countdowns are currently scheduled, "
                 + "use \"@Ninbot countdown\" to add your own!");
     }
 }

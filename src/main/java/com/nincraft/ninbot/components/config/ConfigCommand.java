@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.config;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -26,42 +26,42 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":
                 if (getCommandLength(message) >= 5) {
                     addConfig(message, event.getGuild().getId());
-                    commandResult.addSuccessfulReaction();
+                    messageAction.addSuccessfulReaction();
                 } else {
-                    commandResult.addUnsuccessfulReaction();
+                    messageAction.addUnsuccessfulReaction();
                 }
                 break;
             case "remove":
                 if (getCommandLength(message) >= 5) {
                     removeConfig(message, event.getGuild().getId());
-                    commandResult.addSuccessfulReaction();
+                    messageAction.addSuccessfulReaction();
                 } else {
-                    commandResult.addUnsuccessfulReaction();
+                    messageAction.addUnsuccessfulReaction();
                 }
                 break;
             case "update":
                 if (getCommandLength(message) >= 5) {
                     updateConfig(message, event.getGuild().getId());
-                    commandResult.addSuccessfulReaction();
+                    messageAction.addSuccessfulReaction();
                 } else {
-                    commandResult.addUnsuccessfulReaction();
+                    messageAction.addUnsuccessfulReaction();
                 }
                 break;
             case "list":
-                commandResult.addChannelAction(listConfigs(event));
+                messageAction.addChannelAction(listConfigs(event));
                 break;
             default:
-                commandResult.addUnknownReaction();
+                messageAction.addUnknownReaction();
                 break;
         }
-        return commandResult;
+        return messageAction;
     }
 
     private void updateConfig(String messageString, String guildId) {

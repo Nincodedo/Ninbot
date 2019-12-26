@@ -104,7 +104,6 @@ public class PathogenManager {
                 String line;
                 while ((line = br.readLine()) != null) {
                     list.add(line);
-                    line = null;
                 }
             }
             return IntStream.range(0, wordListLength)

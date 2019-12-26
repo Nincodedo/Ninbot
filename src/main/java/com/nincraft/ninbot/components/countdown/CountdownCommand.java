@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.countdown;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
@@ -33,21 +33,15 @@ public class CountdownCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "list":
-                commandResult.addChannelAction(listCountdowns(event));
-                break;
-            case "":
-                commandResult = displayHelp(event);
-                break;
-            default:
-                commandResult.addCorrectReaction(setupCountdown(event));
-                break;
+            case "list" -> messageAction.addChannelAction(listCountdowns(event));
+            case "" -> messageAction = displayHelp(event);
+            default -> messageAction.addCorrectReaction(setupCountdown(event));
         }
-        return commandResult;
+        return messageAction;
     }
 
     private Message listCountdowns(MessageReceivedEvent event) {

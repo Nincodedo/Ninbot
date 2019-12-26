@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.channel;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.Config;
@@ -24,21 +24,21 @@ public class TopicChangeCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
 
         val channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
 
         if (channelConfig.isPresent()) {
             configService.removeConfig(channelConfig.get());
-            commandResult.addReaction(Emojis.OFF);
+            messageAction.addReaction(Emojis.OFF);
         } else {
             Config config = new Config(event.getGuild()
                     .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL, event.getChannel().getId());
             configService.addConfig(config);
-            commandResult.addReaction(Emojis.ON);
+            messageAction.addReaction(Emojis.ON);
         }
-        return commandResult;
+        return messageAction;
     }
 }

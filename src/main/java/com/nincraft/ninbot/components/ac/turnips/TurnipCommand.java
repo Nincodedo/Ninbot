@@ -6,7 +6,7 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.nincraft.ninbot.components.ac.Villager;
 import com.nincraft.ninbot.components.ac.VillagerManager;
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -34,37 +34,20 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "join":
-                commandResult.addCorrectReaction(joinTurnipEvent(event));
-                break;
-            case "buy":
-                commandResult.addCorrectReaction(buyTurnips(event));
-                break;
-            case "sell":
-                commandResult.addCorrectReaction(sellTurnips(event));
-                break;
-            case "price":
-            case "prices":
-                commandResult.addChannelAction(listTurnipPrices(event));
-                break;
-            case "leaderboard":
-                commandResult.addChannelAction(getLeaderboard(event));
-                break;
-            case "inv":
-            case "inventory":
-            case "wallet":
-                commandResult.addChannelAction(getVillagerInventory(event));
-                break;
-            default:
-                commandResult = displayHelp(event);
-                break;
+            case "join" -> messageAction.addCorrectReaction(joinTurnipEvent(event));
+            case "buy" -> messageAction.addCorrectReaction(buyTurnips(event));
+            case "sell" -> messageAction.addCorrectReaction(sellTurnips(event));
+            case "price", "prices" -> messageAction.addChannelAction(listTurnipPrices(event));
+            case "leaderboard" -> messageAction.addChannelAction(getLeaderboard(event));
+            case "inv", "inventory", "wallet" -> messageAction.addChannelAction(getVillagerInventory(event));
+            default -> messageAction = displayHelp(event);
         }
 
-        return commandResult;
+        return messageAction;
     }
 
     private Message getVillagerInventory(MessageReceivedEvent event) {

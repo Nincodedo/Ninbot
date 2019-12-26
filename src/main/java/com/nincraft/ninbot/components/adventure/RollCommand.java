@@ -6,7 +6,7 @@ import com.bernardomg.tabletop.dice.interpreter.DiceRoller;
 import com.bernardomg.tabletop.dice.parser.DefaultDiceParser;
 import com.bernardomg.tabletop.dice.parser.DiceParser;
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -29,18 +29,18 @@ public class RollCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    public MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val content = event.getMessage().getContentStripped();
         val commandArgs = content.split("\\s+");
         if (commandArgs.length == 2) {
-            commandResult.addChannelAction(rollDice("1d20", event));
+            messageAction.addChannelAction(rollDice("1d20", event));
         } else if (commandArgs.length == 3 && commandArgs[2].contains("d")) {
-            commandResult.addChannelAction(rollDice(commandArgs[2], event));
+            messageAction.addChannelAction(rollDice(commandArgs[2], event));
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 
     private Message rollDice(String diceArgs, MessageReceivedEvent event) {

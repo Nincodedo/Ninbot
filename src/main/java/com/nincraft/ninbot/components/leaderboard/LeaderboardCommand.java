@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.leaderboard;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
 import com.nincraft.ninbot.components.config.ConfigService;
@@ -29,48 +29,46 @@ public class LeaderboardCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "":
-                commandResult.addChannelAction(displayLeaderboard(event));
+                messageAction.addChannelAction(displayLeaderboard(event));
                 break;
             case "admin":
                 if (userHasPermission(event.getGuild(), event.getAuthor(), RolePermission.ADMIN)) {
-                    adminSubCommandParse(event, commandResult);
+                    adminSubCommandParse(event, messageAction);
                 } else {
-                    commandResult.addUnsuccessfulReaction();
+                    messageAction.addUnsuccessfulReaction();
                 }
                 break;
             default:
-                commandResult.addUnknownReaction();
+                messageAction.addUnknownReaction();
                 break;
         }
-        return commandResult;
+        return messageAction;
     }
 
     private void adminSubCommandParse(MessageReceivedEvent event,
-            CommandResult commandResult) {
+            MessageAction messageAction) {
         val message = event.getMessage().getContentStripped();
         val splitMessage = message.split("\\s+");
         if (splitMessage.length == 4) {
-            runAdminSubCommand(splitMessage[3], event, commandResult);
+            runAdminSubCommand(splitMessage[3], event, messageAction);
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
     }
 
     private void runAdminSubCommand(String command, MessageReceivedEvent event,
-            CommandResult commandResult) {
+            MessageAction messageAction) {
         switch (command) {
-            case "clear":
+            case "clear" -> {
                 clearLeaderboard(event);
-                commandResult.addSuccessfulReaction();
-                break;
-            default:
-                commandResult.addUnknownReaction();
-                break;
+                messageAction.addSuccessfulReaction();
+            }
+            default -> messageAction.addUnknownReaction();
         }
     }
 

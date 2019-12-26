@@ -1,7 +1,7 @@
 package com.nincraft.ninbot.components.leaderboard;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
-import com.nincraft.ninbot.components.command.CommandResult;
+import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -24,15 +24,15 @@ public class WinCommand extends AbstractCommand {
     }
 
     @Override
-    protected CommandResult executeCommand(MessageReceivedEvent event) {
-        CommandResult commandResult = new CommandResult(event);
+    protected MessageAction executeCommand(MessageReceivedEvent event) {
+        MessageAction messageAction = new MessageAction(event);
         val mentionedUsers = event.getMessage().getMentionedUsers();
         List<User> mentionList = mentionedUsers.stream().filter(user -> !user.isBot()).collect(Collectors.toList());
         mentionList.remove(event.getAuthor());
         if (!mentionList.isEmpty()) {
             val message = event.getMessage();
-            commandResult.addSuccessfulReaction();
-            commandResult.addUnsuccessfulReaction();
+            messageAction.addSuccessfulReaction();
+            messageAction.addUnsuccessfulReaction();
             mentionList.forEach(user -> {
                 val jda = event.getJDA();
                 val reactionResultListener = new ReactionResultListener(leaderboardService, name, message.getId(), event
@@ -41,8 +41,8 @@ public class WinCommand extends AbstractCommand {
                 jda.addEventListener(reactionResultListener);
             });
         } else {
-            commandResult.addUnknownReaction();
+            messageAction.addUnknownReaction();
         }
-        return commandResult;
+        return messageAction;
     }
 }
