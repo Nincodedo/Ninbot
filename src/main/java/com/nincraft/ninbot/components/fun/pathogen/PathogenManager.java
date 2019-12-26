@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,15 +36,22 @@ public class PathogenManager {
     private String roleName = "infected";
     @Getter
     private int wordListLength = 30;
+    private boolean healingWeek;
 
     public PathogenManager() {
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
+        this.healingWeek = determineIfHealingWeek();
+    }
+
+    private boolean determineIfHealingWeek() {
+        return LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) % 2 == 0;
     }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void setRandomSeed() {
         this.todayRandom = new Random(LocalDate.now().toEpochDay());
+        this.healingWeek = determineIfHealingWeek();
     }
 
     public void setRandomSeed(long seed) {
@@ -56,14 +65,23 @@ public class PathogenManager {
             return;
         }
         val infectedRole = infectedRoles.get(0);
-        //Infect chance
+        //Infect/heal chance
         possiblePathogenVictims.keySet()
                 .stream()
-                .filter(user -> !user.isBot() && !isInfectedMember(guild.getMember(user))
-                        && random.nextInt(100) < 60)
+                .filter(user -> !user.isBot() && random.nextInt(100) < 60)
                 .forEach(user -> {
-                    guild.addRoleToMember(guild.getMember(user), infectedRole).queue();
-                    possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
+                    if (healingWeek) {
+                        guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
+                            //Successfully removed role, so add healing reaction
+                            possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
+                        });
+
+                    } else {
+                        guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
+                            //Successfully added role, so add infected reaction
+                            possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
+                        });
+                    }
                 });
     }
 
@@ -96,5 +114,20 @@ public class PathogenManager {
             log.error("Failed to read list of common words", e);
             return new HashSet<>();
         }
+    }
+
+    boolean messageContainsSecretWordOfTheDay(String contentStripped) {
+        List<String> messageList = Arrays.asList(contentStripped.split("\\s+"));
+        return getWordList()
+                .stream()
+                .anyMatch(secretWord -> messageList.stream().anyMatch(secretWord::equalsIgnoreCase));
+    }
+
+    boolean isSpreadableEvent(MessageReceivedEvent event) {
+        if (healingWeek && !isInfectedMember(event.getMember())
+                || !healingWeek && isInfectedMember(event.getMember())) {
+            return messageContainsSecretWordOfTheDay(event.getMessage().getContentStripped());
+        }
+        return false;
     }
 }

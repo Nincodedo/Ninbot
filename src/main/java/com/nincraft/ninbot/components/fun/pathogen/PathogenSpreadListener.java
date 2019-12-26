@@ -7,9 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -28,9 +26,7 @@ public class PathogenSpreadListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (componentService.isDisabled(componentName, event.getGuild().getId())
-                || pathogenManager.isInfectedMember(event.getMember()) ||
-                !pathogenManager.isInfectedMember(event.getMember())
-                        && !messageContainsSecretWordOfTheDay(event.getMessage().getContentStripped())) {
+                || !pathogenManager.isSpreadableEvent(event)) {
             return;
         }
         event.getChannel().getHistoryAround(event.getMessage(), 5).queue(messageHistory -> {
@@ -38,12 +34,5 @@ public class PathogenSpreadListener extends ListenerAdapter {
             messageHistory.getRetrievedHistory().forEach(message -> surroundingUsers.put(message.getAuthor(), message));
             pathogenManager.spread(event.getGuild(), surroundingUsers);
         });
-    }
-
-    private boolean messageContainsSecretWordOfTheDay(String contentStripped) {
-        List<String> messageList = Arrays.asList(contentStripped.split("\\s+"));
-        return pathogenManager.getWordList()
-                .stream()
-                .anyMatch(secretWord -> messageList.stream().anyMatch(secretWord::equalsIgnoreCase));
     }
 }

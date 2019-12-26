@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.common;
 
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.api.entities.Emote;
 
 @UtilityClass
 public class Emojis {
@@ -15,4 +16,5 @@ public class Emojis {
     public static final String BIRTHDAY_CAKE = "\uD83C\uDF82";
     public static final String BALLOON = "\uD83C\uDF88";
     public static final String PARTY_POPPER = "\uD83C\uDF89";
+    public static final String PILLS = "\uD83D\uDC8A";
 }
