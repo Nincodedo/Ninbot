@@ -123,10 +123,6 @@ public class PathogenManager {
     }
 
     boolean isSpreadableEvent(MessageReceivedEvent event) {
-        if (healingWeek && !isInfectedMember(event.getMember())
-                || !healingWeek && isInfectedMember(event.getMember())) {
-            return messageContainsSecretWordOfTheDay(event.getMessage().getContentStripped());
-        }
-        return false;
+        return messageContainsSecretWordOfTheDay(event.getMessage().getContentStripped());
     }
 }

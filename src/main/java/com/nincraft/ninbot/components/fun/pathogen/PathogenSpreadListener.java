@@ -25,7 +25,7 @@ public class PathogenSpreadListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (componentService.isDisabled(componentName, event.getGuild().getId())
+        if (!event.isFromGuild() || componentService.isDisabled(componentName, event.getGuild().getId())
                 || !pathogenManager.isSpreadableEvent(event)) {
             return;
         }
