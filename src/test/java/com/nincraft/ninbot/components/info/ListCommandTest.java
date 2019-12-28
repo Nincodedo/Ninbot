@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.info;
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +44,10 @@ public class ListCommandTest extends NinbotTest {
 
     @Test
     public void testList() {
+        JDA jda = Mockito.mock(JDA.class);
         List<Role> roles = new ArrayList<>();
-        RoleImpl role = new RoleImpl(1L, mockGuild);
-        role.setName("best");
+        Role role = Mockito.mock(Role.class);
+        when(role.getName()).thenReturn("best");
         roles.add(role);
         when(messageEvent.getMessage()).thenReturn(message);
         when(messageEvent.getGuild()).thenReturn(mockGuild);
