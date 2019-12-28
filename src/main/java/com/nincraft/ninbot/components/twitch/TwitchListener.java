@@ -84,7 +84,7 @@ public class TwitchListener extends ListenerAdapter {
     }
 
     private void deleteOldStreams(StreamingMember streamingMember) {
-        if (streamingMember.getStarted().isBefore(LocalDateTime.now().minus(24, ChronoUnit.HOURS))) {
+        if (streamingMember.getStarted().isBefore(LocalDateTime.now().minus(6, ChronoUnit.HOURS))) {
             log.trace("Old, removing {}", streamingMember.getUserId());
             streamingMemberRepository.delete(streamingMember);
         }
