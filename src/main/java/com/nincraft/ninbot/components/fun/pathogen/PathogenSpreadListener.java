@@ -36,23 +36,14 @@ public class PathogenSpreadListener extends ListenerAdapter {
             return;
         }
         val serverId = event.getGuild().getId();
-        int messageSearchLimit = 3;
-        int messageAffectChance = 40;
-        val searchConfigOptional = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_SEARCH_LIMIT,
-                serverId);
-        if (searchConfigOptional.isPresent()) {
-            messageSearchLimit = Integer.parseInt(searchConfigOptional.get().getValue());
-        }
-        val affectConfigOptional = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE
-                , serverId);
-        if (affectConfigOptional.isPresent()) {
-            messageAffectChance = Integer.parseInt(affectConfigOptional.get().getValue());
-        }
-        int finalMessageAffectChance = messageAffectChance;
+        int messageSearchLimit = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_SEARCH_LIMIT,
+                serverId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
+        int messageAffectChance = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE
+                , serverId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
         event.getChannel().getHistoryAround(event.getMessage(), messageSearchLimit).queue(messageHistory -> {
             Map<User, Message> surroundingUsers = new HashMap<>();
             messageHistory.getRetrievedHistory().forEach(message -> surroundingUsers.put(message.getAuthor(), message));
-            pathogenManager.spread(event.getGuild(), surroundingUsers, finalMessageAffectChance);
+            pathogenManager.spread(event.getGuild(), surroundingUsers, messageAffectChance);
         });
     }
 }
