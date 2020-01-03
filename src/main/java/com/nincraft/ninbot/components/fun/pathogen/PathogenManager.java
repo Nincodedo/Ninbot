@@ -59,7 +59,7 @@ public class PathogenManager {
     }
 
 
-    public void spread(Guild guild, Map<User, Message> possiblePathogenVictims) {
+    public void spread(Guild guild, Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
         val infectedRoles = guild.getRolesByName(roleName, true);
         if (infectedRoles.isEmpty()) {
             return;
@@ -68,7 +68,7 @@ public class PathogenManager {
         //Infect/heal chance
         possiblePathogenVictims.keySet()
                 .stream()
-                .filter(user -> !user.isBot() && random.nextInt(100) < 60)
+                .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {

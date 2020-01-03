@@ -12,4 +12,5 @@ public interface ConfigRepository extends CrudRepository<Config, Long> {
 
     Optional<Config> getConfigByServerIdAndName(String serverId, String name);
     Optional<Config> getConfigByServerIdAndNameAndValue(String serverId, String name, String value);
+    Optional<Config> getConfigByNameAndGlobal(String name, Boolean isGlobal);
 }

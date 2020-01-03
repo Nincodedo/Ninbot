@@ -88,4 +88,16 @@ public class ConfigService {
             configRepository.save(oldConfig);
         });
     }
+
+    @Transactional
+    @Cacheable("global-configs-by-name")
+    public Optional<Config> getGlobalConfigByName(String configName, String serverId) {
+        //First try to find config by server ID. If none found, then use the global
+        val serverConfig = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        if (serverConfig.isEmpty()) {
+            return configRepository.getConfigByNameAndGlobal(configName, true);
+        } else {
+            return Optional.of(serverConfig.get(0));
+        }
+    }
 }

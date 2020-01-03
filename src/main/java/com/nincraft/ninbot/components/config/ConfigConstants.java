@@ -16,4 +16,6 @@ public class ConfigConstants {
     public static final String SERVER_LOCALE = "serverLocale";
     public static final String SERVER_TIMEZONE = "serverTimezone";
     public static final String DEFAULT_TIMEZONE = "GMT-6";
+    public static final String PATHOGEN_MESSAGE_SEARCH_LIMIT = "pathogenMessageSearchLimit";
+    public static final String PATHOGEN_MESSAGE_AFFECT_CHANCE = "pathogenMessageAffectChance";
 }

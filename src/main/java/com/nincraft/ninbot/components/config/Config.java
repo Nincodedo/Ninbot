@@ -15,8 +15,9 @@ public class Config implements Serializable {
     @Column(nullable = false)
     private String name;
     private String value;
-    @Column(nullable = false)
     private String serverId;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean global = false;
 
     public Config() {
         //no-op
@@ -26,5 +27,11 @@ public class Config implements Serializable {
         this.serverId = serverId;
         this.name = configName;
         this.value = configValue;
+    }
+
+    public Config(String configName, String configValue) {
+        this.name = configName;
+        this.value = configValue;
+        this.global = true;
     }
 }
