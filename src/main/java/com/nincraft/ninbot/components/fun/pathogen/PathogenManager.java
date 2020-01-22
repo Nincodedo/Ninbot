@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ import java.util.stream.IntStream;
 @RequestMapping("/pathogen")
 public class PathogenManager {
 
+    private PathogenAuditRepository pathogenAuditRepository;
     private Random todayRandom;
     private Random random;
     private String roleName = "infected";
@@ -38,7 +40,8 @@ public class PathogenManager {
     private int wordListLength = 30;
     private boolean healingWeek;
 
-    public PathogenManager() {
+    public PathogenManager(PathogenAuditRepository pathogenAuditRepository) {
+        this.pathogenAuditRepository = pathogenAuditRepository;
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
         this.healingWeek = determineIfHealingWeek();
@@ -50,8 +53,14 @@ public class PathogenManager {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void setRandomSeed() {
-        this.todayRandom = new Random(LocalDate.now().toEpochDay());
+        val seed = LocalDate.now().toEpochDay();
+        this.todayRandom = new Random(seed);
         this.healingWeek = determineIfHealingWeek();
+        PathogenAudit audit = new PathogenAudit();
+        audit.setAction("setRandomSeed");
+        audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
+        audit.setCreationDate(LocalDateTime.now());
+        audit.setCreatedBy("ninbot");
     }
 
     public void setRandomSeed(long seed) {
