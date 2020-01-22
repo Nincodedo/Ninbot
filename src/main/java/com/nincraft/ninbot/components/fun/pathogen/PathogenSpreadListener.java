@@ -40,10 +40,11 @@ public class PathogenSpreadListener extends ListenerAdapter {
                 serverId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
         int messageAffectChance = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE
                 , serverId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
+
         event.getChannel().getHistoryAround(event.getMessage(), messageSearchLimit).queue(messageHistory -> {
             Map<User, Message> surroundingUsers = new HashMap<>();
             messageHistory.getRetrievedHistory().forEach(message -> surroundingUsers.put(message.getAuthor(), message));
-            pathogenManager.spread(event.getGuild(), surroundingUsers, messageAffectChance);
+            pathogenManager.spread(event.getGuild(), event.getAuthor(), surroundingUsers, messageAffectChance);
         });
     }
 }

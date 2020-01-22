@@ -4,6 +4,7 @@ import com.nincraft.ninbot.NinbotTest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.Random;
 
@@ -13,6 +14,9 @@ class PathogenManagerTest extends NinbotTest {
 
     @InjectMocks
     PathogenManager pathogenManager;
+
+    @Mock
+    PathogenAuditRepository pathogenAuditRepository;
 
     @Test
     void getManyWordLists() {
