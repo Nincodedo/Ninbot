@@ -61,6 +61,7 @@ public class PathogenManager {
         audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
         audit.setCreationDate(LocalDateTime.now());
         audit.setCreatedBy("ninbot");
+        pathogenAuditRepository.save(audit);
     }
 
     public void setRandomSeed(long seed) {
@@ -68,7 +69,8 @@ public class PathogenManager {
     }
 
 
-    public void spread(Guild guild, Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
+    public void spread(Guild guild, User spreadSource,
+            Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
         val infectedRoles = guild.getRolesByName(roleName, true);
         if (infectedRoles.isEmpty()) {
             return;
@@ -79,19 +81,35 @@ public class PathogenManager {
                 .stream()
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
+                    val channelId = possiblePathogenVictims.get(user).getChannel().getId();
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully removed role, so add healing reaction
                             possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
+                            auditAction(spreadSource, channelId, user, "healing",
+                                    "Healed user %s in channel %s");
                         });
 
                     } else {
                         guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully added role, so add infected reaction
                             possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
+                            auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
+                                    + "in channel %s");
                         });
                     }
                 });
+    }
+
+    private void auditAction(User spreadSource, String channelId, User targetUser, String action,
+            String description) {
+        PathogenAudit audit = new PathogenAudit();
+        audit.setAction(action);
+        audit.setDescription(String.format(description, targetUser.getId(),
+                channelId));
+        audit.setCreationDate(LocalDateTime.now());
+        audit.setCreatedBy(spreadSource.getId());
+        pathogenAuditRepository.save(audit);
     }
 
     boolean isInfectedMember(Member member) {
