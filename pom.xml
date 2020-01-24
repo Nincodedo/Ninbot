@@ -22,7 +22,7 @@
     <properties>
         <build.number>SNAPSHOT</build.number>
         <log4j.version>2.13.0</log4j.version>
-        <testcontainers.version>1.12.4</testcontainers.version>
+        <testcontainers.version>1.12.5</testcontainers.version>
     </properties>
 
     <dependencies>
