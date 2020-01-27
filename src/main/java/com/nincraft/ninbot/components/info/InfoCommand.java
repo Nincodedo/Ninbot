@@ -11,6 +11,7 @@ import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -34,8 +35,8 @@ public class InfoCommand extends AbstractCommand {
         embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(), false);
         val uptime = metricsEndpoint.metric("process.uptime", null);
         val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
-        embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(uptimeMilliseconds),
-                false);
+        embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
+                uptimeMilliseconds), false);
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
                 String.format(resourceBundle.getString("command.info.githublink.value"), "https://github"
                         + ".com/Nincodedo/Ninbot"),
@@ -46,20 +47,20 @@ public class InfoCommand extends AbstractCommand {
         return messageAction;
     }
 
-    private String getDurationString(long uptimeMilliseconds) {
+    private String getDurationString(ResourceBundle resourceBundle, long uptimeMilliseconds) {
         String duration = "";
         val durationString = DurationFormatUtils.formatDuration(uptimeMilliseconds, "dd:HH:mm:ss", false).split(":");
         if (!"0".equals(durationString[3])) {
-            duration += durationString[3] + " seconds";
+            duration += durationString[3] + " " + resourceBundle.getString("command.info.seconds");
         }
         if (!"0".equals(durationString[2])) {
-            duration = durationString[2] + " minutes " + duration;
+            duration = durationString[2] + " " + resourceBundle.getString("command.info.minutes") + " " + duration;
         }
         if (!"0".equals(durationString[1])) {
-            duration = durationString[1] + " hours " + duration;
+            duration = durationString[1] + " " + resourceBundle.getString("command.info.hours") + " " + duration;
         }
         if (!"0".equals(durationString[0])) {
-            duration = durationString[0] + " days " + duration;
+            duration = durationString[0] + " " + resourceBundle.getString("command.info.days") + " " + duration;
         }
         return duration;
     }

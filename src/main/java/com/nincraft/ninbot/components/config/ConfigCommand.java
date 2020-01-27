@@ -65,7 +65,7 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private void updateConfig(String messageString, String guildId) {
-        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
+        Config config = new Config(guildId, getSubcommand(messageString, 3), getSubcommand(messageString, 4));
         configService.updateConfig(config);
     }
 
@@ -84,12 +84,12 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private void removeConfig(String messageString, String guildId) {
-        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
+        Config config = new Config(guildId, getSubcommand(messageString, 3), getSubcommand(messageString, 4));
         configService.removeConfig(config);
     }
 
     private void addConfig(String messageString, String guildId) {
-        Config config = new Config(guildId, messageString.split("\\s+")[3], messageString.split("\\s+")[4]);
+        Config config = new Config(guildId, getSubcommand(messageString, 3), getSubcommand(messageString, 4));
         configService.addConfig(config);
     }
 }

@@ -56,6 +56,14 @@ public class Ninbot {
                     });
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
             setNinbotActivity();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                shardManager.setActivity(Activity.playing("Shutting down, be back in a few!"));
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    log.error("Failed to sleep before shutdown", e);
+                }
+            }));
         };
     }
 
