@@ -163,6 +163,11 @@
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>eu.crydee</groupId>
+            <artifactId>syllable-counter</artifactId>
+            <version>4.0.3</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
