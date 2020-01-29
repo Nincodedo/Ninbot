@@ -166,14 +166,14 @@
         <dependency>
             <groupId>eu.crydee</groupId>
             <artifactId>syllable-counter</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.0</version>
         </dependency>
     </dependencies>
     <repositories>
         <repository>
             <id>jcenter</id>
             <name>jcenter-bintray</name>
-            <url>http://jcenter.bintray.com</url>
+            <url>https://jcenter.bintray.com</url>
         </repository>
         <repository>
             <id>jcenter-snapshot</id>
