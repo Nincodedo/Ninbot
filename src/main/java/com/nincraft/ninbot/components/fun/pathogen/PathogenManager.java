@@ -33,6 +33,7 @@ import java.util.stream.IntStream;
 public class PathogenManager {
 
     private PathogenAuditRepository pathogenAuditRepository;
+    private PathogenRepository pathogenRepository;
     private Random todayRandom;
     private Random random;
     private String roleName = "infected";
@@ -40,8 +41,9 @@ public class PathogenManager {
     private int wordListLength = 30;
     private boolean healingWeek;
 
-    public PathogenManager(PathogenAuditRepository pathogenAuditRepository) {
+    public PathogenManager(PathogenRepository pathogenRepository, PathogenAuditRepository pathogenAuditRepository) {
         this.pathogenAuditRepository = pathogenAuditRepository;
+        this.pathogenRepository = pathogenRepository;
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
         this.healingWeek = determineIfHealingWeek();
@@ -82,12 +84,23 @@ public class PathogenManager {
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
                     val channelId = possiblePathogenVictims.get(user).getChannel().getId();
+                    val pathogenUserOptional = pathogenRepository.getByUserId(user.getId());
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully removed role, so add healing reaction
                             possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
                             auditAction(spreadSource, channelId, user, "healing",
                                     "Healed user %s in channel %s");
+                            PathogenUser pathogenUser;
+                            if (pathogenUserOptional.isPresent()) {
+                                pathogenUser = pathogenUserOptional.get();
+                                pathogenUser.setInfectionLevel(0);
+                            } else {
+                                pathogenUser = new PathogenUser();
+                                pathogenUser.setInfectionLevel(0);
+                                pathogenUser.setUserId(user.getId());
+                            }
+                            pathogenRepository.save(pathogenUser);
                         });
 
                     } else {
@@ -96,6 +109,16 @@ public class PathogenManager {
                             possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
                             auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
                                     + "in channel %s");
+                            PathogenUser pathogenUser;
+                            if (pathogenUserOptional.isPresent()) {
+                                pathogenUser = pathogenUserOptional.get();
+                                pathogenUser.setInfectionLevel(pathogenUser.getInfectionLevel() + 1);
+                            } else {
+                                pathogenUser = new PathogenUser();
+                                pathogenUser.setInfectionLevel(1);
+                                pathogenUser.setUserId(user.getId());
+                            }
+                            pathogenRepository.save(pathogenUser);
                         });
                     }
                 });
