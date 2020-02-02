@@ -33,17 +33,17 @@ import java.util.stream.IntStream;
 public class PathogenManager {
 
     private PathogenAuditRepository pathogenAuditRepository;
-    private PathogenRepository pathogenRepository;
+    private PathogenUserRepository pathogenUserRepository;
     private Random todayRandom;
     private Random random;
-    private String roleName = "infected";
     @Getter
     private int wordListLength = 30;
     private boolean healingWeek;
 
-    public PathogenManager(PathogenRepository pathogenRepository, PathogenAuditRepository pathogenAuditRepository) {
+    public PathogenManager(PathogenUserRepository pathogenUserRepository,
+            PathogenAuditRepository pathogenAuditRepository) {
         this.pathogenAuditRepository = pathogenAuditRepository;
-        this.pathogenRepository = pathogenRepository;
+        this.pathogenUserRepository = pathogenUserRepository;
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
         this.healingWeek = determineIfHealingWeek();
@@ -73,7 +73,7 @@ public class PathogenManager {
 
     public void spread(Guild guild, User spreadSource,
             Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
-        val infectedRoles = guild.getRolesByName(roleName, true);
+        val infectedRoles = guild.getRolesByName(PathogenConfig.getRoleName(), true);
         if (infectedRoles.isEmpty()) {
             return;
         }
@@ -84,7 +84,8 @@ public class PathogenManager {
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
                     val channelId = possiblePathogenVictims.get(user).getChannel().getId();
-                    val pathogenUserOptional = pathogenRepository.getByUserId(user.getId());
+                    val pathogenUserOptional = pathogenUserRepository.getByUserIdAndServerId(user.getId(),
+                            guild.getId());
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully removed role, so add healing reaction
@@ -100,7 +101,8 @@ public class PathogenManager {
                                 pathogenUser.setInfectionLevel(0);
                                 pathogenUser.setUserId(user.getId());
                             }
-                            pathogenRepository.save(pathogenUser);
+                            pathogenUser.setServerId(guild.getId());
+                            pathogenUserRepository.save(pathogenUser);
                         });
 
                     } else {
@@ -112,13 +114,16 @@ public class PathogenManager {
                             PathogenUser pathogenUser;
                             if (pathogenUserOptional.isPresent()) {
                                 pathogenUser = pathogenUserOptional.get();
-                                pathogenUser.setInfectionLevel(pathogenUser.getInfectionLevel() + 1);
+                                if (pathogenUser.getInfectionLevel() < 9) {
+                                    pathogenUser.setInfectionLevel(pathogenUser.getInfectionLevel() + 1);
+                                }
                             } else {
                                 pathogenUser = new PathogenUser();
                                 pathogenUser.setInfectionLevel(1);
                                 pathogenUser.setUserId(user.getId());
                             }
-                            pathogenRepository.save(pathogenUser);
+                            pathogenUser.setServerId(guild.getId());
+                            pathogenUserRepository.save(pathogenUser);
                         });
                     }
                 });
@@ -140,7 +145,7 @@ public class PathogenManager {
             return false;
         }
         return member.getRoles().stream()
-                .anyMatch(role -> roleName.equalsIgnoreCase(role.getName()));
+                .anyMatch(role -> PathogenConfig.getRoleName().equalsIgnoreCase(role.getName()));
     }
 
     @GetMapping("/wordlist")
