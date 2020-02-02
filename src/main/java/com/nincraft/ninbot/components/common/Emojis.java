@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.common;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
@@ -20,12 +21,13 @@ public class Emojis {
     public static final String BALLOON = "\uD83C\uDF88";
     public static final String PARTY_POPPER = "\uD83C\uDF89";
     public static final String PILLS = "\uD83D\uDC8A";
-    public static Map<Integer, String> numberMap;
-    private String enclosingKeycap = "️⃣";
+    @Getter
+    private static final Map<Integer, String> numberMap;
 
     static {
         numberMap = new HashMap<>();
         for (int i = 0; i < 10; i++) {
+            String enclosingKeycap = "️⃣";
             numberMap.put(i, i + enclosingKeycap);
         }
     }
