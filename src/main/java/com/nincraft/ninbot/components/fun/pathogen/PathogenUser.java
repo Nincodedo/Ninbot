@@ -13,5 +13,7 @@ public class PathogenUser {
     private Long id;
     @Column(nullable = false)
     private String userId;
+    @Column(nullable = false)
+    private String serverId;
     private Integer infectionLevel = 0;
 }
