@@ -47,7 +47,7 @@ public class PathogenCommand extends AbstractCommand {
 
     private Message getInfectionServerStats(Guild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        val roleList = guild.getRolesByName(PathogenConfig.getRoleName(), true);
+        val roleList = guild.getRolesByName(PathogenConfig.getROLENAME(), true);
         if (!roleList.isEmpty()) {
             val users = guild.getMembersWithRoles(roleList);
             List<String> userIds = users.stream().map(ISnowflake::getId).collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class PathogenCommand extends AbstractCommand {
             } else if (pathogenUser.getInfectionLevel() > 0) {
                 reactions.add(Emojis.SICK_FACE);
             }
-            reactions.add(Emojis.numberMap.get(pathogenUser.getInfectionLevel()));
+            reactions.add(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
         });
         return reactions;
     }
