@@ -23,6 +23,7 @@
         <build.number>SNAPSHOT</build.number>
         <log4j.version>2.13.0</log4j.version>
         <testcontainers.version>1.12.5</testcontainers.version>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencies>
@@ -259,6 +260,26 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>prepare-agent-it</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report-it</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -270,7 +291,7 @@
                         <exclude>**/*IT</exclude>
                     </excludes>
                     <argLine>
-                        --enable-preview
+                        @{argLine} --enable-preview
                     </argLine>
                 </configuration>
             </plugin>
@@ -322,7 +343,7 @@
                                         <include>**/*IT</include>
                                     </includes>
                                     <argLine>
-                                        --enable-preview
+                                        @{argLine} --enable-preview
                                     </argLine>
                                 </configuration>
                             </execution>
