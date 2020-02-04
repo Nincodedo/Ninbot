@@ -35,6 +35,7 @@ public class Magic8BallCommand extends AbstractCommand {
         List<String> answers = readMagic8BallList();
         embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball", event.getMember().getEffectiveName()));
         embedBuilder.setThumbnail("https://i.imgur.com/80imnZ0.png");
+        embedBuilder.appendDescription("The Magic 8 Ball says...\n\n");
         embedBuilder.appendDescription("_" + answers.get(random.nextInt(answers.size())) + "_");
         messageAction.addChannelAction(new MessageBuilder(embedBuilder).build());
         return messageAction;
