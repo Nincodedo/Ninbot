@@ -149,7 +149,7 @@ public class TurnipCommand extends AbstractCommand {
             if (getCommandLength(message) > 3) {
                 String sellAmount = message.split("\\s+")[3];
                 if(StringUtils.isNumeric(sellAmount)) {
-                    selling = Integer.parseInt(message.split("\\s+")[3]);
+                    selling = Integer.parseInt(sellAmount);
                 } else if ("max".equals(sellAmount)) {
                     selling = villager.getTurnipsOwned();
                 }

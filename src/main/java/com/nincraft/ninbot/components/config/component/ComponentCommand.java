@@ -46,12 +46,12 @@ public class ComponentCommand extends AbstractCommand {
     }
 
     private void enableComponent(MessageReceivedEvent event) {
-        val componentName = event.getMessage().getContentStripped().split(" ")[3];
+        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.enableComponent(componentName, event.getGuild().getId());
     }
 
     private void disableComponent(MessageReceivedEvent event) {
-        val componentName = event.getMessage().getContentStripped().split(" ")[3];
+        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.disableComponent(componentName, event.getGuild().getId());
     }
 
