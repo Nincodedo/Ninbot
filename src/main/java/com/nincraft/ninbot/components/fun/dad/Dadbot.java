@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.fun;
+package com.nincraft.ninbot.components.fun.dad;
 
 import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.config.ConfigConstants;

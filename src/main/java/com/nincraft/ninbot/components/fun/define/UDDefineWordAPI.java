@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.fun;
+package com.nincraft.ninbot.components.fun.define;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

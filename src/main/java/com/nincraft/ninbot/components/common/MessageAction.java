@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.common;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
@@ -63,6 +64,11 @@ public class MessageAction {
 
     public MessageAction addChannelAction(Message message) {
         channelMessageList.add(message);
+        return this;
+    }
+
+    public MessageAction addChannelAction(EmbedBuilder embedBuilder) {
+        channelMessageList.add(new MessageBuilder(embedBuilder).build());
         return this;
     }
 

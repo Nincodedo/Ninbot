@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.fun;
+package com.nincraft.ninbot.components.fun.dab;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
