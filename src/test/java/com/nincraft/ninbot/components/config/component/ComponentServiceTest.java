@@ -54,21 +54,4 @@ class ComponentServiceTest extends NinbotTest {
         componentService.registerComponent(name, componentType);
         verify(componentRepository, times(0)).save(Mockito.any(Component.class));
     }
-
-    @Test
-    void disableComponent() {
-        
-    }
-
-    @Test
-    void isDisabled() {
-    }
-
-    @Test
-    void enableComponent() {
-    }
-
-    @Test
-    void getDisabledComponents() {
-    }
 }

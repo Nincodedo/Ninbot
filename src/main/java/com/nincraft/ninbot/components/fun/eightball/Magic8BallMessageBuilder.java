@@ -2,7 +2,6 @@ package com.nincraft.ninbot.components.fun.eightball;
 
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
