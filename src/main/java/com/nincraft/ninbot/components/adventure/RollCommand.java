@@ -48,7 +48,8 @@ public class RollCommand extends AbstractCommand {
         val diceCommand = diceArgs.split("d");
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.appendFormat(resourceBundle.getString("command.roll.result"), event.getMember()
-                .getEffectiveName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getTotalRoll()));
+                .getEffectiveName(), diceCommand[0], diceCommand[1], String.valueOf(parsed.getTotalRoll()),
+                parsed.toString());
         return messageBuilder.build();
     }
 }
