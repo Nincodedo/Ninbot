@@ -38,13 +38,13 @@ public class PollCommand extends AbstractCommand {
         return messageAction;
     }
 
-    private Poll parsePollMessage(Message message, Member member) {
+    Poll parsePollMessage(Message message, Member member) {
         Poll poll = new Poll();
         poll.setMember(member);
         val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         poll.setChoices(new ArrayList<>());
         if (pollMessage.contains("\"")) {
-            poll.setTitle(pollMessage.substring(0, pollMessage.indexOf("\"")));
+            poll.setTitle(pollMessage.substring(0, pollMessage.indexOf("\"")).trim());
             val pollOptions = pollMessage.substring(
                     pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
             poll.setChoices(Arrays.asList(pollOptions.split(", ")));
