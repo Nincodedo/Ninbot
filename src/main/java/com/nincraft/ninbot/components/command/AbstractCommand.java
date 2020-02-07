@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.command;
 
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
+import com.nincraft.ninbot.components.common.WebhookHelper;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -27,6 +28,7 @@ public abstract class AbstractCommand {
     protected String usageText;
     protected List<String> aliases = new ArrayList<>();
     protected ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
+    protected WebhookHelper webhookHelper = new WebhookHelper();
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();

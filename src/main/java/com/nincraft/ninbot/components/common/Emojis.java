@@ -21,6 +21,7 @@ public class Emojis {
     public static final String BALLOON = "\uD83C\uDF88";
     public static final String PARTY_POPPER = "\uD83C\uDF89";
     public static final String PILLS = "\uD83D\uDC8A";
+    public static final String COOLDOWN_5_CLOCK = "\uD83D\uDD54";
     @Getter
     private static final Map<Integer, String> numberMap;
 
