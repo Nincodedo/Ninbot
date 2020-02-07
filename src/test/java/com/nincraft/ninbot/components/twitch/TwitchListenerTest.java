@@ -46,9 +46,6 @@ public class TwitchListenerTest {
     ComponentService componentService;
 
     @Mock
-    TwitchAPI twitchAPI;
-
-    @Mock
     StreamingMemberRepository streamingMemberRepository;
 
     @InjectMocks

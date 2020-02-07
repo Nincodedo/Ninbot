@@ -1,7 +1,5 @@
 package com.nincraft.ninbot.beans;
 
-import com.github.twitch4j.helix.TwitchHelix;
-import com.github.twitch4j.helix.TwitchHelixBuilder;
 import com.nincodedo.sapconversational.SAPConversationalAIAPI;
 import com.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -51,10 +49,5 @@ public class ApplicationBean {
     @Bean
     public SAPConversationalAIAPI sapConversationalAIAPI() {
         return new SAPConversationalAIAPIBuilder(sapToken).build();
-    }
-
-    @Bean
-    public TwitchHelix twitchHelix() {
-        return TwitchHelixBuilder.builder().withClientId(twitchClientId).withClientSecret(twitchClientSecret).build();
     }
 }
