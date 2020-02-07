@@ -11,6 +11,7 @@ All commands are prefixed with @Ninbot.
     * [Lose/Win](#losewin)
     * [Poll](#poll)
     * [Roll](#roll)
+    * [Simulate](#simulate)
     * [Stats](#stats)
     * [Subscribe/Unsubscribe](#subscribeunsubscribe)
     * [Trivia](#trivia)
@@ -115,6 +116,13 @@ Usage:
     
     @Ninbot roll 2d20
     
+### Simulate
+Simulates messages from another user.
+
+Usage:
+
+    @Ninbot simulate @Username
+
 ### Stats
 Shows various stats on Ninbot.
 
