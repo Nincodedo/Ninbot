@@ -38,10 +38,9 @@ public class SimulateCommand extends CooldownCommand {
         MessageAction messageAction = new MessageAction(event);
         val mentionedUsers = event.getMessage().getMentionedUsers();
         val targetUser = mentionedUsers.get(mentionedUsers.size() - 1);
-        val guilds = targetUser.getMutualGuilds();
 
         try {
-            val list = getUserMessages(guilds, targetUser);
+            val list = getUserMessages(event.getGuild(), targetUser);
             if (list.isEmpty()) {
                 return messageAction;
             }
@@ -73,21 +72,27 @@ public class SimulateCommand extends CooldownCommand {
         return messageAction;
     }
 
-    private List<Message> getUserMessages(List<Guild> guilds,
-            User user) throws ExecutionException, InterruptedException {
+    private List<Message> getUserMessages(Guild guild, User user) throws ExecutionException, InterruptedException {
         List<Message> returnMessages = new ArrayList<>();
-        for (val guild : guilds) {
-            for (val textChannel : guild.getTextChannels()) {
-                val apply = textChannel.getIterableHistory().takeAsync(1000).thenApply(messages ->
-                        messages.parallelStream()
-                                .filter(message -> message.getAuthor().equals(user))
-                                .filter(message -> !message.getContentStripped().toLowerCase().contains("@ninbot"))
-                                .filter(message -> !message.getContentStripped().trim().isBlank())
-                                .collect(Collectors.toList())
-                );
-                returnMessages.addAll((List<Message>) apply.get());
-            }
+        //Limit to 10 random channels that the default public role can read/talk
+        val textChannels = guild.getTextChannels().parallelStream()
+                .filter(textChannel -> textChannel.canTalk(guild.getMembersWithRoles(guild.getPublicRole()).get(0)))
+                .unordered()
+                .limit(10)
+                .collect(Collectors.toList());
+        for (val textChannel : textChannels) {
+            //Limit to 1000 messages from those channels where the target is the message author, they're not
+            //mentioning Ninbot and their post isn't blank (really only relevant to bots)
+            val apply = textChannel.getIterableHistory().takeAsync(1000).thenApply(messages ->
+                    messages.parallelStream()
+                            .filter(message -> message.getAuthor().equals(user))
+                            .filter(message -> !message.getContentStripped().toLowerCase().contains("@ninbot"))
+                            .filter(message -> !message.getContentStripped().trim().isBlank())
+                            .collect(Collectors.toList())
+            );
+            returnMessages.addAll((List<Message>) apply.get());
         }
+
         return returnMessages;
     }
 }
