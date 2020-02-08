@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.fun.haiku;
 
 import com.nincraft.ninbot.components.config.component.ComponentService;
+import com.nincraft.ninbot.components.config.component.ComponentType;
 import eu.crydee.syllablecounter.SyllableCounter;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,6 +23,7 @@ public class HaikuListener extends ListenerAdapter {
         this.componentService = componentService;
         this.syllableCounter = new SyllableCounter();
         this.componentName = "haiku";
+        componentService.registerComponent(componentName, ComponentType.ACTION);
     }
 
 
