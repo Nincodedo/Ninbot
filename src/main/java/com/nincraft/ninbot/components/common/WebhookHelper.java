@@ -5,6 +5,7 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -19,11 +20,20 @@ import java.util.concurrent.ExecutionException;
 @Log4j2
 public class WebhookHelper {
 
+    /**
+     * Returns Optional of the webhook if found
+     * @param guild the guild to check for the webhook
+     * @param textChannel the text channel search
+     * @param name name of the webhook
+     * @return Optional of the webhook if the bot has Permission.MANAGE_WEBHOOKS and its found
+     */
     public Optional<Webhook> getWebhookByName(Guild guild, TextChannel textChannel, String name) {
-        val webhooks = guild.retrieveWebhooks().complete();
-        for (val webhook : webhooks) {
-            if (webhook.getName().equalsIgnoreCase(name) && webhook.getChannel().equals(textChannel)) {
-                return Optional.of(webhook);
+        if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
+            val webhooks = guild.retrieveWebhooks().complete();
+            for (val webhook : webhooks) {
+                if (webhook.getName().equalsIgnoreCase(name) && webhook.getChannel().equals(textChannel)) {
+                    return Optional.of(webhook);
+                }
             }
         }
         return Optional.empty();
