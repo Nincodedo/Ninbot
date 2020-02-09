@@ -1,6 +1,7 @@
 package com.nincraft.ninbot;
 
 import com.nincraft.ninbot.components.common.MessageAction;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class TestUtils {
 
     public static String returnEmbeddedTitle(MessageAction messageAction) {
         return messageAction.getChannelMessageList().get(0).getEmbeds().get(0).getTitle();
+    }
+
+    public static List<MessageEmbed.Field> returnPrivateMessageEmbedFields(MessageAction messageAction) {
+        return messageAction.getPrivateMessageList().get(0).getEmbeds().get(0).getFields();
     }
 
     public static String returnEmbeddedName(MessageAction messageAction) {

@@ -24,7 +24,7 @@ import static com.nincraft.ninbot.components.common.Emojis.QUESTION_MARK;
 
 @Log4j2
 @Component
-class CommandParser {
+public class CommandParser {
 
     private ConfigService configService;
     private ComponentService componentService;

@@ -101,8 +101,8 @@ public abstract class AbstractCommand {
             return true;
         } else {
             val member = guild.getMember(user);
-            val role = guild.getRolesByName(rolePermission.getRoleName(), true).get(0);
-            return guild.getMembersWithRoles(role).contains(member);
+            val roles = guild.getRolesByName(rolePermission.getRoleName(), true);
+            return guild.getMembersWithRoles(roles).contains(member);
         }
     }
 
