@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.info;
 
-import com.nincraft.ninbot.NinbotITTest;
 import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.command.CommandParser;
@@ -21,9 +20,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Collectors;
@@ -32,11 +36,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = NinbotRunner.class, initializers = {NinbotITTest.Initializer.class})
+@ContextConfiguration(classes = NinbotRunner.class, initializers = {HelpCommandTestIT.Initializer.class})
 @TestPropertySource("classpath:application.properties")
 @Log4j2
 @Testcontainers
-public class HelpCommandTestIT extends NinbotITTest {
+public class HelpCommandTestIT {
+    @Container
+    private static final MySQLContainer mySQLContainer = new MySQLContainer();
     @Mock
     public MessageReceivedEvent messageEvent;
     @Mock
@@ -70,5 +76,14 @@ public class HelpCommandTestIT extends NinbotITTest {
         assertThat(TestUtils.returnPrivateMessageEmbedFields(messageAction)).hasSameSizeAs(everyoneCommands);
     }
 
-
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "spring.datasource.url=" + mySQLContainer.getJdbcUrl(),
+                    "spring.datasource.username=" + mySQLContainer.getUsername(),
+                    "spring.datasource.password=" + mySQLContainer.getPassword())
+                    .applyTo(configurableApplicationContext.getEnvironment());
+        }
+    }
 }

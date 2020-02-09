@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.ac.turnips;
 
-import com.nincraft.ninbot.NinbotITTest;
 import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.ac.Villager;
@@ -21,9 +20,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.DayOfWeek;
@@ -33,12 +37,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = NinbotRunner.class, initializers = {NinbotITTest.Initializer.class})
+@ContextConfiguration(classes = NinbotRunner.class, initializers = {TurnipCommandTestIT.Initializer.class})
 @TestPropertySource("classpath:application.properties")
 @Log4j2
 @Testcontainers
-public class TurnipCommandTestIT extends NinbotITTest {
+public class TurnipCommandTestIT {
 
+    @Container
+    private static final MySQLContainer mySQLContainer = new MySQLContainer();
     @Mock
     public MessageReceivedEvent messageEvent;
     @Mock
@@ -104,6 +110,17 @@ public class TurnipCommandTestIT extends NinbotITTest {
             assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         } else {
             assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CROSS_X);
+        }
+    }
+
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "spring.datasource.url=" + mySQLContainer.getJdbcUrl(),
+                    "spring.datasource.username=" + mySQLContainer.getUsername(),
+                    "spring.datasource.password=" + mySQLContainer.getPassword())
+                    .applyTo(configurableApplicationContext.getEnvironment());
         }
     }
 }
