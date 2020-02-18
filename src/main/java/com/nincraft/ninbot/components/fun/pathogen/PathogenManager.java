@@ -37,7 +37,7 @@ public class PathogenManager {
     private Random todayRandom;
     private Random random;
     @Getter
-    private int wordListLength = 30;
+    private int wordListLength = 15;
     private boolean healingWeek;
 
     public PathogenManager(PathogenUserRepository pathogenUserRepository,
