@@ -50,20 +50,31 @@ public class PathogenManager {
     }
 
     private boolean determineIfHealingWeek() {
-        return LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) % 2 == 0;
+        return healingWeekId() % 2 == 0;
+    }
+
+    private int healingWeekId() {
+        return LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void setRandomSeed() {
+        setRandomSeed(true);
+    }
+
+    public void setRandomSeed(boolean doAuditAction) {
         val seed = LocalDate.now().toEpochDay();
         this.todayRandom = new Random(seed);
         this.healingWeek = determineIfHealingWeek();
-        PathogenAudit audit = new PathogenAudit();
-        audit.setAction("setRandomSeed");
-        audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
-        audit.setCreationDate(LocalDateTime.now());
-        audit.setCreatedBy("ninbot");
-        pathogenAuditRepository.save(audit);
+        if (doAuditAction) {
+            PathogenAudit audit = new PathogenAudit();
+            audit.setAction("setRandomSeed");
+            audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
+            audit.setCreationDate(LocalDateTime.now());
+            audit.setCreatedBy("ninbot");
+            audit.setWeekId(healingWeekId());
+            pathogenAuditRepository.save(audit);
+        }
     }
 
     public void setRandomSeed(long seed) {
@@ -137,6 +148,7 @@ public class PathogenManager {
                 channelId));
         audit.setCreationDate(LocalDateTime.now());
         audit.setCreatedBy(spreadSource.getId());
+        audit.setWeekId(healingWeekId());
         pathogenAuditRepository.save(audit);
     }
 
@@ -151,7 +163,7 @@ public class PathogenManager {
     @GetMapping("/wordlist")
     @ResponseBody
     public Set<String> getWordList() {
-        setRandomSeed();
+        setRandomSeed(false);
         try {
             List<String> list = new ArrayList<>();
             try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()

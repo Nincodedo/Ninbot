@@ -20,4 +20,5 @@ public class PathogenAudit {
     private LocalDateTime creationDate;
     @CreatedBy
     private String createdBy;
+    private Integer weekId;
 }
