@@ -56,6 +56,11 @@
       "type": "exact"
     },
     {
+      "response": "sorry",
+      "target": "!sorry",
+      "type": "exact"
+    },
+    {
       "response": "sory",
       "target": "not sorry",
       "type": "exact"
