@@ -11,10 +11,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,8 +24,6 @@ import java.util.stream.IntStream;
 
 @Log4j2
 @Component
-@Controller
-@RequestMapping("/pathogen")
 public class PathogenManager {
 
     private PathogenAuditRepository pathogenAuditRepository;
@@ -63,7 +57,16 @@ public class PathogenManager {
     }
 
     public void setRandomSeed(boolean doAuditAction) {
-        val seed = LocalDate.now().toEpochDay();
+        setRandomSeed(doAuditAction, null);
+    }
+
+    public void setRandomSeed(boolean doAuditAction, LocalDate localDate) {
+        long seed;
+        if (localDate == null) {
+            seed = LocalDate.now().toEpochDay();
+        } else {
+            seed = localDate.toEpochDay();
+        }
         this.todayRandom = new Random(seed);
         this.healingWeek = determineIfHealingWeek();
         if (doAuditAction) {
@@ -115,7 +118,6 @@ public class PathogenManager {
                             pathogenUser.setServerId(guild.getId());
                             pathogenUserRepository.save(pathogenUser);
                         });
-
                     } else {
                         guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully added role, so add infected reaction
@@ -160,26 +162,36 @@ public class PathogenManager {
                 .anyMatch(role -> PathogenConfig.getROLENAME().equalsIgnoreCase(role.getName()));
     }
 
-    @GetMapping("/wordlist")
-    @ResponseBody
     public Set<String> getWordList() {
         setRandomSeed(false);
-        try {
-            List<String> list = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
-                    .getResourceAsStream("listOfCommonWords.txt")))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    list.add(line);
-                }
+        List<String> list = readWordList();
+        return IntStream.range(0, wordListLength)
+                .mapToObj(i -> list.remove(todayRandom.nextInt(list.size())))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> getWordList(String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        setRandomSeed(false, localDate);
+        List<String> list = readWordList();
+        return IntStream.range(0, wordListLength)
+                .mapToObj(i -> list.remove(todayRandom.nextInt(list.size())))
+                .collect(Collectors.toSet());
+    }
+
+    private List<String> readWordList() {
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
+                .getResourceAsStream("listOfCommonWords.txt")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
             }
-            return IntStream.range(0, wordListLength)
-                    .mapToObj(i -> list.remove(todayRandom.nextInt(list.size())))
-                    .collect(Collectors.toSet());
         } catch (IOException e) {
-            log.error("Failed to read list of common words", e);
-            return new HashSet<>();
+            log.error("Failed to read common word file", e);
+            return new ArrayList<>();
         }
+        return list;
     }
 
     boolean messageContainsSecretWordOfTheDay(String contentStripped) {
