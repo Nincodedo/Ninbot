@@ -84,7 +84,7 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private boolean joinTurnipEvent(MessageReceivedEvent event) {
-        if (!villagerManager.findByDiscordId(event.getAuthor().getId()).isPresent()) {
+        if (villagerManager.findByDiscordId(event.getAuthor().getId()).isEmpty()) {
             Villager villager = new Villager();
             villager.setDiscordId(event.getAuthor().getId());
             villager.setDiscordServerId(event.getGuild().getId());

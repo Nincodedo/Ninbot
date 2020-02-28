@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -131,5 +132,14 @@ public abstract class AbstractCommand {
         } else {
             return "";
         }
+    }
+
+    protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
+        for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
+            if (member.getId().equals(user.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

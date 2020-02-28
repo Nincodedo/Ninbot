@@ -27,7 +27,7 @@ public class ComponentService {
 
     public void registerComponent(String name, ComponentType componentType) {
         val componentOptional = componentRepository.findByNameAndType(name, componentType);
-        if (!componentOptional.isPresent()) {
+        if (componentOptional.isEmpty()) {
             Component component = new Component(name, componentType);
             componentRepository.save(component);
         }

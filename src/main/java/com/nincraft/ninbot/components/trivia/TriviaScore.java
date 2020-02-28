@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class TriviaScore implements Comparable {
+public class TriviaScore implements Comparable<TriviaScore> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -25,12 +25,11 @@ public class TriviaScore implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        TriviaScore triviaScore = (TriviaScore) o;
-        if (triviaScore.getScore() == this.getScore()) {
-            return triviaScore.getUserId().compareTo(this.getUserId());
+    public int compareTo(TriviaScore otherScore) {
+        if (otherScore.getScore() == this.getScore()) {
+            return otherScore.getUserId().compareTo(this.getUserId());
         } else {
-            return Integer.compare(triviaScore.getScore(), this.getScore());
+            return Integer.compare(otherScore.getScore(), this.getScore());
         }
     }
 }

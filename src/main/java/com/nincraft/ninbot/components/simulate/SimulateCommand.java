@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -83,14 +84,16 @@ public class SimulateCommand extends CooldownCommand {
         for (val textChannel : textChannels) {
             //Limit to 1000 messages from those channels where the target is the message author, they're not
             //mentioning Ninbot and their post isn't blank (really only relevant to bots)
-            val apply = textChannel.getIterableHistory().takeAsync(1000).thenApply(messages ->
-                    messages.parallelStream()
-                            .filter(message -> message.getAuthor().equals(user))
-                            .filter(message -> !message.getContentStripped().toLowerCase().contains("@ninbot"))
-                            .filter(message -> !message.getContentStripped().trim().isBlank())
-                            .collect(Collectors.toList())
-            );
-            returnMessages.addAll((List<Message>) apply.get());
+            CompletableFuture<List<Message>> apply = textChannel.getIterableHistory()
+                    .takeAsync(1000)
+                    .thenApply(messages ->
+                            messages.parallelStream()
+                                    .filter(message -> message.getAuthor().equals(user))
+                                    .filter(message -> !message.getContentStripped().toLowerCase().contains("@ninbot"))
+                                    .filter(message -> !message.getContentStripped().trim().isBlank())
+                                    .collect(Collectors.toList())
+                    );
+            returnMessages.addAll(apply.get());
         }
 
         return returnMessages;

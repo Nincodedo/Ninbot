@@ -40,7 +40,6 @@ public class HaikuListener extends ListenerAdapter {
             embedBuilder.setFooter("A haiku inspired by " + event.getMember().getEffectiveName());
             event.getChannel().sendMessage(new MessageBuilder(embedBuilder).build()).queue();
         });
-
     }
 
     Optional<String> isHaikuable(String message) {
