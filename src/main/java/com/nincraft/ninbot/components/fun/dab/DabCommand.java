@@ -57,14 +57,11 @@ public class DabCommand extends AbstractCommand {
         messageAction.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(MessageAction messageAction, ShardManager shardManager,
-            User commandUser) {
+    private void dabOnMessage(MessageAction messageAction, ShardManager shardManager, User commandUser) {
         int dabCritPercentChance = 5;
-        for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
-            if (member.getId().equals(commandUser.getId())) {
-                dabCritPercentChance = dabCritPercentChance * 2;
-                break;
-            }
+
+        if (isUserNinbotSupporter(shardManager, commandUser)) {
+            dabCritPercentChance = dabCritPercentChance * 2;
         }
 
         val critDab = random.nextInt(100) < dabCritPercentChance;

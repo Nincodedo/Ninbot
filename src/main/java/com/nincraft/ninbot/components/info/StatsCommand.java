@@ -55,7 +55,7 @@ public class StatsCommand extends AbstractCommand {
         return new MessageBuilder(embedBuilder).build();
     }
 
-    private static class Stat implements Comparable {
+    private static class Stat implements Comparable<Stat> {
         private String name;
         private int amount;
 
@@ -66,12 +66,11 @@ public class StatsCommand extends AbstractCommand {
 
 
         @Override
-        public int compareTo(Object o) {
-            Stat stat = (Stat) o;
-            if (stat.amount == this.amount) {
-                return stat.name.compareTo(this.name);
+        public int compareTo(Stat other) {
+            if (other.amount == this.amount) {
+                return other.name.compareTo(this.name);
             } else {
-                return Integer.compare(stat.amount, this.amount);
+                return Integer.compare(other.amount, this.amount);
             }
         }
     }
