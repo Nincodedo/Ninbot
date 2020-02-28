@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
+import com.nincraft.ninbot.components.common.IdConstants;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.common.WebhookHelper;
@@ -135,7 +136,7 @@ public abstract class AbstractCommand {
     }
 
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        for (val member : shardManager.getGuildById("608765747728220161").getMembers()) {
+        for (val member : shardManager.getGuildById(IdConstants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
             if (member.getId().equals(user.getId())) {
                 return true;
             }
