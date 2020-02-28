@@ -8,28 +8,28 @@ import java.util.TimerTask;
 public class GenericAnnounce extends TimerTask {
 
     private ShardManager shardManager;
-    private String announceChannel;
+    private String announcementChannelId;
     private String announceString;
     private Message announceMessage;
 
-    public GenericAnnounce(ShardManager shardManager, String announceChannel, String announceString) {
+    public GenericAnnounce(ShardManager shardManager, String announcementChannelId, String announceString) {
         this.shardManager = shardManager;
-        this.announceChannel = announceChannel;
+        this.announcementChannelId = announcementChannelId;
         this.announceString = announceString;
     }
 
-    public GenericAnnounce(ShardManager shardManager, String announceChannel, Message announceMessage) {
+    public GenericAnnounce(ShardManager shardManager, String announcementChannelId, Message announceMessage) {
         this.shardManager = shardManager;
-        this.announceChannel = announceChannel;
+        this.announcementChannelId = announcementChannelId;
         this.announceMessage = announceMessage;
     }
 
     @Override
     public void run() {
         if (announceString != null) {
-            shardManager.getTextChannelById(announceChannel).sendMessage(announceString).queue();
+            shardManager.getTextChannelById(announcementChannelId).sendMessage(announceString).queue();
         } else if (announceMessage != null) {
-            shardManager.getTextChannelById(announceChannel).sendMessage(announceMessage).queue();
+            shardManager.getTextChannelById(announcementChannelId).sendMessage(announceMessage).queue();
         }
     }
 }

@@ -13,5 +13,6 @@ public class NinbotUser {
     @Column(nullable = false)
     private Long id;
     private String userId;
+    private String serverId;
     private Date birthday;
 }

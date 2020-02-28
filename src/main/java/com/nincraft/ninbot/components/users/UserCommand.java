@@ -52,6 +52,7 @@ public class UserCommand extends AbstractCommand {
             } else {
                 ninbotUser = new NinbotUser();
                 ninbotUser.setUserId(userId);
+                ninbotUser.setServerId(event.getGuild().getId());
             }
             ninbotUser.setBirthday(birthday);
             userRepository.save(ninbotUser);
