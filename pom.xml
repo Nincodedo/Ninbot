@@ -21,7 +21,7 @@
 
     <properties>
         <build.number>SNAPSHOT</build.number>
-        <log4j.version>2.13.0</log4j.version>
+        <log4j.version>2.13.1</log4j.version>
         <testcontainers.version>1.12.5</testcontainers.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
