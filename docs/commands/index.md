@@ -1,14 +1,17 @@
 # Commands
 All commands are prefixed with @Ninbot.
   * [User Commands](#user-commands)
+    * [8 ball](#8-ball)
     * [Countdown](#countdown)
     * [Dab](#dab)
     * [Define](#define)
     * [Events](#events)
     * [Help](#help)
+    * [Info](#info)
     * [Leaderboard](#leaderboard)
     * [List](#list)
     * [Lose/Win](#losewin)
+    * [Pathogen](#pathogen)
     * [Poll](#poll)
     * [Roll](#roll)
     * [Simulate](#simulate)
@@ -18,6 +21,7 @@ All commands are prefixed with @Ninbot.
     * [Turnips](#turnips)
     * [Twitch](#twitch)
   * [Mods Commands](#mod-commands)
+    * [Conversation](#conversation)
     * [Topic Change Announcement](#topic-change-announcement)
   * [Admin Commands](#admin-commands)
     * [Component](#component)
@@ -25,6 +29,13 @@ All commands are prefixed with @Ninbot.
     * [Leaderboard](#admin-leaderboard)
 
 ## User Commands
+
+### 8 Ball
+Asks the magic 8 ball a question.
+
+Usage:
+
+    @Ninbot 8ball
 
 ### Countdown
 Setup a countdown that will be announced every day leading up to the event.
@@ -71,6 +82,13 @@ Usage:
 
     @Ninbot help
     
+### Info
+Shows info about Ninbot such as uptime and the most recent commit.
+
+Usage:
+
+    @Ninbot info
+    
 ### Leaderboard
 Shows the server's leaderboard.
 
@@ -96,6 +114,14 @@ Usage:
     
 Aliases: won, beat, smashed, owned
          lost, loss
+         
+### Pathogen
+Displays the user's current infection level.
+
+Usage:
+    
+    @Ninbot pathogen
+
 ### Poll
 Creates a new poll. You can have a maximum of 10 answers in a single poll. 
 
@@ -228,6 +254,14 @@ Usage:
     
     
 ## Mod Commands
+### Conversation
+Toggles the Ninbot conversation module in the current channel. It is off by default.
+
+Usage:
+
+    @Ninbot conversation
+    
+
 ### Topic Change Announcement
 Toggles topic change announcements in the current channel.
 
