@@ -22,16 +22,18 @@ public class WebhookHelper {
 
     /**
      * Returns Optional of the webhook if found
-     * @param guild the guild to check for the webhook
-     * @param textChannel the text channel search
-     * @param name name of the webhook
+     *
+     * @param guild       the guild to check for the webhook
+     * @param textChannel the text channel to set the webhook to
+     * @param name        name of the webhook
      * @return Optional of the webhook if the bot has Permission.MANAGE_WEBHOOKS and its found
      */
     public Optional<Webhook> getWebhookByName(Guild guild, TextChannel textChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
             val webhooks = guild.retrieveWebhooks().complete();
             for (val webhook : webhooks) {
-                if (webhook.getName().equalsIgnoreCase(name) && webhook.getChannel().equals(textChannel)) {
+                if (webhook.getName().equalsIgnoreCase(name)) {
+                    webhook.getManager().setChannel(textChannel).complete();
                     return Optional.of(webhook);
                 }
             }

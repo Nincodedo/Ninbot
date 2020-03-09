@@ -39,36 +39,38 @@ public class SimulateCommand extends CooldownCommand {
         MessageAction messageAction = new MessageAction(event);
         val mentionedUsers = event.getMessage().getMentionedUsers();
         val targetUser = mentionedUsers.get(mentionedUsers.size() - 1);
-
+        List<Message> userMessages;
         try {
-            val list = getUserMessages(event.getGuild(), targetUser);
-            if (list.isEmpty()) {
-                return messageAction;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            int loopLength = random.nextInt(3) + 3;
-            for (int i = 0; i < loopLength; i++) {
-                val message = list.get(random.nextInt(list.size())).getContentStripped() + " ";
-                stringBuilder.append(message);
-            }
-            val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(),
-                    WEBHOOK_NAME);
-            val member = event.getGuild().getMember(targetUser);
-            if (webhookOptional.isPresent()) {
-                val webhook = webhookOptional.get();
-                val manager = webhook.getManager();
-                webhookHelper.setWebhookIcon(targetUser.getEffectiveAvatarUrl(), manager);
-                manager.setName(member.getEffectiveName()).queue(aVoid -> {
-                    webhookHelper.sendMessage(stringBuilder.toString(), webhook.getUrl());
-                    manager.setName(WEBHOOK_NAME).queue();
-                });
-            } else {
-                messageAction.addChannelAction(new EmbedBuilder().appendDescription(stringBuilder.toString()));
-            }
+             userMessages = getUserMessages(event.getGuild(), targetUser);
         } catch (ExecutionException | InterruptedException e) {
             log.error("Failed to run user simulation", e);
             messageAction.addUnsuccessfulReaction();
+            return messageAction;
         }
+        if (userMessages.isEmpty()) {
+            return messageAction;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        int loopLength = random.nextInt(3) + 3;
+        for (int i = 0; i < loopLength; i++) {
+            val message = userMessages.get(random.nextInt(userMessages.size())).getContentStripped() + " ";
+            stringBuilder.append(message);
+        }
+        val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(),
+                WEBHOOK_NAME);
+        val member = event.getGuild().getMember(targetUser);
+        if (webhookOptional.isPresent()) {
+            val webhook = webhookOptional.get();
+            val manager = webhook.getManager();
+            webhookHelper.setWebhookIcon(targetUser.getEffectiveAvatarUrl(), manager);
+            manager.setName(member.getEffectiveName()).queue(aVoid -> {
+                webhookHelper.sendMessage(stringBuilder.toString(), webhook.getUrl());
+                manager.setName(WEBHOOK_NAME).queue();
+            });
+        } else {
+            messageAction.addChannelAction(new EmbedBuilder().appendDescription(stringBuilder.toString()));
+        }
+
 
         return messageAction;
     }
