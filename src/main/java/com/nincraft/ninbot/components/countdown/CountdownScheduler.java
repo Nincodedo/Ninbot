@@ -41,7 +41,7 @@ public class CountdownScheduler implements Schedulable {
                 .atStartOfDay()
                 .atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
-            val dayDifference = ChronoUnit.DAYS.between(tomorrowDate, countdownDate);
+            val dayDifference = countdown.getDayDifference();
             if (dayDifference > 7 && dayDifference % 7 != 0) {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
@@ -49,7 +49,7 @@ public class CountdownScheduler implements Schedulable {
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang",
                     localeService.getLocale(countdown.getServerId()));
             countdown.setResourceBundle(resourceBundle);
-            val countdownMessage = countdown.buildMessage(dayDifference);
+            val countdownMessage = countdown.buildMessage();
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(),
                     ConfigConstants.ANNOUNCE_CHANNEL);

@@ -50,9 +50,8 @@ public class CountdownCommand extends AbstractCommand {
         if (!list.isEmpty()) {
             embedBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
             for (val countdown : list) {
-                embedBuilder.addField(countdown.getName(),
-                        resourceBundle.getString("command.countdown.list.starttime")
-                                + countdown.getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE), false);
+                countdown.setResourceBundle(resourceBundle);
+                embedBuilder.addField(countdown.getName(), countdown.getDescription(), false);
             }
             String serverTimezone = getServerTimeZone(event.getGuild().getId());
             embedBuilder.setFooter(resourceBundle.getString("command.countdown.list.footer") + serverTimezone, null);

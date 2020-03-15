@@ -1,8 +1,5 @@
 package com.nincraft.ninbot.components.ac.turnips;
 
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.WebhookClientBuilder;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.nincraft.ninbot.components.ac.Villager;
 import com.nincraft.ninbot.components.ac.VillagerManager;
 import com.nincraft.ninbot.components.command.AbstractCommand;
@@ -22,6 +19,7 @@ import java.time.LocalDateTime;
 @Component
 public class TurnipCommand extends AbstractCommand {
 
+    private static final String SELLING_BUYING_COMMAND_MAX = "max";
     private TurnipPricesManager turnipPricesManager;
     private VillagerManager villagerManager;
 
@@ -123,17 +121,12 @@ public class TurnipCommand extends AbstractCommand {
     private void listSundayTurnipSellingPrices(MessageReceivedEvent event) {
         int turnipPrice = turnipPricesManager.getSundayTurnipPrices(
                 getSeed(event.getGuild().getIdLong()));
-        event.getGuild().retrieveWebhooks().queue(webhooks -> webhooks.forEach(webhook -> {
-            if (webhook.getName().equalsIgnoreCase("joan") && webhook.getChannel().equals(event.getTextChannel())) {
-                WebhookClientBuilder builder = new WebhookClientBuilder(webhook.getUrl());
-                WebhookClient client = builder.build();
-                WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
-                messageBuilder.append(String.format(
-                        resourceBundle.getString("command.turnips.list.sunday.joan"), turnipPrice));
-                client.send(messageBuilder.build());
-                client.close();
-            }
-        }));
+        val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(), "joan");
+        if (webhookOptional.isPresent()) {
+            val webhook = webhookOptional.get();
+            webhookHelper.sendMessage(String.format(
+                    resourceBundle.getString("command.turnips.list.sunday.joan"), turnipPrice), webhook.getUrl());
+        }
     }
 
     private boolean sellTurnips(MessageReceivedEvent event) {
@@ -150,7 +143,7 @@ public class TurnipCommand extends AbstractCommand {
                 String sellAmount = message.split("\\s+")[3];
                 if (StringUtils.isNumeric(sellAmount)) {
                     selling = Integer.parseInt(sellAmount);
-                } else if ("max".equals(sellAmount)) {
+                } else if (SELLING_BUYING_COMMAND_MAX.equals(sellAmount)) {
                     selling = villager.getTurnipsOwned();
                 }
             }
@@ -182,7 +175,7 @@ public class TurnipCommand extends AbstractCommand {
             String buyAmount = message.split("\\s+")[3];
             if (StringUtils.isNumeric(buyAmount)) {
                 amountBuying = Integer.parseInt(message.split("\\s+")[3]);
-            } else if ("max".equals(buyAmount)) {
+            } else if (SELLING_BUYING_COMMAND_MAX.equals(buyAmount)) {
                 amountBuying = villager.getBellsTotal() / currentPrice / 10 * 10;
             }
         }
