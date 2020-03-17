@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -14,18 +13,16 @@
     <name>Ninbot</name>
     <description>Discord bot for OCW Discord using JDA</description>
     <url>https://github.com/Nincodedo/Ninbot</url>
-
     <scm>
         <connection>scm:git:https://github.com/Nincodedo/Ninbot.git</connection>
     </scm>
-
     <properties>
         <build.number>SNAPSHOT</build.number>
         <log4j.version>2.13.1</log4j.version>
         <testcontainers.version>1.13.0</testcontainers.version>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -201,10 +198,27 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.ekryd.sortpom</groupId>
+                    <artifactId>sortpom-maven-plugin</artifactId>
+                    <version>2.11.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -230,10 +244,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.2.5.RELEASE</version>
-                <configuration>
-                    <mainClass>com.nincraft.ninbot.NinbotRunner</mainClass>
-                    <layout>ZIP</layout>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -241,6 +251,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>com.nincraft.ninbot.NinbotRunner</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -290,24 +304,10 @@
                     <excludes>
                         <exclude>**/*IT</exclude>
                     </excludes>
-                    <argLine>
-                        @{argLine} --enable-preview
-                    </argLine>
+                    <argLine>@{argLine} --enable-preview</argLine>
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-                    <configuration>
-                        <tagNameFormat>@{project.version}</tagNameFormat>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <profiles>
         <profile>
@@ -339,9 +339,7 @@
                                     <includes>
                                         <include>**/*IT</include>
                                     </includes>
-                                    <argLine>
-                                        @{argLine} --enable-preview
-                                    </argLine>
+                                    <argLine>@{argLine} --enable-preview</argLine>
                                 </configuration>
                             </execution>
                         </executions>
@@ -350,14 +348,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>2.22.2</version>
-                        <configuration>
-                            <includes>
-                                <include>**/*IT</include>
-                            </includes>
-                            <argLine>
-                                --enable-preview
-                            </argLine>
-                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
@@ -366,6 +356,12 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT</include>
+                            </includes>
+                            <argLine>--enable-preview</argLine>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
