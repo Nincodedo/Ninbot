@@ -36,7 +36,7 @@ public class ApplicationBean {
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
-            DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder(ninbotToken);
+            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(ninbotToken);
             builder.addEventListeners(listenerAdapters.toArray());
             builder.setShardsTotal(-1);
             return builder.build();
