@@ -6,7 +6,7 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit --no-transfer-progress
 
-FROM adoptopenjdk/openjdk13:jre-13.0.1_9-alpine
+FROM adoptopenjdk/openjdk13:alpine-slim
 COPY --from=build /app/target/ninbot-1.0-SNAPSHOT.jar /
 RUN apk add --no-cache curl
 HEALTHCHECK CMD curl --request GET --url http://localhost:8090/actuator/health || exit 1
