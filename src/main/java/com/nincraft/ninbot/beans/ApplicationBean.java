@@ -4,6 +4,7 @@ import com.nincodedo.sapconversational.SAPConversationalAIAPI;
 import com.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.security.auth.login.LoginException;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -37,6 +39,7 @@ public class ApplicationBean {
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(ninbotToken);
+            builder.setEnabledIntents(Arrays.asList(GatewayIntent.values()));
             builder.addEventListeners(listenerAdapters.toArray());
             builder.setShardsTotal(-1);
             return builder.build();
