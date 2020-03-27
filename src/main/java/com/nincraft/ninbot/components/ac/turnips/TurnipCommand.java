@@ -112,7 +112,8 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private int getCurrentPrice(long seed) {
-        val priceList = turnipPricesManager.getTurnipPricesList(TurnipPattern.getRandomTurnipPattern(seed), seed);
+        val turnipPattern = turnipPricesManager.getTurnipPattern(seed);
+        val priceList = turnipPricesManager.getTurnipPricesList(turnipPattern, seed);
         int priceIndex = ((LocalDate.now().getDayOfWeek().getValue() - 1) * 2) + (
                 LocalDateTime.now().getHour() >= 12 ? 1 : 0);
         return priceList.get(priceIndex);

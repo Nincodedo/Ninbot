@@ -4,8 +4,11 @@ import com.nincraft.ninbot.NinbotTest;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.assertj.core.data.Percentage;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +17,22 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Log4j2
-public class TurnipPricesManagerTest extends NinbotTest {
+public class NewLeafTurnipPricesManagerTest extends NinbotTest {
 
     @InjectMocks
-    TurnipPricesManager turnipPricesManager;
+    static TurnipPricesManager turnipPricesManager;
+
+    static NewLeafTurnipPriceGenerator turnipPriceGenerator;
 
     private long seed = 5;
     private double expectedAverageProfitPerTurnip = 160;
     private double expectedAverageProfitableWeeks = 0.7;
+
+    @BeforeAll
+    public static void setup(){
+        turnipPriceGenerator = new NewLeafTurnipPriceGenerator();
+        turnipPricesManager = new TurnipPricesManager(null, turnipPriceGenerator);
+    }
 
     @Test
     public void simulateManyWeeks() {
