@@ -1,6 +1,5 @@
 package com.nincraft.ninbot.components.poll;
 
-import com.nincraft.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -21,11 +20,10 @@ class PollAnnounce extends TimerTask {
 
     @Override
     public void run() {
-        announcePollResults().executeActions();
+        pollMessage.getChannel().sendMessage(announcePollResults()).queue();
     }
 
-    private MessageAction announcePollResults() {
-        MessageAction messageAction = new MessageAction();
+    private String announcePollResults() {
         val newMessage = pollMessage.getChannel().retrieveMessageById(pollMessage.getId()).complete();
         int highCount = 0;
         List<String> winningChoices = new ArrayList<>();
@@ -58,9 +56,8 @@ class PollAnnounce extends TimerTask {
                             + pollClosedMessage);
         }
         pollMessage.editMessage(poll.buildClosed()).queue();
-        messageAction.addChannelAction(poll.getResult());
         pollMessage.unpin().queue();
-        return messageAction;
+        return poll.getResult();
     }
 
     private String listWinners(List<String> winningChoices) {
