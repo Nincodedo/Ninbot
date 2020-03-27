@@ -1,13 +1,13 @@
-package com.nincraft.ninbot.components.info;
+package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.internal.entities.RoleImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +49,7 @@ public class ListCommandTest extends NinbotTest {
         List<Role> roles = new ArrayList<>();
         Role role = Mockito.mock(Role.class);
         when(role.getName()).thenReturn("best");
+        when(role.getPermissions()).thenReturn(EnumSet.noneOf(Permission.class));
         roles.add(role);
         when(messageEvent.getMessage()).thenReturn(message);
         when(messageEvent.getGuild()).thenReturn(mockGuild);

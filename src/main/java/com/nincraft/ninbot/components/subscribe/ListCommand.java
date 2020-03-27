@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.info;
+package com.nincraft.ninbot.components.subscribe;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
@@ -55,7 +55,12 @@ public class ListCommand extends AbstractCommand {
     }
 
     private Message listSubscriptions(List<Role> roleList, String guildId) {
-        List<String> roleNameList = roleList.stream().map(Role::getName).collect(Collectors.toList());
+        List<String> roleNameList = roleList.stream()
+                .filter(role -> !role.isManaged() && role.getPermissions().size() <= roleList.get(roleList.size() - 1)
+                        .getPermissions()
+                        .size() && !role.getName().equals("infected") && !role.getName().equals("@everyone"))
+                .map(Role::getName)
+                .collect(Collectors.toList());
         List<String> roleBlackList = configService.getValuesByName(guildId, ConfigConstants.ROLE_BLACKLIST);
         roleNameList.removeAll(roleBlackList);
         EmbedBuilder embedBuilder = new EmbedBuilder();
