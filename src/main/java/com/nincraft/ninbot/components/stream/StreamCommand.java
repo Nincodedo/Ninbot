@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.twitch;
+package com.nincraft.ninbot.components.stream;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
@@ -11,12 +11,12 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TwitchCommand extends AbstractCommand {
+public class StreamCommand extends AbstractCommand {
 
     private ConfigService configService;
 
-    public TwitchCommand(ConfigService configService) {
-        name = "twitch";
+    public StreamCommand(ConfigService configService) {
+        name = "stream";
         length = 2;
         this.configService = configService;
     }
