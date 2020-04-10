@@ -19,10 +19,10 @@ jobs:
         java-version: '14'
     - name: Update permissions on mvnw
       run: chmod 700 mvnw
-    - name: Build, Test, Sonar
+    - name: Build, Test
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./mvnw clean verify sonar:sonar -P git-commit,integration -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref }} --no-transfer-progress
+      run: ./mvnw clean verify -P git-commit,integration -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref }} --no-transfer-progress
     - name: GitHub Docker Action
       uses: matootie/github-docker@v1.0.1
       with:
