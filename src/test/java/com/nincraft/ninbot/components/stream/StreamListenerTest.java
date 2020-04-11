@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.twitch;
+package com.nincraft.ninbot.components.stream;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -34,7 +34,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class TwitchListenerTest {
+public class StreamListenerTest {
 
     @Mock
     ConfigService configService;
@@ -49,7 +49,7 @@ public class TwitchListenerTest {
     StreamingMemberRepository streamingMemberRepository;
 
     @InjectMocks
-    TwitchListener twitchListener;
+    StreamListener streamListener;
 
     @Test
     public void userStartsStreamingNotAlreadyStreamingNoCooldown() {
@@ -67,6 +67,7 @@ public class TwitchListenerTest {
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
+        when(member.getUser()).thenReturn(user);
         when(member.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
@@ -84,7 +85,7 @@ public class TwitchListenerTest {
         when(textChannel.sendMessage(Mockito.any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
-        twitchListener.onGenericUserPresence(userActivityStartEvent);
+        streamListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(1)).queue();
         Mockito.verify(auditableRestAction, times(1)).queue();
     }
@@ -104,7 +105,7 @@ public class TwitchListenerTest {
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.DEFAULT);
-        twitchListener.onGenericUserPresence(userActivityStartEvent);
+        streamListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(0)).queue();
         Mockito.verify(auditableRestAction, times(0)).queue();
     }
@@ -124,7 +125,7 @@ public class TwitchListenerTest {
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.STREAMING);
-        twitchListener.onGenericUserPresence(userActivityStartEvent);
+        streamListener.onGenericUserPresence(userActivityStartEvent);
         Mockito.verify(messageAction, times(0)).queue();
         Mockito.verify(auditableRestAction, times(0)).queue();
     }
@@ -144,7 +145,7 @@ public class TwitchListenerTest {
         when(guild.getId()).thenReturn("123");
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
-        twitchListener.onGenericUserPresence(userActivityEndEvent);
+        streamListener.onGenericUserPresence(userActivityEndEvent);
         Mockito.verify(messageAction, times(0)).queue();
         Mockito.verify(auditableRestAction, times(1)).queue();
     }

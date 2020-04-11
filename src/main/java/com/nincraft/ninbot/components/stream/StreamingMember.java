@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.twitch;
+package com.nincraft.ninbot.components.stream;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

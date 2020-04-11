@@ -1,4 +1,4 @@
-package com.nincraft.ninbot.components.twitch;
+package com.nincraft.ninbot.components.stream;
 
 import org.springframework.data.repository.CrudRepository;
 
