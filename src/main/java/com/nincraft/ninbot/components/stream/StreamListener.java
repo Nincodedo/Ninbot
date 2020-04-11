@@ -95,7 +95,8 @@ public class StreamListener extends ListenerAdapter {
     private String getStreamingUrlFromEvent(GenericEvent event) {
         if (event instanceof UserActivityStartEvent userActivityStartEvent) {
             return userActivityStartEvent.getNewActivity().getUrl();
-        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent) {
+        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent
+                && guildVoiceStreamEvent.getVoiceState().getChannel() != null) {
             return guildVoiceStreamEvent.getVoiceState().getChannel().getName();
         } else {
             return null;
@@ -204,12 +205,20 @@ public class StreamListener extends ListenerAdapter {
             String streamingUrl, String gameName, String streamTitle, String serverId) {
         log.trace("Building stream announce message for {} server {}", username, serverId);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
-        val embedMessage = new EmbedBuilder()
-                .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"), username, gameName,
-                        streamingUrl), streamingUrl, avatarUrl)
-                .setTitle(streamTitle)
-                .setColor(MessageBuilderHelper.getColor(avatarUrl));
-        return new MessageBuilder(embedMessage).build();
+        EmbedBuilder embedBuilder;
+        if (!streamingUrl.contains("https://")) {
+            embedBuilder = new EmbedBuilder()
+                    .setAuthor(String.format(resourceBundle.getString("listener.stream.announce.voicechannel"),
+                            username, streamingUrl), null, avatarUrl)
+                    .setTitle(streamTitle);
+        } else {
+            embedBuilder = new EmbedBuilder()
+                    .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"), username, gameName,
+                            streamingUrl), streamingUrl, avatarUrl)
+                    .setTitle(streamTitle);
+        }
+        embedBuilder.setColor(MessageBuilderHelper.getColor(avatarUrl));
+        return new MessageBuilder(embedBuilder).build();
     }
 
     private void addRole(Guild guild, Member member) {
