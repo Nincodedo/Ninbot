@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.subscribe;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -21,12 +20,9 @@ import java.util.stream.Collectors;
 @Component
 public class ListCommand extends AbstractCommand {
 
-    private ConfigService configService;
-
-    public ListCommand(ConfigService configService) {
+    public ListCommand() {
         length = 2;
         name = "list";
-        this.configService = configService;
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -18,14 +17,12 @@ import java.util.Comparator;
 public class LeaderboardCommand extends AbstractCommand {
 
     private LeaderboardService leaderboardService;
-    private ConfigService configService;
 
-    public LeaderboardCommand(LeaderboardService leaderboardService, ConfigService configService) {
+    public LeaderboardCommand(LeaderboardService leaderboardService) {
         name = "leaderboard";
         length = 2;
         checkExactLength = false;
         this.leaderboardService = leaderboardService;
-        this.configService = configService;
     }
 
     @Override

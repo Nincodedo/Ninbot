@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.event;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -22,15 +21,13 @@ public class EventCommand extends AbstractCommand {
     private EventRepository eventRepository;
     private EventScheduler eventScheduler;
     private EventParser eventParser;
-    private ConfigService configService;
 
-    public EventCommand(EventRepository eventRepository, EventScheduler eventScheduler, ConfigService configService) {
+    public EventCommand(EventRepository eventRepository, EventScheduler eventScheduler) {
         length = 3;
         name = "events";
         checkExactLength = false;
         this.eventRepository = eventRepository;
         this.eventScheduler = eventScheduler;
-        this.configService = configService;
         this.eventParser = new EventParser();
     }
 

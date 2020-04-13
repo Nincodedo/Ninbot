@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.countdown;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -20,16 +19,13 @@ public class CountdownCommand extends AbstractCommand {
 
     private CountdownRepository countdownRepository;
     private CountdownScheduler countdownScheduler;
-    private ConfigService configService;
 
-    public CountdownCommand(CountdownRepository countdownRepository, CountdownScheduler countdownScheduler,
-            ConfigService configService) {
+    public CountdownCommand(CountdownRepository countdownRepository, CountdownScheduler countdownScheduler) {
         name = "countdown";
         length = 2;
         checkExactLength = false;
         this.countdownRepository = countdownRepository;
         this.countdownScheduler = countdownScheduler;
-        this.configService = configService;
     }
 
     @Override
