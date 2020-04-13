@@ -4,6 +4,7 @@ import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 import com.nincraft.ninbot.components.simulate.SimulateCommand;
 import lombok.val;
@@ -29,8 +30,11 @@ class HelpCommandTest extends NinbotTest {
     @Mock
     ComponentService componentService;
 
+    @Mock
+    ConfigService configService;
+
     @InjectMocks
-    HelpCommand helpCommand = new HelpCommand(commandMap, componentService);
+    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService);
 
     @BeforeAll
     public static void before() {
