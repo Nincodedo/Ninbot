@@ -4,6 +4,7 @@ import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.command.CommandParser;
 import com.nincraft.ninbot.components.common.RolePermission;
+import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -51,6 +52,8 @@ public class HelpCommandTestIT {
     ShardManager shardManager;
     @Autowired
     ComponentService componentService;
+    @Autowired
+    ConfigService configService;
     @Autowired
     CommandParser commandParser;
 

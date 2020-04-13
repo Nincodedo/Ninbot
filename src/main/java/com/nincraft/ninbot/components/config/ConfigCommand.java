@@ -15,14 +15,12 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ConfigCommand extends AbstractCommand {
 
-    private ConfigService configService;
 
-    public ConfigCommand(ConfigService configService) {
+    public ConfigCommand() {
         length = 3;
         name = "config";
         checkExactLength = false;
         permissionLevel = RolePermission.ADMIN;
-        this.configService = configService;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.info;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -20,12 +19,9 @@ import java.util.stream.Collectors;
 @Component
 public class StatsCommand extends AbstractCommand {
 
-    private ConfigService configService;
-
-    public StatsCommand(ConfigService configService) {
+    public StatsCommand() {
         length = 2;
         name = "stats";
-        this.configService = configService;
     }
 
     @Override

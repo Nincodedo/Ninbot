@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.common.IdConstants;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.RolePermission;
 import com.nincraft.ninbot.components.common.WebhookHelper;
+import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -13,11 +14,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Log4j2
 @Data
@@ -31,6 +30,8 @@ public abstract class AbstractCommand {
     protected List<String> aliases = new ArrayList<>();
     protected ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
     protected WebhookHelper webhookHelper = new WebhookHelper();
+    @Autowired
+    protected ConfigService configService;
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();
@@ -103,7 +104,12 @@ public abstract class AbstractCommand {
             return true;
         } else {
             val member = guild.getMember(user);
-            val roles = guild.getRolesByName(rolePermission.getRoleName(), true);
+            val configuredRole = configService.getSingleValueByName(guild.getId(),
+                    "roleRank-" + rolePermission.getRoleName());
+            val roles =
+                    configuredRole.map(configuredRoleId ->
+                            Collections.singletonList(guild.getRoleById(configuredRoleId)))
+                            .orElseGet(() -> guild.getRolesByName(rolePermission.getRoleName(), true));
             return guild.getMembersWithRoles(roles).contains(member);
         }
     }

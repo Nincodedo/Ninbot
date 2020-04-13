@@ -2,12 +2,13 @@ package com.nincraft.ninbot.components.event;
 
 import com.nincraft.ninbot.NinbotTest;
 import com.nincraft.ninbot.TestUtils;
-import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.common.Emojis;
+import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,16 +25,23 @@ import static org.mockito.Mockito.when;
 class EventCommandTest extends NinbotTest {
 
     @Mock
-    EventRepository eventRepository;
-
-    @Mock
+    static
     ConfigService configService;
-
+    @InjectMocks
+    static
+    EventCommand eventCommand;
     @Mock
+    static
+    EventRepository eventRepository;
+    @Mock
+    static
     EventScheduler eventScheduler;
 
-    @InjectMocks
-    EventCommand eventCommand;
+    @BeforeAll
+    static void setup() {
+        eventCommand = new EventCommand(eventRepository, eventScheduler);
+        eventCommand.setConfigService(configService);
+    }
 
     @Test
     void listCommandWithEvents() {
@@ -70,7 +78,8 @@ class EventCommandTest extends NinbotTest {
         JDA jda = Mockito.mock(JDA.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getGuild()).thenReturn(guild);
-        when(message.getContentStripped()).thenReturn("@Ninbot events plan \"Name\" 2019-01-31T12:00:00-06:00 mariokart");
+        when(message.getContentStripped()).thenReturn("@Ninbot events plan \"Name\" 2019-01-31T12:00:00-06:00 "
+                + "mariokart");
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(messageEvent.getAuthor()).thenReturn(user);

@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.subscribe;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -18,12 +17,9 @@ import java.util.List;
 @Component
 public class SubscribeCommand extends AbstractCommand {
 
-    private ConfigService configService;
-
-    public SubscribeCommand(ConfigService configService) {
+    public SubscribeCommand() {
         length = 3;
         name = "subscribe";
-        this.configService = configService;
     }
 
     @Override
