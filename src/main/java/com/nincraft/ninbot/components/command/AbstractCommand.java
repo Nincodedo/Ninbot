@@ -16,10 +16,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Log4j2
 @Data
@@ -107,7 +104,12 @@ public abstract class AbstractCommand {
             return true;
         } else {
             val member = guild.getMember(user);
-            val roles = guild.getRolesByName(rolePermission.getRoleName(), true);
+            val configuredRole = configService.getSingleValueByName(guild.getId(),
+                    "roleRank-" + rolePermission.getRoleName());
+            val roles =
+                    configuredRole.map(configuredRoleId ->
+                            Collections.singletonList(guild.getRoleById(configuredRoleId)))
+                            .orElseGet(() -> guild.getRolesByName(rolePermission.getRoleName(), true));
             return guild.getMembersWithRoles(roles).contains(member);
         }
     }
