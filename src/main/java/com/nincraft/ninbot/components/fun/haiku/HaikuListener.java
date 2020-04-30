@@ -11,17 +11,21 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 @Component
 public class HaikuListener extends ListenerAdapter {
 
     private ComponentService componentService;
     private SyllableCounter syllableCounter;
+    private Random random;
     private String componentName;
 
     public HaikuListener(ComponentService componentService) {
         this.componentService = componentService;
         this.syllableCounter = new SyllableCounter();
+        this.random = new Random();
         this.componentName = "haiku";
         componentService.registerComponent(componentName, ComponentType.ACTION);
     }
@@ -44,7 +48,7 @@ public class HaikuListener extends ListenerAdapter {
 
     Optional<String> isHaikuable(String message) {
         Optional<String> haikuLines = Optional.empty();
-        if (getSyllableCount(message) == 17) {
+        if (isMessageOnlyCharacters(message) && getSyllableCount(message) == 17) {
             StringBuilder firstLine = new StringBuilder();
             String[] split = message.split("\\s+");
             int counter;
@@ -88,7 +92,19 @@ public class HaikuListener extends ListenerAdapter {
                 }
             }
         }
-        return haikuLines;
+        if (checkChance()) {
+            return haikuLines;
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private boolean isMessageOnlyCharacters(String message) {
+        return Pattern.compile("^[a-zA-Z\s.,!?]+$").matcher(message).matches();
+    }
+
+    boolean checkChance() {
+        return random.nextInt(100) < 10;
     }
 
     private int getSyllableCount(String message) {
