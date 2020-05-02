@@ -7,6 +7,7 @@ All commands are prefixed with @Ninbot.
     * [Define](#define)
     * [Events](#events)
     * [Help](#help)
+    * [Hugemoji](#hugemoji)
     * [Info](#info)
     * [Leaderboard](#leaderboard)
     * [List](#list)
@@ -82,8 +83,15 @@ Usage:
 
     @Ninbot help
     
+### Hugemoji
+Shows a huge version of the emoji used
+
+Usage:
+
+    @Ninbot hugemoji :thumbsup:
+    
 ### Info
-Shows info about Ninbot such as uptime and the most recent commit.
+Shows info about Ninbot such as uptime, and the most recent commit.
 
 Usage:
 
@@ -127,7 +135,7 @@ Creates a new poll. You can have a maximum of 10 answers in a single poll.
 
 Example: @Ninbot poll Who stole the cookies from the cookie jar? "You, me, then who?" 20
 
-This would create a poll with three options and it would close after 20 minutes.
+This would create a poll with three options, and it would close after 20 minutes.
 
 Usage:
 
