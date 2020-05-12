@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.security.auth.login.LoginException;
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -38,11 +37,11 @@ public class ApplicationBean {
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
-            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.create(ninbotToken,
-                    Arrays.asList(GatewayIntent.values()));
-            builder.addEventListeners(listenerAdapters.toArray());
-            builder.setShardsTotal(-1);
-            return builder.build();
+            return DefaultShardManagerBuilder.createDefault(ninbotToken)
+                    .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .addEventListeners(listenerAdapters.toArray())
+                    .setShardsTotal(-1)
+                    .build();
         } catch (LoginException e) {
             log.error("Failed to login", e);
         }

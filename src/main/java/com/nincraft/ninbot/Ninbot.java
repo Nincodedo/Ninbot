@@ -39,18 +39,11 @@ public class Ninbot {
                             log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo()
                                     .getShardId(), jda.getGuilds().size());
                             for (Guild guild : jda.getGuilds()) {
-                                guild.retrieveMembers().get();
-                                double botPercentage = guild.getMembers()
-                                        .stream()
-                                        .filter(member -> member.getUser().isBot())
-                                        .count() / (double) guild.getMembers().size();
-                                log.info("Server ID: {}, Name: {}, Owner: {}, Member Count: {}, Bot ratio: {}",
+                                log.info("Server ID: {}, Name: {}, Owner: {}",
                                         guild.getId(), guild
-                                                .getName(), guild.getOwner().getEffectiveName(), guild.getMembers()
-                                                .size(), NumberFormat.getPercentInstance()
-                                                .format(botPercentage));
+                                                .getName(), guild.getOwner().getEffectiveName());
                             }
-                        } catch (InterruptedException | ExecutionException e) {
+                        } catch (InterruptedException e) {
                             log.error("Failed to wait for shard to start", e);
                         }
                     });
