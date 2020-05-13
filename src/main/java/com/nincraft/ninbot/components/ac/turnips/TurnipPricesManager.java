@@ -1,5 +1,6 @@
 package com.nincraft.ninbot.components.ac.turnips;
 
+import com.nincraft.ninbot.components.ac.turnips.generator.TurnipPriceGenerator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,6 @@ public class TurnipPricesManager {
     }
 
     void generateNewWeek() {
-        turnipPricesRepository.deleteAll();
         TurnipPrices turnipPrices = new TurnipPrices();
         turnipPrices.setSeed(random.nextLong());
         turnipPrices.setCreated(LocalDateTime.now());
@@ -36,11 +36,15 @@ public class TurnipPricesManager {
     }
 
     int getSundayTurnipPrices(long seed) {
-        return new Random(seed).nextInt(20) + 90;
+        return turnipPriceGenerator.getSundayTurnipPrice(seed);
     }
 
     public List<TurnipPrices> findAll() {
         return turnipPricesRepository.findAll();
+    }
+
+    public TurnipPrices findNewest(){
+        return turnipPricesRepository.findAllByOrderByCreatedDesc().get(0);
     }
 
     public TurnipPattern getTurnipPattern(long seed) {

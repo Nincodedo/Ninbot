@@ -108,7 +108,7 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private long getSeed(long serverId) {
-        return turnipPricesManager.findAll().get(0).getSeed() + serverId;
+        return turnipPricesManager.findNewest().getSeed() + serverId;
     }
 
     private int getCurrentPrice(long seed) {
