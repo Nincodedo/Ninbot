@@ -1,9 +1,7 @@
 package com.nincraft.ninbot.components.ac.turnips.generator;
 
 import com.nincraft.ninbot.components.ac.turnips.TurnipPattern;
-import com.nincraft.ninbot.components.ac.turnips.TurnipPricesRepository;
 import com.nincraft.ninbot.components.ac.turnips.TurnipPricesService;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -19,7 +17,6 @@ public class TurnipPriceGenerator {
     private TurnipPricesService turnipPricesService;
 
     public TurnipPriceGenerator(TurnipPricesService turnipPricesService) {
-        this.random = new Random();
         this.turnipPricesService = turnipPricesService;
     }
 

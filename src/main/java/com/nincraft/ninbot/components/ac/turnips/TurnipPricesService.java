@@ -20,10 +20,7 @@ public class TurnipPricesService {
         val twoWeeksAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
         val optionalPrice = turnipPricesRepository.findFirstByCreatedBetween(lastWeek, twoWeeksAgo);
         //if there's a previous week for the turnips, then return that pattern, otherwise generate one based on the seed
-        if (optionalPrice.isPresent()) {
-            return TurnipPattern.getRandomTurnipPattern(optionalPrice.get().getSeed());
-        } else {
-            return TurnipPattern.getRandomTurnipPattern(seed);
-        }
+        long serverSeed = optionalPrice.map(TurnipPrices::getSeed).orElse(seed);
+        return TurnipPattern.getRandomTurnipPattern(serverSeed);
     }
 }

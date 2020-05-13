@@ -18,11 +18,7 @@ public class BigSpikePriceGenerator extends PatternPriceGenerator {
 
         List<Integer> prices = new ArrayList<>();
 
-        for (index = 0; index < peakStart; index++) {
-            prices.add((int) Math.ceil(rate * basePrice));
-            rate -= 0.03;
-            rate -= randomUtil.nextDouble(0, 0.02);
-        }
+        index = addDecreasingPrices(basePrice, randomUtil, peakStart, rate, prices);
 
         prices.add((int) Math.ceil(randomUtil.nextDouble(0.9, 1.4) * basePrice));
         prices.add((int) Math.ceil(randomUtil.nextDouble(1.4, 2.0) * basePrice));
@@ -35,4 +31,5 @@ public class BigSpikePriceGenerator extends PatternPriceGenerator {
         }
         return prices;
     }
+
 }
