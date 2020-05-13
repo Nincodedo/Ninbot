@@ -37,22 +37,8 @@ public class ReactionListener extends ListenerAdapter {
 
     private void respond(MessageReceivedEvent event) {
         reactionResponseList.stream()
-                .filter(reactionResponse -> isExactResponse(event, reactionResponse)
-                        || isContainsResponse(event, reactionResponse))
+                .filter(reactionResponse -> reactionResponse.canRespond(event))
                 .findFirst()
                 .ifPresent(reactionResponse -> reactionResponse.react(event.getMessage(), event.getChannel()));
-    }
-
-    private boolean isExactResponse(MessageReceivedEvent event, ReactionResponse reactionResponse) {
-        return reactionResponse.getType().equalsIgnoreCase("exact") && reactionResponse.getTarget()
-                .equalsIgnoreCase(event.getMessage().getContentStripped());
-    }
-
-    private boolean isContainsResponse(MessageReceivedEvent event, ReactionResponse reactionResponse) {
-        return reactionResponse.getType().equalsIgnoreCase("contains") && event.getMessage()
-                .getContentStripped()
-                .toLowerCase()
-                .contains(reactionResponse.getTarget()
-                        .toLowerCase());
     }
 }

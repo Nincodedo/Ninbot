@@ -8,7 +8,7 @@ public class StringReactionResponse extends ReactionResponse {
     StringReactionResponse(ReactionResponse reactionResponse) {
         this.response = reactionResponse.getResponse();
         this.target = reactionResponse.getTarget();
-        this.type = reactionResponse.getType();
+        this.reactionMatchType = reactionResponse.getReactionMatchType();
     }
 
     @Override

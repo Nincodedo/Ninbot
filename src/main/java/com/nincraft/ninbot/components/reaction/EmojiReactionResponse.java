@@ -30,7 +30,7 @@ public class EmojiReactionResponse extends ReactionResponse {
     public EmojiReactionResponse(ReactionResponse reactionResponse) {
         this.response = reactionResponse.getResponse();
         this.target = reactionResponse.getTarget();
-        this.type = reactionResponse.getType();
+        this.reactionMatchType = reactionResponse.getReactionMatchType();
         addEmojis();
     }
 
