@@ -35,12 +35,8 @@ public class PathogenCommand extends AbstractCommand {
         MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "stats":
-                messageAction.addChannelAction(getInfectionServerStats(event.getGuild()));
-                break;
-            default:
-                messageAction.addReaction(getUserInfectionLevel(event));
-                break;
+            case "stats" -> messageAction.addChannelAction(getInfectionServerStats(event.getGuild()));
+            default -> messageAction.addReaction(getUserInfectionLevel(event));
         }
         return messageAction;
     }

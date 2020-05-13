@@ -13,9 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Log4j2
 @ComponentScan({"com.nincraft.ninbot"})

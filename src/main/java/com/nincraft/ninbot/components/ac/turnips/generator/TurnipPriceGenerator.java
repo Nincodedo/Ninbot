@@ -24,7 +24,7 @@ public class TurnipPriceGenerator {
         random = new Random(seed);
         int chance = random.nextInt(100);
         TurnipPattern previousPattern = turnipPricesService.getPreviousPattern(seed);
-        TurnipPattern nextPattern = previousPattern;
+        TurnipPattern nextPattern;
         List<Integer> chanceList = switch (previousPattern) {
             case RANDOM -> Arrays.asList(20, 50, 65);
             case BIG_SPIKE -> Arrays.asList(50, 55, 75);
