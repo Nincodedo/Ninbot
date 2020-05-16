@@ -5,14 +5,27 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.List;
+
 @Data
 class ReactionResponse {
 
     protected String response;
     protected String target;
+    protected List<String> responses;
     protected ReactionMatchType reactionMatchType;
 
-    void react(Message message, MessageChannel channel){
+    public ReactionResponse() {
+    }
+
+    public ReactionResponse(ReactionResponse reactionResponse) {
+        this.response = reactionResponse.response;
+        this.target = reactionResponse.target;
+        this.responses = reactionResponse.responses;
+        this.reactionMatchType = reactionResponse.reactionMatchType;
+    }
+
+    void react(Message message, MessageChannel channel) {
         //NO-OP
     }
 

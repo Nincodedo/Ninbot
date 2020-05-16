@@ -59,11 +59,17 @@ public class ReactionsReader {
 
 
     private ReactionResponse generateResponse(ReactionResponse response) {
-        if (isCanEmoji(response.getResponse())) {
+        if (hasSpecialActionsActions(response.getResponse())) {
+            return new SpecialReactionResponse(response);
+        } else if (isCanEmoji(response.getResponse())) {
             return new EmojiReactionResponse(response);
         } else {
             return new StringReactionResponse(response);
         }
+    }
+
+    private boolean hasSpecialActionsActions(String response) {
+        return response.contains("$");
     }
 
     private boolean isCanEmoji(String response) {
