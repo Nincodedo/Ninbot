@@ -18,18 +18,15 @@ public class SpecialReactionResponse extends ReactionResponse {
     public void react(Message message, MessageChannel channel) {
         boolean canReact = true;
         String reactionResponse = response;
-        if (reactionResponse.contains("$message.previous.author")) {
+        if (reactionResponse.contains("$message.previous")) {
             val lastMessageOptional = getPreviousMessage(channel, message);
-            if (lastMessageOptional.isPresent()) {
+            if (reactionResponse.contains("$message.previous.author") && lastMessageOptional.isPresent()) {
                 val lastMessage = lastMessageOptional.get();
                 val previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
                         .getEffectiveName() : lastMessage.getAuthor().getName();
                 reactionResponse = reactionResponse.replace("$message.previous.author", previousAuthorName);
             }
-        }
-        if (reactionResponse.contains("$message.previous.content")) {
-            val lastMessageOptional = getPreviousMessage(channel, message);
-            if (lastMessageOptional.isPresent()) {
+            if (reactionResponse.contains("$message.previous.content") && lastMessageOptional.isPresent()) {
                 val lastMessage = lastMessageOptional.get();
                 String previousMessageContent = lastMessage.getContentStripped();
                 if (reactionResponse.contains("#toUpper")) {
