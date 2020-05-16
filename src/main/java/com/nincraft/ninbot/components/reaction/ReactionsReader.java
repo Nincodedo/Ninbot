@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,22 +19,26 @@ import java.util.stream.Collectors;
 @Component
 public class ReactionsReader {
 
-    private static List<String> badCharacters = Arrays.asList(" ", "!", ":");
+    private List<String> badCharacters = Arrays.asList(" ", "!", ":");
 
     @Bean
     List<ReactionResponse> reactionResponseList() {
         try {
-
             String jsonString = readFromInputStream(getClass().getClassLoader()
                     .getResourceAsStream("responses.json"));
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<ReactionResponse> reactionResponseList = objectMapper.readValue(objectMapper.readTree(jsonString)
-                    .get("responses")
-                    .toString(), objectMapper.getTypeFactory()
-                    .constructCollectionType(List.class, ReactionResponse.class));
+            List<ReactionResponse> reactionResponseList = new ArrayList<>();
+            for (ReactionMatchType type : ReactionMatchType.values()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<ReactionResponse> typeReaction = objectMapper.readValue(objectMapper.readTree(jsonString)
+                        .get("responses")
+                        .get(type.getName())
+                        .toString(), objectMapper.getTypeFactory()
+                        .constructCollectionType(List.class, ReactionResponse.class));
+                typeReaction.forEach(reactionResponse -> reactionResponse.setReactionMatchType(type));
+                reactionResponseList.addAll(typeReaction);
+            }
             return reactionResponseList.stream()
                     .map(this::generateResponse)
-                    .sorted(Comparator.comparing(ReactionResponse::getType).reversed())
                     .collect(Collectors.toList());
         } catch (IOException e) {
             log.error("Failed to load reaction responses JSON", e);
@@ -56,11 +59,17 @@ public class ReactionsReader {
 
 
     private ReactionResponse generateResponse(ReactionResponse response) {
-        if (isCanEmoji(response.getResponse())) {
+        if (hasSpecialActionsActions(response.getResponse())) {
+            return new SpecialReactionResponse(response);
+        } else if (isCanEmoji(response.getResponse())) {
             return new EmojiReactionResponse(response);
         } else {
             return new StringReactionResponse(response);
         }
+    }
+
+    private boolean hasSpecialActionsActions(String response) {
+        return response.contains("$");
     }
 
     private boolean isCanEmoji(String response) {

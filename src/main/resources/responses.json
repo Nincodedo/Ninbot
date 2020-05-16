@@ -1,89 +1,85 @@
 {
-  "responses": [
-    {
-      "response": "same",
-      "target": "same",
-      "type": "exact"
-    },
-    {
-      "response": "That's right!",
-      "target": "meowth",
-      "type": "exact"
-    },
-    {
-      "response": "thanks :3",
-      "target": "good bot",
-      "type": "exact"
-    },
-    {
-      "response": ":(",
-      "target": "bad bot",
-      "type": "exact"
-    },
-    {
-      "response": "thanks",
-      "target": "me too",
-      "type": "exact"
-    },
-    {
-      "response": "F",
-      "target": "Press f to pay respects",
-      "type": "exact"
-    },
-    {
-      "response": "F",
-      "target": "F",
-      "type": "exact"
-    },
-    {
-      "response": "F",
-      "target": "rip",
-      "type": "exact"
-    },
-    {
-      "response": "mad",
-      "target": "I'm mad",
-      "type": "exact"
-    },
-    {
-      "response": "https://www.youtube.com/watch?v=R7c-UNfUWGs",
-      "target": "bidoof",
-      "type": "exact"
-    },
-    {
-      "response": "!sorry",
-      "target": "sorry",
-      "type": "exact"
-    },
-    {
-      "response": "sorry",
-      "target": "!sorry",
-      "type": "exact"
-    },
-    {
-      "response": "sory",
-      "target": "not sorry",
-      "type": "exact"
-    },
-    {
-      "response": "neat",
-      "target": "neat",
-      "type": "exact"
-    },
-    {
-      "response": "nice",
-      "target": "nice",
-      "type": "exact"
-    },
-    {
-      "response": "nice",
-      "target": "69",
-      "type": "contains"
-    },
-    {
-      "response": "https://www.youtube.com/watch?v=njqW60xCwIA",
-      "target": "sad_violin",
-      "type": "contains"
-    }
-  ]
+  "responses": {
+    "exact": [
+      {
+        "response": "same",
+        "target": "same"
+      },
+      {
+        "response": "That's right!",
+        "target": "meowth"
+      },
+      {
+        "response": "thanks :3",
+        "target": "good bot"
+      },
+      {
+        "response": ":(",
+        "target": "bad bot"
+      },
+      {
+        "response": "thanks",
+        "target": "me too"
+      },
+      {
+        "response": "F",
+        "target": "Press f to pay respects"
+      },
+      {
+        "response": "F",
+        "target": "F"
+      },
+      {
+        "response": "F",
+        "target": "rip"
+      },
+      {
+        "response": "mad",
+        "target": "I'm mad"
+      },
+      {
+        "response": "https://www.youtube.com/watch?v=R7c-UNfUWGs",
+        "target": "bidoof"
+      },
+      {
+        "response": "!sorry",
+        "target": "sorry"
+      },
+      {
+        "response": "sorry",
+        "target": "!sorry"
+      },
+      {
+        "response": "sory",
+        "target": "not sorry"
+      },
+      {
+        "response": "neat",
+        "target": "neat"
+      },
+      {
+        "response": "nice",
+        "target": "nice"
+      },
+      {
+        "response": "$message.previous.author said \"$message.previous.content#toUpper\"",
+        "target": "what"
+      },
+      {
+        "response": "$message.previous.author said \"$message.previous.content#toUpper\"",
+        "target": "what?"
+      }
+    ],
+    "contains": [
+      {
+        "response": "nice",
+        "target": "69"
+      },
+      {
+        "response": "https://www.youtube.com/watch?v=njqW60xCwIA",
+        "target": "sad_violin"
+      }
+    ],
+    "regex": []
+  }
 }

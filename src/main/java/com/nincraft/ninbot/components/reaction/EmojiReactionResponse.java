@@ -28,9 +28,7 @@ public class EmojiReactionResponse extends ReactionResponse {
     private List<String> emojiList;
 
     public EmojiReactionResponse(ReactionResponse reactionResponse) {
-        this.response = reactionResponse.getResponse();
-        this.target = reactionResponse.getTarget();
-        this.type = reactionResponse.getType();
+        super(reactionResponse);
         addEmojis();
     }
 

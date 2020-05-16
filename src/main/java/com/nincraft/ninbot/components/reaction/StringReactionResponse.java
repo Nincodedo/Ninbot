@@ -5,10 +5,8 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class StringReactionResponse extends ReactionResponse {
 
-    StringReactionResponse(ReactionResponse reactionResponse) {
-        this.response = reactionResponse.getResponse();
-        this.target = reactionResponse.getTarget();
-        this.type = reactionResponse.getType();
+    public StringReactionResponse(ReactionResponse reactionResponse) {
+        super(reactionResponse);
     }
 
     @Override
