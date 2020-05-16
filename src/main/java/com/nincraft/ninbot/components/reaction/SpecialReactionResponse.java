@@ -22,7 +22,8 @@ public class SpecialReactionResponse extends ReactionResponse {
             val lastMessageOptional = getPreviousMessage(channel, message);
             if (lastMessageOptional.isPresent()) {
                 val lastMessage = lastMessageOptional.get();
-                val previousAuthorName = lastMessage.getMember().getEffectiveName();
+                val previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
+                        .getEffectiveName() : lastMessage.getAuthor().getName();
                 reactionResponse = reactionResponse.replace("$message.previous.author", previousAuthorName);
             }
         }
