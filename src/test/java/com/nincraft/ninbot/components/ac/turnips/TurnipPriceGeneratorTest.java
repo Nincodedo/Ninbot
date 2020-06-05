@@ -10,11 +10,12 @@ import org.mockito.Mock;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 class TurnipPriceGeneratorTest extends NinbotTest {
 
     @Mock
-    TurnipPricesRepository turnipPricesRepository;
+    TurnipPricesService turnipPricesService;
 
     @InjectMocks
     TurnipPriceGenerator turnipPriceGenerator;
@@ -27,7 +28,7 @@ class TurnipPriceGeneratorTest extends NinbotTest {
     }
 
     @Test
-    void getRandomTurnipPricesList() {
+    void randomPrices() {
         val expectedPrices = Arrays.asList(117, 134, 128, 109, 73, 67, 59, 123, 65, 59, 103, 120);
         val actualPrices = turnipPriceGenerator.getTurnipPricesList(TurnipPattern.RANDOM, 5L);
         assertThat(actualPrices).hasSize(12);
@@ -60,5 +61,9 @@ class TurnipPriceGeneratorTest extends NinbotTest {
 
     @Test
     void getTurnipPattern() {
+        when(turnipPricesService.getPreviousPattern(5L)).thenReturn(TurnipPattern.RANDOM);
+        val expectedPattern = TurnipPattern.SMALL_SPIKE;
+        val actualPattern = turnipPriceGenerator.getTurnipPattern(5L);
+        assertThat(actualPattern).isEqualTo(expectedPattern);
     }
 }
