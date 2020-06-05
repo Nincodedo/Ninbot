@@ -63,16 +63,16 @@ public class PathogenCommand extends AbstractCommand {
 
     private List<String> getUserInfectionLevel(MessageReceivedEvent event) {
         List<String> reactions = new ArrayList<>();
-        val pathogenUserOptional = pathogenUserRepository.getByUserIdAndServerId(event.getAuthor()
+        val pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getAuthor()
                 .getId(), event.getGuild().getId());
-        pathogenUserOptional.ifPresent(pathogenUser -> {
+        if (pathogenUser != null) {
             if (pathogenUser.getInfectionLevel() == 0) {
                 reactions.add(Emojis.HAPPY_FACE);
             } else if (pathogenUser.getInfectionLevel() > 0) {
                 reactions.add(Emojis.SICK_FACE);
             }
             reactions.add(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
-        });
+        }
         return reactions;
     }
 }

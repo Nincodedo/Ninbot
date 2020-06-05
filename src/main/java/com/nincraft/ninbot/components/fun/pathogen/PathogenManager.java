@@ -27,17 +27,17 @@ import java.util.stream.IntStream;
 public class PathogenManager {
 
     private PathogenAuditRepository pathogenAuditRepository;
-    private PathogenUserRepository pathogenUserRepository;
+    private PathogenUserService pathogenUserService;
     private Random todayRandom;
     private Random random;
     @Getter
     private int wordListLength = 15;
     private boolean healingWeek;
 
-    public PathogenManager(PathogenUserRepository pathogenUserRepository,
+    public PathogenManager(PathogenUserService pathogenUserService,
             PathogenAuditRepository pathogenAuditRepository) {
         this.pathogenAuditRepository = pathogenAuditRepository;
-        this.pathogenUserRepository = pathogenUserRepository;
+        this.pathogenUserService = pathogenUserService;
         this.todayRandom = new Random(new Date().getTime());
         this.random = new Random();
         this.healingWeek = determineIfHealingWeek();
@@ -98,7 +98,7 @@ public class PathogenManager {
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
                     val channelId = possiblePathogenVictims.get(user).getChannel().getId();
-                    val pathogenUserOptional = pathogenUserRepository.getByUserIdAndServerId(user.getId(),
+                    val pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
                             guild.getId());
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
@@ -106,17 +106,7 @@ public class PathogenManager {
                             possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
                             auditAction(spreadSource, channelId, user, "healing",
                                     "Healed user %s in channel %s");
-                            PathogenUser pathogenUser;
-                            if (pathogenUserOptional.isPresent()) {
-                                pathogenUser = pathogenUserOptional.get();
-                                pathogenUser.setInfectionLevel(0);
-                            } else {
-                                pathogenUser = new PathogenUser();
-                                pathogenUser.setInfectionLevel(0);
-                                pathogenUser.setUserId(user.getId());
-                            }
-                            pathogenUser.setServerId(guild.getId());
-                            pathogenUserRepository.save(pathogenUser);
+                            pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
                         });
                     } else {
                         guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
@@ -124,19 +114,7 @@ public class PathogenManager {
                             possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
                             auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
                                     + "in channel %s");
-                            PathogenUser pathogenUser;
-                            if (pathogenUserOptional.isPresent()) {
-                                pathogenUser = pathogenUserOptional.get();
-                                if (pathogenUser.getInfectionLevel() < 9) {
-                                    pathogenUser.setInfectionLevel(pathogenUser.getInfectionLevel() + 1);
-                                }
-                            } else {
-                                pathogenUser = new PathogenUser();
-                                pathogenUser.setInfectionLevel(1);
-                                pathogenUser.setUserId(user.getId());
-                            }
-                            pathogenUser.setServerId(guild.getId());
-                            pathogenUserRepository.save(pathogenUser);
+                            pathogenUserService.infectedUser(pathogenUser,user.getId(),guild.getId());
                         });
                     }
                 });
