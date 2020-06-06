@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.trivia;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 @Entity
 @Data
@@ -26,10 +27,8 @@ public class TriviaScore implements Comparable<TriviaScore> {
 
     @Override
     public int compareTo(TriviaScore otherScore) {
-        if (otherScore.getScore() == this.getScore()) {
-            return otherScore.getUserId().compareTo(this.getUserId());
-        } else {
-            return Integer.compare(otherScore.getScore(), this.getScore());
-        }
+        return Comparator.comparing(TriviaScore::getScore)
+                .thenComparing(TriviaScore::getUserId)
+                .compare(this, otherScore);
     }
 }

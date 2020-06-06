@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,11 +55,7 @@ public class StatsCommand extends AbstractCommand {
     private record Stat(String name, int amount) implements Comparable<Stat> {
         @Override
         public int compareTo(Stat other) {
-            if (other.amount == this.amount) {
-                return other.name.compareTo(this.name);
-            } else {
-                return Integer.compare(other.amount, this.amount);
-            }
+            return Comparator.comparing(Stat::amount).thenComparing(Stat::name).compare(this, other);
         }
     }
 }
