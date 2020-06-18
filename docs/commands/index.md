@@ -9,9 +9,7 @@ All commands are prefixed with @Ninbot.
     * [Help](#help)
     * [Hugemoji](#hugemoji)
     * [Info](#info)
-    * [Leaderboard](#leaderboard)
     * [List](#list)
-    * [Lose/Win](#losewin)
     * [Pathogen](#pathogen)
     * [Poll](#poll)
     * [Roll](#roll)
@@ -27,7 +25,6 @@ All commands are prefixed with @Ninbot.
   * [Admin Commands](#admin-commands)
     * [Component](#component)
     * [Config](#config)
-    * [Leaderboard](#admin-leaderboard)
 
 ## User Commands
 
@@ -97,32 +94,13 @@ Usage:
 
     @Ninbot info
     
-### Leaderboard
-Shows the server's leaderboard.
-
-Usage:
-
-    @Ninbot leaderboard
-    
 ### List
 Shows the available role subscriptions.
 
 Usage:
 
     @Ninbot list
-    
-### Lose/Win
-Report a win or a loss against another user for the leaderboard.
 
-Usage:
-
-    @Ninbot win @Username
-    
-    @Ninbot lose @Username
-    
-Aliases: won, beat, smashed, owned
-         lost, loss
-         
 ### Pathogen
 Displays the user's current infection level.
 
@@ -291,6 +269,3 @@ Usage:
     @Ninbot component disable COMPONENTNAME
     
     @Ninbot component enable COMPONENTNAME
-
-
-### Admin Leaderboard
