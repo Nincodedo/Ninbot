@@ -2,4 +2,4 @@ blank_issues_enabled: true
 contact_links:
     - name: Wiki
       url: https://ninbot.nincodedo.com/
-      about: Ninbot's main documentation, look here first if you're having issues with commands or certain functionality.
+      about: Ninbot's main documentation. Look here first if you're having issues with commands or certain functionality.
