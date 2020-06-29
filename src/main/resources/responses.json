@@ -76,6 +76,10 @@
       {
         "response": "$message.previous.author said \"$message.previous.content#toUpper\"",
         "target": "wat?"
+      },
+      {
+        "response": "https://i.imgur.com/Iv6aIxm.gifv",
+        "target": "happy new year"
       }
     ],
     "contains": [
