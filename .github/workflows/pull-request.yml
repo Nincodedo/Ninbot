@@ -16,5 +16,4 @@ jobs:
     - name: GitHub Docker Action
       uses: matootie/github-docker@v3.0.0
       with:
-         username: nincodedo
-         personalAccessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+         accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
