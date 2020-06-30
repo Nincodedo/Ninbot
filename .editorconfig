@@ -282,3 +282,9 @@ ij_json_space_before_comma = false
 ij_json_spaces_within_braces = false
 ij_json_spaces_within_brackets = false
 ij_json_wrap_long_lines = false
+
+[*.yml]
+indent_size = 2
+
+[*.yaml]
+indent_size = 2
