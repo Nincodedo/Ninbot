@@ -14,5 +14,5 @@ public class NinbotUser {
     private Long id;
     private String userId;
     private String serverId;
-    private Date birthday;
+    private String birthday;
 }
