@@ -57,8 +57,8 @@ public class ListCommand extends AbstractCommand {
                         .size() && !role.getName().equals("infected") && !role.getName().equals("@everyone"))
                 .map(Role::getName)
                 .collect(Collectors.toList());
-        List<String> roleBlackList = configService.getValuesByName(guildId, ConfigConstants.ROLE_BLACKLIST);
-        roleNameList.removeAll(roleBlackList);
+        List<String> roleDenyList = configService.getValuesByName(guildId, ConfigConstants.ROLE_DENY_LIST);
+        roleNameList.removeAll(roleDenyList);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.list.availablesubs"));
         roleNameList.stream().map(roleName -> roleName + "\n").forEach(embedBuilder::appendDescription);

@@ -49,8 +49,8 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     private boolean isValidSubscribeRole(Role role, String serverId) {
-        List<String> roleBlacklist = configService.getValuesByName(serverId, ConfigConstants.ROLE_BLACKLIST);
-        return role != null && !roleBlacklist.contains(role.getName());
+        List<String> roleDenyList = configService.getValuesByName(serverId, ConfigConstants.ROLE_DENY_LIST);
+        return role != null && !roleDenyList.contains(role.getName());
     }
 
     private Role getRole(Guild server, String subscribeTo) {

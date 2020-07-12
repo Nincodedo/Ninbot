@@ -7,10 +7,10 @@ Name: announcementChannel
 
 Usage: Channel ID for Event announcements.
 
-## Dadbot Blacklist
-Name: dadbotChannelBlacklist
+## Dadbot Deny List
+Name: dadbotChannelDenyList
 
-Usage: Channel IDs for blacklisting Dadbot reactions.
+Usage: Channel IDs for deny listing Dadbot reactions.
 
 ## Streaming Announce Users
 Name: streamingAnnounceUsers
@@ -22,10 +22,10 @@ Name: streamingAnnounceChannel
 
 Usage: Channel ID for Twitch announcements.
 
-## Role Blacklist
-Name: roleBlacklist
+## Role Deny List
+Name: roleDenyList
 
-Usage: Blacklist of role names you don't want to show up in the subscribe/unsubscribe command.
+Usage: Deny list of role names you don't want to show up in the subscribe/unsubscribe command.
 
 ## Streaming Role
 Name: streamingRole

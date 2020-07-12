@@ -21,17 +21,17 @@ public class DadbotCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        toggleBlacklistChannel(event.getGuild().getId(), event.getChannel().getId());
+        toggleDenyListChannel(event.getGuild().getId(), event.getChannel().getId());
         messageAction.addSuccessfulReaction();
         return messageAction;
     }
 
-    private void toggleBlacklistChannel(String serverId, String channelId) {
-        val channelBlacklist = configService.getValuesByName(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL);
-        if (!channelBlacklist.contains(channelId)) {
-            configService.addConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channelId);
+    private void toggleDenyListChannel(String serverId, String channelId) {
+        val channelDenyList = configService.getValuesByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+        if (!channelDenyList.contains(channelId)) {
+            configService.addConfig(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL, channelId);
         } else {
-            configService.removeConfig(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL, channelId);
+            configService.removeConfig(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL, channelId);
         }
     }
 }

@@ -32,10 +32,10 @@ public class StatsCommand extends AbstractCommand {
     }
 
     private Message displayRoleStats(Guild server) {
-        List<String> roleBlackList = configService.getValuesByName(server.getId(), ConfigConstants.ROLE_BLACKLIST);
+        List<String> roleDenyList = configService.getValuesByName(server.getId(), ConfigConstants.ROLE_DENY_LIST);
 
         Map<Role, Integer> roleMap = server.getMembers().stream().flatMap(member -> member.getRoles().stream())
-                .filter(role -> !roleBlackList.contains(role.getName()))
+                .filter(role -> !roleDenyList.contains(role.getName()))
                 .collect(Collectors.toMap(role -> role, role -> 1, Integer::sum));
 
         List<Stat> statList = roleMap.keySet()

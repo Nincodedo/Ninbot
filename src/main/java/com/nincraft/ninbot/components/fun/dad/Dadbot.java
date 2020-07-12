@@ -56,13 +56,13 @@ public class Dadbot extends ListenerAdapter {
         }
     }
 
-    private boolean channelIsBlacklisted(String serverId, String channelId) {
-        val channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_BLACKLIST_CHANNEL);
+    private boolean channelIsOnDenyList(String serverId, String channelId) {
+        val channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
     private void hiImDad(String message, MessageReceivedEvent event) {
-        if (channelIsBlacklisted(event.getGuild().getId(), event.getChannel().getId())) {
+        if (channelIsOnDenyList(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
         String stringBuilder = resourceBundle.getString("listener.dad.hi") +

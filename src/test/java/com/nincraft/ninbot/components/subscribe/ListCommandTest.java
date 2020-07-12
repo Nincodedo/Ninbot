@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class ListCommandTest extends NinbotTest {
 
     @Mock
-    static List<String> roleBlackList = new ArrayList<>();
+    static List<String> roleDenyList = new ArrayList<>();
 
     @Mock
     MessageChannel mockMessageChannel;
@@ -40,7 +40,7 @@ public class ListCommandTest extends NinbotTest {
 
     @BeforeAll
     public static void setup() {
-        roleBlackList.add("admin");
+        roleDenyList.add("admin");
     }
 
     @Test
