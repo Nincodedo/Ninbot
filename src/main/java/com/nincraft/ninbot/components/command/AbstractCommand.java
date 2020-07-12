@@ -16,6 +16,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 @Log4j2
@@ -70,7 +72,8 @@ public abstract class AbstractCommand {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
-                + ".help.title")), help, false);
+                + ".help.title")), help, false)
+                .setColor(Color.BLUE);
         MessageAction messageAction = new MessageAction(event);
         messageAction.addPrivateMessageAction(embedBuilder.build());
         messageAction.addSuccessfulReaction();
