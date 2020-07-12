@@ -34,6 +34,7 @@ public class UserCommand extends AbstractCommand {
                 messageAction.addCorrectReaction(updateBirthday(event));
                 break;
             default:
+                messageAction = displayHelp(event);
                 break;
         }
         return messageAction;
