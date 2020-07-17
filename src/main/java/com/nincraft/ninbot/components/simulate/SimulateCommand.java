@@ -79,7 +79,13 @@ public class SimulateCommand extends CooldownCommand {
         List<Message> returnMessages = new ArrayList<>();
         //Limit to 10 random channels that the default public role can read/talk
         val textChannels = guild.getTextChannels().parallelStream()
-                .filter(textChannel -> textChannel.canTalk(guild.getMembersWithRoles(guild.getPublicRole()).get(0)))
+                .filter(textChannel -> {
+                    val membersWithPublicRole = guild.getMembersWithRoles(guild.getPublicRole());
+                    if (!membersWithPublicRole.isEmpty()) {
+                        return textChannel.canTalk(membersWithPublicRole.get(0));
+                    }
+                    return false;
+                })
                 .unordered()
                 .limit(10)
                 .collect(Collectors.toList());
