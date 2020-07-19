@@ -36,7 +36,7 @@ public class TriviaAnswerListener extends ListenerAdapter {
                 event.getChannel()
                         .sendMessage(String.format("%s got it right! It was %s. They now have %s point(s)",
                                 event.getMember()
-                                .getEffectiveName(), answer, newScore))
+                                        .getEffectiveName(), answer, newScore))
                         .queue();
                 event.getJDA().removeEventListener(this);
                 questionAnswered = true;

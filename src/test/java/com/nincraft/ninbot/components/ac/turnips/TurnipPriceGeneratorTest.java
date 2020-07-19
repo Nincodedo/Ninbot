@@ -21,7 +21,7 @@ class TurnipPriceGeneratorTest extends NinbotTest {
     TurnipPriceGenerator turnipPriceGenerator;
 
     @Test
-    void getSundayTurnipPrice(){
+    void getSundayTurnipPrice() {
         val expectedPrice = 97;
         val actualPrice = turnipPriceGenerator.getSundayTurnipPrice(5L);
         assertThat(actualPrice).isEqualTo(expectedPrice);

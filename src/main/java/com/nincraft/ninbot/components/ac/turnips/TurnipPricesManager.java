@@ -43,7 +43,7 @@ public class TurnipPricesManager {
         return turnipPricesRepository.findAll();
     }
 
-    public TurnipPrices findNewest(){
+    public TurnipPrices findNewest() {
         return turnipPricesRepository.findAllByOrderByCreatedDesc().get(0);
     }
 

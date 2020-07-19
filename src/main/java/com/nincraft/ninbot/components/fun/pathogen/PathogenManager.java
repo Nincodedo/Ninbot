@@ -114,7 +114,7 @@ public class PathogenManager {
                             possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
                             auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
                                     + "in channel %s");
-                            pathogenUserService.infectedUser(pathogenUser,user.getId(),guild.getId());
+                            pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
                         });
                     }
                 });

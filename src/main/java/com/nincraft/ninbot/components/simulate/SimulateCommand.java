@@ -41,7 +41,7 @@ public class SimulateCommand extends CooldownCommand {
         val targetUser = mentionedUsers.get(mentionedUsers.size() - 1);
         List<Message> userMessages;
         try {
-             userMessages = getUserMessages(event.getGuild(), targetUser);
+            userMessages = getUserMessages(event.getGuild(), targetUser);
         } catch (ExecutionException | InterruptedException e) {
             log.error("Failed to run user simulation", e);
             messageAction.addUnsuccessfulReaction();

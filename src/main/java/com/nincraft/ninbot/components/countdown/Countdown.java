@@ -43,7 +43,7 @@ class Countdown {
     public String getDescription() {
         return resourceBundle.getString("command.countdown.list.starttime")
                 + getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE) + "\n"
-                + resourceBundle.getString("command.countdown.list.daysuntil") +getDayDifference();
+                + resourceBundle.getString("command.countdown.list.daysuntil") + getDayDifference();
     }
 
     long getDayDifference() {

@@ -1,13 +1,15 @@
 package com.nincraft.ninbot.components.stream;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Optional;
-
+import com.nincraft.ninbot.NinbotRunner;
+import com.nincraft.ninbot.components.common.LocaleService;
+import com.nincraft.ninbot.components.config.ConfigConstants;
+import com.nincraft.ninbot.components.config.ConfigService;
+import com.nincraft.ninbot.components.config.component.ComponentService;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
+import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,16 +21,12 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import com.nincraft.ninbot.NinbotRunner;
-import com.nincraft.ninbot.components.common.LocaleService;
-import com.nincraft.ninbot.components.config.ConfigConstants;
-import com.nincraft.ninbot.components.config.ConfigService;
-import com.nincraft.ninbot.components.config.component.ComponentService;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Optional;
 
-import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
-import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
-import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})

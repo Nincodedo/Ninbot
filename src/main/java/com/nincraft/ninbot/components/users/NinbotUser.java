@@ -3,7 +3,6 @@ package com.nincraft.ninbot.components.users;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
