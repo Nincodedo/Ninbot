@@ -9,3 +9,4 @@
 *.gz
 /sourcetrail_dependencies/
 Ninbot.src*
+*.jar
