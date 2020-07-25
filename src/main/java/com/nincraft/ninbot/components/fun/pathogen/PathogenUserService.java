@@ -2,6 +2,7 @@ package com.nincraft.ninbot.components.fun.pathogen;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -13,14 +14,13 @@ public class PathogenUserService {
     }
 
     public void uninfectedUser(PathogenUser pathogenUser, String userId, String guildId) {
-        if (pathogenUser != null) {
-            pathogenUser.setInfectionLevel(0);
-        } else {
+        if (pathogenUser == null) {
             pathogenUser = new PathogenUser();
-            pathogenUser.setInfectionLevel(0);
-            pathogenUser.setUserId(userId);
         }
+        pathogenUser.setUserId(userId);
+        pathogenUser.setInfectionLevel(0);
         pathogenUser.setServerId(guildId);
+        pathogenUser.setLastInitialCure(new Date());
         pathogenUserRepository.save(pathogenUser);
     }
 
@@ -33,6 +33,7 @@ public class PathogenUserService {
             pathogenUser = new PathogenUser();
             pathogenUser.setInfectionLevel(1);
             pathogenUser.setUserId(userId);
+            pathogenUser.setLastInitialInfection(new Date());
         }
         pathogenUser.setServerId(guildId);
         pathogenUserRepository.save(pathogenUser);
