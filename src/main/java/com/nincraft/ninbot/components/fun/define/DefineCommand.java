@@ -32,7 +32,6 @@ public class DefineCommand extends AbstractCommand {
         } else {
             Message message = buildMessage(definition, word);
             messageAction.addChannelAction(message);
-
         }
         return messageAction;
     }

@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.trivia.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -20,6 +21,15 @@ public class TriviaQuestion {
     @JsonProperty("incorrect_answers")
     private List<String> incorrectAnswers;
 
+    public TriviaQuestion(JsonNode triviaResults) {
+        this.category = triviaResults.get("category").asText();
+        this.type = triviaResults.get("type").asText();
+        this.difficulty = triviaResults.get("difficulty").asText();
+        this.question = triviaResults.get("question").asText();
+        this.correctAnswer = triviaResults.get("correct_answer").asText();
+        this.incorrectAnswers = triviaResults.findValuesAsText("incorrect_answers");
+    }
+
 
     public Message build() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -28,7 +38,7 @@ public class TriviaQuestion {
         return new MessageBuilder(embedBuilder).build();
     }
 
-    void unescapeFields() {
+    public void unescapeFields() {
         category = StringEscapeUtils.unescapeHtml3(category).trim();
         type = StringEscapeUtils.unescapeHtml3(type).trim();
         difficulty = StringEscapeUtils.unescapeHtml3(difficulty).trim();

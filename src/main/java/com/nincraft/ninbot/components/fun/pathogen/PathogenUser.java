@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.fun.pathogen;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,4 +17,6 @@ public class PathogenUser {
     @Column(nullable = false)
     private String serverId;
     private Integer infectionLevel = 0;
+    private Date lastInitialInfection;
+    private Date lastInitialCure;
 }
