@@ -215,7 +215,7 @@ Usage:
     
 ##### Price
 Shows the current price of turnips. On Sundays, shows how much you can buy turnips for.
-Every other day it shows how much you can sell them for. Each individual server has it's own prices every day.
+Every other day it shows how much you can sell them for. Each individual server has its own prices every day.
 
 Usage:
 
