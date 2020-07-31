@@ -36,6 +36,14 @@ public class MessageAction {
         this.event = event;
     }
 
+    public static void successfulReaction(Message message) {
+        message.addReaction(Emojis.CHECK_MARK).queue();
+    }
+
+    public static void unsuccessfulReaction(Message message) {
+        message.addReaction(Emojis.CROSS_X).queue();
+    }
+
     public void executeActions() {
         Message eventMessage = event.getMessage();
         if (overrideMessage != null) {

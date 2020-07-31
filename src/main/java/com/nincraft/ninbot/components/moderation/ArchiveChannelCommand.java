@@ -8,13 +8,14 @@ import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.managers.ChannelManager;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ArchiveChannelCommand extends AbstractCommand {
 
     public ArchiveChannelCommand() {
-        name = "archive-channel";
+        name = "archive";
         length = 2;
         checkExactLength = false;
         permissionLevel = RolePermission.MODS;
@@ -31,30 +32,57 @@ public class ArchiveChannelCommand extends AbstractCommand {
             return messageAction;
         }
         val guild = event.getGuild();
-        configService.getSingleValueByName(event.getGuild().getId(), ConfigConstants.ARCHIVE_CATEGORY_ID)
-                .ifPresent(archiveChannelId -> moveChannel(archiveChannelId, textChannel, guild));
+
+        String archiveCategoryId = getCategoryIdMovingTo(event, guild);
+        if (archiveCategoryId == null) {
+            messageAction.addUnsuccessfulReaction();
+            return messageAction;
+        }
+        moveChannelToCategory(archiveCategoryId, textChannel, guild).queue(
+                aVoidSuccess -> MessageAction.successfulReaction(event.getMessage()),
+                aVoidFailure -> MessageAction.unsuccessfulReaction(event.getMessage()));
         return messageAction;
+    }
+
+    String getCategoryIdMovingTo(MessageReceivedEvent event, Guild guild) {
+        String archiveCategoryId;
+        val categoryIdOptional = configService.getSingleValueByName(event.getGuild()
+                .getId(), ConfigConstants.ARCHIVE_CATEGORY_ID);
+        //an archive channel has been already configured
+        if (categoryIdOptional.isPresent()) {
+            archiveCategoryId = categoryIdOptional.get();
+        } else {
+            val categories = guild.getCategoriesByName("archive", true);
+            if (!categories.isEmpty()) {
+                archiveCategoryId = categories.get(0).getId();
+            } else {
+                archiveCategoryId = null;
+            }
+        }
+        return archiveCategoryId;
     }
 
     private TextChannel getChannelFromMessage(String message, MessageReceivedEvent event) {
         val commandLength = getCommandLength(message);
         TextChannel textChannel = null;
-        //archive this channel
+        //this channel
         if (commandLength == 2) {
             textChannel = event.getTextChannel();
         }
-        //archive some named channel
+        //some named channel
         else if (commandLength == 3) {
-            textChannel = event.getJDA().getTextChannelById(getSubcommand(message, 2));
+            val mentionedChannels = event.getMessage().getMentionedChannels();
+            if (mentionedChannels.isEmpty()) {
+                textChannel = event.getJDA().getTextChannelsByName(getSubcommand(message, 2), true).get(0);
+            } else {
+                return mentionedChannels.get(0);
+            }
         }
         return textChannel;
     }
 
-    private void moveChannel(String archiveChannelId, TextChannel textChannel, Guild guild) {
-        guild.getCategoryById(archiveChannelId)
-                .modifyTextChannelPositions()
-                .selectPosition(textChannel.getManager().getChannel())
-                .moveTo(0)
-                .queue();
+    private ChannelManager moveChannelToCategory(String archiveCategoryId, TextChannel textChannel, Guild guild) {
+        val archiveCategory = guild.getCategoryById(archiveCategoryId);
+        return textChannel.getManager().setParent(archiveCategory);
     }
 }
