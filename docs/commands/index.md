@@ -15,10 +15,10 @@ All commands are prefixed with @Ninbot.
     * [Roll](#roll)
     * [Simulate](#simulate)
     * [Stats](#stats)
+    * [Stream](#stream)
     * [Subscribe/Unsubscribe](#subscribeunsubscribe)
     * [Trivia](#trivia)
     * [Turnips](#turnips)
-    * [Twitch](#twitch)
   * [Mods Commands](#mod-commands)
     * [Archive Channel](#archive-channel)
     * [Conversation](#conversation)
@@ -143,6 +143,16 @@ Usage:
 
     @Ninbot stats
     
+### Stream
+Streaming related commands.
+#### Subcommands
+##### Announce
+Toggles your going live announcement.
+
+Usage:
+
+    @Ninbot stream announce
+
 ### Subscribe/Unsubscribe
 Subscribes/unsubscribes you to a role for events.
 
@@ -228,18 +238,7 @@ Shows your current inventory, including your Bells and turnips.
 Usage:
 
     @Ninbot turnips wallet
-    
-### Twitch
-Twitch related commands.
-#### Subcommands
-##### Announce
-Toggles your going live announcement.
 
-Usage:
-
-    @Ninbot twitch announce
-    
-    
 ## Mod Commands
 ### Archive Channel
 Moves the current channel or the tagged channel into the archive category.
