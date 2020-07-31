@@ -241,7 +241,7 @@ Usage:
 
 ## Mod Commands
 ### Archive Channel
-Moves the current channel or the tagged channel into the archive category.
+Moves the current channel or the tagged channel into the archive category, [optionally configured](../configuration/index.md#archive-category).
 You can also use unarchive to move a tagged channel into the current category.
 
 Usage:

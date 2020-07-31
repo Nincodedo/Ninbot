@@ -7,6 +7,11 @@ Name: announcementChannel
 
 Usage: Channel ID for Event announcements.
 
+## Archive Category
+Name: archiveCategoryId
+
+Usage: Category ID for archived channels.
+
 ## Dadbot Deny List
 Name: dadbotChannelDenyList
 
