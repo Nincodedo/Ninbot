@@ -20,6 +20,7 @@ All commands are prefixed with @Ninbot.
     * [Turnips](#turnips)
     * [Twitch](#twitch)
   * [Mods Commands](#mod-commands)
+    * [Archive Channel](#archive-channel)
     * [Conversation](#conversation)
     * [Topic Change Announcement](#topic-change-announcement)
   * [Admin Commands](#admin-commands)
@@ -240,6 +241,19 @@ Usage:
     
     
 ## Mod Commands
+### Archive Channel
+Moves the current channel or the tagged channel into the archive category.
+You can also use unarchive to move a tagged channel into the current category.
+
+Usage:
+
+    @Ninbot archive
+    
+    @Ninbot archive #channel-name
+    
+    @Ninbot unarchive #channel-name
+    
+
 ### Conversation
 Toggles the Ninbot conversation module in the current channel. It is off by default.
 
