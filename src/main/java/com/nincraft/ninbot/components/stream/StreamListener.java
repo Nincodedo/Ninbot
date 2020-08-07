@@ -187,7 +187,7 @@ public class StreamListener extends ListenerAdapter {
                         log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(user.getAvatarUrl(), username, streamingUrl,
-                            gameName, streamTitle, serverId))
+                            gameName, streamTitle, serverId, guild))
                             .queue();
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
@@ -202,9 +202,9 @@ public class StreamListener extends ListenerAdapter {
     }
 
     Message buildStreamAnnounceMessage(String avatarUrl, String username,
-            String streamingUrl, String gameName, String streamTitle, String serverId) {
+            String streamingUrl, String gameName, String streamTitle, String serverId, Guild guild) {
         log.trace("Building stream announce message for {} server {}", username, serverId);
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(serverId));
+        ResourceBundle resourceBundle = localeService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder;
         if (!streamingUrl.contains("https://")) {
             embedBuilder = new EmbedBuilder()

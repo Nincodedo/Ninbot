@@ -36,7 +36,7 @@ class EventAnnounce extends TimerTask {
         config.ifPresent(announceChannelId -> {
             val channel = guild.getTextChannelById(announceChannelId);
             val gameRoleId = guild.getRolesByName(event.getGameName(), true).get(0);
-            event.setResourceBundle(ResourceBundle.getBundle("lang", localeService.getLocale(serverId)));
+            event.setResourceBundle(ResourceBundle.getBundle("lang", localeService.getLocale(guild)));
             channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
         });
     }

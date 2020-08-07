@@ -24,6 +24,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -77,7 +78,8 @@ public class StreamListenerTest {
         when(activity.asRichPresence()).thenReturn(richPresence);
         when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
         when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
-        when(localeService.getLocale("123")).thenReturn(new Locale("en"));
+        when(localeService.getResourceBundleOrDefault(guild)).thenReturn(ResourceBundle.getBundle("lang",
+                Locale.ENGLISH));
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getTextChannelById("123")).thenReturn(textChannel);
         when(textChannel.sendMessage(Mockito.any(Message.class))).thenReturn(messageAction);

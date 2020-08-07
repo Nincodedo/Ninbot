@@ -38,8 +38,7 @@ public class TopicChangeListener extends ListenerAdapter {
         val eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
             String message;
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event.getGuild()
-                    .getId()));
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event.getGuild()));
             if (event.getGuild()
                     .getMember(event.getJDA().getSelfUser())
                     .getPermissions(eventChannel)

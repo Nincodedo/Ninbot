@@ -46,8 +46,9 @@ public class CountdownScheduler implements Schedulable {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
             }
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang",
-                    localeService.getLocale(countdown.getServerId()));
+
+            ResourceBundle resourceBundle = localeService.getResourceBundleOrDefault(shardManager.getGuildById(countdown
+                    .getServerId()));
             countdown.setResourceBundle(resourceBundle);
             val countdownMessage = countdown.buildMessage();
             val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
