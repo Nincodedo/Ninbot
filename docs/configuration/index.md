@@ -52,7 +52,18 @@ Name: topicChangeChannel
 
 Usage: Channel IDs that Ninbot will announce when the topic is changed.
 
+## Server Timezone
+Name: serverTimezone
+
+Usage: Sets the server's timezone, used for event announcements. Should be formatted as GMT+1, GMT-1, or just GMT.
+
+Default: GMT-6
+
+# Deprecated Configurations
+
 ## Server Locale
+The Discord server's Locale will automatically be used instead.
+
 Name: serverLocal
 
 Usage: Changes Ninbot's language server wide.
@@ -60,10 +71,3 @@ Usage: Changes Ninbot's language server wide.
 Possible options: de, en, es, fr, it, pt, ru
 
 Default: en
-
-## Server Timezone
-Name: serverTimezone
-
-Usage: Sets the server's timezone, used for event announcements. Should be formatted as GMT+1, GMT-1, or just GMT.
-
-Default: GMT-6

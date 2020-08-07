@@ -1,9 +1,6 @@
 package com.nincraft.ninbot.components.command;
 
-import com.nincraft.ninbot.components.common.IdConstants;
-import com.nincraft.ninbot.components.common.MessageAction;
-import com.nincraft.ninbot.components.common.RolePermission;
-import com.nincraft.ninbot.components.common.WebhookHelper;
+import com.nincraft.ninbot.components.common.*;
 import com.nincraft.ninbot.components.config.ConfigService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -34,10 +31,12 @@ public abstract class AbstractCommand {
     protected WebhookHelper webhookHelper = new WebhookHelper();
     @Autowired
     protected ConfigService configService;
+    @Autowired
+    protected LocaleService localeService;
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();
-        resourceBundle = ResourceBundle.getBundle("lang", serverLocale);
+        resourceBundle = localeService.getResourceBundleOrDefault(serverLocale);
         if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
                     .getName(), event.getGuild().getId(), message);

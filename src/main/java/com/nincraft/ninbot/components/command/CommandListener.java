@@ -5,7 +5,6 @@ import com.nincraft.ninbot.components.config.component.ComponentService;
 import com.nincraft.ninbot.components.info.HelpCommand;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class CommandListener extends ListenerAdapter {
     private ComponentService componentService;
     private ConfigService configService;
 
-    @Autowired
     public CommandListener(CommandParser commandParser, List<AbstractCommand> commands,
             ComponentService componentService, ConfigService configService) {
         this.commandParser = commandParser;

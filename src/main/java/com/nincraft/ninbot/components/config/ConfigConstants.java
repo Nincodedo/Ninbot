@@ -13,7 +13,6 @@ public class ConfigConstants {
     public static final String CONVERSATION_CHANNELS = "conversationChannels";
     public static final String LEADERBOARD_NAME = "leaderboardName";
     public static final String TOPIC_CHANGE_CHANNEL = "topicChangeChannel";
-    public static final String SERVER_LOCALE = "serverLocale";
     public static final String SERVER_TIMEZONE = "serverTimezone";
     public static final String DEFAULT_TIMEZONE = "GMT-6";
     public static final String PATHOGEN_MESSAGE_SEARCH_LIMIT = "pathogenMessageSearchLimit";
