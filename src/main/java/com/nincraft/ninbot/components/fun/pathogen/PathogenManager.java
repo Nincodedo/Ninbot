@@ -61,12 +61,7 @@ public class PathogenManager {
     }
 
     public void setRandomSeed(boolean doAuditAction, LocalDate localDate) {
-        long seed;
-        if (localDate == null) {
-            seed = LocalDate.now().toEpochDay();
-        } else {
-            seed = localDate.toEpochDay();
-        }
+        long seed = localDate == null ? LocalDate.now().toEpochDay() : localDate.toEpochDay();
         this.todayRandom = new Random(seed);
         this.healingWeek = determineIfHealingWeek();
         if (doAuditAction) {

@@ -25,12 +25,8 @@ public class UserCommand extends AbstractCommand {
         MessageAction messageAction = new MessageAction(event);
         val message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
-            case "birthday":
-                messageAction.addCorrectReaction(updateBirthday(event));
-                break;
-            default:
-                messageAction = displayHelp(event);
-                break;
+            case "birthday" -> messageAction.addCorrectReaction(updateBirthday(event));
+            default -> messageAction = displayHelp(event);
         }
         return messageAction;
     }
