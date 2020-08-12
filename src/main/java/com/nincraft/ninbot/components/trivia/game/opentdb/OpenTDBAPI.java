@@ -6,16 +6,10 @@ import com.nincraft.ninbot.components.trivia.game.TriviaAPI;
 import com.nincraft.ninbot.components.trivia.game.TriviaQuestion;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
