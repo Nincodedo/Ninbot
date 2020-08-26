@@ -80,6 +80,10 @@
       {
         "response": "https://i.imgur.com/Iv6aIxm.gifv",
         "target": "happy new year"
+      },
+      {
+        "response": "https://www.youtube.com/watch?v=3qxX5KhCpTk",
+        "target": "our bot"
       }
     ],
     "contains": [
