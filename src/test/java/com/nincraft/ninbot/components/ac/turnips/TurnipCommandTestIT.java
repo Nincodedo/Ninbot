@@ -64,7 +64,9 @@ public class TurnipCommandTestIT {
     public void executeHelpCommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips");
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
+
         assertThat(TestUtils.returnPrivateMessageEmbededName(commandResults)).contains("Turnips Command Help");
     }
 
@@ -78,10 +80,11 @@ public class TurnipCommandTestIT {
         when(user.getId()).thenReturn("1");
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         val villagers = villagerRepository.findAll();
-        villagers.forEach(villager -> log.info("VILLAGER: " + villager));
+
+        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         assertThat(villagers).isNotEmpty();
     }
 
@@ -94,7 +97,6 @@ public class TurnipCommandTestIT {
         villager.setTurnipsOwned(0);
         villagerManager.save(villager);
         turnipPricesManager.generateNewWeek();
-
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
         if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
@@ -105,7 +107,9 @@ public class TurnipCommandTestIT {
             when(messageEvent.getGuild()).thenReturn(guild);
             when(guild.getIdLong()).thenReturn(1L);
         }
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
+
         if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         } else {

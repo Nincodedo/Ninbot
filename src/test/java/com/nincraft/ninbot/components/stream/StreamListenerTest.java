@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -26,8 +25,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
@@ -52,16 +50,16 @@ public class StreamListenerTest {
 
     @Test
     public void userStartsStreamingNotAlreadyStreamingNoCooldown() {
-        UserActivityStartEvent userActivityStartEvent = Mockito.mock(UserActivityStartEvent.class);
-        Member member = Mockito.mock(Member.class);
-        Guild guild = Mockito.mock(Guild.class);
-        Activity activity = Mockito.mock(Activity.class);
-        User user = Mockito.mock(User.class);
-        TextChannel textChannel = Mockito.mock(TextChannel.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
-        Role streamingRole = Mockito.mock(Role.class);
-        RichPresence richPresence = Mockito.mock(RichPresence.class);
-        AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
+        UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
+        Member member = mock(Member.class);
+        Guild guild = mock(Guild.class);
+        Activity activity = mock(Activity.class);
+        User user = mock(User.class);
+        TextChannel textChannel = mock(TextChannel.class);
+        MessageAction messageAction = mock(MessageAction.class);
+        Role streamingRole = mock(Role.class);
+        RichPresence richPresence = mock(RichPresence.class);
+        AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
@@ -82,22 +80,24 @@ public class StreamListenerTest {
                 Locale.ENGLISH));
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getTextChannelById("123")).thenReturn(textChannel);
-        when(textChannel.sendMessage(Mockito.any(Message.class))).thenReturn(messageAction);
+        when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
+
         streamListener.onGenericUserPresence(userActivityStartEvent);
-        Mockito.verify(messageAction, times(1)).queue();
-        Mockito.verify(auditableRestAction, times(1)).queue();
+
+        verify(messageAction, times(1)).queue();
+        verify(auditableRestAction, times(1)).queue();
     }
 
     @Test
     public void userNotStreamingStartsOtherActivity() {
-        UserActivityStartEvent userActivityStartEvent = Mockito.mock(UserActivityStartEvent.class);
-        Member member = Mockito.mock(Member.class);
-        Guild guild = Mockito.mock(Guild.class);
-        Activity activity = Mockito.mock(Activity.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
-        AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
+        UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
+        Member member = mock(Member.class);
+        Guild guild = mock(Guild.class);
+        Activity activity = mock(Activity.class);
+        MessageAction messageAction = mock(MessageAction.class);
+        AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
@@ -105,19 +105,21 @@ public class StreamListenerTest {
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.DEFAULT);
+
         streamListener.onGenericUserPresence(userActivityStartEvent);
-        Mockito.verify(messageAction, times(0)).queue();
-        Mockito.verify(auditableRestAction, times(0)).queue();
+
+        verify(messageAction, times(0)).queue();
+        verify(auditableRestAction, times(0)).queue();
     }
 
     @Test
     public void userStartsStreamingNotAlreadyStreamingOnCooldown() {
-        UserActivityStartEvent userActivityStartEvent = Mockito.mock(UserActivityStartEvent.class);
-        Member member = Mockito.mock(Member.class);
-        Guild guild = Mockito.mock(Guild.class);
-        Activity activity = Mockito.mock(Activity.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
-        AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
+        UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
+        Member member = mock(Member.class);
+        Guild guild = mock(Guild.class);
+        Activity activity = mock(Activity.class);
+        MessageAction messageAction = mock(MessageAction.class);
+        AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
@@ -125,19 +127,21 @@ public class StreamListenerTest {
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.STREAMING);
+
         streamListener.onGenericUserPresence(userActivityStartEvent);
-        Mockito.verify(messageAction, times(0)).queue();
-        Mockito.verify(auditableRestAction, times(0)).queue();
+
+        verify(messageAction, times(0)).queue();
+        verify(auditableRestAction, times(0)).queue();
     }
 
     @Test
     public void userStopsStreaming() {
-        UserActivityEndEvent userActivityEndEvent = Mockito.mock(UserActivityEndEvent.class);
-        Member member = Mockito.mock(Member.class);
-        Guild guild = Mockito.mock(Guild.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
-        AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
-        Role streamingRole = Mockito.mock(Role.class);
+        UserActivityEndEvent userActivityEndEvent = mock(UserActivityEndEvent.class);
+        Member member = mock(Member.class);
+        Guild guild = mock(Guild.class);
+        MessageAction messageAction = mock(MessageAction.class);
+        AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
+        Role streamingRole = mock(Role.class);
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
         when(userActivityEndEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
@@ -145,8 +149,10 @@ public class StreamListenerTest {
         when(guild.getId()).thenReturn("123");
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
+
         streamListener.onGenericUserPresence(userActivityEndEvent);
-        Mockito.verify(messageAction, times(0)).queue();
-        Mockito.verify(auditableRestAction, times(1)).queue();
+
+        verify(messageAction, times(0)).queue();
+        verify(auditableRestAction, times(1)).queue();
     }
 }
