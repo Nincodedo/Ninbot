@@ -67,7 +67,9 @@ public class HelpCommandTestIT {
         when(guild.getId()).thenReturn("1");
         when(guild.getOwner()).thenReturn(member);
         when(member.getUser()).thenReturn(user);
+
         val messageAction = helpCommand.executeCommand(messageEvent);
+
         assertThat(messageAction).isNotNull();
         assertThat(messageAction.getPrivateMessageList()).isNotEmpty();
         val everyoneCommands = commandParser.getCommandHashMap()

@@ -1,6 +1,6 @@
 package com.nincraft.ninbot.components.channel;
 
-import com.nincraft.ninbot.NinbotTest;
+import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.components.common.Emojis;
 import com.nincraft.ninbot.components.config.component.ComponentService;
 import lombok.val;
@@ -13,14 +13,21 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class TempVoiceChannelManagerTest extends NinbotTest {
+@ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = {NinbotRunner.class})
+@TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
+public class TempVoiceChannelManagerTest {
 
     @Mock
     TempVoiceChannelRepository tempVoiceChannelRepository;

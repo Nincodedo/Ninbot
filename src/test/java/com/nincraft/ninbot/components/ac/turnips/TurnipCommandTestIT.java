@@ -30,8 +30,9 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -64,7 +65,9 @@ public class TurnipCommandTestIT {
     public void executeHelpCommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips");
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
+
         assertThat(TestUtils.returnPrivateMessageEmbededName(commandResults)).contains("Turnips Command Help");
     }
 
@@ -78,15 +81,16 @@ public class TurnipCommandTestIT {
         when(user.getId()).thenReturn("1");
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
-        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         val villagers = villagerRepository.findAll();
-        villagers.forEach(villager -> log.info("VILLAGER: " + villager));
+
+        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         assertThat(villagers).isNotEmpty();
     }
 
     @Test
-    public void executeBuyCommand() {
+    public void executeBuyCommandOnWeekday() {
         Villager villager = new Villager();
         villager.setBellsTotal(2000);
         villager.setDiscordId("2");
@@ -94,23 +98,39 @@ public class TurnipCommandTestIT {
         villager.setTurnipsOwned(0);
         villagerManager.save(villager);
         turnipPricesManager.generateNewWeek();
-
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-            User author = Mockito.mock(User.class);
-            Guild guild = Mockito.mock(Guild.class);
-            when(messageEvent.getAuthor()).thenReturn(author);
-            when(author.getId()).thenReturn("2");
-            when(messageEvent.getGuild()).thenReturn(guild);
-            when(guild.getIdLong()).thenReturn(1L);
-        }
+        Clock weekdayClock = Clock.fixed(Instant.parse("2020-09-07T12:00:00.00Z"), ZoneId.systemDefault());
+        turnipCommand.setClock(weekdayClock);
+
         val commandResults = turnipCommand.executeCommand(messageEvent);
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-            assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
-        } else {
-            assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CROSS_X);
-        }
+
+        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CROSS_X);
+    }
+
+    @Test
+    public void executeBuyCommandOnSunday() {
+        Villager villager = new Villager();
+        villager.setBellsTotal(2000);
+        villager.setDiscordId("2");
+        villager.setDiscordServerId("2");
+        villager.setTurnipsOwned(0);
+        villagerManager.save(villager);
+        turnipPricesManager.generateNewWeek();
+        when(messageEvent.getMessage()).thenReturn(message);
+        when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
+        User author = Mockito.mock(User.class);
+        Guild guild = Mockito.mock(Guild.class);
+        when(messageEvent.getAuthor()).thenReturn(author);
+        when(author.getId()).thenReturn("2");
+        when(messageEvent.getGuild()).thenReturn(guild);
+        when(guild.getIdLong()).thenReturn(1L);
+        Clock sundayClock = Clock.fixed(Instant.parse("2020-09-06T12:00:00.00Z"), ZoneId.systemDefault());
+        turnipCommand.setClock(sundayClock);
+
+        val commandResults = turnipCommand.executeCommand(messageEvent);
+
+        assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
     }
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {

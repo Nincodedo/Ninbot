@@ -4,6 +4,7 @@ import com.nincraft.ninbot.components.ac.Villager;
 import com.nincraft.ninbot.components.ac.VillagerManager;
 import com.nincraft.ninbot.components.command.AbstractCommand;
 import com.nincraft.ninbot.components.common.MessageAction;
+import lombok.Setter;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,11 +24,14 @@ public class TurnipCommand extends AbstractCommand {
     private static final String SELLING_BUYING_COMMAND_MAX = "max";
     private TurnipPricesManager turnipPricesManager;
     private VillagerManager villagerManager;
+    @Setter
+    private Clock clock;
 
     public TurnipCommand(TurnipPricesManager turnipPricesManager, VillagerManager villagerManager) {
         name = "turnips";
         length = 3;
         checkExactLength = false;
+        this.clock = Clock.systemDefaultZone();
         this.turnipPricesManager = turnipPricesManager;
         this.villagerManager = villagerManager;
     }
@@ -93,7 +98,7 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private Message listTurnipPrices(MessageReceivedEvent event) {
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+        if (LocalDate.now(clock).getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             listSundayTurnipSellingPrices(event);
         } else {
             long seed = getSeed(event.getGuild().getIdLong());
@@ -114,8 +119,8 @@ public class TurnipCommand extends AbstractCommand {
     private int getCurrentPrice(long seed) {
         val turnipPattern = turnipPricesManager.getTurnipPattern(seed);
         val priceList = turnipPricesManager.getTurnipPricesList(turnipPattern, seed);
-        int priceIndex = ((LocalDate.now().getDayOfWeek().getValue() - 1) * 2) + (
-                LocalDateTime.now().getHour() >= 12 ? 1 : 0);
+        int priceIndex = ((LocalDate.now(clock).getDayOfWeek().getValue() - 1) * 2) + (
+                LocalDateTime.now(clock).getHour() >= 12 ? 1 : 0);
         return priceList.get(priceIndex);
     }
 
@@ -131,7 +136,7 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private boolean sellTurnips(MessageReceivedEvent event) {
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+        if (LocalDate.now(clock).getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             return false;
         }
         val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
@@ -155,7 +160,7 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private boolean buyTurnips(MessageReceivedEvent event) {
-        if (!LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+        if (!LocalDate.now(clock).getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             return false;
         }
         val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
