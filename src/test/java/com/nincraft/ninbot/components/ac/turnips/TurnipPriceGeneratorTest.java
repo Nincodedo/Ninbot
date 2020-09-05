@@ -5,6 +5,8 @@ import com.nincraft.ninbot.components.ac.turnips.generator.TurnipPriceGenerator;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -76,13 +79,26 @@ class TurnipPriceGeneratorTest {
         assertThat(actualPrices).isEqualTo(expectedPrices);
     }
 
-    @Test
-    void getTurnipPattern() {
-        when(turnipPricesService.getPreviousPattern(5L)).thenReturn(TurnipPattern.RANDOM);
 
-        val expectedPattern = TurnipPattern.SMALL_SPIKE;
-        val actualPattern = turnipPriceGenerator.getTurnipPattern(5L);
+    private static Stream<TestData> turnipPatternTestData() {
+        return Stream.of(
+                new TestData(5L, TurnipPattern.SMALL_SPIKE),
+                new TestData(10L, TurnipPattern.RANDOM),
+                new TestData(15L, TurnipPattern.BIG_SPIKE),
+                new TestData(20L, TurnipPattern.DECREASING)
+        );
+    }
 
-        assertThat(actualPattern).isEqualTo(expectedPattern);
+    @ParameterizedTest
+    @MethodSource("turnipPatternTestData")
+    void getTurnipPattern(TestData testData) {
+        when(turnipPricesService.getPreviousPattern(testData.input)).thenReturn(TurnipPattern.RANDOM);
+
+        val actualPattern = turnipPriceGenerator.getTurnipPattern(testData.input);
+
+        assertThat(actualPattern).isEqualTo(testData.expected);
+    }
+
+    record TestData(long input, TurnipPattern expected) {
     }
 }
