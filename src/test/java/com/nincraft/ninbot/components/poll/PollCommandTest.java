@@ -56,7 +56,6 @@ class PollCommandTest {
         when(user.getAvatarUrl()).thenReturn("http://google.com/a-url");
         when(messageEvent.getChannel()).thenReturn(messageChannel);
         when(messageChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
-        when(localeService.getLocale(messageEvent)).thenReturn(new Locale("en"));
 
         val actualMessageAction = pollCommand.executeCommand(messageEvent);
 
