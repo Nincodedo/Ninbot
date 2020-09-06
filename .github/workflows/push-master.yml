@@ -22,7 +22,7 @@ jobs:
     - name: Build, Test
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./mvnw clean verify -P git-commit,integration -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref }} --no-transfer-progress
+      run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
     - name: GitHub Docker Action
       uses: matootie/github-docker@v3.0.0
       with:
@@ -37,9 +37,9 @@ jobs:
         gcloud auth configure-docker
     - name: Build
       run: |        
-        docker build -t gcr.io/"$GCLOUD_PROJECT"/"$IMAGE":latest \
+        docker build -t gcr.io/"$GCLOUD_PROJECT"/"$IMAGE":$GITHUB_SHA \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
     - name: Publish
       run: |
-        docker push gcr.io/$GCLOUD_PROJECT/$IMAGE:latest
+        docker push gcr.io/$GCLOUD_PROJECT/$IMAGE:$GITHUB_SHA
