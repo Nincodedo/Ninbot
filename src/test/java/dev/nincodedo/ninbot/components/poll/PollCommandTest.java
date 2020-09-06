@@ -71,7 +71,10 @@ class PollCommandTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot poll test \"1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11\"");
         when(messageEvent.getMember()).thenReturn(member);
-
+        when(member.getUser()).thenReturn(user);
+        when(user.getAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
+        when(member.getEffectiveName()).thenReturn("Nincodedo");
+        
         val actualMessageAction = pollCommand.executeCommand(messageEvent);
 
         assertThat(actualMessageAction).isNotNull();
@@ -81,6 +84,10 @@ class PollCommandTest {
     @Test
     void parsePollMessage() {
         Member member = Mockito.mock(Member.class);
+        User user = Mockito.mock(User.class);
+        when(member.getUser()).thenReturn(user);
+        when(user.getAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
+        when(member.getEffectiveName()).thenReturn("Nincodedo");
         when(message.getContentStripped()).thenReturn("@Ninbot poll test \"1, 2, 3\" 10");
 
         val poll = pollCommand.parsePollMessage(message, member);

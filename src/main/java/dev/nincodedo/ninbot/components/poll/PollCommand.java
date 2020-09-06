@@ -29,6 +29,7 @@ public class PollCommand extends AbstractCommand {
         if (isCommandLengthCorrect(event.getMessage().getContentStripped())) {
             Poll poll = parsePollMessage(event.getMessage(), event.getMember());
             poll.setResourceBundle(resourceBundle);
+            poll.setLocaleString(localeService.getLocale(event).toString());
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
                 event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
             } else {
@@ -40,7 +41,8 @@ public class PollCommand extends AbstractCommand {
 
     Poll parsePollMessage(Message message, Member member) {
         Poll poll = new Poll();
-        poll.setMember(member);
+        poll.setUserAvatarUrl(member.getUser().getAvatarUrl());
+        poll.setUserName(member.getEffectiveName());
         val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         poll.setChoices(new ArrayList<>());
         if (pollMessage.contains("\"")) {
