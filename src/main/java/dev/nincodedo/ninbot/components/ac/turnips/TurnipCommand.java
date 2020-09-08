@@ -146,7 +146,7 @@ public class TurnipCommand extends AbstractCommand {
             val message = event.getMessage().getContentStripped();
             int selling = 0;
             if (getCommandLength(message) > 3) {
-                String sellAmount = message.split("\\s+")[3];
+                String sellAmount = getSubcommand(message, 3);
                 if (StringUtils.isNumeric(sellAmount)) {
                     selling = Integer.parseInt(sellAmount);
                 } else if (SELLING_BUYING_COMMAND_MAX.equals(sellAmount)) {
@@ -178,9 +178,9 @@ public class TurnipCommand extends AbstractCommand {
     private int getAmountBuying(Villager villager, int currentPrice, String message) {
         int amountBuying = 0;
         if (getCommandLength(message) > 3) {
-            String buyAmount = message.split("\\s+")[3];
+            String buyAmount = getSubcommand(message, 3);
             if (StringUtils.isNumeric(buyAmount)) {
-                amountBuying = Integer.parseInt(message.split("\\s+")[3]);
+                amountBuying = Integer.parseInt(buyAmount);
             } else if (SELLING_BUYING_COMMAND_MAX.equals(buyAmount)) {
                 amountBuying = villager.getBellsTotal() / currentPrice / 10 * 10;
             }
