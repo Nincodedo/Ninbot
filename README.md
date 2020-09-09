@@ -10,7 +10,7 @@ Ninbot is a Discord bot with various silly commands and actions, such as dabbing
 
 Prioritize the reaction framework when possible. Adding a target phrase and a response to the [responses.json](src/main/resources/responses.json) is sometimes all you need to do. Responses done through this will react with emojis automatically if its possible. This also helps with the next development goal...
 
-### Minimum Chat Clutter
+### Minimize Chat Clutter
 
 Prioritize reacting with emojis when possible. Sending chat messages should only be done if absolutely neccessary (comedy is sometimes neccessary). Commonly used Emojis for Ninbot can be found in the [common Emojis class](src/main/java/com/nincraft/ninbot/components/common/Emojis.java).
 
@@ -20,6 +20,6 @@ Prioritize reacting with emojis when possible. Sending chat messages should only
 |Failure |❌     |
 |Unknown |❔      |
 
-### Documentation should be up to date
+### Updated Documentation
 
 Changes and additions to a command or action that would affect the end user should be documented. The latest version of Ninbot is the only supported version, so the documentation needs to be up to date.
