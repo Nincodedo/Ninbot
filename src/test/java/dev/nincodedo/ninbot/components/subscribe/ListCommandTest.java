@@ -33,14 +33,11 @@ import static org.mockito.Mockito.when;
 public class ListCommandTest {
 
     @Mock
+    static List<String> roleDenyList = new ArrayList<>();
+    @Mock
     public MessageReceivedEvent messageEvent;
-
     @Mock
     public Message message;
-
-    @Mock
-    static List<String> roleDenyList = new ArrayList<>();
-
     @Mock
     MessageChannel mockMessageChannel;
 

@@ -31,6 +31,15 @@ class TurnipPriceGeneratorTest {
     @InjectMocks
     TurnipPriceGenerator turnipPriceGenerator;
 
+    private static Stream<TestData> turnipPatternTestData() {
+        return Stream.of(
+                new TestData(5L, TurnipPattern.SMALL_SPIKE),
+                new TestData(10L, TurnipPattern.RANDOM),
+                new TestData(15L, TurnipPattern.BIG_SPIKE),
+                new TestData(20L, TurnipPattern.DECREASING)
+        );
+    }
+
     @Test
     void getSundayTurnipPrice() {
         val expectedPrice = 97;
@@ -78,16 +87,6 @@ class TurnipPriceGeneratorTest {
 
         assertThat(actualPrices).hasSize(12);
         assertThat(actualPrices).isEqualTo(expectedPrices);
-    }
-
-
-    private static Stream<TestData> turnipPatternTestData() {
-        return Stream.of(
-                new TestData(5L, TurnipPattern.SMALL_SPIKE),
-                new TestData(10L, TurnipPattern.RANDOM),
-                new TestData(15L, TurnipPattern.BIG_SPIKE),
-                new TestData(20L, TurnipPattern.DECREASING)
-        );
     }
 
     @ParameterizedTest
