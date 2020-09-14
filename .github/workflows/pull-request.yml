@@ -14,6 +14,6 @@ jobs:
     - name: Package
       run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
     - name: GitHub Docker Action
-      uses: matootie/github-docker@v3.0.0
+      uses: matootie/github-docker@v3.1.0
       with:
          accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
