@@ -10,4 +10,4 @@ FROM adoptopenjdk/openjdk14:alpine-slim
 COPY --from=build /app/target/ninbot*.jar /ninbot.jar
 RUN apk add --no-cache curl
 HEALTHCHECK CMD curl --request GET --url http://localhost:8090/actuator/health || exit 1
-CMD ["java", "--enable-preview", "-jar", "/ninbot.jar"]
+CMD ["java", "-Xss512k", "-Xmx128M", "--enable-preview", "-jar", "/ninbot.jar"]
