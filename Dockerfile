@@ -10,4 +10,4 @@ FROM openjdk:15-slim
 COPY --from=build /app/target/ninbot*.jar /ninbot.jar
 RUN apt-get update && apt-get install curl -y
 HEALTHCHECK CMD curl --request GET --url http://localhost:8090/actuator/health || exit 1
-CMD ["java", "-Xss512k", "-Xmx128M", "--enable-preview", "-jar", "/ninbot.jar"]
+CMD ["java", "-Xss512k", "-Xmx256M", "--enable-preview", "-jar", "/ninbot.jar"]

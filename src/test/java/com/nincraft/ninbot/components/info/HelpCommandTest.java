@@ -3,6 +3,7 @@ package com.nincraft.ninbot.components.info;
 import com.nincraft.ninbot.NinbotRunner;
 import com.nincraft.ninbot.TestUtils;
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
@@ -47,8 +48,11 @@ class HelpCommandTest {
     @Mock
     ConfigService configService;
 
+    @Mock
+    LocaleService localeService;
+
     @InjectMocks
-    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService);
+    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService, localeService);
 
     @BeforeAll
     public static void before() {

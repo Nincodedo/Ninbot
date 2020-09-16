@@ -1,6 +1,7 @@
 package com.nincraft.ninbot.components.info;
 
 import com.nincraft.ninbot.components.command.AbstractCommand;
+import com.nincraft.ninbot.components.common.LocaleService;
 import com.nincraft.ninbot.components.common.MessageAction;
 import com.nincraft.ninbot.components.config.ConfigService;
 import com.nincraft.ninbot.components.config.component.ComponentService;
@@ -20,12 +21,13 @@ public class HelpCommand extends AbstractCommand {
     private ComponentService componentService;
 
     public HelpCommand(Map<String, AbstractCommand> commandMap,
-            ComponentService componentService, ConfigService configService) {
+            ComponentService componentService, ConfigService configService, LocaleService localeService) {
         length = 2;
         name = "help";
         this.commandMap = commandMap;
         this.componentService = componentService;
         this.configService = configService;
+        this.localeService = localeService;
     }
 
     @Override
