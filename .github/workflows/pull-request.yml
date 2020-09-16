@@ -8,7 +8,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-java@v1
       with:
-        java-version: '14'
+        java-version: '15'
     - name: Update permissions on mvnw
       run: chmod 700 mvnw
     - name: Package
