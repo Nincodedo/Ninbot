@@ -100,4 +100,9 @@ public class ConfigService {
             return Optional.of(serverConfig.get(0));
         }
     }
+
+    @Transactional
+    public boolean isConfigEnabled(String configName, String serverId, String configValue) {
+        return configRepository.getConfigByServerIdAndNameAndValue(serverId, configName, configValue).isPresent();
+    }
 }
