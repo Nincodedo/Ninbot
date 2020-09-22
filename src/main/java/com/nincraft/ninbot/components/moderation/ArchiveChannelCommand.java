@@ -39,9 +39,18 @@ public class ArchiveChannelCommand extends AbstractCommand {
             return messageAction;
         }
         moveChannelToCategory(archiveCategoryId, textChannel, guild).queue(
-                aVoidSuccess -> MessageAction.successfulReaction(event.getMessage()),
+                aVoidSuccess -> updateChannelPermissions(event, textChannel.getId(), archiveCategoryId),
                 aVoidFailure -> MessageAction.unsuccessfulReaction(event.getMessage()));
         return messageAction;
+    }
+
+    void updateChannelPermissions(MessageReceivedEvent event, String textChannelId, String targetCategoryId) {
+        val targetCategory = event.getJDA().getCategoryById(targetCategoryId);
+        event.getJDA()
+                .getTextChannelById(textChannelId)
+                .getManager()
+                .sync(targetCategory)
+                .queue(aVoidSuccess -> MessageAction.successfulReaction(event.getMessage()));
     }
 
     String getCategoryIdMovingTo(MessageReceivedEvent event, Guild guild) {
