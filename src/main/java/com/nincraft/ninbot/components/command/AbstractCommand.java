@@ -143,6 +143,14 @@ public abstract class AbstractCommand {
         }
     }
 
+    protected String getSubcommandNoTransform(String command, int position) {
+        if (getCommandLength(command) >= position + 1) {
+            return command.split("\\s+")[position];
+        } else {
+            return "";
+        }
+    }
+
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
         for (val member : shardManager.getGuildById(IdConstants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
             if (member.getId().equals(user.getId())) {
