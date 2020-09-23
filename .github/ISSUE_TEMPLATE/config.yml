@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Wiki
-    url: https://ninbot.nincodedo.com/
+    url: https://ninbot.nincodedo.dev/
     about: Ninbot's main documentation. Look here first if you're having issues with commands or certain functionality.
