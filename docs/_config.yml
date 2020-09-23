@@ -1,3 +1,2 @@
 remote_theme: pmarsceill/just-the-docs
-color_scheme: dark
-logo: "images/ninbot-github-logo-small.png"
+search_enabled: false
