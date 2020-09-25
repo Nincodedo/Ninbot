@@ -12,7 +12,7 @@ Prioritize the reaction framework when possible. Adding a target phrase and a re
 
 ### Minimize Chat Clutter
 
-Prioritize reacting with emojis when possible. Sending chat messages should only be done if absolutely neccessary (comedy is sometimes neccessary). Commonly used Emojis for Ninbot can be found in the [common Emojis class](src/main/java/com/nincraft/ninbot/components/common/Emojis.java).
+Prioritize reacting with emojis when possible. Sending chat messages should only be done if absolutely neccessary (comedy is sometimes neccessary). Commonly used Emojis for Ninbot can be found in the [common Emojis class](src/main/java/dev/nincodedo/ninbot/components/common/Emojis.java).
 
 |  Action|Emoji  |
 |--------|-------|
