@@ -5,6 +5,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/labeler@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
     - uses: actions/checkout@master
     - uses: actions/setup-java@v1
       with:
@@ -16,4 +19,4 @@ jobs:
     - name: GitHub Docker Action
       uses: matootie/github-docker@v3.1.0
       with:
-         accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+        accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
