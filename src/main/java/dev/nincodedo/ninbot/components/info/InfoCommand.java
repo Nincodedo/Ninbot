@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.info;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -38,11 +39,12 @@ public class InfoCommand extends AbstractCommand {
         embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
                 uptimeMilliseconds), false);
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
-                String.format(resourceBundle.getString("command.info.githublink.value"), "https://github"
-                        + ".com/Nincodedo/Ninbot"),
+                String.format(resourceBundle.getString("command.info.githublink.value"), Constants.NINBOT_GITHUB_URL),
                 false);
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.issues"),
-                "https://github.com/Nincodedo/Ninbot/issues/new/choose", false);
+                Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false);
+        embedBuilder.addField(resourceBundle.getString("command.info.documentation.name"),
+                Constants.NINBOT_DOCUMENTATION_URL, false);
         messageAction.addChannelAction(new MessageBuilder(embedBuilder).build());
         return messageAction;
     }

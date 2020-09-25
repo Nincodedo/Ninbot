@@ -152,7 +152,7 @@ public abstract class AbstractCommand {
     }
 
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        for (val member : shardManager.getGuildById(IdConstants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
+        for (val member : shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
             if (member.getId().equals(user.getId())) {
                 return true;
             }

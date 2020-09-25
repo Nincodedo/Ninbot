@@ -82,7 +82,7 @@ public class PathogenManager {
 
     public void spread(Guild guild, User spreadSource,
             Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
-        val infectedRoles = guild.getRolesByName(PathogenConfig.getROLENAME(), true);
+        val infectedRoles = guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
         if (infectedRoles.isEmpty()) {
             return;
         }
@@ -132,7 +132,7 @@ public class PathogenManager {
             return false;
         }
         return member.getRoles().stream()
-                .anyMatch(role -> PathogenConfig.getROLENAME().equalsIgnoreCase(role.getName()));
+                .anyMatch(role -> PathogenConfig.getROLE_NAME().equalsIgnoreCase(role.getName()));
     }
 
     public Set<String> getWordList() {

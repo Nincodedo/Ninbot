@@ -43,7 +43,7 @@ public class PathogenCommand extends AbstractCommand {
 
     private Message getInfectionServerStats(Guild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        val roleList = guild.getRolesByName(PathogenConfig.getROLENAME(), true);
+        val roleList = guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
         if (!roleList.isEmpty()) {
             val users = guild.getMembersWithRoles(roleList);
             List<String> userIds = users.stream().map(ISnowflake::getId).collect(Collectors.toList());

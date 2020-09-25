@@ -6,5 +6,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class PathogenConfig {
     @Getter
-    private static final String ROLENAME = "infected";
+    private static final String ROLE_NAME = "infected";
 }

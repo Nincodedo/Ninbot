@@ -27,20 +27,16 @@ import static org.mockito.Mockito.when;
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 public class ConfigCommandTest {
 
-    @InjectMocks
-    ConfigCommand configCommand;
-
-    @Mock
-    Guild guild;
-
-    @Mock
-    ConfigService configService;
-
     @Mock
     public MessageReceivedEvent messageEvent;
-
     @Mock
     public Message message;
+    @InjectMocks
+    ConfigCommand configCommand;
+    @Mock
+    Guild guild;
+    @Mock
+    ConfigService configService;
 
     @Test
     public void testUnknownSubcommand() {
