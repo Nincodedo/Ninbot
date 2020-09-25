@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.util.List;
 
 @Log4j2
-@ComponentScan({"com.nincraft.ninbot"})
+@ComponentScan({"dev.nincodedo.ninbot"})
 public class Ninbot {
 
     @Autowired

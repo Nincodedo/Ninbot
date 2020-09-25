@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackages = {"com.nincraft.ninbot"})
+@ComponentScan(basePackages = {"dev.nincodedo.ninbot"})
 @Log4j2
 public class ApplicationBean {
 
