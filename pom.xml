@@ -125,9 +125,9 @@
             <version>1.9</version>
         </dependency>
         <dependency>
-            <groupId>com.nincodedo</groupId>
+            <groupId>dev.nincodedo</groupId>
             <artifactId>sap-conversational-ai-java-api</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
