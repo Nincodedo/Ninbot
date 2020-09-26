@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.beans;
 
-import com.nincodedo.sapconversational.SAPConversationalAIAPI;
-import com.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
+import dev.nincodedo.sapconversational.SAPConversationalAIAPI;
+import dev.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
