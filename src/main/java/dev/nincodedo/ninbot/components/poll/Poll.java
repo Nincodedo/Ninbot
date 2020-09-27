@@ -24,13 +24,16 @@ class Poll {
     @Transient
     ResourceBundle resourceBundle;
     private String title;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> choices;
     private String result;
     private long timeLength;
     private String userAvatarUrl;
     private String userName;
     private boolean pollOpen;
+    private String serverId;
+    private String channelId;
+    private String messageId;
 
     public Poll() {
         pollOpen = true;

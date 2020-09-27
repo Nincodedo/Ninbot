@@ -7,7 +7,7 @@ public class PollService {
 
     private PollRepository pollRepository;
 
-    public PollService(PollRepository pollRepository){
+    public PollService(PollRepository pollRepository) {
         this.pollRepository = pollRepository;
     }
 }

@@ -12,15 +12,17 @@ class PollAnnounce extends TimerTask {
 
     private Poll poll;
     private Message pollMessage;
+    private PollRepository pollRepository;
 
-    PollAnnounce(Poll poll, Message pollMessage) {
+    PollAnnounce(Poll poll, Message pollMessage, PollRepository pollRepository) {
         this.poll = poll;
         this.pollMessage = pollMessage;
+        this.pollRepository = pollRepository;
     }
 
     @Override
     public void run() {
-        pollMessage.getChannel().sendMessage(announcePollResults()).queue();
+        pollMessage.getChannel().sendMessage(announcePollResults()).queue(message -> pollRepository.save(poll));
     }
 
     private String announcePollResults() {

@@ -17,10 +17,13 @@ import java.util.Arrays;
 @Component
 public class PollCommand extends AbstractCommand {
 
-    public PollCommand() {
+    private PollScheduler pollScheduler;
+
+    public PollCommand(PollScheduler pollScheduler) {
         name = "poll";
         length = 4;
         checkExactLength = false;
+        this.pollScheduler = pollScheduler;
     }
 
     @Override
@@ -31,7 +34,12 @@ public class PollCommand extends AbstractCommand {
             poll.setResourceBundle(resourceBundle);
             poll.setLocaleString(localeService.getLocale(event).toString());
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
-                event.getChannel().sendMessage(poll.build()).queue(new PollConsumer(poll));
+                event.getChannel()
+                        .sendMessage(poll.build())
+                        .queue(message -> {
+                            poll.setMessageId(message.getId());
+                            pollScheduler.addPoll(poll, event.getJDA().getShardManager());
+                        });
             } else {
                 messageAction.addUnsuccessfulReaction();
             }
@@ -41,6 +49,8 @@ public class PollCommand extends AbstractCommand {
 
     Poll parsePollMessage(Message message, Member member) {
         Poll poll = new Poll();
+        poll.setChannelId(message.getTextChannel().getId());
+        poll.setServerId(message.getGuild().getId());
         poll.setUserAvatarUrl(member.getUser().getAvatarUrl());
         poll.setUserName(member.getEffectiveName());
         val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
