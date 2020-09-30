@@ -1,11 +1,11 @@
-version: '3'
+version: "3.8"
 
 services:
   app:
     build: .
     image: nincodedo/ninbot:latest
     ports:
-      - '8080:8090'
+      - "8080:8080"
     env_file:
       - config/docker.env
     environment:
@@ -15,23 +15,13 @@ services:
       SPRING_DATASOURCE_USERNAME: ninbot
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 10s
-        max_attempts: 3
-    healthcheck:
-      test: curl --request GET --url http://localhost:8090/actuator/health || exit 1
-      interval: 45s
-      timeout: 10s
-      retries: 5
   db:
     image: mysql:latest
     env_file:
       - config/docker.env
     command: --default-authentication-plugin=mysql_native_password
     ports:
-      - '3306:3306'
+      - "3306:3306"
     volumes:
       - mysql-data-volume:/var/lib/mysql
 volumes:
