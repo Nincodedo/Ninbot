@@ -5,18 +5,18 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/labeler@v2
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-    - uses: actions/checkout@master
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '15'
-    - name: Update permissions on mvnw
-      run: chmod 700 mvnw
-    - name: Package
-      run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
-    - name: GitHub Docker Action
-      uses: matootie/github-docker@v3.1.0
-      with:
-        accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+      - uses: actions/labeler@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/checkout@master
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '15'
+      - name: Update permissions on mvnw
+        run: chmod 700 mvnw
+      - name: Package
+        run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
+      - name: GitHub Docker Action
+        uses: matootie/github-docker@v3.1.0
+        with:
+          accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
