@@ -10,7 +10,7 @@ Ninbot is a Discord bot with various silly commands and actions, such as dabbing
 
 ## Want to help develop Ninbot?
 
-Make sure to read our [contributing expectations](CONTRIBUTING.md) before 
+Make sure to read our [contributing expectations](CONTRIBUTING.md) before making any changes.
 
 ### Development Goals
 
