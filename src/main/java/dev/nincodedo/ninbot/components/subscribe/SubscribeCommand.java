@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.subscribe;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
+import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -50,6 +51,7 @@ public class SubscribeCommand extends AbstractCommand {
 
     private boolean isValidSubscribeRole(Role role, String serverId) {
         List<String> roleDenyList = configService.getValuesByName(serverId, ConfigConstants.ROLE_DENY_LIST);
+        roleDenyList.add(PathogenConfig.getROLE_NAME());
         return role != null && !roleDenyList.contains(role.getName());
     }
 
