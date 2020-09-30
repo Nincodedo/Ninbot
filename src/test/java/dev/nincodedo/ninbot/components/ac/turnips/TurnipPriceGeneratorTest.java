@@ -55,8 +55,7 @@ class TurnipPriceGeneratorTest {
 
         val actualPrices = turnipPriceGenerator.getTurnipPricesList(TurnipPattern.RANDOM, 5L);
 
-        assertThat(actualPrices).hasSize(12);
-        assertThat(actualPrices).isEqualTo(expectedPrices);
+        assertThat(actualPrices).hasSize(12).isEqualTo(expectedPrices);
     }
 
     @Test
@@ -65,8 +64,7 @@ class TurnipPriceGeneratorTest {
 
         val actualPrices = turnipPriceGenerator.getTurnipPricesList(TurnipPattern.SMALL_SPIKE, 5L);
 
-        assertThat(actualPrices).hasSize(12);
-        assertThat(actualPrices).isEqualTo(expectedPrices);
+        assertThat(actualPrices).hasSize(12).isEqualTo(expectedPrices);
     }
 
     @Test
@@ -75,8 +73,7 @@ class TurnipPriceGeneratorTest {
 
         val actualPrices = turnipPriceGenerator.getTurnipPricesList(TurnipPattern.DECREASING, 5L);
 
-        assertThat(actualPrices).hasSize(12);
-        assertThat(actualPrices).isEqualTo(expectedPrices);
+        assertThat(actualPrices).hasSize(12).isEqualTo(expectedPrices);
     }
 
     @Test
@@ -85,8 +82,7 @@ class TurnipPriceGeneratorTest {
 
         val actualPrices = turnipPriceGenerator.getTurnipPricesList(TurnipPattern.BIG_SPIKE, 5L);
 
-        assertThat(actualPrices).hasSize(12);
-        assertThat(actualPrices).isEqualTo(expectedPrices);
+        assertThat(actualPrices).hasSize(12).isEqualTo(expectedPrices);
     }
 
     @ParameterizedTest

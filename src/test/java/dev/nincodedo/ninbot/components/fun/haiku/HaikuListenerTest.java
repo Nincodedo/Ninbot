@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-public class HaikuListenerTest {
+class HaikuListenerTest {
 
     @Mock
     public MessageReceivedEvent messageEvent;
@@ -38,7 +38,7 @@ public class HaikuListenerTest {
     MockHaikuListener haikuListener;
 
     @Test
-    public void messageTooShortToHaiku() {
+    void messageTooShortToHaiku() {
         Guild guild = Mockito.mock(Guild.class);
         TextChannel channel = Mockito.mock(TextChannel.class);
         User user = Mockito.mock(User.class);
@@ -58,7 +58,7 @@ public class HaikuListenerTest {
     }
 
     @Test
-    public void messageHasNumbers() {
+    void messageHasNumbers() {
         String bestHaiku = "the the the the the the the the the the the the the the the the 9";
         Guild guild = Mockito.mock(Guild.class);
         TextChannel channel = Mockito.mock(TextChannel.class);
@@ -77,11 +77,11 @@ public class HaikuListenerTest {
 
         haikuListener.onMessageReceived(messageEvent);
 
-        assertThat(haikuListener.isHaikuable(bestHaiku).isPresent()).isFalse();
+        assertThat(haikuListener.isHaikuable(bestHaiku)).isNotPresent();
     }
 
     @Test
-    public void messageHaikuable() {
+    void messageHaikuable() {
         String bestHaiku = "the the the the the the the the the the the the the the the the the";
         Guild guild = Mockito.mock(Guild.class);
         TextChannel channel = Mockito.mock(TextChannel.class);
@@ -103,7 +103,7 @@ public class HaikuListenerTest {
 
         haikuListener.onMessageReceived(messageEvent);
 
-        assertThat(haikuListener.isHaikuable(bestHaiku).isPresent()).isTrue();
+        assertThat(haikuListener.isHaikuable(bestHaiku)).isPresent();
     }
 
     public static class MockHaikuListener extends HaikuListener {
