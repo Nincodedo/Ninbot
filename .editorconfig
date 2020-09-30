@@ -267,7 +267,6 @@ ij_editorconfig_spaces_around_assignment_operators = true
 ij_xml_block_comment_at_first_column = true
 ij_xml_keep_indents_on_empty_lines = false
 ij_xml_line_comment_at_first_column = true
-ij_xml_use_custom_settings = false
 
 
 [*.json]

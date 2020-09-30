@@ -16,13 +16,13 @@ import java.util.ResourceBundle;
 @Entity
 @Data
 class Poll {
+    @Transient
+    ResourceBundle resourceBundle;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     private String localeString;
-    @Transient
-    ResourceBundle resourceBundle;
     private String title;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> choices;

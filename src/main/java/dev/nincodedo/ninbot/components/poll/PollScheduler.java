@@ -35,7 +35,8 @@ public class PollScheduler implements Schedulable {
     }
 
     private void scheduleOne(Poll poll, ShardManager shardManager) {
-        val resourceBundle = localeService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId()).getLocale());
+        val resourceBundle = localeService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
+                .getLocale());
         poll.setResourceBundle(resourceBundle);
         List<String> choices = poll.getChoices();
         val channel = shardManager.getTextChannelById(poll.getChannelId());

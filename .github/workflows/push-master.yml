@@ -1,6 +1,6 @@
 on:
   push:
-    branches: 
+    branches:
       - master
 name: Master Build/Deploy
 env:
@@ -13,33 +13,33 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '15'
-    - name: Update permissions on mvnw
-      run: chmod 700 mvnw
-    - name: Build, Test
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
-    - name: GitHub Docker Action
-      uses: matootie/github-docker@v3.1.0
-      with:
-         accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
-         tag: 'latest'
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      with:
-        version: '270.0.0'
-        service_account_email: ${{ secrets.GCLOUD_EMAIL }}
-        service_account_key: ${{ secrets.GCLOUD_KEY }}
-    - run: |
-        gcloud auth configure-docker
-    - name: Build
-      run: |        
-        docker build -t gcr.io/"$GCLOUD_PROJECT"/"$IMAGE":$GITHUB_SHA \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
-    - name: Publish
-      run: |
-        docker push gcr.io/$GCLOUD_PROJECT/$IMAGE:$GITHUB_SHA
+      - uses: actions/checkout@master
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '15'
+      - name: Update permissions on mvnw
+        run: chmod 700 mvnw
+      - name: Build, Test
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
+      - name: GitHub Docker Action
+        uses: matootie/github-docker@v3.1.0
+        with:
+          accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+          tag: 'latest'
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_email: ${{ secrets.GCLOUD_EMAIL }}
+          service_account_key: ${{ secrets.GCLOUD_KEY }}
+      - run: |
+          gcloud auth configure-docker
+      - name: Build
+        run: |
+          docker build -t gcr.io/"$GCLOUD_PROJECT"/"$IMAGE":$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+      - name: Publish
+        run: |
+          docker push gcr.io/$GCLOUD_PROJECT/$IMAGE:$GITHUB_SHA
