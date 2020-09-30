@@ -17,6 +17,11 @@ Name: dadbotChannelDenyList
 
 Usage: Channel IDs for deny listing Dadbot reactions.
 
+## Pathogen Deny List
+Name: pathogenDenyListChannel
+
+Usage: Channel IDs for deny listing Pathogen actions.
+
 ## Streaming Announce Users
 Name: streamingAnnounceUsers
 

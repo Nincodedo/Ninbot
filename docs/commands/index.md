@@ -29,12 +29,16 @@ All commands are prefixed with @Ninbot.
 
 ## User Commands
 
-### 8 Ball
-Asks the magic 8 ball a question.
+### 8-Ball
+Asks the magic 8-ball a question.
 
-Usage:
+###### Usage:
 
     @Ninbot 8ball
+    
+###### Aliases:
+
+    magic8ball, 8
 
 ### Countdown
 Setup a countdown that will be announced every day leading up to the event.
@@ -105,9 +109,13 @@ Usage:
 ### Pathogen
 Displays the user's current infection level.
 
-Usage:
+###### Usage:
     
     @Ninbot pathogen
+    
+###### Aliases:
+
+    infected, infection
 
 ### Poll
 Creates a new poll. You can have a maximum of 10 answers in a single poll. 
