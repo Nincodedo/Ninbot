@@ -53,6 +53,9 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '15'
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
 
