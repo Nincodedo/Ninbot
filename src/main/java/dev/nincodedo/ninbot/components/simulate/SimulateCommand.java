@@ -5,14 +5,14 @@ import dev.nincodedo.ninbot.components.common.MessageAction;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -78,20 +78,20 @@ public class SimulateCommand extends CooldownCommand {
     private List<Message> getUserMessages(Guild guild, User user) throws ExecutionException, InterruptedException {
         List<Message> returnMessages = new ArrayList<>();
         //Limit to 10 random channels that the default public role can read/talk
-        val textChannels = guild.getTextChannels().parallelStream()
-                .filter(textChannel -> {
-                    val membersWithPublicRole = guild.getMembersWithRoles(guild.getPublicRole());
-                    if (!membersWithPublicRole.isEmpty()) {
-                        return textChannel.canTalk(membersWithPublicRole.get(0));
-                    }
-                    return false;
-                })
+        Member memberWithLeastPermissions = getMemberWithLeastPermissions(guild);
+        if (memberWithLeastPermissions == null) {
+            return new ArrayList<>();
+        }
+        val guildChannels = guild.getChannels(false).parallelStream()
+                .filter(guildChannel -> guildChannel.getType().equals(ChannelType.TEXT))
+                .filter(memberWithLeastPermissions::hasAccess)
                 .unordered()
                 .limit(10)
                 .collect(Collectors.toList());
-        for (val textChannel : textChannels) {
+        for (val guildChannel : guildChannels) {
             //Limit to 1000 messages from those channels where the target is the message author, they're not
             //mentioning Ninbot and their post isn't blank (really only relevant to bots)
+            TextChannel textChannel = (TextChannel) guildChannel;
             CompletableFuture<List<Message>> apply = textChannel.getIterableHistory()
                     .takeAsync(1000)
                     .thenApply(messages ->
@@ -105,5 +105,17 @@ public class SimulateCommand extends CooldownCommand {
         }
 
         return returnMessages;
+    }
+
+    private Member getMemberWithLeastPermissions(Guild guild) {
+        Member memberWithLeastPermissions = null;
+        long count = Long.MAX_VALUE;
+        for (val member : guild.getMembersWithRoles(Collections.emptyList())) {
+            if (member.getPermissions().size() < count) {
+                count = Permission.getRaw(member.getPermissions());
+                memberWithLeastPermissions = member;
+            }
+        }
+        return memberWithLeastPermissions;
     }
 }
