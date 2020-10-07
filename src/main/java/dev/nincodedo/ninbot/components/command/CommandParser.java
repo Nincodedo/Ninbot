@@ -46,7 +46,7 @@ public class CommandParser {
         String message = event.getMessage().getContentStripped();
         if (StringUtils.isNotBlank(message)) {
             String commandName = getCommand(message);
-            if (componentService.isDisabled(commandName, event.getGuild().getId())) {
+            if (event.isFromGuild() && componentService.isDisabled(commandName, event.getGuild().getId())) {
                 event.getMessage().addReaction(QUESTION_MARK).queue();
                 return;
             }
