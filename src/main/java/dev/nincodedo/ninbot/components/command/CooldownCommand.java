@@ -1,7 +1,9 @@
 package dev.nincodedo.ninbot.components.command;
 
+import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.StreamUtils;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -11,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public abstract class CooldownCommand extends AbstractCommand {
 
@@ -25,13 +28,17 @@ public abstract class CooldownCommand extends AbstractCommand {
                 .isBefore(lastTimeCommandUsed.toInstant())) {
             return new MessageAction(event).addReaction(Emojis.COOLDOWN_5_CLOCK);
         } else {
-            val loadingEmote = event.getJDA().getShardManager().getEmoteById(Emojis.PACMAN_LOADING_ID);
+            val loadingEmote = event.getJDA()
+                    .getShardManager()
+                    .getEmotesByName("loading", true)
+                    .stream()
+                    .filter(emote -> emote.getGuild().getId().equals(Constants.NINBOT_SERVER_ID))
+                    .sorted(StreamUtils.shuffle())
+                    .findFirst();
             val message = event.getMessage();
             cooldownMap.put(name, new Date());
-            message.addReaction(loadingEmote).delay(Duration.ofSeconds(10)).flatMap(
-                    avoid -> message.removeReaction(loadingEmote)
-            );
-
+            loadingEmote.ifPresent(emote -> message.addReaction(emote)
+                    .queue(avoid -> message.removeReaction(emote).queueAfter(5L, TimeUnit.of(ChronoUnit.SECONDS))));
             return executeCooldownCommand(event);
         }
     }
