@@ -7,6 +7,7 @@ Ninbot is a Discord bot with various silly commands and actions, such as dabbing
 
 - [Check the documentation for a list of features and help with commands](https://ninbot.nincodedo.dev/)
 - [Create an issue if you think you've found a bug](https://github.com/Nincodedo/Ninbot/issues/new/choose)
+- [Join the support Discord server if you need additional help](https://discord.gg/hdw9NhJ)
 
 ## Want to help develop Ninbot?
 
