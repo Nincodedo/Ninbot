@@ -6,14 +6,19 @@ import dev.nincodedo.ninbot.components.common.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class InfoCommand extends AbstractCommand {
@@ -45,8 +50,31 @@ public class InfoCommand extends AbstractCommand {
                 Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false);
         embedBuilder.addField(resourceBundle.getString("command.info.documentation.name"),
                 Constants.NINBOT_DOCUMENTATION_URL, false);
+        val patronsList = getPatronsList(event.getJDA().getShardManager());
+        if (patronsList != null && !patronsList.isEmpty()) {
+            embedBuilder.addField(resourceBundle.getString("command.info.patreonthanks.name"), patronsList, false);
+        }
         messageAction.addChannelAction(new MessageBuilder(embedBuilder).build());
         return messageAction;
+    }
+
+    private String getPatronsList(ShardManager shardManager) {
+        val ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        if (ninbotPatronServer != null) {
+            val list = ninbotPatronServer
+                    .getMembersWithRoles(Collections.emptyList())
+                    .stream()
+                    .map(Member::getUser)
+                    .filter(user -> !user.isBot())
+                    .map(User::getName)
+                    .collect(Collectors.toList());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (val username : list) {
+                stringBuilder.append(username).append(" ");
+            }
+            return stringBuilder.toString().trim();
+        }
+        return null;
     }
 
     private String getDurationString(ResourceBundle resourceBundle, long uptimeMilliseconds) {
