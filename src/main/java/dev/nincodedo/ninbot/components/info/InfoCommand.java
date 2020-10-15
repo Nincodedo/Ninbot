@@ -61,18 +61,17 @@ public class InfoCommand extends AbstractCommand {
     private String getPatronsList(ShardManager shardManager) {
         val ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (ninbotPatronServer != null) {
-            val list = ninbotPatronServer
+            return ninbotPatronServer
                     .getMembersWithRoles(Collections.emptyList())
                     .stream()
                     .map(Member::getUser)
                     .filter(user -> !user.isBot())
+                    //get out of here ya freeloader
+                    .filter(user -> !user.getName().equalsIgnoreCase("nincodedo"))
                     .map(User::getName)
-                    .collect(Collectors.toList());
-            StringBuilder stringBuilder = new StringBuilder();
-            for (val username : list) {
-                stringBuilder.append(username).append(" ");
-            }
-            return stringBuilder.toString().trim();
+                    .map(username -> username + " ")
+                    .collect(Collectors.joining())
+                    .trim();
         }
         return null;
     }
