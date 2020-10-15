@@ -38,11 +38,14 @@ public class InfoCommand extends AbstractCommand {
         MessageAction messageAction = new MessageAction(event);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.info.title"));
-        embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(), false);
-        val uptime = metricsEndpoint.metric("process.uptime", null);
-        val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
-        embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
-                uptimeMilliseconds), false);
+        if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
+            embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(),
+                    false);
+            val uptime = metricsEndpoint.metric("process.uptime", null);
+            val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
+            embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
+                    uptimeMilliseconds), false);
+        }
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
                 String.format(resourceBundle.getString("command.info.githublink.value"), Constants.NINBOT_GITHUB_URL),
                 false);
