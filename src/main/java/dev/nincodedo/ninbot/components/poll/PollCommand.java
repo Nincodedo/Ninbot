@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -59,7 +60,9 @@ public class PollCommand extends AbstractCommand {
             poll.setTitle(pollMessage.substring(0, pollMessage.indexOf("\"")).trim());
             val pollOptions = pollMessage.substring(
                     pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
-            poll.setChoices(Arrays.asList(pollOptions.split(", ")));
+            poll.setChoices(Arrays.stream(pollOptions.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList()));
             val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
                 poll.setTimeLength(Long.parseLong(timeString));
