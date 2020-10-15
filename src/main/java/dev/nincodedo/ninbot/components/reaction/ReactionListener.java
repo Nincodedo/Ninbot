@@ -1,16 +1,16 @@
 package dev.nincodedo.ninbot.components.reaction;
 
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ReactionListener extends ListenerAdapter {
+public class ReactionListener extends StatAwareListenerAdapter {
 
     private List<ReactionResponse> reactionResponseList;
     private ComponentService componentService;
@@ -37,6 +37,9 @@ public class ReactionListener extends ListenerAdapter {
         reactionResponseList.stream()
                 .filter(reactionResponse -> reactionResponse.canRespond(event))
                 .findFirst()
-                .ifPresent(reactionResponse -> reactionResponse.react(event.getMessage(), event.getChannel()));
+                .ifPresent(reactionResponse -> {
+                    reactionResponse.react(event.getMessage(), event.getChannel());
+                    countOneStat(componentName, event.getGuild().getId());
+                });
     }
 }

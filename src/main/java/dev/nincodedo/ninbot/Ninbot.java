@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot;
 
 import dev.nincodedo.ninbot.components.common.Schedulable;
+import dev.nincodedo.ninbot.components.stats.StatCategory;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Activity;
@@ -23,6 +25,9 @@ public class Ninbot {
     private ShardManager shardManager;
 
     @Autowired
+    private StatManager statManager;
+
+    @Autowired
     private List<Schedulable> schedulableList;
 
     @Bean
@@ -40,6 +45,8 @@ public class Ninbot {
                                 log.info("Server ID: {}, Server Name: {}, Owner ID: {}, Owner Name: {}",
                                         guild.getId(), guild
                                                 .getName(), guild.getOwnerId(), guild.getOwner().getEffectiveName());
+                                statManager.recordCount("serverCount", StatCategory.SERVER, guild.getId(),
+                                        guild.getMemberCount());
                             }
                         } catch (InterruptedException e) {
                             log.error("Failed to wait for shard to start", e);

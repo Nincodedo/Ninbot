@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.components.common.Emojis;
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.order.ChannelOrderAction;
 import net.dv8tion.jda.api.requests.restaction.order.OrderAction;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Log4j2
-public class TempVoiceChannelManager extends ListenerAdapter {
+public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     private TempVoiceChannelRepository repository;
     private ComponentService componentService;
@@ -54,6 +54,7 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         if (hasPermission(guild, Permission.MANAGE_CHANNEL) && channelJoined
                 .getName()
                 .startsWith(Emojis.PLUS)) {
+            countOneStat(componentName, guild.getId());
             createTemporaryChannel(channelJoined, guild, member);
         }
     }

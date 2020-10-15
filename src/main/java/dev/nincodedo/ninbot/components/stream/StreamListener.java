@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.MessageBuilderHelper;
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -16,7 +17,6 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceStreamEvent;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 
 @Component
 @Log4j2
-public class StreamListener extends ListenerAdapter {
+public class StreamListener extends StatAwareListenerAdapter {
 
     private ConfigService configService;
     private LocaleService localeService;
@@ -188,7 +188,7 @@ public class StreamListener extends ListenerAdapter {
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(user.getAvatarUrl(), username, streamingUrl,
                             gameName, streamTitle, serverId, guild))
-                            .queue();
+                            .queue(message -> countOneStat(componentName, guild.getId()));
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
                     log.trace("Announcement channel was null, not announcing stream for {} on server {}", username,

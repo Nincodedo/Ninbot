@@ -1,12 +1,12 @@
 package dev.nincodedo.ninbot.components.fun.dad;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 @Component
-public class Dadbot extends ListenerAdapter {
+public class Dadbot extends StatAwareListenerAdapter {
 
     private Random random;
     private ConfigService configService;
@@ -68,7 +68,9 @@ public class Dadbot extends ListenerAdapter {
         String stringBuilder = resourceBundle.getString("listener.dad.hi") +
                 message.substring(message.indexOf(' ')) +
                 resourceBundle.getString("listener.dad.imdad");
-        event.getChannel().sendMessage(stringBuilder).queue();
+        event.getChannel()
+                .sendMessage(stringBuilder)
+                .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
     }
 
     private boolean checkChance() {

@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.*;
 import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.components.stats.StatCategory;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -33,6 +35,8 @@ public abstract class AbstractCommand {
     protected ConfigService configService;
     @Autowired
     protected LocaleService localeService;
+    @Autowired
+    protected StatManager statManager;
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();
@@ -41,8 +45,10 @@ public abstract class AbstractCommand {
             log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
                     .getId(), event.getGuild().getId(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
+                statManager.addOneCount(name, StatCategory.COMMAND_HELP, event.getGuild().getId());
                 displayHelp(event).executeActions();
             } else {
+                statManager.addOneCount(name, StatCategory.COMMAND, event.getGuild().getId());
                 executeCommand(event).executeActions();
             }
         } else if (!event.isFromGuild()) {

@@ -1,6 +1,5 @@
-package dev.nincodedo.ninbot.components.info;
+package dev.nincodedo.ninbot.components.command;
 
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import lombok.val;
