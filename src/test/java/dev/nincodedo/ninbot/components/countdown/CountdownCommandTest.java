@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-public class CountdownCommandTest {
+class CountdownCommandTest {
 
     @Mock
     public MessageReceivedEvent messageEvent;
@@ -37,7 +37,7 @@ public class CountdownCommandTest {
     CountdownCommand countdownCommand;
 
     @Test
-    public void testHelpCommand() {
+    void testHelpCommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot countdown");
 
@@ -48,7 +48,7 @@ public class CountdownCommandTest {
     }
 
     @Test
-    public void testListCommandNoCountdowns() {
+    void testListCommandNoCountdowns() {
         Guild guild = Mockito.mock(Guild.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(messageEvent.getGuild()).thenReturn(guild);
@@ -62,7 +62,7 @@ public class CountdownCommandTest {
     }
 
     @Test
-    public void testListCommandHasCountdowns() {
+    void testListCommandHasCountdowns() {
         Guild guild = Mockito.mock(Guild.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(messageEvent.getGuild()).thenReturn(guild);

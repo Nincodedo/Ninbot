@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @TestPropertySource("classpath:application.properties")
 @Log4j2
 @Testcontainers
-public class TurnipCommandTestIT {
+class TurnipCommandTestIT {
 
     @Container
     private static final MySQLContainer mySQLContainer = new MySQLContainer();
@@ -62,7 +62,7 @@ public class TurnipCommandTestIT {
     TurnipCommand turnipCommand;
 
     @Test
-    public void executeHelpCommand() {
+    void executeHelpCommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips");
 
@@ -72,7 +72,7 @@ public class TurnipCommandTestIT {
     }
 
     @Test
-    public void executeJoinCommand() {
+    void executeJoinCommand() {
         User user = Mockito.mock(User.class);
         Guild guild = Mockito.mock(Guild.class);
         when(messageEvent.getMessage()).thenReturn(message);
@@ -90,7 +90,7 @@ public class TurnipCommandTestIT {
     }
 
     @Test
-    public void executeBuyCommandOnWeekday() {
+    void executeBuyCommandOnWeekday() {
         Villager villager = new Villager();
         villager.setBellsTotal(2000);
         villager.setDiscordId("2");
@@ -109,7 +109,7 @@ public class TurnipCommandTestIT {
     }
 
     @Test
-    public void executeBuyCommandOnSunday() {
+    void executeBuyCommandOnSunday() {
         Villager villager = new Villager();
         villager.setBellsTotal(2000);
         villager.setDiscordId("2");

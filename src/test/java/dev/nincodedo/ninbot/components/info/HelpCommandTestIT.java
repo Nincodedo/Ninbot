@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @TestPropertySource("classpath:application.properties")
 @Log4j2
 @Testcontainers
-public class HelpCommandTestIT {
+class HelpCommandTestIT {
     @Container
     private static final MySQLContainer mySQLContainer = new MySQLContainer();
     @Mock

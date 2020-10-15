@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-public class ListCommandTest {
+class ListCommandTest {
 
     @Mock
     static List<String> roleDenyList = new ArrayList<>();
@@ -56,7 +56,7 @@ public class ListCommandTest {
     }
 
     @Test
-    public void testList() {
+    void testList() {
         JDA jda = Mockito.mock(JDA.class);
         List<Role> roles = new ArrayList<>();
         Role role = Mockito.mock(Role.class);

@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StreamListenerTest {
+class StreamListenerTest {
 
     @Mock
     ConfigService configService;
@@ -49,7 +49,7 @@ public class StreamListenerTest {
     StreamListener streamListener;
 
     @Test
-    public void userStartsStreamingNotAlreadyStreamingNoCooldown() {
+    void userStartsStreamingNotAlreadyStreamingNoCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
@@ -91,7 +91,7 @@ public class StreamListenerTest {
     }
 
     @Test
-    public void userNotStreamingStartsOtherActivity() {
+    void userNotStreamingStartsOtherActivity() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
@@ -113,7 +113,7 @@ public class StreamListenerTest {
     }
 
     @Test
-    public void userStartsStreamingNotAlreadyStreamingOnCooldown() {
+    void userStartsStreamingNotAlreadyStreamingOnCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
@@ -135,7 +135,7 @@ public class StreamListenerTest {
     }
 
     @Test
-    public void userStopsStreaming() {
+    void userStopsStreaming() {
         UserActivityEndEvent userActivityEndEvent = mock(UserActivityEndEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);

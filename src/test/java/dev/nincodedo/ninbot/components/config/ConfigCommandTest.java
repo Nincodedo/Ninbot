@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-public class ConfigCommandTest {
+class ConfigCommandTest {
 
     @Mock
     public MessageReceivedEvent messageEvent;
@@ -39,7 +39,7 @@ public class ConfigCommandTest {
     ConfigService configService;
 
     @Test
-    public void testUnknownSubcommand() {
+    void testUnknownSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config test");
 
@@ -49,7 +49,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testAddSubcommand() {
+    void testAddSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config add name value");
         when(messageEvent.getGuild()).thenReturn(guild);
@@ -62,7 +62,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testAddWrongLengthSubcommand() {
+    void testAddWrongLengthSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config add name");
 
@@ -72,7 +72,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testRemoveWrongLengthSubcommand() {
+    void testRemoveWrongLengthSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config remove name");
 
@@ -82,7 +82,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testRemoveSubcommand() {
+    void testRemoveSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config remove name value");
         when(messageEvent.getGuild()).thenReturn(guild);
@@ -95,7 +95,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testListNoConfigsSubcommand() {
+    void testListNoConfigsSubcommand() {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config list");
         when(messageEvent.getGuild()).thenReturn(guild);
@@ -108,7 +108,7 @@ public class ConfigCommandTest {
     }
 
     @Test
-    public void testListSubcommand() {
+    void testListSubcommand() {
         List<Config> configList = new ArrayList<>();
         configList.add(new Config("1", "name", "value"));
         when(messageEvent.getMessage()).thenReturn(message);

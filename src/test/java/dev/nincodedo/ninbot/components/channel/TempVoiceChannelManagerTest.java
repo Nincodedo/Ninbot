@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-public class TempVoiceChannelManagerTest {
+class TempVoiceChannelManagerTest {
 
     @Mock
     TempVoiceChannelRepository tempVoiceChannelRepository;
@@ -39,7 +39,7 @@ public class TempVoiceChannelManagerTest {
     TempVoiceChannelManager tempVoiceChannelManager;
 
     @Test
-    public void onGuildVoiceJoin() {
+    void onGuildVoiceJoin() {
         val guild = Mockito.mock(Guild.class);
         val joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
         val jda = Mockito.mock(JDA.class);
