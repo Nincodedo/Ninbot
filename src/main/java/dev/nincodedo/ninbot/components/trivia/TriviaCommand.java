@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.trivia;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaManager;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-@Log4j2
 public class TriviaCommand extends AbstractCommand {
 
     private TriviaManager triviaManager;

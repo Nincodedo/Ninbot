@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.ac.Villager;
 import dev.nincodedo.ninbot.components.ac.VillagerManager;
 import dev.nincodedo.ninbot.components.ac.VillagerRepository;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -40,7 +39,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = NinbotRunner.class, initializers = {TurnipCommandTestIT.Initializer.class})
 @TestPropertySource("classpath:application.properties")
-@Log4j2
 @Testcontainers
 class TurnipCommandTestIT {
 

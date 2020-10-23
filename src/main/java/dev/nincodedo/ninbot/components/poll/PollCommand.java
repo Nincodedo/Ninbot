@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@Log4j2
 @Component
 public class PollCommand extends AbstractCommand {
 

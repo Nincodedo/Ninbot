@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Log4j2
 @Component
 public class SubscribeCommand extends AbstractCommand {
 

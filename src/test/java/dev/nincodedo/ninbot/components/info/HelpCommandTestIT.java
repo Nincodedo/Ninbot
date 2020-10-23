@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.command.CommandParser;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -40,7 +39,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = NinbotRunner.class, initializers = {HelpCommandTestIT.Initializer.class})
 @TestPropertySource("classpath:application.properties")
-@Log4j2
 @Testcontainers
 class HelpCommandTestIT {
     @Container

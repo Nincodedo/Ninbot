@@ -2,12 +2,10 @@ package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-@Log4j2
 @Component
 public class UserCommand extends AbstractCommand {
 

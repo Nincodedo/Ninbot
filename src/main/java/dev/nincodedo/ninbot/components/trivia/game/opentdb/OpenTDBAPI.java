@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaAPI;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaQuestion;
-import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Log4j2
 @Component
 public class OpenTDBAPI implements TriviaAPI {
 
