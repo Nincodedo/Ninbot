@@ -61,7 +61,7 @@ public class TempVoiceChannelManager extends ListenerAdapter {
     private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member user) {
         val channelNameType = channelJoined.getName().substring(2);
         val channelName = String.format("%s's %s", user.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
-        log.info("Creating temporary channel named {} for {} in server {}", channelName, user.getEffectiveName(),
+        log.info("Creating temporary channel named {} for user id {} in server id {}", channelName, user.getId(),
                 guild.getId());
         createVoiceChannel(guild, channelJoined, channelName)
                 .queue(voiceChannel -> {

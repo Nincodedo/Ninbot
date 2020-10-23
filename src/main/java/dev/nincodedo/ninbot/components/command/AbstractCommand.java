@@ -39,7 +39,7 @@ public abstract class AbstractCommand {
         resourceBundle = localeService.getResourceBundleOrDefault(serverLocale);
         if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
-                    .getName(), event.getGuild().getId(), message);
+                    .getId(), event.getGuild().getId(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
                 displayHelp(event).executeActions();
             } else {
@@ -47,11 +47,11 @@ public abstract class AbstractCommand {
             }
         } else if (!event.isFromGuild()) {
             log.warn("User executed command from outside of a Guild. Name: {}, Channel ID: {}", event.getAuthor()
-                    .getName(), event.getChannel().getId());
+                    .getId(), event.getChannel().getId());
             event.getChannel().sendMessage("Ninbot only processes commands on servers").queue();
         } else {
             log.debug("User {} does not have permission to run {} on server {}: {}", event.getAuthor()
-                    .getName(), name, event.getGuild().getId(), message);
+                    .getId(), name, event.getGuild().getId(), message);
             new MessageAction(event)
                     .addUnsuccessfulReaction()
                     .executeActions();

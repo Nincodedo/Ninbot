@@ -30,7 +30,7 @@ class EventAnnounce extends TimerTask {
 
     @Override
     public void run() {
-        log.debug("Running announce for event {}", event.getName());
+        log.debug("Running announce for event {}", event.getId());
         val serverId = event.getServerId();
         val config = configService.getSingleValueByName(serverId, ConfigConstants.ANNOUNCE_CHANNEL);
         config.ifPresent(announceChannelId -> {

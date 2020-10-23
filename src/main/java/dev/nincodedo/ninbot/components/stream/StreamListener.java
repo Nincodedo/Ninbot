@@ -226,10 +226,10 @@ public class StreamListener extends ListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             val streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
-                log.trace("Adding role {} to {}", streamingRole.getName(), member.getEffectiveName());
+                log.trace("Adding role {} to {}", streamingRole.getName(), member.getId());
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.trace("Could not add role ID {} for {}", roleId, member.getEffectiveName());
+                log.trace("Could not add role ID {} for {}", roleId, member.getId());
             }
         });
     }

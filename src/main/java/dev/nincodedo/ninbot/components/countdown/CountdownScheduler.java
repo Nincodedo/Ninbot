@@ -62,7 +62,7 @@ public class CountdownScheduler implements Schedulable {
             } else {
                 log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or "
                         + "this countdown", countdown
-                        .getName(), countdown.getServerId());
+                        .getId(), countdown.getServerId());
                 return;
             }
             new Timer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),
@@ -71,7 +71,7 @@ public class CountdownScheduler implements Schedulable {
                             .plus(1, ChronoUnit.DAYS)
                             .toInstant()));
         } else {
-            log.debug("Countdown {} is past, removing", countdown.getName());
+            log.debug("Countdown {} is past, removing", countdown.getId());
             countdownRepository.delete(countdown);
         }
     }

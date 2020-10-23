@@ -60,11 +60,11 @@ public class EventScheduler implements Schedulable {
         }
         if (eventEndTime.isBefore(now()) ||
                 (event.getEndTime() == null && eventStartTime.plus(1, DAYS).isBefore(now()))) {
-            log.debug("Removing event {}, the end time is passed", event.getName());
+            log.debug("Removing event {}, the end time is passed", event.getId());
             new EventRemove(event, eventRepository).run();
         } else {
             Timer timer = new Timer();
-            log.info("Scheduling {} for {}", event.getName(), event.getStartTime());
+            log.info("Scheduling {} for {}", event.getId(), event.getStartTime());
             val guild = shardManager.getGuildById(event.getServerId());
             scheduleOne(event, timer, eventStartTime, 0, guild);
             scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, guild);
