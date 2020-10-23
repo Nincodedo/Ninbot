@@ -12,8 +12,13 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '15'
-      - name: Update permissions on mvnw
-        run: chmod 700 mvnw
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - name: Package
         run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
       - name: GitHub Docker Action
