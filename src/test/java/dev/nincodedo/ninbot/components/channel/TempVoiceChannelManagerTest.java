@@ -43,21 +43,20 @@ class TempVoiceChannelManagerTest {
         val guild = Mockito.mock(Guild.class);
         val joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
         val jda = Mockito.mock(JDA.class);
-        val selfUser = Mockito.mock(SelfUser.class);
+        val selfMember = Mockito.mock(Member.class);
         val member = Mockito.mock(Member.class);
         val voiceChannelJoined = Mockito.mock(VoiceChannel.class);
         val restAction = Mockito.mock(ChannelAction.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
-        when(guild.getJDA()).thenReturn(jda);
-        when(jda.getSelfUser()).thenReturn(selfUser);
-        when(guild.getMember(selfUser)).thenReturn(member);
+        when(guild.getSelfMember()).thenReturn(selfMember);
         when(joinEvent.getChannelJoined()).thenReturn(voiceChannelJoined);
         when(joinEvent.getMember()).thenReturn(member);
         when(voiceChannelJoined.getName()).thenReturn(Emojis.PLUS + " wot");
-        when(member.hasPermission(any(Permission.class))).thenReturn(true);
+        when(selfMember.hasPermission(any(Permission.class))).thenReturn(true);
         when(member.getEffectiveName()).thenReturn("Nincodedo");
+        when(member.getId()).thenReturn("1");
         when(guild.createVoiceChannel(anyString())).thenReturn(restAction);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);

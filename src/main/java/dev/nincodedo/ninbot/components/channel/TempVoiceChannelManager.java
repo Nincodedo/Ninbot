@@ -47,8 +47,8 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        log.trace("hasPermission: {}", hasPermission(guild, Permission.MANAGE_CHANNEL));
-        log.trace("channel join {} is temp creator: {}", channelJoined
+        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasPermission(guild,
+                Permission.MANAGE_CHANNEL), channelJoined
                 .getName(), channelJoined.getName()
                 .startsWith(Emojis.PLUS));
         if (hasPermission(guild, Permission.MANAGE_CHANNEL) && channelJoined
@@ -58,28 +58,36 @@ public class TempVoiceChannelManager extends ListenerAdapter {
         }
     }
 
-    private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member user) {
+    private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member member) {
         val channelNameType = channelJoined.getName().substring(2);
-        val channelName = String.format("%s's %s", user.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
-        log.info("Creating temporary channel named {} for user id {} in server id {}", channelName, user.getId(),
+        val channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
+        log.info("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
                 guild.getId());
         createVoiceChannel(guild, channelJoined, channelName)
                 .queue(voiceChannel -> {
-                    TempVoiceChannel channel = new TempVoiceChannel(user.getId(), voiceChannel.getId());
+                    TempVoiceChannel channel = new TempVoiceChannel(member.getId(), voiceChannel.getId());
                     repository.save(channel);
-                    guild.moveVoiceMember(user, voiceChannel).queue(aVoid -> {
+                    guild.moveVoiceMember(member, voiceChannel).queue(aVoid -> {
                         val position = channelJoined.getPosition();
                         modifyVoiceChannelPositions(guild, channelJoined)
                                 .selectPosition(voiceChannel)
                                 .moveTo(position + 1)
-                                .queue(aVoid1 -> voiceChannel.createPermissionOverride(user)
-                                        .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS,
-                                                Permission.PRIORITY_SPEAKER,
-                                                Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                                                Permission.VOICE_DEAF_OTHERS))
-                                        .queue());
+                                .queue(success -> updateTempChannelPermissions(guild, member, voiceChannel));
                     });
                 });
+    }
+
+    private void updateTempChannelPermissions(Guild guild, Member member, VoiceChannel voiceChannel) {
+        if (hasPermission(guild, Permission.MANAGE_PERMISSIONS)) {
+            voiceChannel.createPermissionOverride(member)
+                    .setAllow(Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                            Permission.PRIORITY_SPEAKER,
+                            Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                            Permission.VOICE_DEAF_OTHERS))
+                    .queue(success -> log.trace("Successfully updated permissions for member {}'s voice channel {}",
+                            member
+                                    .getId(), voiceChannel.getId()));
+        }
     }
 
     private RestAction<VoiceChannel> createVoiceChannel(Guild guild, VoiceChannel joinedChannel,
@@ -128,12 +136,12 @@ public class TempVoiceChannelManager extends ListenerAdapter {
 
     private void deleteTemporaryChannel(VoiceChannel voiceChannel) {
         voiceChannel.delete()
-                .queueAfter(10, TimeUnit.SECONDS, avoid ->
+                .queueAfter(10, TimeUnit.SECONDS, success ->
                         repository.findByVoiceChannelId(voiceChannel.getId())
-                                .ifPresent(tempVoiceChannel2 -> repository.delete(tempVoiceChannel2)));
+                                .ifPresent(tempVoiceChannel -> repository.delete(tempVoiceChannel)));
     }
 
     private boolean hasPermission(Guild guild, Permission permission) {
-        return guild.getMember(guild.getJDA().getSelfUser()).hasPermission(permission);
+        return guild.getSelfMember().hasPermission(permission);
     }
 }
