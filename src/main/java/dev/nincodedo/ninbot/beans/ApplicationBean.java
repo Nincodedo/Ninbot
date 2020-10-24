@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.security.auth.login.LoginException;
-import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 @Configuration
@@ -39,7 +39,9 @@ public class ApplicationBean {
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.create(ninbotToken,
-                    Arrays.asList(GatewayIntent.values()));
+                    EnumSet.of(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS,
+                            GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_PRESENCES,
+                            GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS));
             builder.addEventListeners(listenerAdapters.toArray());
             builder.setShardsTotal(-1);
             return builder.build();
