@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @Testcontainers
 class HelpCommandTestIT {
     @Container
-    private static final MySQLContainer mySQLContainer = new MySQLContainer();
+    private static final MySQLContainer mySQLContainer = new MySQLContainer("mysql");
     @Mock
     public MessageReceivedEvent messageEvent;
     @Mock
