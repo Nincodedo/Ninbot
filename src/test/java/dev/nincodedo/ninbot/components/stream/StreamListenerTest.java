@@ -86,7 +86,7 @@ class StreamListenerTest {
 
         streamListener.onGenericUserPresence(userActivityStartEvent);
 
-        verify(messageAction, times(1)).queue();
+        verify(messageAction, times(1)).queue(any());
         verify(auditableRestAction, times(1)).queue();
     }
 

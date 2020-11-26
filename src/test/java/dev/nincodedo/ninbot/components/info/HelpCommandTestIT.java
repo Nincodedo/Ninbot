@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.info;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.TestUtils;
 import dev.nincodedo.ninbot.components.command.CommandParser;
+import dev.nincodedo.ninbot.components.command.HelpCommand;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;

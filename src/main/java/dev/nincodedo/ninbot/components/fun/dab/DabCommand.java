@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.fun.dab;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Log4j2
 public class DabCommand extends AbstractCommand {
 
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
@@ -64,10 +66,14 @@ public class DabCommand extends AbstractCommand {
             dabCritPercentChance = dabCritPercentChance * 2;
         }
 
-        val critDab = random.nextInt(100) < dabCritPercentChance;
+        val critInt = random.nextInt(100);
+        val critDab = critInt < dabCritPercentChance;
         if (critDab) {
             messageAction.addReaction(critResponse.getEmojiList());
             messageAction.addReaction(dabResponse.getEmojiList());
+            if (critInt >= 5) {
+                log.trace("Made possible by Patreon");
+            }
         }
 
         val list = shardManager.getEmotes().stream()
@@ -84,6 +90,8 @@ public class DabCommand extends AbstractCommand {
                 emoteList.add(emote);
             }
         }
+
+        log.trace("Dabbing from {} potential dabs", emoteList.size());
 
         messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)

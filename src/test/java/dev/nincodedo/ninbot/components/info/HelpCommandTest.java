@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.info;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.TestUtils;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.command.HelpCommand;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigService;

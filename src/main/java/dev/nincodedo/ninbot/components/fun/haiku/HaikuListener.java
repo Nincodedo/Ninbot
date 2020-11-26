@@ -1,13 +1,14 @@
 package dev.nincodedo.ninbot.components.fun.haiku;
 
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,14 +16,15 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 @Component
-public class HaikuListener extends ListenerAdapter {
+public class HaikuListener extends StatAwareListenerAdapter {
 
     private ComponentService componentService;
     private SyllableCounter syllableCounter;
     private Random random;
     private String componentName;
 
-    public HaikuListener(ComponentService componentService) {
+    public HaikuListener(ComponentService componentService, StatManager statManager) {
+        super(statManager);
         this.componentService = componentService;
         this.syllableCounter = new SyllableCounter();
         this.random = new Random();
@@ -42,7 +44,9 @@ public class HaikuListener extends ListenerAdapter {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.appendDescription("_" + haikuLines + "_");
             embedBuilder.setFooter("A haiku inspired by " + event.getMember().getEffectiveName());
-            event.getChannel().sendMessage(new MessageBuilder(embedBuilder).build()).queue();
+            event.getChannel()
+                    .sendMessage(new MessageBuilder(embedBuilder).build())
+                    .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
         });
     }
 

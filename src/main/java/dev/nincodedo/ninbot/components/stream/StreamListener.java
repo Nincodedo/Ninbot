@@ -2,10 +2,12 @@ package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.MessageBuilderHelper;
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,7 +18,6 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceStreamEvent;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ import java.util.ResourceBundle;
 
 @Component
 @Log4j2
-public class StreamListener extends ListenerAdapter {
+public class StreamListener extends StatAwareListenerAdapter {
 
     private ConfigService configService;
     private LocaleService localeService;
@@ -37,7 +38,9 @@ public class StreamListener extends ListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, LocaleService localeService,
-            ComponentService componentService, StreamingMemberRepository streamingMemberRepository) {
+            ComponentService componentService, StreamingMemberRepository streamingMemberRepository,
+            StatManager statManager) {
+        super(statManager);
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;
@@ -188,7 +191,7 @@ public class StreamListener extends ListenerAdapter {
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(user.getAvatarUrl(), username, streamingUrl,
                             gameName, streamTitle, serverId, guild))
-                            .queue();
+                            .queue(message -> countOneStat(componentName, guild.getId()));
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
                     log.trace("Announcement channel was null, not announcing stream for {} on server {}", username,

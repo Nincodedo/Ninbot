@@ -1,20 +1,21 @@
 package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
+import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
 
 @Component
-public class TopicChangeListener extends ListenerAdapter {
+public class TopicChangeListener extends StatAwareListenerAdapter {
 
     private ConfigService configService;
     private LocaleService localeService;
@@ -22,7 +23,8 @@ public class TopicChangeListener extends ListenerAdapter {
     private String componentName;
 
     public TopicChangeListener(ConfigService configService, LocaleService localeService,
-            ComponentService componentService) {
+            ComponentService componentService, StatManager statManager) {
+        super(statManager);
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;
@@ -51,6 +53,7 @@ public class TopicChangeListener extends ListenerAdapter {
                 message = String.format(resourceBundle.getString("listener.topic.update.nopermission"),
                         event.getNewTopic());
             }
+            countOneStat(componentName, event.getGuild().getId());
             eventChannel.sendMessage(message).queue();
         }
     }
