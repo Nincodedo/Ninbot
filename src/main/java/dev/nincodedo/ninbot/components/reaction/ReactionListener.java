@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.reaction;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,9 @@ public class ReactionListener extends StatAwareListenerAdapter {
     private String componentName;
 
     @Autowired
-    public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService) {
+    public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService,
+            StatManager statManager) {
+        super(statManager);
         this.reactionResponseList = reactionResponseList;
         this.componentService = componentService;
         this.componentName = "reaction-listener";

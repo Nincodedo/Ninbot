@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
@@ -31,7 +32,8 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private String componentName;
 
     public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository,
-            ComponentService componentService) {
+            ComponentService componentService, StatManager statManager) {
+        super(statManager);
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
         this.componentName = "voice-channel-manager";

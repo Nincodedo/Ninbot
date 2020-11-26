@@ -5,6 +5,7 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import dev.nincodedo.sapconversational.SAPConversationalAIAPI;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -23,7 +24,8 @@ public class ConversationListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public ConversationListener(ConfigService configService, ComponentService componentService,
-            SAPConversationalAIAPI sapConversationalAIAPI) {
+            SAPConversationalAIAPI sapConversationalAIAPI, StatManager statManager) {
+        super(statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.sapConversationalAIAPI = sapConversationalAIAPI;

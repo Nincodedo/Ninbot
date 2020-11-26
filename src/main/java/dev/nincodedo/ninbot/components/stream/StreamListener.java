@@ -7,6 +7,7 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -37,7 +38,9 @@ public class StreamListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, LocaleService localeService,
-            ComponentService componentService, StreamingMemberRepository streamingMemberRepository) {
+            ComponentService componentService, StreamingMemberRepository streamingMemberRepository,
+            StatManager statManager) {
+        super(statManager);
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;

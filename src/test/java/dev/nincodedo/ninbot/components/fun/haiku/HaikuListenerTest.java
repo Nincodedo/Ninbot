@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.fun.haiku;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -33,6 +34,9 @@ class HaikuListenerTest {
 
     @Mock
     ComponentService componentService;
+
+    @Mock
+    StatManager statManager;
 
     @InjectMocks
     MockHaikuListener haikuListener;
@@ -108,8 +112,8 @@ class HaikuListenerTest {
 
     public static class MockHaikuListener extends HaikuListener {
 
-        public MockHaikuListener(ComponentService componentService) {
-            super(componentService);
+        public MockHaikuListener(ComponentService componentService, StatManager statManager) {
+            super(componentService, statManager);
         }
 
         @Override

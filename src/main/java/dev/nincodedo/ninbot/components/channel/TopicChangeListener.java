@@ -5,6 +5,7 @@ import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
@@ -22,7 +23,8 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public TopicChangeListener(ConfigService configService, LocaleService localeService,
-            ComponentService componentService) {
+            ComponentService componentService, StatManager statManager) {
+        super(statManager);
         this.configService = configService;
         this.localeService = localeService;
         this.componentService = componentService;

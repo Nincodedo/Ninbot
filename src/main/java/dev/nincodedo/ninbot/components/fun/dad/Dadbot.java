@@ -5,6 +5,7 @@ import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,9 @@ public class Dadbot extends StatAwareListenerAdapter {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
 
     @Autowired
-    public Dadbot(ConfigService configService, ComponentService componentService, LocaleService localeService) {
+    public Dadbot(ConfigService configService, ComponentService componentService, LocaleService localeService,
+            StatManager statManager) {
+        super(statManager);
         random = new Random();
         this.configService = configService;
         componentName = "dad";
