@@ -60,7 +60,7 @@ public class BirthdayScheduler implements Schedulable {
                     .plus(1, ChronoUnit.DAYS)
                     .atStartOfDay(ZoneId.systemDefault())
                     .toInstant()))) {
-                log.info("Scheduling birthday announcement for {}", ninbotUser.getUserId());
+                log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
                 val announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
                         .getDefaultChannel()
@@ -85,7 +85,7 @@ public class BirthdayScheduler implements Schedulable {
         MessageBuilder messageBuilder = new MessageBuilder();
         val user = shardManager.getUserById(ninbotUser.getId());
         messageBuilder.append("It's ");
-        messageBuilder.append(user);
+        messageBuilder.append(user.getName());
         messageBuilder.append(" birthday today! ");
         messageBuilder.append(
                 Emojis.BIRTHDAY_CAKE + " " + Emojis.PARTY_FACE + " " + Emojis.BALLOON + " " + Emojis.PARTY_POPPER);

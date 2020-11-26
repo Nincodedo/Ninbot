@@ -45,7 +45,7 @@ public class Ninbot {
                                 log.info("Server ID: {}, Server Name: {}, Owner ID: {}, Owner Name: {}",
                                         guild.getId(), guild
                                                 .getName(), guild.getOwnerId(), guild.getOwner().getEffectiveName());
-                                statManager.recordCount("serverCount", StatCategory.SERVER, guild.getId(),
+                                statManager.recordCount("serverMemberCount", StatCategory.SERVER, guild.getId(),
                                         guild.getMemberCount());
                             }
                         } catch (InterruptedException e) {

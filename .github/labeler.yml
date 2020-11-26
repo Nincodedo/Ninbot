@@ -1,4 +1,4 @@
 module-pathogen:
   - src/main/java/com/nincraft/ninbot/components/fun/pathogen/**/*
 module-stream-announce:
-  - src/main/java/com/nincraft/ninbot/components/twitch/**/*
+  - src/main/java/com/nincraft/ninbot/components/stream/**/*

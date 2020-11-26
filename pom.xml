@@ -338,13 +338,6 @@
                     <mainClass>dev.nincodedo.ninbot.NinbotRunner</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

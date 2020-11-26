@@ -42,7 +42,7 @@ public abstract class AbstractCommand {
         val message = event.getMessage().getContentStripped();
         resourceBundle = localeService.getResourceBundleOrDefault(serverLocale);
         if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
-            log.info("Executing command {} by {} in server {}: {}", name, event.getAuthor()
+            log.trace("Executing command {} by {} in server {}: {}", name, event.getAuthor()
                     .getId(), event.getGuild().getId(), message);
             if (getSubcommand(message).equalsIgnoreCase("help")) {
                 statManager.addOneCount(name, StatCategory.COMMAND_HELP, event.getGuild().getId());
@@ -179,11 +179,9 @@ public abstract class AbstractCommand {
      * @return true/false
      */
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        for (val member : shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
-            if (member.getId().equals(user.getId())) {
-                return true;
-            }
-        }
-        return false;
+        return shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID)
+                .getMembers()
+                .stream()
+                .anyMatch(member -> member.getId().equals(user.getId()));
     }
 }

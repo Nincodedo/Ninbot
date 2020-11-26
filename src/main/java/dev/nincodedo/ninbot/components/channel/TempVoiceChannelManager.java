@@ -64,20 +64,19 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member member) {
         val channelNameType = channelJoined.getName().substring(2);
         val channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
-        log.info("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
+        log.trace("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
                 guild.getId());
-        createVoiceChannel(guild, channelJoined, channelName)
-                .queue(voiceChannel -> {
-                    TempVoiceChannel channel = new TempVoiceChannel(member.getId(), voiceChannel.getId());
-                    repository.save(channel);
-                    guild.moveVoiceMember(member, voiceChannel).queue(aVoid -> {
-                        val position = channelJoined.getPosition();
-                        modifyVoiceChannelPositions(guild, channelJoined)
-                                .selectPosition(voiceChannel)
-                                .moveTo(position + 1)
-                                .queue(success -> updateTempChannelPermissions(guild, member, voiceChannel));
-                    });
-                });
+        createVoiceChannel(guild, channelJoined, channelName).queue(voiceChannel -> {
+            TempVoiceChannel channel = new TempVoiceChannel(member.getId(), voiceChannel.getId());
+            repository.save(channel);
+            guild.moveVoiceMember(member, voiceChannel).queue(aVoid -> {
+                val position = channelJoined.getPosition();
+                modifyVoiceChannelPositions(guild, channelJoined)
+                        .selectPosition(voiceChannel)
+                        .moveTo(position + 1)
+                        .queue(success -> updateTempChannelPermissions(guild, member, voiceChannel));
+            });
+        });
     }
 
     private void updateTempChannelPermissions(Guild guild, Member member, VoiceChannel voiceChannel) {

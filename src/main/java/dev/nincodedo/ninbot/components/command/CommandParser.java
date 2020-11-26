@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -34,7 +33,6 @@ public class CommandParser {
     private Map<String, String> commandAliasMap = new HashMap<>();
     private ExecutorService executorService;
 
-    @Autowired
     CommandParser(ConfigService configService, LocaleService localeService, ComponentService componentService) {
         this.configService = configService;
         this.localeService = localeService;

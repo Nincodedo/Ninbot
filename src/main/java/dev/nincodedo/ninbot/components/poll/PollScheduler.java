@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
+import java.util.function.Consumer;
 
 @Component
 public class PollScheduler implements Schedulable {
@@ -41,21 +43,25 @@ public class PollScheduler implements Schedulable {
         List<String> choices = poll.getChoices();
         val channel = shardManager.getTextChannelById(poll.getChannelId());
         if (channel != null) {
-            channel.retrieveMessageById(poll.getMessageId()).queue(message -> {
-                char digitalOneEmoji = '\u0031';
-                for (int i = 0; i < choices.size(); i++) {
-                    message.addReaction(digitalOneEmoji + "\u20E3").queue();
-                    digitalOneEmoji++;
-                }
-                val announceTime = message.getTimeCreated().toInstant().plus(poll.getTimeLength(), ChronoUnit.MINUTES);
-                //Poll announce time is in the future, or has not been announce yet
-                if (announceTime.isAfter(Instant.now()) || poll.isPollOpen()) {
-                    message.pin().queue();
-                    PollAnnounce pollAnnounce = new PollAnnounce(poll, message, pollRepository);
-                    Timer timer = new Timer();
-                    timer.schedule(pollAnnounce, Date.from(announceTime));
-                }
-            });
+            channel.retrieveMessageById(poll.getMessageId()).queue(setupPoll(poll, choices));
         }
+    }
+
+    private Consumer<Message> setupPoll(Poll poll, List<String> choices) {
+        return message -> {
+            char digitalOneEmoji = '\u0031';
+            for (int i = 0; i < choices.size(); i++) {
+                message.addReaction(digitalOneEmoji + "\u20E3").queue();
+                digitalOneEmoji++;
+            }
+            val announceTime = message.getTimeCreated().toInstant().plus(poll.getTimeLength(), ChronoUnit.MINUTES);
+            //Poll announce time is in the future, or has not been announce yet
+            if (announceTime.isAfter(Instant.now()) || poll.isPollOpen()) {
+                message.pin().queue();
+                PollAnnounce pollAnnounce = new PollAnnounce(poll, message, pollRepository);
+                Timer timer = new Timer();
+                timer.schedule(pollAnnounce, Date.from(announceTime));
+            }
+        };
     }
 }

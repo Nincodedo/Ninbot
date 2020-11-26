@@ -6,6 +6,8 @@ import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class UserCommand extends AbstractCommand {
 
@@ -36,6 +38,7 @@ public class UserCommand extends AbstractCommand {
         NinbotUser ninbotUser;
         if (optionalUser.isPresent()) {
             ninbotUser = optionalUser.get();
+            ninbotUser.setModifiedAt(LocalDateTime.now());
         } else {
             ninbotUser = new NinbotUser();
             ninbotUser.setUserId(userId);

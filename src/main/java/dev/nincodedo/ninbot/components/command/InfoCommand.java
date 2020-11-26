@@ -14,6 +14,7 @@ import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -24,12 +25,14 @@ public class InfoCommand extends AbstractCommand {
 
     private GitProperties gitProperties;
     private MetricsEndpoint metricsEndpoint;
+    private Instant timeStarted;
 
     public InfoCommand(GitProperties gitProperties, MetricsEndpoint metricsEndpoint) {
         name = "info";
         length = 2;
         this.gitProperties = gitProperties;
         this.metricsEndpoint = metricsEndpoint;
+        this.timeStarted = Instant.now();
     }
 
     @Override
@@ -38,20 +41,22 @@ public class InfoCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.info.title"));
         if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
-            embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(),
-                    false);
             val uptime = metricsEndpoint.metric("process.uptime", null);
             val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
-            embedBuilder.addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
-                    uptimeMilliseconds), false);
+            embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(),
+                    false)
+                    .addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
+                            uptimeMilliseconds), false)
+                    .setFooter(resourceBundle.getString("command.info.startedAt"))
+                    .setTimestamp(timeStarted);
         }
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
                 String.format(resourceBundle.getString("command.info.githublink.value"), Constants.NINBOT_GITHUB_URL),
-                false);
-        embedBuilder.addField(resourceBundle.getString("command.info.githublink.issues"),
-                Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false);
-        embedBuilder.addField(resourceBundle.getString("command.info.documentation.name"),
-                Constants.NINBOT_DOCUMENTATION_URL, false);
+                false)
+                .addField(resourceBundle.getString("command.info.githublink.issues"),
+                        Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false)
+                .addField(resourceBundle.getString("command.info.documentation.name"),
+                        Constants.NINBOT_DOCUMENTATION_URL, false);
         val patronsList = getPatronsList(event.getJDA().getShardManager());
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle.getString("command.info.patreonthanks.name"), patronsList, false);

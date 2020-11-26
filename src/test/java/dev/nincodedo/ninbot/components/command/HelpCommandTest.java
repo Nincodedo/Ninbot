@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.info;
+package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.TestUtils;

@@ -32,8 +32,7 @@ public abstract class CooldownCommand extends AbstractCommand {
                     .getEmotesByName("loading", true)
                     .stream()
                     .filter(emote -> emote.getGuild().getId().equals(Constants.NINBOT_SERVER_ID))
-                    .sorted(StreamUtils.shuffle())
-                    .findFirst();
+                    .min(StreamUtils.shuffle());
             val message = event.getMessage();
             cooldownMap.put(name, new Date());
             loadingEmote.ifPresent(emote -> message.addReaction(emote)
