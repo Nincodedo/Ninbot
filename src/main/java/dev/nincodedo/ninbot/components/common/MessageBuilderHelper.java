@@ -42,6 +42,6 @@ public class MessageBuilderHelper {
             }
         }
         int total = width * height;
-        return new Color(redSum / total, greenSum / total, blueSum / total);
+        return new Color(redSum / total, greenSum / total, blueSum / total).brighter();
     }
 }
