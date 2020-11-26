@@ -141,6 +141,13 @@ public abstract class AbstractCommand {
         return getSubcommand(command, 2);
     }
 
+    /**
+     * Returns a lowercase subcommand based on array index position, starts at 0
+     *
+     * @param command  full command message
+     * @param position index position from command
+     * @return lowercase subcommand
+     */
     protected String getSubcommand(String command, int position) {
         if (getCommandLength(command) >= position + 1) {
             return command.split("\\s+")[position].toLowerCase();
@@ -149,6 +156,13 @@ public abstract class AbstractCommand {
         }
     }
 
+    /**
+     * Returns a subcommand based on array index position, starts at 0
+     *
+     * @param command  full command message
+     * @param position index position from command
+     * @return subcommand
+     */
     protected String getSubcommandNoTransform(String command, int position) {
         if (getCommandLength(command) >= position + 1) {
             return command.split("\\s+")[position];
@@ -157,6 +171,13 @@ public abstract class AbstractCommand {
         }
     }
 
+    /**
+     * Returns true if the user is a Patreon supporter (specifically if they are in the Ninbot Patreon Discord)
+     *
+     * @param shardManager shardManager
+     * @param user         user to check
+     * @return true/false
+     */
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
         for (val member : shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID).getMembers()) {
             if (member.getId().equals(user.getId())) {
