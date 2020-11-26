@@ -19,6 +19,8 @@ class StreamingMember {
     private Long id;
     private String userId;
     private String guildId;
+    private String twitchUsername;
+    private boolean currentlyStreaming = false;
 
     public StreamingMember() {
 

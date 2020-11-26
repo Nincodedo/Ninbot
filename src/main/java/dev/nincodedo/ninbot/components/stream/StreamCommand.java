@@ -12,19 +12,47 @@ import org.springframework.stereotype.Component;
 @Component
 public class StreamCommand extends AbstractCommand {
 
-    public StreamCommand() {
+    private StreamingMemberRepository streamingMemberRepository;
+
+    public StreamCommand(StreamingMemberRepository streamingMemberRepository) {
         name = "stream";
         length = 2;
+        checkExactLength = false;
+        this.streamingMemberRepository = streamingMemberRepository;
     }
 
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        switch (getSubcommand(event.getMessage().getContentStripped())) {
-            case "announce" -> announceToggle(messageAction);
-            default -> messageAction = displayHelp(event);
+        val message = event.getMessage().getContentStripped();
+        if ("announce".equals(getSubcommand(message))) {
+            if (getCommandLength(message) == 3) {
+                announceToggle(messageAction);
+            } else if (getCommandLength(message) == 4) {
+                addTwitchUsername(messageAction);
+            }
+        } else {
+            messageAction = displayHelp(event);
         }
         return messageAction;
+    }
+
+    private void addTwitchUsername(MessageAction messageAction) {
+        val event = messageAction.getEvent();
+        val configOptional = configService.getConfigByServerIdAndName(event.getGuild()
+                .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
+        val userId = event.getMember().getId();
+        val serverId = event.getGuild().getId();
+        if (configOptional.isEmpty()) {
+            configService.addConfig(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS, userId);
+        }
+        val streamingMemberOptional = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId);
+        val twitchUsername = getSubcommandNoTransform(event.getMessage().getContentStripped(), 3);
+        StreamingMember streamingMember = streamingMemberOptional.orElseGet(() -> new StreamingMember(userId,
+                serverId));
+        streamingMember.setTwitchUsername(twitchUsername);
+        streamingMemberRepository.save(streamingMember);
+        messageAction.addSuccessfulReaction();
     }
 
     private void announceToggle(MessageAction messageAction) {
