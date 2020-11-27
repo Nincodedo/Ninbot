@@ -62,6 +62,8 @@ public class PollCommand extends AbstractCommand {
             poll.setChoices(Arrays.stream(pollOptions.split(","))
                     .map(String::trim)
                     .collect(Collectors.toList()));
+            //If a + is included in the choices, allowed for other users to add their own choices
+            poll.setUserChoicesAllowed((poll.getChoices().remove("+")));
             val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
                 poll.setTimeLength(Long.parseLong(timeString));

@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
-class PollAnnounce extends TimerTask {
+class PollResultsAnnouncer extends TimerTask {
 
     private Poll poll;
     private Message pollMessage;
     private PollRepository pollRepository;
 
-    PollAnnounce(Poll poll, Message pollMessage, PollRepository pollRepository) {
+    PollResultsAnnouncer(Poll poll, Message pollMessage, PollRepository pollRepository) {
         this.poll = poll;
         this.pollMessage = pollMessage;
         this.pollRepository = pollRepository;
