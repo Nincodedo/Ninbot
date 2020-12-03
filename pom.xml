@@ -19,22 +19,31 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
+        <JDA.version>4.2.0_222</JDA.version>
+        <archunit.version>0.14.1</archunit.version>
+        <assertj-core.version>3.18.1</assertj-core.version>
         <build.number>SNAPSHOT</build.number>
+        <dice.version>2.0.4</dice.version>
+        <discord-webhooks.version>0.5.0</discord-webhooks.version>
+        <emoji-java.version>5.1.1</emoji-java.version>
         <log4j.version>2.14.0</log4j.version>
+        <lombok.version>1.18.16</lombok.version>
+        <sap-conversational-ai-java-api.version>0.0.3</sap-conversational-ai-java-api.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.15.0</testcontainers.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
-            <version>0.5.0</version>
+            <version>${discord-webhooks.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bernardomg.tabletop</groupId>
             <artifactId>dice</artifactId>
-            <version>2.0.4</version>
+            <version>${dice.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
@@ -47,9 +56,15 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit</artifactId>
+            <version>${archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
-            <version>5.1.1</version>
+            <version>${emoji-java.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -64,12 +79,12 @@
         <dependency>
             <groupId>dev.nincodedo</groupId>
             <artifactId>sap-conversational-ai-java-api</artifactId>
-            <version>0.0.3</version>
+            <version>${sap-conversational-ai-java-api.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.crydee</groupId>
             <artifactId>syllable-counter</artifactId>
-            <version>4.1.0</version>
+            <version>${syllable-counter.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -78,7 +93,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_222</version>
+            <version>${JDA.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>club.minnced</groupId>
@@ -89,7 +104,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -99,7 +113,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -114,7 +127,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.18.1</version>
+            <version>${assertj-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -130,7 +143,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -178,12 +191,6 @@
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit</artifactId>
-            <version>0.14.1</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <repositories>
         <repository>
@@ -212,19 +219,7 @@
             <name>sonatype-snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <resources>
             <resource>
