@@ -89,31 +89,36 @@ class TurnipCommandTestIT {
 
     @Test
     void executeBuyCommandOnWeekday() {
-        Villager villager = new Villager();
-        villager.setBellsTotal(2000);
-        villager.setDiscordId("2");
-        villager.setDiscordServerId("2");
-        villager.setTurnipsOwned(0);
-        villagerManager.save(villager);
+        Villager villager = getVillager("2", "2", 0, 2000);
         turnipPricesManager.generateNewWeek();
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
         Clock weekdayClock = Clock.fixed(Instant.parse("2020-09-07T12:00:00.00Z"), ZoneId.systemDefault());
         turnipCommand.setClock(weekdayClock);
 
+        val before = villagerRepository.findByDiscordId("2").get();
         val commandResults = turnipCommand.executeCommand(messageEvent);
+        val after = villagerRepository.findByDiscordId("2").get();
 
+        assertThat(after.getTurnipsOwned()).isEqualTo(before.getTurnipsOwned());
         assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CROSS_X);
+    }
+
+    private Villager getVillager(String discordId, String serverId, int turnipsOwned, int bells) {
+        val optional = villagerRepository.findByDiscordId(discordId);
+        Villager villager;
+        villager = optional.orElseGet(Villager::new);
+        villager.setDiscordId(discordId);
+        villager.setDiscordServerId(serverId);
+        villager.setTurnipsOwned(turnipsOwned);
+        villager.setBellsTotal(bells);
+        villagerRepository.save(villager);
+        return villager;
     }
 
     @Test
     void executeBuyCommandOnSunday() {
-        Villager villager = new Villager();
-        villager.setBellsTotal(2000);
-        villager.setDiscordId("2");
-        villager.setDiscordServerId("2");
-        villager.setTurnipsOwned(0);
-        villagerManager.save(villager);
+        Villager villager = getVillager("2", "2", 0, 2000);
         turnipPricesManager.generateNewWeek();
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips buy 10");
@@ -126,8 +131,11 @@ class TurnipCommandTestIT {
         Clock sundayClock = Clock.fixed(Instant.parse("2020-09-06T12:00:00.00Z"), ZoneId.systemDefault());
         turnipCommand.setClock(sundayClock);
 
+        val before = villagerRepository.findByDiscordId("2").get();
         val commandResults = turnipCommand.executeCommand(messageEvent);
+        val after = villagerRepository.findByDiscordId("2").get();
 
+        assertThat(after.getTurnipsOwned()).isEqualTo(before.getTurnipsOwned() + 10);
         assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
     }
 
