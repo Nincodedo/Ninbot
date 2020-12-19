@@ -48,6 +48,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             val channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
             if (channel != null) {
                 val emote = event.getEmote();
+                countOneStat(componentName, event.getGuild().getId());
                 channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild())).queue();
             }
         }
