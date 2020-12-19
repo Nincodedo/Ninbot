@@ -1,5 +1,10 @@
 # Automatic Actions
-Automatic Actions are various Ninbot modules that need little to no configuration. They can be disabled with the [Component command](../commands/index.md#component). 
+Automatic Actions are various Ninbot modules that need little to no configuration. They can be disabled with the [Component command](../commands/index.md#component).
+
+* [Temporary Voice Channels](#temporary-voice-channels)
+* [Pathogen Game](#pathogen-game)
+* [New Emote Announcements](#new-emote-announcements)
+
 ## Temporary Voice Channels
 Voice Channels with ➕ in the beginning of their name will automatically create voice channels when a person joins them
 and move them into it. This channel is deleted as soon as it is empty. The user that created the channel will also have
@@ -16,3 +21,12 @@ The pathogen game requires a role name "infected" on the server for it to begin.
 Component name:
 
     pathogen
+
+## New Emote Announcements
+New emotes added to the server can be automatically announced in a specific channel if configured. Add the configuration
+`emoteAnnouncementChannelId` with the channel id as the value to have Ninbot automatically announce.
+The component can also be disabled with the following name.
+
+Component name:
+
+    emote-added-announcement
