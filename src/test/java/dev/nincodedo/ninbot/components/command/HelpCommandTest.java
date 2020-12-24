@@ -9,6 +9,7 @@ import dev.nincodedo.ninbot.components.common.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.simulate.SimulateCommand;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -53,8 +54,11 @@ class HelpCommandTest {
     @Mock
     LocaleService localeService;
 
+    @Mock
+    StatManager statManager;
+
     @InjectMocks
-    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService, localeService);
+    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService, localeService, statManager);
 
     @BeforeAll
     public static void before() {
