@@ -84,6 +84,10 @@
       {
         "response": "https://www.youtube.com/watch?v=3qxX5KhCpTk",
         "target": "our bot"
+      },
+      {
+        "response": "hello my child",
+        "target": "hi dad"
       }
     ],
     "contains": [
