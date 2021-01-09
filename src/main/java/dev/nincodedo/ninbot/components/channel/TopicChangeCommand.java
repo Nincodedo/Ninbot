@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;

@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.StreamUtils;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

@@ -3,7 +3,9 @@ package dev.nincodedo.ninbot.components.ac.turnips;
 import dev.nincodedo.ninbot.components.ac.Villager;
 import dev.nincodedo.ninbot.components.ac.VillagerManager;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.Impersonation;
+import dev.nincodedo.ninbot.components.common.message.ImpersonationController;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.Setter;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -127,12 +129,9 @@ public class TurnipCommand extends AbstractCommand {
     private void listSundayTurnipSellingPrices(MessageReceivedEvent event) {
         int turnipPrice = turnipPricesManager.getSundayTurnipPrices(
                 getSeed(event.getGuild().getIdLong()));
-        val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(), "joan");
-        if (webhookOptional.isPresent()) {
-            val webhook = webhookOptional.get();
-            webhookHelper.sendMessage(String.format(
-                    resourceBundle.getString("command.turnips.list.sunday.joan"), turnipPrice), webhook.getUrl());
-        }
+        Impersonation impersonation = new Impersonation("joan", "", event.getGuild(), event.getTextChannel());
+        impersonation.sendMessage(String.format(resourceBundle.getString("command.turnips.list.sunday.joan"),
+                turnipPrice));
     }
 
     private boolean sellTurnips(MessageReceivedEvent event) {

@@ -1,10 +1,11 @@
 package dev.nincodedo.ninbot.components.simulate;
 
 import dev.nincodedo.ninbot.components.command.CooldownCommand;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.Impersonation;
+import dev.nincodedo.ninbot.components.common.message.ImpersonationController;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -56,22 +57,12 @@ public class SimulateCommand extends CooldownCommand {
             val message = userMessages.get(random.nextInt(userMessages.size())).getContentStripped() + " ";
             stringBuilder.append(message);
         }
-        val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(),
-                WEBHOOK_NAME);
+
         val member = event.getGuild().getMember(targetUser);
-        if (webhookOptional.isPresent()) {
-            val webhook = webhookOptional.get();
-            val manager = webhook.getManager();
-            webhookHelper.setWebhookIcon(targetUser.getEffectiveAvatarUrl(), manager);
-            manager.setName(member.getEffectiveName()).queue(aVoid -> {
-                webhookHelper.sendMessage(stringBuilder.toString(), webhook.getUrl());
-                manager.setName(WEBHOOK_NAME).queue();
-            });
-        } else {
-            messageAction.addChannelAction(new EmbedBuilder().appendDescription(stringBuilder.toString()));
-        }
-
-
+        ImpersonationController impersonationController =
+                new ImpersonationController(Impersonation.of(member.getEffectiveName(), targetUser
+                        .getEffectiveAvatarUrl()), event.getGuild(), event.getTextChannel());
+        impersonationController.sendMessage(stringBuilder.toString());
         return messageAction;
     }
 
