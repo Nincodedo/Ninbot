@@ -127,11 +127,21 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private void listSundayTurnipSellingPrices(MessageReceivedEvent event) {
-        int turnipPrice = turnipPricesManager.getSundayTurnipPrices(
-                getSeed(event.getGuild().getIdLong()));
-        Impersonation impersonation = new Impersonation("joan", "", event.getGuild(), event.getTextChannel());
-        impersonation.sendMessage(String.format(resourceBundle.getString("command.turnips.list.sunday.joan"),
+        int turnipPrice = turnipPricesManager.getSundayTurnipPrices(getSeed(event.getGuild().getIdLong()));
+        ImpersonationController impersonationController = new ImpersonationController(todaysSeller(),
+                event.getGuild(), event.getTextChannel());
+        String sellerName = todaysSeller().name().toLowerCase().replace(" ", "");
+        impersonationController.sendMessage(String.format(resourceBundle.getString(
+                "command.turnips.list.sunday." + sellerName),
                 turnipPrice));
+    }
+
+    private Impersonation todaysSeller() {
+        if (LocalDate.now(clock).getMonthValue() % 2 == 0) {
+            return Impersonation.of("Joan", "https://i.imgur.com/rfSMl18.png");
+        } else {
+            return Impersonation.of("Daisy Mae", "https://i.imgur.com/RNGXzmb.png");
+        }
     }
 
     private boolean sellTurnips(MessageReceivedEvent event) {
