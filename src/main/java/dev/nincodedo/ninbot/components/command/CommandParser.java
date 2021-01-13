@@ -27,15 +27,13 @@ public class CommandParser {
 
     private ConfigService configService;
     private ComponentService componentService;
-    private LocaleService localeService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
     private Map<String, String> commandAliasMap = new HashMap<>();
     private ExecutorService executorService;
 
-    CommandParser(ConfigService configService, LocaleService localeService, ComponentService componentService) {
+    CommandParser(ConfigService configService, ComponentService componentService) {
         this.configService = configService;
-        this.localeService = localeService;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
         this.componentService = componentService;
     }
@@ -51,7 +49,7 @@ public class CommandParser {
             AbstractCommand command = commandHashMap.get(commandName);
             if (command != null) {
                 try {
-                    executorService.execute(() -> command.execute(event, localeService.getLocale(event)));
+                    executorService.execute(() -> command.execute(event, LocaleService.getLocale(event)));
                 } catch (Exception e) {
                     log.error("Error executing command " + command.getName(), e);
                 }

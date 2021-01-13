@@ -50,13 +50,10 @@ class HelpCommandTest {
     ConfigService configService;
 
     @Mock
-    LocaleService localeService;
-
-    @Mock
     StatManager statManager;
 
     @InjectMocks
-    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService, localeService, statManager);
+    HelpCommand helpCommand = new HelpCommand(commandMap, componentService, configService, statManager);
 
     @BeforeAll
     public static void before() {

@@ -26,13 +26,11 @@ public class EventScheduler implements Schedulable {
 
     private EventRepository eventRepository;
     private ConfigService configService;
-    private LocaleService localeService;
 
     @Autowired
-    public EventScheduler(EventRepository eventRepository, ConfigService configService, LocaleService localeService) {
+    public EventScheduler(EventRepository eventRepository, ConfigService configService) {
         this.eventRepository = eventRepository;
         this.configService = configService;
-        this.localeService = localeService;
     }
 
     public void scheduleAll(ShardManager shardManager) {
@@ -74,7 +72,7 @@ public class EventScheduler implements Schedulable {
 
     private void scheduleOne(Event event, Timer timer, Instant eventTime, int minutesBeforeStart, Guild guild) {
         if (!eventTime.isBefore(now())) {
-            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, guild, localeService),
+            timer.schedule(new EventAnnounce(event, minutesBeforeStart, configService, guild),
                     from(eventTime));
         }
     }

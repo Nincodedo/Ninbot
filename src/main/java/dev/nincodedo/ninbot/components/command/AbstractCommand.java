@@ -36,13 +36,11 @@ public abstract class AbstractCommand {
     @Autowired
     protected ConfigService configService;
     @Autowired
-    protected LocaleService localeService;
-    @Autowired
     protected StatManager statManager;
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
         val message = event.getMessage().getContentStripped();
-        resourceBundle = localeService.getResourceBundleOrDefault(serverLocale);
+        resourceBundle = LocaleService.getResourceBundleOrDefault(serverLocale);
         if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.trace("Executing command {} by {} in server {}: {}", name, event.getAuthor()
                     .getId(), event.getGuild().getId(), message);

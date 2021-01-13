@@ -17,15 +17,12 @@ class EventAnnounce extends TimerTask {
     private Guild guild;
     private int minutesBeforeStart;
     private ConfigService configService;
-    private LocaleService localeService;
 
-    EventAnnounce(Event event, int minutesBeforeStart, ConfigService configService, Guild guild,
-            LocaleService localeService) {
+    EventAnnounce(Event event, int minutesBeforeStart, ConfigService configService, Guild guild) {
         this.event = event;
         this.minutesBeforeStart = minutesBeforeStart;
         this.configService = configService;
         this.guild = guild;
-        this.localeService = localeService;
     }
 
     @Override
@@ -36,7 +33,7 @@ class EventAnnounce extends TimerTask {
         config.ifPresent(announceChannelId -> {
             val channel = guild.getTextChannelById(announceChannelId);
             val gameRoleId = guild.getRolesByName(event.getGameName(), true).get(0);
-            event.setResourceBundle(ResourceBundle.getBundle("lang", localeService.getLocale(guild)));
+            event.setResourceBundle(ResourceBundle.getBundle("lang", LocaleService.getLocale(guild)));
             channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
         });
     }

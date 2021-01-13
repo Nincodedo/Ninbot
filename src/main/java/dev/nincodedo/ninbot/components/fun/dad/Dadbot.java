@@ -23,25 +23,22 @@ public class Dadbot extends StatAwareListenerAdapter {
     private ConfigService configService;
     private ComponentService componentService;
     private String componentName;
-    private LocaleService localeService;
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
 
     @Autowired
-    public Dadbot(ConfigService configService, ComponentService componentService, LocaleService localeService,
-            StatManager statManager) {
+    public Dadbot(ConfigService configService, ComponentService componentService,            StatManager statManager) {
         super(statManager);
         random = new Random();
         this.configService = configService;
         componentName = "dad";
         this.componentService = componentService;
-        this.localeService = localeService;
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.isFromGuild() && !event.getAuthor().isBot()
                 && !componentService.isDisabled(componentName, event.getGuild().getId())) {
-            resourceBundle = localeService.getResourceBundleOrDefault(event.getGuild());
+            resourceBundle = LocaleService.getResourceBundleOrDefault(event.getGuild());
             parseMessage(event);
         }
     }

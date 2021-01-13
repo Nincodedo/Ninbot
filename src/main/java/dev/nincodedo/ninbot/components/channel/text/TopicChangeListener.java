@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.channel;
+package dev.nincodedo.ninbot.components.channel.text;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
@@ -18,15 +18,13 @@ import java.util.ResourceBundle;
 public class TopicChangeListener extends StatAwareListenerAdapter {
 
     private ConfigService configService;
-    private LocaleService localeService;
     private ComponentService componentService;
     private String componentName;
 
-    public TopicChangeListener(ConfigService configService, LocaleService localeService,
+    public TopicChangeListener(ConfigService configService,
             ComponentService componentService, StatManager statManager) {
         super(statManager);
         this.configService = configService;
-        this.localeService = localeService;
         this.componentService = componentService;
         this.componentName = "topic-change";
     }
@@ -40,7 +38,7 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
         val eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
             String message;
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", localeService.getLocale(event.getGuild()));
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", LocaleService.getLocale(event.getGuild()));
             if (event.getGuild()
                     .getMember(event.getJDA().getSelfUser())
                     .getPermissions(eventChannel)

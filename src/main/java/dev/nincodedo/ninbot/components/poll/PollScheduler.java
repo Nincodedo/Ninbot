@@ -18,11 +18,9 @@ import java.util.function.Consumer;
 public class PollScheduler implements Schedulable {
 
     private PollRepository pollRepository;
-    private LocaleService localeService;
 
-    public PollScheduler(PollRepository pollRepository, LocaleService localeService) {
+    public PollScheduler(PollRepository pollRepository) {
         this.pollRepository = pollRepository;
-        this.localeService = localeService;
     }
 
     @Override
@@ -37,7 +35,7 @@ public class PollScheduler implements Schedulable {
     }
 
     private void scheduleOne(Poll poll, ShardManager shardManager) {
-        val resourceBundle = localeService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
+        val resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
                 .getLocale());
         poll.setResourceBundle(resourceBundle);
         List<String> choices = poll.getChoices();

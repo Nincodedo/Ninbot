@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -32,17 +33,15 @@ import java.util.ResourceBundle;
 public class StreamListener extends StatAwareListenerAdapter {
 
     private ConfigService configService;
-    private LocaleService localeService;
     private ComponentService componentService;
     private StreamingMemberRepository streamingMemberRepository;
     private String componentName;
 
-    public StreamListener(ConfigService configService, LocaleService localeService,
-            ComponentService componentService, StreamingMemberRepository streamingMemberRepository,
+    public StreamListener(ConfigService configService, ComponentService componentService,
+            StreamingMemberRepository streamingMemberRepository,
             StatManager statManager) {
         super(statManager);
         this.configService = configService;
-        this.localeService = localeService;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
         this.componentName = "stream-announce";
@@ -190,7 +189,7 @@ public class StreamListener extends StatAwareListenerAdapter {
                         log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                     }
                     channel.sendMessage(buildStreamAnnounceMessage(user.getAvatarUrl(), username, streamingUrl,
-                            gameName, streamTitle, serverId, guild))
+                            gameName, streamTitle, serverId, guild.getLocale()))
                             .queue(message -> countOneStat(componentName, guild.getId()));
                     log.trace("Queued stream message for {} to channel {}", username, channel.getId());
                 } else {
@@ -205,9 +204,9 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     Message buildStreamAnnounceMessage(String avatarUrl, String username,
-            String streamingUrl, String gameName, String streamTitle, String serverId, Guild guild) {
+            String streamingUrl, String gameName, String streamTitle, String serverId, Locale locale) {
         log.trace("Building stream announce message for {} server {}", username, serverId);
-        ResourceBundle resourceBundle = localeService.getResourceBundleOrDefault(guild);
+        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(locale);
         EmbedBuilder embedBuilder;
         if (!streamingUrl.contains("https://")) {
             embedBuilder = new EmbedBuilder()

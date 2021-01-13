@@ -13,18 +13,16 @@ import java.util.List;
 @Component
 public class CommandListener extends ListenerAdapter {
 
-    private LocaleService localeService;
     private CommandParser commandParser;
     private ComponentService componentService;
     private ConfigService configService;
     private StatManager statManager;
 
     public CommandListener(CommandParser commandParser, List<AbstractCommand> commands,
-            ComponentService componentService, ConfigService configService, LocaleService localeService, StatManager statManager) {
+            ComponentService componentService, ConfigService configService, StatManager statManager) {
         this.commandParser = commandParser;
         this.componentService = componentService;
         this.configService = configService;
-        this.localeService = localeService;
         this.statManager = statManager;
         addCommands(commands);
     }
@@ -32,8 +30,7 @@ public class CommandListener extends ListenerAdapter {
     private void addCommands(List<AbstractCommand> commands) {
         commandParser.registerAliases(commands);
         commandParser.addCommands(commands);
-        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap(), componentService, configService,
-                localeService, statManager));
+        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap(), componentService, configService, statManager));
     }
 
     @Override

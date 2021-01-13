@@ -20,14 +20,13 @@ public class HelpCommand extends AbstractCommand {
     private Map<String, AbstractCommand> commandMap;
     private ComponentService componentService;
 
-    public HelpCommand(Map<String, AbstractCommand> commandMap,
-            ComponentService componentService, ConfigService configService, LocaleService localeService, StatManager statManager) {
+    public HelpCommand(Map<String, AbstractCommand> commandMap, ComponentService componentService,
+            ConfigService configService, StatManager statManager) {
         length = 2;
         name = "help";
         this.commandMap = commandMap;
         this.componentService = componentService;
         this.configService = configService;
-        this.localeService = localeService;
         this.statManager = statManager;
     }
 

@@ -21,13 +21,10 @@ public class CountdownScheduler implements Schedulable {
 
     private CountdownRepository countdownRepository;
     private ConfigService configService;
-    private LocaleService localeService;
 
-    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService,
-            LocaleService localeService) {
+    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService) {
         this.countdownRepository = countdownRepository;
         this.configService = configService;
-        this.localeService = localeService;
     }
 
     public void scheduleAll(ShardManager shardManager) {
@@ -47,7 +44,7 @@ public class CountdownScheduler implements Schedulable {
                 return;
             }
 
-            ResourceBundle resourceBundle = localeService.getResourceBundleOrDefault(shardManager.getGuildById(countdown
+            ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(countdown
                     .getServerId()));
             countdown.setResourceBundle(resourceBundle);
             val countdownMessage = countdown.buildMessage();

@@ -23,15 +23,13 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
 
     private ComponentService componentService;
     private ConfigService configService;
-    private LocaleService localeService;
     private String componentName;
 
-    public EmoteCreationAnnouncement(StatManager statManager, ConfigService configService, LocaleService localeService,
+    public EmoteCreationAnnouncement(StatManager statManager, ConfigService configService,
             ComponentService componentService) {
         super(statManager);
         this.componentService = componentService;
         this.configService = configService;
-        this.localeService = localeService;
         componentName = "emote-added-announcement";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
@@ -56,7 +54,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
 
     @NotNull
     private Message buildAnnouncementMessage(Emote emote, Guild guild) {
-        ResourceBundle resourceBundle = localeService.getResourceBundleOrDefault(guild);
+        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append(resourceBundle.getString("listener.emote.announce.message"));
         messageBuilder.append("\n");

@@ -33,9 +33,6 @@ class PollCommandTest {
     @Mock
     public Message message;
 
-    @Mock
-    LocaleService localeService;
-
     @InjectMocks
     PollCommand pollCommand;
 
@@ -49,7 +46,6 @@ class PollCommandTest {
         Guild guild = Mockito.mock(Guild.class);
         when(message.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
-        pollCommand.setLocaleService(localeService);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getTextChannel()).thenReturn(textChannel);
         when(textChannel.getId()).thenReturn("1");
@@ -59,7 +55,7 @@ class PollCommandTest {
         when(user.getAvatarUrl()).thenReturn("http://google.com/a-url");
         when(messageEvent.getChannel()).thenReturn(messageChannel);
         when(messageChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
-        when(localeService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
+        when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
         val actualMessageAction = pollCommand.executeCommand(messageEvent);
 
@@ -77,7 +73,6 @@ class PollCommandTest {
         Guild guild = Mockito.mock(Guild.class);
         when(message.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
-        pollCommand.setLocaleService(localeService);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getTextChannel()).thenReturn(textChannel);
         when(textChannel.getId()).thenReturn("1");
@@ -86,7 +81,7 @@ class PollCommandTest {
         when(member.getUser()).thenReturn(user);
         when(user.getAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
         when(member.getEffectiveName()).thenReturn("Nincodedo");
-        when(localeService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
+        when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
         val actualMessageAction = pollCommand.executeCommand(messageEvent);
 
