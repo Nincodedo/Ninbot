@@ -25,6 +25,7 @@ class Poll {
     private String localeString;
     private String title;
     @ElementCollection(fetch = FetchType.EAGER)
+    @OrderColumn(name = "choice_index")
     private List<String> choices;
     private String result;
     private long timeLength;
