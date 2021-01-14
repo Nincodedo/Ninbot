@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.components.common.message;
 
 import lombok.experimental.UtilityClass;
 

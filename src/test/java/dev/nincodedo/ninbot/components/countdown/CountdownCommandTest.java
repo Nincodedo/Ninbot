@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.countdown;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.TestUtils;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

@@ -3,7 +3,9 @@ package dev.nincodedo.ninbot.components.ac.turnips;
 import dev.nincodedo.ninbot.components.ac.Villager;
 import dev.nincodedo.ninbot.components.ac.VillagerManager;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.Impersonation;
+import dev.nincodedo.ninbot.components.common.message.ImpersonationController;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.Setter;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -125,13 +127,20 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private void listSundayTurnipSellingPrices(MessageReceivedEvent event) {
-        int turnipPrice = turnipPricesManager.getSundayTurnipPrices(
-                getSeed(event.getGuild().getIdLong()));
-        val webhookOptional = webhookHelper.getWebhookByName(event.getGuild(), event.getTextChannel(), "joan");
-        if (webhookOptional.isPresent()) {
-            val webhook = webhookOptional.get();
-            webhookHelper.sendMessage(String.format(
-                    resourceBundle.getString("command.turnips.list.sunday.joan"), turnipPrice), webhook.getUrl());
+        int turnipPrice = turnipPricesManager.getSundayTurnipPrices(getSeed(event.getGuild().getIdLong()));
+        ImpersonationController impersonationController = new ImpersonationController(todaysSeller(),
+                event.getGuild(), event.getTextChannel());
+        String sellerName = todaysSeller().name().toLowerCase().replace(" ", "");
+        impersonationController.sendMessage(String.format(resourceBundle.getString(
+                "command.turnips.list.sunday." + sellerName),
+                turnipPrice));
+    }
+
+    private Impersonation todaysSeller() {
+        if (LocalDate.now(clock).getMonthValue() % 2 == 0) {
+            return Impersonation.of("Joan", "https://i.imgur.com/rfSMl18.png");
+        } else {
+            return Impersonation.of("Daisy Mae", "https://i.imgur.com/RNGXzmb.png");
         }
     }
 

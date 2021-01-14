@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.MessageBuilderHelper;
+import dev.nincodedo.ninbot.components.common.message.MessageBuilderHelper;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;

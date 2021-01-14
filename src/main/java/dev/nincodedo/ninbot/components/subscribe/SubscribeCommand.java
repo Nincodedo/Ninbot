@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.subscribe;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
 import lombok.val;

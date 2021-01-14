@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.fun.pathogen;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

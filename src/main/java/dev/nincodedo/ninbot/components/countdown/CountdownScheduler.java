@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.countdown;
 
-import dev.nincodedo.ninbot.components.common.GenericAnnounce;
+import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;

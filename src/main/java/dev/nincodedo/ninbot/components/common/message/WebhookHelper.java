@@ -1,8 +1,9 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.components.common.message;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
@@ -20,6 +21,9 @@ import java.util.concurrent.ExecutionException;
 @Log4j2
 public class WebhookHelper {
 
+    @Getter
+    private Webhook webhook;
+
     /**
      * Returns Optional of the webhook if found
      *
@@ -34,6 +38,7 @@ public class WebhookHelper {
             for (val webhook : webhooks) {
                 if (webhook.getName().equalsIgnoreCase(name)) {
                     webhook.getManager().setChannel(textChannel).complete();
+                    this.webhook = webhook;
                     return Optional.of(webhook);
                 }
             }
@@ -41,24 +46,23 @@ public class WebhookHelper {
         return Optional.empty();
     }
 
-    public void setWebhookIcon(String iconUrl, WebhookManager manager) {
+    public WebhookManager setWebhookIcon(String iconUrl) {
         try {
             Icon icon = Icon.from(new URL(iconUrl).openStream());
-            manager.setAvatar(icon).queue();
+            webhook.getManager().setAvatar(icon).queue();
         } catch (IOException e) {
             log.error("Failed to grab avatar", e);
         }
+        return webhook.getManager();
     }
 
-    public void sendMessage(String message, String webhookUrl) {
+    public void sendMessage(String message) {
         WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
         messageBuilder.append(message);
-        WebhookClient client = new WebhookClientBuilder(webhookUrl).build();
-        try {
+        try (WebhookClient client = new WebhookClientBuilder(webhook.getUrl()).build()) {
             client.send(messageBuilder.build()).get();
         } catch (InterruptedException | ExecutionException e) {
             log.error("Failed to send webhook message", e);
         }
-        client.close();
     }
 }

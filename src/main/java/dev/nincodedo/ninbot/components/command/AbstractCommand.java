@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.*;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.WebhookHelper;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;

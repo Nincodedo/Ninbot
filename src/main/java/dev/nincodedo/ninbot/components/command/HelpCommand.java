@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;

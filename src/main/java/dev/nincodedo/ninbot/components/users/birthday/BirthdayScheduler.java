@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.users.birthday;
 
 import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.GenericAnnounce;
+import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.users.NinbotUser;
 import dev.nincodedo.ninbot.components.users.UserRepository;

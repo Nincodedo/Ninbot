@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.subscribe;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.components.common.MessageAction;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
