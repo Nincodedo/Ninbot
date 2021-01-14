@@ -14,8 +14,22 @@
     <name>Ninbot</name>
     <description>Discord bot for OCW Discord using JDA</description>
     <url>https://github.com/Nincodedo/Ninbot</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://www.mit.edu/~amini/LICENSE.md</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>nincodedo</id>
+            <name>Nincodedo</name>
+            <email>nincodedo@gmail.com</email>
+        </developer>
+    </developers>
     <scm>
         <connection>scm:git:https://github.com/Nincodedo/Ninbot.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Nincodedo/Ninbot.git</developerConnection>
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
