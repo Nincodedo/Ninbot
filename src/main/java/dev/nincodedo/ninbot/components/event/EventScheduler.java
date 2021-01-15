@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.event;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;

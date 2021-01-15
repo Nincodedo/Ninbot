@@ -285,5 +285,3 @@ ij_json_wrap_long_lines = false
 [*.yml]
 indent_size = 2
 
-[*.yaml]
-indent_size = 2

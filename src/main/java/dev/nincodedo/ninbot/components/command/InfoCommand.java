@@ -73,9 +73,9 @@ public class InfoCommand extends AbstractCommand {
                     .stream()
                     .map(Member::getUser)
                     .filter(user -> !user.isBot())
-                    //get out of here ya freeloader
-                    .filter(user -> !user.getName().equalsIgnoreCase("nincodedo"))
                     .map(User::getName)
+                    //get out of here ya freeloader
+                    .filter(userName -> !userName.equalsIgnoreCase("nincodedo"))
                     .map(username -> username + " ")
                     .collect(Collectors.joining())
                     .trim();

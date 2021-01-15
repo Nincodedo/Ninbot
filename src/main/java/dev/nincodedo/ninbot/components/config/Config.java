@@ -28,10 +28,4 @@ public class Config implements Serializable {
         this.name = configName;
         this.value = configValue;
     }
-
-    public Config(String configName, String configValue) {
-        this.name = configName;
-        this.value = configValue;
-        this.global = true;
-    }
 }

@@ -36,8 +36,6 @@ public class ImpersonationController {
             webhookHelper.setWebhookIcon(impersonation.iconUrl())
                     .setName(impersonation.name())
                     .complete();
-        } else {
-            //throws something
         }
     }
 }
