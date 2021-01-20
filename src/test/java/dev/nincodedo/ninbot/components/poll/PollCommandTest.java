@@ -55,6 +55,9 @@ class PollCommandTest {
         when(user.getAvatarUrl()).thenReturn("http://google.com/a-url");
         when(messageEvent.getChannel()).thenReturn(messageChannel);
         when(messageChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
+        when(messageEvent.getChannelType()).thenReturn(ChannelType.TEXT);
+        when(messageEvent.getGuild()).thenReturn(guild);
+        when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
         val actualMessageAction = pollCommand.executeCommand(messageEvent);
@@ -81,6 +84,9 @@ class PollCommandTest {
         when(member.getUser()).thenReturn(user);
         when(user.getAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
         when(member.getEffectiveName()).thenReturn("Nincodedo");
+        when(messageEvent.getChannelType()).thenReturn(ChannelType.TEXT);
+        when(messageEvent.getGuild()).thenReturn(guild);
+        when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
         val actualMessageAction = pollCommand.executeCommand(messageEvent);

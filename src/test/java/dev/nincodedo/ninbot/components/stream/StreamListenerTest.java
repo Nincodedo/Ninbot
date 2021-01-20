@@ -73,8 +73,7 @@ class StreamListenerTest {
         when(activity.asRichPresence()).thenReturn(richPresence);
         when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
         when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
-        when(LocaleService.getResourceBundleOrDefault(guild)).thenReturn(ResourceBundle.getBundle("lang",
-                Locale.ENGLISH));
+        when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getTextChannelById("123")).thenReturn(textChannel);
         when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
