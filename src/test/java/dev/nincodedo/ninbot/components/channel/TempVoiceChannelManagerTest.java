@@ -1,8 +1,6 @@
 package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.components.channel.voice.TempVoiceChannelManager;
-import dev.nincodedo.ninbot.components.channel.voice.TempVoiceChannelRepository;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
