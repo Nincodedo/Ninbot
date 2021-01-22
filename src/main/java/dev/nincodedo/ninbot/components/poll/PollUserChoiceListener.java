@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -24,16 +25,20 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
         val refMessage = event.getMessage().getReferencedMessage();
         if (refMessage != null && refMessage.getId().equals(pollMessageId)) {
             val pollOptional = pollRepository.findByMessageIdAndPollOpen(pollMessageId, true);
-            if (pollOptional.isPresent() && pollOptional.get().isUserChoicesAllowed()) {
+            if (pollOptional.isPresent() && pollOptional.get().isPollOpen() && pollOptional.get()
+                    .isUserChoicesAllowed()) {
                 val message = event.getMessage().getContentStripped();
                 val poll = pollOptional.get();
-                poll.getChoices().add(message);
-                pollRepository.save(poll);
-                refMessage.editMessage(poll.build()).queue();
-                pollSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
+                val pollChoices = poll.getChoices();
+                if (!pollChoices.contains(message)) {
+                    poll.getChoices().add(message);
+                    pollRepository.save(poll);
+                    refMessage.editMessage(poll.build()).queue();
+                    pollSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
+                } else {
+                    new MessageAction().setOverrideMessage(event.getMessage()).addUnsuccessfulReaction().executeActions();
+                }
             }
         }
     }
-
-
 }
