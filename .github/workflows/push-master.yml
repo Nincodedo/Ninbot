@@ -32,7 +32,9 @@ jobs:
         uses: matootie/github-docker@v3.1.0
         with:
           accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
-          tag: 'latest'
+          tag: |
+            latest
+            ${{ github.sha }}
           containerRegistry: true
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
