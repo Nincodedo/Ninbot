@@ -2,31 +2,32 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.Schedulable;
+import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.val;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.function.Consumer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class PollScheduler implements Schedulable {
 
     private PollRepository pollRepository;
+    private ExecutorService executorService;
+    private PollSetup pollSetup;
 
-    public PollScheduler(PollRepository pollRepository) {
+    public PollScheduler(PollRepository pollRepository, PollSetup pollSetup) {
         this.pollRepository = pollRepository;
+        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("poll-scheduler"));
+        this.pollSetup = pollSetup;
     }
 
     @Override
     public void scheduleAll(ShardManager shardManager) {
         //Only find open polls (ones that have not been announced)
-        pollRepository.findAllByPollOpen(true).forEach(poll -> scheduleOne(poll, shardManager));
+        pollRepository.findAllByPollOpen(true)
+                .forEach(poll -> executorService.execute(() -> scheduleOne(poll, shardManager)));
     }
 
     void addPoll(Poll poll, ShardManager shardManager) {
@@ -38,28 +39,10 @@ public class PollScheduler implements Schedulable {
         val resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
                 .getLocale());
         poll.setResourceBundle(resourceBundle);
-        List<String> choices = poll.getChoices();
         val channel = shardManager.getTextChannelById(poll.getChannelId());
         if (channel != null) {
-            channel.retrieveMessageById(poll.getMessageId()).queue(setupPoll(poll, choices));
+            channel.retrieveMessageById(poll.getMessageId())
+                    .queue(message -> pollSetup.setupAnnounce(poll, shardManager, message));
         }
-    }
-
-    private Consumer<Message> setupPoll(Poll poll, List<String> choices) {
-        return message -> {
-            char digitalOneEmoji = '\u0031';
-            for (int i = 0; i < choices.size(); i++) {
-                message.addReaction(digitalOneEmoji + "\u20E3").queue();
-                digitalOneEmoji++;
-            }
-            val announceTime = message.getTimeCreated().toInstant().plus(poll.getTimeLength(), ChronoUnit.MINUTES);
-            //Poll announce time is in the future, or has not been announce yet
-            if (announceTime.isAfter(Instant.now()) || poll.isPollOpen()) {
-                message.pin().queue();
-                PollAnnounce pollAnnounce = new PollAnnounce(poll, message, pollRepository);
-                Timer timer = new Timer();
-                timer.schedule(pollAnnounce, Date.from(announceTime));
-            }
-        };
     }
 }

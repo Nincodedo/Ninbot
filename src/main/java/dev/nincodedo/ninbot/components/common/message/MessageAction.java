@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.common.message;
 
 import dev.nincodedo.ninbot.components.common.Emojis;
 import lombok.Getter;
-import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
@@ -22,7 +21,6 @@ public class MessageAction {
     private List<Message> channelMessageList;
     private List<String> emojisList;
     private List<Emote> emoteList;
-    @Setter
     private Message overrideMessage;
 
     public MessageAction() {
@@ -45,29 +43,41 @@ public class MessageAction {
         message.addReaction(Emojis.CROSS_X).queue();
     }
 
+    public MessageAction setOverrideMessage(Message overrideMessage) {
+        this.overrideMessage = overrideMessage;
+        return this;
+    }
+
     public void executeActions() {
-        Message eventMessage = event.getMessage();
+        Message eventMessage = null;
+        if (event != null) {
+            eventMessage = event.getMessage();
+        }
         if (overrideMessage != null) {
             eventMessage = overrideMessage;
         }
-        for (Message message : privateMessageList) {
-            event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-                privateChannel.sendTyping().queue();
-                privateChannel.sendMessage(message).queue();
-            });
-        }
-        for (Message message : channelMessageList) {
-            if (message != null) {
-                MessageChannel messageChannel = event.getChannel();
-                messageChannel.sendTyping().queue();
-                messageChannel.sendMessage(message).queue();
+        if (event != null) {
+            for (Message message : privateMessageList) {
+                event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                    privateChannel.sendTyping().queue();
+                    privateChannel.sendMessage(message).queue();
+                });
+            }
+            for (Message message : channelMessageList) {
+                if (message != null) {
+                    MessageChannel messageChannel = event.getChannel();
+                    messageChannel.sendTyping().queue();
+                    messageChannel.sendMessage(message).queue();
+                }
             }
         }
-        for (String emoji : emojisList) {
-            eventMessage.addReaction(emoji).queue();
-        }
-        for (Emote emote : emoteList) {
-            eventMessage.addReaction(emote).queue();
+        if (eventMessage != null) {
+            for (String emoji : emojisList) {
+                eventMessage.addReaction(emoji).queue();
+            }
+            for (Emote emote : emoteList) {
+                eventMessage.addReaction(emote).queue();
+            }
         }
     }
 
