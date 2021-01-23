@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.val;
@@ -33,7 +34,7 @@ public class PollCommand extends AbstractCommand {
             Poll poll = parsePollMessage(event.getMessage(), event.getMember());
             poll.setResourceBundle(resourceBundle);
             poll.setLocaleString(LocaleService.getLocale(event).toString());
-            if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= 9) {
+            if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= Constants.POLL_CHOICE_LIMIT) {
                 event.getChannel()
                         .sendMessage(poll.build())
                         .queue(message -> {

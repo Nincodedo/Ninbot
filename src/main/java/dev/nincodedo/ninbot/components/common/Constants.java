@@ -8,4 +8,5 @@ public class Constants {
     public static final String NINBOT_SERVER_ID = "497444318768922633";
     public static final String NINBOT_DOCUMENTATION_URL = "https://ninbot.nincodedo.dev/";
     public static final String NINBOT_GITHUB_URL = "https://github.com/Nincodedo/Ninbot";
+    public static final int POLL_CHOICE_LIMIT = 9;
 }

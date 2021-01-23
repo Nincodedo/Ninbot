@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
+import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.stats.StatManager;
@@ -30,7 +31,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
                 val message = event.getMessage().getContentStripped();
                 val poll = pollOptional.get();
                 val pollChoices = poll.getChoices();
-                if (!pollChoices.contains(message)) {
+                if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
                     poll.getChoices().add(message);
                     pollRepository.save(poll);
                     refMessage.editMessage(poll.build()).queue();
