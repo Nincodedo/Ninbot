@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -25,12 +26,18 @@ public class DabCommand extends AbstractCommand {
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
     private SecureRandom random;
+    private boolean isDabEdition;
 
-    public DabCommand() {
+    public DabCommand(GitProperties gitProperties) {
         length = 3;
         name = "dab";
         checkExactLength = false;
         random = new SecureRandom();
+        isDabEdition = isDabEdition(gitProperties.getCommitId());
+    }
+
+    private boolean isDabEdition(String commitId) {
+        return commitId != null && commitId.toLowerCase().contains("dab");
     }
 
     @Override
@@ -63,6 +70,9 @@ public class DabCommand extends AbstractCommand {
         int dabCritPercentChance = 5;
 
         if (isUserNinbotSupporter(shardManager, commandUser)) {
+            dabCritPercentChance = dabCritPercentChance * 2;
+        }
+        if (isDabEdition) {
             dabCritPercentChance = dabCritPercentChance * 2;
         }
 
