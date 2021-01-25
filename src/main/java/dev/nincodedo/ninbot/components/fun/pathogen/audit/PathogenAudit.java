@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.fun.pathogen;
+package dev.nincodedo.ninbot.components.fun.pathogen.audit;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;

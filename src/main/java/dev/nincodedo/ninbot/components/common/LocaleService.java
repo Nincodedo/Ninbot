@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.common;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -8,6 +9,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+@UtilityClass
 @Log4j2
 public class LocaleService {
 

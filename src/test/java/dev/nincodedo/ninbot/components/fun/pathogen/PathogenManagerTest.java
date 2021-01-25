@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
 import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAuditRepository;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

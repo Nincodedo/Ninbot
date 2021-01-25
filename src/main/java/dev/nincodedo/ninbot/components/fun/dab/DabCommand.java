@@ -71,6 +71,7 @@ public class DabCommand extends AbstractCommand {
 
         if (isUserNinbotSupporter(shardManager, commandUser)) {
             dabCritPercentChance = dabCritPercentChance * 2;
+            log.trace("Made possible by Patreon");
         }
         if (isDabEdition) {
             dabCritPercentChance = dabCritPercentChance * 2;
@@ -81,9 +82,6 @@ public class DabCommand extends AbstractCommand {
         if (critDab) {
             messageAction.addReaction(critResponse.getEmojiList());
             messageAction.addReaction(dabResponse.getEmojiList());
-            if (critInt >= 5) {
-                log.trace("Made possible by Patreon");
-            }
         }
 
         val list = shardManager.getEmotes().stream()

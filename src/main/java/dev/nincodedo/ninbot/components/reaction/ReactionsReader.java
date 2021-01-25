@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -24,8 +25,7 @@ public class ReactionsReader {
     @Bean
     List<ReactionResponse> reactionResponseList() {
         try {
-            String jsonString = readFromInputStream(getClass().getClassLoader()
-                    .getResourceAsStream("responses.json"));
+            String jsonString = readFromInputStream(new ClassPathResource("responses.json").getInputStream());
             List<ReactionResponse> reactionResponseList = new ArrayList<>();
             for (ReactionMatchType type : ReactionMatchType.values()) {
                 ObjectMapper objectMapper = new ObjectMapper();
