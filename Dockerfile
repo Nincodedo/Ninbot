@@ -5,7 +5,7 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit --no-transfer-progress
 
-FROM openjdk:15-slim
+FROM adoptopenjdk/openjdk15:debianslim-jre
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 RUN mkdir /app
