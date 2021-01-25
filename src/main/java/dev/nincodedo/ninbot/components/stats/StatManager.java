@@ -43,7 +43,7 @@ public class StatManager {
 
     public void addCount(String name, String category, String serverId, int count) {
         executorService.execute(() -> {
-            val optionalStat = statRepository.findByName(name);
+            val optionalStat = statRepository.findByNameAndCategoryAndServerId(name, category, serverId);
             Stat stat;
             if (optionalStat.isPresent()) {
                 stat = optionalStat.get();
