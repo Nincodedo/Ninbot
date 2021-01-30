@@ -39,7 +39,10 @@ public class InfoCommand extends AbstractCommand {
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(resourceBundle.getString("command.info.title"));
+        embedBuilder.setAuthor(resourceBundle.getString("command.info.title"), Constants.NINBOT_GITHUB_URL,
+                event.getJDA()
+                .getSelfUser()
+                .getEffectiveAvatarUrl());
         if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
             val uptime = metricsEndpoint.metric("process.uptime", null);
             val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
@@ -76,9 +79,10 @@ public class InfoCommand extends AbstractCommand {
                     .map(User::getName)
                     //get out of here ya freeloader
                     .filter(userName -> !userName.equalsIgnoreCase("nincodedo"))
-                    .map(username -> username + " ")
+                    .map(username -> username + "|||")
                     .collect(Collectors.joining())
-                    .trim();
+                    .trim()
+                    .replace("|||", ", ");
         }
         return null;
     }
