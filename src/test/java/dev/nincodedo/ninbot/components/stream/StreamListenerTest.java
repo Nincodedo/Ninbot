@@ -138,8 +138,11 @@ class StreamListenerTest {
         MessageAction messageAction = mock(MessageAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Role streamingRole = mock(Role.class);
+        User user = mock(User.class);
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
         when(userActivityEndEvent.getMember()).thenReturn(member);
+        when(member.getUser()).thenReturn(user);
+        when(user.getId()).thenReturn("123");
         when(member.getId()).thenReturn("123");
         when(userActivityEndEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");

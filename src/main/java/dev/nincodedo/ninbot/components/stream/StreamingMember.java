@@ -46,7 +46,7 @@ class StreamingMember {
     public Optional<StreamInstance> currentStream() {
         return streamInstances.stream()
                 .sorted(Comparator.comparing(StreamInstance::getStartTimestamp))
-                .filter(streamInstance -> streamInstance.getEndTimestamp() != null)
+                .filter(streamInstance -> streamInstance.getEndTimestamp() == null)
                 .findFirst();
     }
 }

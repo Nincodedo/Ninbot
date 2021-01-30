@@ -83,12 +83,13 @@ public class StreamListener extends StatAwareListenerAdapter {
                     String streamingUrl = getStreamingUrlFromEvent(event);
                     setTwitchUserName(streamingMember, streamingUrl);
                     streamingMemberRepository.save(streamingMember);
-                    streamingMember.currentStream().ifPresent(streamInstance1 -> {
-                        if (streamInstance1.getAnnounceMessageId() == null) {
+                    if (streamingMember.currentStream().isPresent()) {
+                        val currentStream = streamingMember.currentStream().get();
+                        if (currentStream.getAnnounceMessageId() == null) {
                             announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
                         }
                         addRole(guild, member);
-                    });
+                    }
                 }
             }
         } else if (hasStoppedStreaming(event)) {
