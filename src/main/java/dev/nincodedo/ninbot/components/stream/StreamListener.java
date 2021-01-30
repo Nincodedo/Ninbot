@@ -16,8 +16,6 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceStreamEvent;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
-import net.dv8tion.jda.api.sharding.ShardManager;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -29,7 +27,6 @@ import java.util.Optional;
 @Log4j2
 public class StreamListener extends StatAwareListenerAdapter {
 
-    private ShardManager shardManager;
     private StreamMessageBuilder streamMessageBuilder;
     private ConfigService configService;
     private ComponentService componentService;
@@ -37,13 +34,11 @@ public class StreamListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, ComponentService componentService,
-            StreamingMemberRepository streamingMemberRepository, ShardManager shardManager,
-            StatManager statManager) {
+            StreamingMemberRepository streamingMemberRepository, StatManager statManager) {
         super(statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
-        this.shardManager = shardManager;
         this.streamMessageBuilder = new StreamMessageBuilder();
         this.componentName = "stream-announce";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
@@ -166,36 +161,6 @@ public class StreamListener extends StatAwareListenerAdapter {
     @Override
     public void onGenericUserPresence(GenericUserPresenceEvent event) {
         onStreamEvent(event, event.getGuild(), event.getMember());
-    }
-
-    private void endOldStreams(StreamingMember streamingMember) {
-        streamingMember.currentStream().ifPresent(streamInstance -> {
-            val guild = shardManager.getGuildById(streamingMember.getGuildId());
-            if (guild != null) {
-                guild.retrieveMemberById(streamingMember.getUserId()).queue(member -> {
-                    if (member.getActivities().isEmpty()) {
-                        //if member has no current activities then end any stream instances that haven't been ended yet
-                        streamInstance.getStreamingMember().getStreamInstances().forEach(streamInstance1 -> {
-                            if (streamInstance1.getEndTimestamp() == null) {
-                                streamInstance1.setEndTimestamp(LocalDateTime.now());
-                            }
-                        });
-                    }
-                    streamingMemberRepository.save(streamingMember);
-                });
-            }
-        });
-    }
-
-    //twice a day
-    @Scheduled(fixedRate = 43200000L)
-    private void endOldStreams() {
-        log.trace("Running scheduled end of old streams");
-        streamingMemberRepository.findAll().forEach(streamingMember -> {
-            if (streamingMember.currentStream().isPresent() && streamingMember.currentStream().get().isStreaming()) {
-                endOldStreams(streamingMember);
-            }
-        });
     }
 
     private boolean hasNoStreamingActivity(List<Activity> activities) {
