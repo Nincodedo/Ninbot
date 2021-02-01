@@ -57,9 +57,9 @@ public class StreamListener extends StatAwareListenerAdapter {
         if (hasStartedStreaming(event)) {
             Optional<String> userIdOptional = getUserIdFromEvent(event);
             if (userIdOptional.isPresent()) {
-                val userId = userIdOptional.get();
-                StreamingMember streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId)
-                        .orElseGet(() -> new StreamingMember(userId, guildId));
+                StreamingMember streamingMember =
+                        streamingMemberRepository.findByUserIdAndGuildId(userIdOptional.get(), guildId)
+                                .orElseGet(() -> new StreamingMember(userIdOptional.get(), guildId));
                 //Grab all the values because this query will get cached easier rather than looking for individual IDs
                 val streamingAnnounceUser = configService.getValuesByName(guildId,
                         ConfigConstants.STREAMING_ANNOUNCE_USERS);
@@ -212,10 +212,12 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     private void updateStreamMemberWithMessageId(StreamingMember streamingMember, String messageId) {
-        streamingMember.currentStream().ifPresent(streamInstance -> {
-            streamInstance.setAnnounceMessageId(messageId);
-            streamingMemberRepository.save(streamingMember);
-        });
+        streamingMemberRepository.findByUserIdAndGuildId(streamingMember.getUserId(), streamingMember.getGuildId())
+                .flatMap(StreamingMember::currentStream)
+                .ifPresent(streamInstance -> {
+                    streamInstance.setAnnounceMessageId(messageId);
+                    streamingMemberRepository.save(streamingMember);
+                });
     }
 
     private void addRole(Guild guild, Member member) {
