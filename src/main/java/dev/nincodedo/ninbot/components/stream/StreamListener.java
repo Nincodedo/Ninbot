@@ -216,6 +216,7 @@ public class StreamListener extends StatAwareListenerAdapter {
                 .flatMap(StreamingMember::currentStream)
                 .ifPresent(streamInstance -> {
                     streamInstance.setAnnounceMessageId(messageId);
+                    streamingMember.updateCurrentStream(streamInstance);
                     streamingMemberRepository.save(streamingMember);
                 });
     }

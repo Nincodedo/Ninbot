@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class StreamInstance {
     private LocalDateTime endTimestamp;
     private String announceMessageId;
     @ManyToOne
+    @ToString.Exclude
     private StreamingMember streamingMember;
 
     public boolean isStreaming(){
