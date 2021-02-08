@@ -40,7 +40,9 @@ class StreamingMember {
     }
 
     public void startNewStream() {
-        streamInstances.add(new StreamInstance());
+        StreamInstance streamInstance = new StreamInstance();
+        streamInstances.add(streamInstance);
+        streamInstance.setStreamingMember(this);
     }
 
     public Optional<StreamInstance> currentStream() {
@@ -48,5 +50,12 @@ class StreamingMember {
                 .sorted(Comparator.comparing(StreamInstance::getStartTimestamp))
                 .filter(streamInstance -> streamInstance.getEndTimestamp() == null)
                 .findFirst();
+    }
+
+    public void updateCurrentStream(StreamInstance streamInstance) {
+        currentStream().ifPresent(currentStreamInstance -> {
+            streamInstances.remove(currentStreamInstance);
+            streamInstances.add(streamInstance);
+        });
     }
 }
