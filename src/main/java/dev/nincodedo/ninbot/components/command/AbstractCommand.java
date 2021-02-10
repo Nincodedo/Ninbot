@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot.components.command;
 
-import dev.nincodedo.ninbot.components.common.*;
+import dev.nincodedo.ninbot.components.common.Constants;
+import dev.nincodedo.ninbot.components.common.LocaleService;
+import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.message.WebhookHelper;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -179,9 +181,13 @@ public abstract class AbstractCommand {
      * @return true/false
      */
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        return shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID)
-                .getMembers()
-                .stream()
-                .anyMatch(member -> member.getId().equals(user.getId()));
+        val guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        if (guild != null) {
+            return guild.getMembers()
+                    .stream()
+                    .anyMatch(member -> member.getId().equals(user.getId()));
+        } else {
+            return false;
+        }
     }
 }
