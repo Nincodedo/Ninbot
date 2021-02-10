@@ -103,6 +103,10 @@ public class DabCommand extends AbstractCommand {
 
         log.trace("Dabbing from {} potential dabs", emoteList.size());
 
+        sendDabs(messageAction, emoteList);
+    }
+
+    void sendDabs(MessageAction messageAction, List<Emote> emoteList) {
         messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
