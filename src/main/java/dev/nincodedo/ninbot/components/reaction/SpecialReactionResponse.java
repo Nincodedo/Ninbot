@@ -28,7 +28,7 @@ public class SpecialReactionResponse extends ReactionResponse {
             }
             if (reactionResponse.contains("$message.previous.content") && lastMessageOptional.isPresent()) {
                 val lastMessage = lastMessageOptional.get();
-                String previousMessageContent = lastMessage.getContentStripped();
+                String previousMessageContent = lastMessage.getContentRaw();
                 if (reactionResponse.contains("#toUpper")) {
                     reactionResponse = reactionResponse.replace("#toUpper", "");
                     previousMessageContent = previousMessageContent.toUpperCase();

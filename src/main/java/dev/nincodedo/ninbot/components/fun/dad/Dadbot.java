@@ -7,6 +7,7 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
 
     @Autowired
-    public Dadbot(ConfigService configService, ComponentService componentService,            StatManager statManager) {
+    public Dadbot(ConfigService configService, ComponentService componentService, StatManager statManager) {
         super(statManager);
         random = new Random();
         this.configService = configService;
@@ -44,15 +45,15 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
-        val message = event.getMessage().getContentStripped();
-        val first = message.split("\\s+")[0];
+        val strippedMessage = event.getMessage().getContentStripped();
+        val first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
                 || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
                 || (!event.getChannelType().isGuild())) {
             return;
         }
-        if (StringUtils.isNotBlank(message) && message.split("\\s+").length >= 1 && checkChance()) {
-            hiImDad(message, event);
+        if (StringUtils.isNotBlank(strippedMessage) && strippedMessage.split("\\s+").length >= 1 && checkChance()) {
+            hiImDad(event.getMessage(), event);
         }
     }
 
@@ -61,16 +62,30 @@ public class Dadbot extends StatAwareListenerAdapter {
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
-    private void hiImDad(String message, MessageReceivedEvent event) {
+    private void hiImDad(Message message, MessageReceivedEvent event) {
         if (channelIsOnDenyList(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
-        String stringBuilder = resourceBundle.getString("listener.dad.hi") +
-                message.substring(message.indexOf(' ')) +
-                resourceBundle.getString("listener.dad.imdad");
+        String strippedMessage = message.getContentStripped();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(resourceBundle.getString("listener.dad.hi")).append(" ");
+        if (isSpoiler(message.getContentRaw())) {
+            stringBuilder.append("||");
+        }
+        stringBuilder.append(strippedMessage.substring(strippedMessage.indexOf(' ')).trim());
+        if (isSpoiler(message.getContentRaw())) {
+            stringBuilder.append("||");
+        }
+        stringBuilder.append(resourceBundle.getString("listener.dad.imdad"));
         event.getChannel()
                 .sendMessage(stringBuilder)
                 .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
+    }
+
+    private boolean isSpoiler(String message) {
+        String checkMessage = message.replaceFirst("\\|\\|", "");
+        return checkMessage.contains("||");
     }
 
     private boolean checkChance() {
