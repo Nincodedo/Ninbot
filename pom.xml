@@ -49,7 +49,7 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <pitest-maven.version>1.6.3</pitest-maven.version>
-        <sap-conversational-ai-java-api.version>0.0.3</sap-conversational-ai-java-api.version>
+        <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>2.13.1</sortpom-maven-plugin.version>
@@ -229,12 +229,9 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-nincodedo-maven</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/nincodedo/maven</url>
+          <id>github</id>
+          <name>GitHub Nincodedo Maven</name>
+          <url>https://maven.pkg.github.com/Nincodedo/sap-conversational-ai-java-api</url>
         </repository>
         <repository>
             <id>sonatype</id>
