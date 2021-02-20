@@ -95,6 +95,7 @@ class HaikuListenerTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped())
                 .thenReturn(bestHaiku);
+        when(message.getContentRaw()).thenReturn(bestHaiku);
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(componentService.isDisabled("haiku", "1")).thenReturn(false);
