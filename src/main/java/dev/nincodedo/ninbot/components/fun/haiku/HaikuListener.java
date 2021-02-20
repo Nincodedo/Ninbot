@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.haiku;
 
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.components.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
@@ -42,7 +43,8 @@ public class HaikuListener extends StatAwareListenerAdapter {
         val message = event.getMessage().getContentStripped();
         isHaikuable(message).ifPresent(haikuLines -> {
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.appendDescription("_" + haikuLines + "_");
+            embedBuilder.appendDescription(MessageUtils.addSpoilerText(
+                    "_" + haikuLines + "_", event.getMessage().getContentRaw()));
             embedBuilder.setFooter("A haiku inspired by " + event.getMember().getEffectiveName());
             event.getChannel()
                     .sendMessage(new MessageBuilder(embedBuilder).build())
