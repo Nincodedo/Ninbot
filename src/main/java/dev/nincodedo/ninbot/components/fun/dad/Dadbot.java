@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.fun.dad;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.components.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -70,22 +71,12 @@ public class Dadbot extends StatAwareListenerAdapter {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(resourceBundle.getString("listener.dad.hi")).append(" ");
-        if (isSpoiler(message.getContentRaw())) {
-            stringBuilder.append("||");
-        }
-        stringBuilder.append(strippedMessage.substring(strippedMessage.indexOf(' ')).trim());
-        if (isSpoiler(message.getContentRaw())) {
-            stringBuilder.append("||");
-        }
+        stringBuilder.append(MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
+                .trim(), message.getContentRaw()));
         stringBuilder.append(resourceBundle.getString("listener.dad.imdad"));
         event.getChannel()
                 .sendMessage(stringBuilder)
                 .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
-    }
-
-    private boolean isSpoiler(String message) {
-        String checkMessage = message.replaceFirst("\\|\\|", "");
-        return checkMessage.contains("||");
     }
 
     private boolean checkChance() {
