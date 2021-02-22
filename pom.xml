@@ -39,7 +39,7 @@
         <commons-io.version>2.8.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.9</commons-text.version>
-        <dice.version>2.0.4</dice.version>
+        <dice.version>2.1.0</dice.version>
         <discord-webhooks.version>0.5.4</discord-webhooks.version>
         <emoji-java.version>5.1.1</emoji-java.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
