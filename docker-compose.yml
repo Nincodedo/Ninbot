@@ -24,5 +24,9 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data-volume:/var/lib/mysql
+  game-server-commander:
+    image: nincodedo/game-server-commander:latest
+    ports:
+    - "8081:8080"
 volumes:
   mysql-data-volume:
