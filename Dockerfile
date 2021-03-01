@@ -1,9 +1,10 @@
 FROM maven:3.6.3-openjdk-15 AS build
 COPY pom.xml .
+COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
 COPY src ./src
 COPY .git ./.git
-RUN mvn package -P git-commit --no-transfer-progress
+RUN mvn package -P git-commit
 
 FROM adoptopenjdk/openjdk15:debianslim-jre
 LABEL maintainer="Nincodedo"
@@ -11,8 +12,7 @@ LABEL source="https://github.com/Nincodedo/Ninbot"
 RUN mkdir /app
 RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
 WORKDIR /app
-COPY --from=build target/ninbot*.jar /app/ninbot.jar
-RUN chown -R ninbot:ninbot /app
+COPY --chown=ninbot:ninbot --from=build target/ninbot*.jar /app/ninbot.jar
 RUN apt-get update && apt-get install curl=7.64.0-4+deb10u1 -y --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
 USER ninbot
 HEALTHCHECK --start-period=20s CMD curl --fail --silent http://localhost:8080/actuator/health 2>&1 | grep UP || exit 1
