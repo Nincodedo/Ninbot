@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.fun.pathogen;
+package dev.nincodedo.ninbot.components.fun.pathogen.user;
 
 import org.springframework.stereotype.Component;
 

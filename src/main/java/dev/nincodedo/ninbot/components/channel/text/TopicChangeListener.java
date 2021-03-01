@@ -36,7 +36,7 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
         }
         val channelIds = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
         val eventChannel = event.getChannel();
-        if (StringUtils.isNotBlank(event.getNewTopic()) && channelIds.contains(eventChannel.getId())) {
+        if (StringUtils.isNotBlank(event.getNewTopic()) && (channelIds.contains(eventChannel.getId()) || channelIds.contains("*"))) {
             String message;
             ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", LocaleService.getLocale(event.getGuild()));
             if (event.getGuild()
