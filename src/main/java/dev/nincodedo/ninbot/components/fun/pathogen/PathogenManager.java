@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
@@ -148,7 +149,7 @@ public class PathogenManager {
 
     private List<String> readWordList() {
         try {
-            return Files.readAllLines(new ClassPathResource("listOfCommonWords.txt").getFile().toPath());
+            return Files.readAllLines(Paths.get(new ClassPathResource("listOfCommonWords.txt").getURI()));
         } catch (IOException e) {
             log.error("Failed to read common word file", e);
             return new ArrayList<>();
