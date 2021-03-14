@@ -5,7 +5,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +40,12 @@ public class Magic8BallMessageBuilder {
 
     private List<String> readMagic8BallList() {
         List<String> answers = new ArrayList<>();
-        try {
-            answers = Files.readAllLines(new ClassPathResource("magic8BallAnswers.txt").getFile().toPath());
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
+                .getResourceAsStream("magic8BallAnswers.txt")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                answers.add(line);
+            }
         } catch (IOException e) {
             log.error("Failed to read magic8BallAnswers.txt", e);
         }
