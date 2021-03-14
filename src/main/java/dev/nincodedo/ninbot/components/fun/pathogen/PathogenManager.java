@@ -8,16 +8,16 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
@@ -130,6 +130,14 @@ public class PathogenManager {
         pathogenAuditRepository.save(audit);
     }
 
+    boolean isInfectedMember(Member member) {
+        if (member == null) {
+            return false;
+        }
+        return member.getRoles().stream()
+                .anyMatch(role -> PathogenConfig.getROLE_NAME().equalsIgnoreCase(role.getName()));
+    }
+
     public Set<String> getWordList() {
         setRandomSeed(false);
         List<String> list = readWordList();
@@ -148,12 +156,18 @@ public class PathogenManager {
     }
 
     private List<String> readWordList() {
-        try {
-            return Files.readAllLines(Paths.get(new ClassPathResource("listOfCommonWords.txt").getURI()));
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
+                .getResourceAsStream("listOfCommonWords.txt")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+            }
         } catch (IOException e) {
             log.error("Failed to read common word file", e);
             return new ArrayList<>();
         }
+        return list;
     }
 
     boolean messageContainsSecretWordOfTheDay(String contentStripped) {
