@@ -15,7 +15,7 @@ public class StreamCleanup {
     private StreamingMemberRepository streamingMemberRepository;
     private ShardManager shardManager;
 
-    public StreamCleanup(StreamingMemberRepository streamingMemberRepository, ShardManager shardManager){
+    public StreamCleanup(StreamingMemberRepository streamingMemberRepository, ShardManager shardManager) {
         this.streamingMemberRepository = streamingMemberRepository;
         this.shardManager = shardManager;
     }

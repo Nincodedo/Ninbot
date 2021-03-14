@@ -11,7 +11,8 @@ public class MessageUtils {
 
     /**
      * Puts spoiler tags around an entire string if the raw message had any spoiler tags
-     * @param message the content stripped string
+     *
+     * @param message    the content stripped string
      * @param rawMessage the raw content string
      * @return string with spoiler tags around it if the raw content had any spoiler tags in it
      */

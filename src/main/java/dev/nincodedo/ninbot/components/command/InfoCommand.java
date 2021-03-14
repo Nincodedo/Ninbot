@@ -41,8 +41,8 @@ public class InfoCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(resourceBundle.getString("command.info.title"), Constants.NINBOT_GITHUB_URL,
                 event.getJDA()
-                .getSelfUser()
-                .getEffectiveAvatarUrl());
+                        .getSelfUser()
+                        .getEffectiveAvatarUrl());
         if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
             val uptime = metricsEndpoint.metric("process.uptime", null);
             val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());

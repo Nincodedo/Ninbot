@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.moderation;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.RolePermission;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;

@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.config.component;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.RolePermission;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

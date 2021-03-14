@@ -29,7 +29,8 @@ public class CommandListener extends ListenerAdapter {
     private void addCommands(List<AbstractCommand> commands) {
         commandParser.registerAliases(commands);
         commandParser.addCommands(commands);
-        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap(), componentService, configService, statManager));
+        commandParser.addCommand(new HelpCommand(commandParser.getCommandHashMap(), componentService, configService,
+                statManager));
     }
 
     @Override

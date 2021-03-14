@@ -37,7 +37,9 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
                     refMessage.editMessage(poll.build()).queue();
                     pollSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
                 } else {
-                    new MessageAction().setOverrideMessage(event.getMessage()).addUnsuccessfulReaction().executeActions();
+                    new MessageAction().setOverrideMessage(event.getMessage())
+                            .addUnsuccessfulReaction()
+                            .executeActions();
                 }
             }
         }
