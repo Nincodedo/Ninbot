@@ -1,23 +1,17 @@
 package dev.nincodedo.ninbot.components.trivia.game;
 
 import dev.nincodedo.ninbot.components.trivia.TriviaScoreService;
-import lombok.Getter;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class TriviaAnswerListener extends ListenerAdapter {
-
     private String channelId;
     private String answer;
-    @Getter
     private boolean questionAnswered;
-    @Getter
     private boolean someAnswerOfSorts;
     private TriviaScoreService triviaScoreService;
 
-    TriviaAnswerListener(String channelId, String answer,
-            TriviaScoreService triviaScoreService) {
+    TriviaAnswerListener(String channelId, String answer, TriviaScoreService triviaScoreService) {
         this.channelId = channelId;
         this.answer = answer;
         questionAnswered = false;
@@ -29,7 +23,7 @@ public class TriviaAnswerListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.getAuthor().isBot() && event.getChannel().getId().equals(channelId)) {
             someAnswerOfSorts = true;
-            val message = event.getMessage().getContentStripped().toLowerCase().trim();
+            String message = event.getMessage().getContentStripped().toLowerCase().trim();
             if (message.equalsIgnoreCase(answer)) {
                 triviaScoreService.addUser(event.getAuthor().getId());
                 int newScore = triviaScoreService.addPoints(event.getAuthor().getId(), 1);
@@ -42,5 +36,15 @@ public class TriviaAnswerListener extends ListenerAdapter {
                 questionAnswered = true;
             }
         }
+    }
+
+
+    public boolean isQuestionAnswered() {
+        return this.questionAnswered;
+    }
+
+
+    public boolean isSomeAnswerOfSorts() {
+        return this.someAnswerOfSorts;
     }
 }

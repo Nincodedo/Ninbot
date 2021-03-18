@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @Component
 public class SubscribeCommand extends AbstractCommand {
-
     public SubscribeCommand() {
         length = 3;
         name = "subscribe";
@@ -24,17 +22,17 @@ public class SubscribeCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped().toLowerCase();
+        String content = event.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
-            val server = event.getGuild();
-            val subscribeTo = content.split("\\s+")[2];
-            val role = getRole(server, subscribeTo);
+            final net.dv8tion.jda.api.entities.Guild server = event.getGuild();
+            String subscribeTo = content.split("\\s+")[2];
+            final net.dv8tion.jda.api.entities.Role role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server, role);
                 messageAction.addSuccessfulReaction();
             } else {
-                messageAction.addChannelAction(new MessageBuilder()
-                        .appendFormat(resourceBundle.getString("command.subscribe.norolefound"), subscribeTo)
+                messageAction.addChannelAction(new MessageBuilder().appendFormat(resourceBundle.getString("command"
+                        + ".subscribe.norolefound"), subscribeTo)
                         .build());
             }
         } else {
@@ -54,7 +52,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     private Role getRole(Guild server, String subscribeTo) {
-        val roleList = server.getRolesByName(subscribeTo, true);
+        final java.util.List<net.dv8tion.jda.api.entities.Role> roleList = server.getRolesByName(subscribeTo, true);
         return roleList.isEmpty() ? null : roleList.get(0);
     }
 }

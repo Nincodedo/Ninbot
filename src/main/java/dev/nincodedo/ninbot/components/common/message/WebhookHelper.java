@@ -3,9 +3,6 @@ package dev.nincodedo.ninbot.components.common.message;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
@@ -18,10 +15,10 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-@Log4j2
 public class WebhookHelper {
 
-    @Getter
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(WebhookHelper.class);
     private Webhook webhook;
 
     /**
@@ -34,8 +31,8 @@ public class WebhookHelper {
      */
     public Optional<Webhook> getWebhookByName(Guild guild, TextChannel textChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
-            val webhooks = guild.retrieveWebhooks().complete();
-            for (val webhook : webhooks) {
+            final java.util.List<net.dv8tion.jda.api.entities.Webhook> webhooks = guild.retrieveWebhooks().complete();
+            for (final net.dv8tion.jda.api.entities.Webhook webhook : webhooks) {
                 if (webhook.getName().equalsIgnoreCase(name)) {
                     webhook.getManager().setChannel(textChannel).complete();
                     this.webhook = webhook;
@@ -64,5 +61,10 @@ public class WebhookHelper {
         } catch (InterruptedException | ExecutionException e) {
             log.error("Failed to send webhook message", e);
         }
+    }
+
+
+    public Webhook getWebhook() {
+        return this.webhook;
     }
 }

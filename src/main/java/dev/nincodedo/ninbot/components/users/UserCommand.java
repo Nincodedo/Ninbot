@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Component
 public class UserCommand extends AbstractCommand {
-
     private UserRepository userRepository;
 
     public UserCommand(UserRepository userRepository) {
@@ -23,7 +21,7 @@ public class UserCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "birthday" -> messageAction.addCorrectReaction(updateBirthday(event));
             default -> messageAction = displayHelp(event);
@@ -32,9 +30,10 @@ public class UserCommand extends AbstractCommand {
     }
 
     private boolean updateBirthday(MessageReceivedEvent event) {
-        val birthday = getSubcommand(event.getMessage().getContentStripped(), 3);
+        String birthday = getSubcommand(event.getMessage().getContentStripped(), 3);
         String userId = event.getAuthor().getId();
-        val optionalUser = userRepository.getFirstByUserId(userId);
+        final java.util.Optional<dev.nincodedo.ninbot.components.users.NinbotUser> optionalUser =
+                userRepository.getFirstByUserId(userId);
         NinbotUser ninbotUser;
         if (optionalUser.isPresent()) {
             ninbotUser = optionalUser.get();

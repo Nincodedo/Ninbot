@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaAPI;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaQuestion;
-import lombok.val;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class OpenTDBAPI implements TriviaAPI {
-
     private static final String HTTP_OPENTDB_COM = "https://opentdb.com/";
     private Map<Integer, String> triviaCategoryMap;
     private List<String> badPhraseList;
@@ -35,10 +33,12 @@ public class OpenTDBAPI implements TriviaAPI {
             triviaInstance.setApiToken(getTriviaToken());
         }
         String triviaUrl = buildTriviaUrl(triviaInstance.getApiToken(), triviaInstance.getCategoryId());
-        val response = restTemplate.getForObject(triviaUrl, ObjectNode.class);
+        final com.fasterxml.jackson.databind.node.ObjectNode response = restTemplate.getForObject(triviaUrl,
+                ObjectNode.class);
         if (response != null) {
-            val triviaResults = response.get("results").get(0);
-            val triviaQuestion = new TriviaQuestion(triviaResults);
+            final com.fasterxml.jackson.databind.JsonNode triviaResults = response.get("results").get(0);
+            final dev.nincodedo.ninbot.components.trivia.game.TriviaQuestion triviaQuestion =
+                    new TriviaQuestion(triviaResults);
             triviaQuestion.unescapeFields();
             return getTriviaQuestion(triviaQuestion);
         }
@@ -54,8 +54,8 @@ public class OpenTDBAPI implements TriviaAPI {
     }
 
     private boolean containsBadQuestionPhrase(String question) {
-        val lowerQuestion = question.toLowerCase();
-        for (val badPhrase : badPhraseList) {
+        String lowerQuestion = question.toLowerCase();
+        for (String badPhrase : badPhraseList) {
             if (lowerQuestion.contains(badPhrase.toLowerCase())) {
                 return true;
             }
@@ -75,7 +75,7 @@ public class OpenTDBAPI implements TriviaAPI {
     }
 
     private String getTriviaToken() {
-        val getTokenUrl = HTTP_OPENTDB_COM + "api_token.php?command=request";
+        String getTokenUrl = HTTP_OPENTDB_COM + "api_token.php?command=request";
         TokenResponse tokenResponse = restTemplate.getForObject(getTokenUrl, TokenResponse.class);
         return tokenResponse != null ? tokenResponse.getToken() : "";
     }
@@ -85,7 +85,7 @@ public class OpenTDBAPI implements TriviaAPI {
         if (!triviaCategoryMap.isEmpty()) {
             return triviaCategoryMap;
         }
-        val getCategoriesUrl = HTTP_OPENTDB_COM + "api_category.php";
+        String getCategoriesUrl = HTTP_OPENTDB_COM + "api_category.php";
         TriviaCategoryResponse triviaCategoryResponse = restTemplate.getForObject(getCategoriesUrl,
                 TriviaCategoryResponse.class);
         Map<Integer, String> categoryMap = new HashMap<>();

@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class PollCommand extends AbstractCommand {
-
     private PollScheduler pollScheduler;
 
     public PollCommand(PollScheduler pollScheduler) {
@@ -35,12 +33,10 @@ public class PollCommand extends AbstractCommand {
             poll.setResourceBundle(resourceBundle);
             poll.setLocaleString(LocaleService.getLocale(event).toString());
             if (!poll.getChoices().isEmpty() && poll.getChoices().size() <= Constants.POLL_CHOICE_LIMIT) {
-                event.getChannel()
-                        .sendMessage(poll.build())
-                        .queue(message -> {
-                            poll.setMessageId(message.getId());
-                            pollScheduler.addPoll(poll, event.getJDA().getShardManager());
-                        });
+                event.getChannel().sendMessage(poll.build()).queue(message -> {
+                    poll.setMessageId(message.getId());
+                    pollScheduler.addPoll(poll, event.getJDA().getShardManager());
+                });
             } else {
                 messageAction.addUnsuccessfulReaction();
             }
@@ -54,18 +50,16 @@ public class PollCommand extends AbstractCommand {
         poll.setServerId(message.getGuild().getId());
         poll.setUserAvatarUrl(member.getUser().getAvatarUrl());
         poll.setUserName(member.getEffectiveName());
-        val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
+        String pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         poll.setChoices(new ArrayList<>());
         if (pollMessage.contains("\"")) {
             poll.setTitle(pollMessage.substring(0, pollMessage.indexOf("\"")).trim());
-            val pollOptions = pollMessage.substring(
-                    pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
-            poll.setChoices(Arrays.stream(pollOptions.split(","))
-                    .map(String::trim)
-                    .collect(Collectors.toList()));
+            String pollOptions = pollMessage.substring(pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\""))
+                    .replace("\"", "");
+            poll.setChoices(Arrays.stream(pollOptions.split(",")).map(String::trim).collect(Collectors.toList()));
             //If a + is included in the choices, allowed for other users to add their own choices
             poll.setUserChoicesAllowed((poll.getChoices().remove("+")));
-            val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
+            String timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
                 poll.setTimeLength(Long.parseLong(timeString));
             } else {
@@ -74,5 +68,4 @@ public class PollCommand extends AbstractCommand {
         }
         return poll;
     }
-
 }

@@ -6,13 +6,11 @@ import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TopicChangeCommand extends AbstractCommand {
-
     public TopicChangeCommand() {
         name = "topic-change";
         length = 2;
@@ -22,10 +20,10 @@ public class TopicChangeCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-
-        val channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
-                .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
-
+        final java.util.Optional<dev.nincodedo.ninbot.components.config.Config> channelConfig =
+                configService.getConfigByServerIdAndName(event
+                        .getGuild()
+                        .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
         if (channelConfig.isPresent()) {
             configService.removeConfig(channelConfig.get());
             messageAction.addReaction(Emojis.OFF);

@@ -1,7 +1,5 @@
 package dev.nincodedo.ninbot.components.common.message;
 
-import lombok.experimental.UtilityClass;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,8 +7,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-@UtilityClass
-public class MessageBuilderHelper {
+public final class MessageBuilderHelper {
+    private MessageBuilderHelper() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     public static Color getColor(String avatarUrl) {
         if (avatarUrl == null) {

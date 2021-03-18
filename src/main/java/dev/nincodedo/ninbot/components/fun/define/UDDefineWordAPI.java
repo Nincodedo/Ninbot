@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.fun.define;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,16 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Log4j2
 @Component
 public class UDDefineWordAPI implements DefineWordAPI {
+
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(UDDefineWordAPI.class);
 
     @Override
     public Map<String, String> defineWord(String word) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
             HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, StandardCharsets.UTF_8));
-
             HttpResponse response = client.execute(get);
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> responseMap = mapper.readValue(EntityUtils.toString(response.getEntity()),
@@ -38,7 +38,6 @@ public class UDDefineWordAPI implements DefineWordAPI {
             } else {
                 return null;
             }
-
         } catch (IOException e) {
             log.error("HttpGet Failed", e);
         }

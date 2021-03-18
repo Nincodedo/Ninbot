@@ -1,7 +1,5 @@
 package dev.nincodedo.ninbot.components.common;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -9,11 +7,15 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-@UtilityClass
-@Log4j2
-public class LocaleService {
+public final class LocaleService {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(LocaleService.class);
     private static Locale defaultLocale = Locale.ENGLISH;
+
+    private LocaleService() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     public static Locale getLocale(MessageReceivedEvent event) {
         if (event.getChannelType().isGuild()) {

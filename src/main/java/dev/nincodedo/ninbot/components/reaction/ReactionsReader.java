@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.reaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -16,10 +15,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Log4j2
 @Component
 public class ReactionsReader {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(ReactionsReader.class);
     private List<String> badCharacters = Arrays.asList(" ", "!", ":");
 
     @Bean
@@ -37,9 +37,7 @@ public class ReactionsReader {
                 typeReaction.forEach(reactionResponse -> reactionResponse.setReactionMatchType(type));
                 reactionResponseList.addAll(typeReaction);
             }
-            return reactionResponseList.stream()
-                    .map(this::generateResponse)
-                    .collect(Collectors.toList());
+            return reactionResponseList.stream().map(this::generateResponse).collect(Collectors.toList());
         } catch (IOException e) {
             log.error("Failed to load reaction responses JSON", e);
         }
@@ -56,7 +54,6 @@ public class ReactionsReader {
         }
         return resultStringBuilder.toString();
     }
-
 
     private ReactionResponse generateResponse(ReactionResponse response) {
         if (hasSpecialActionsActions(response.getResponse())) {

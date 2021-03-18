@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.common.message;
 
 import dev.nincodedo.ninbot.components.common.Emojis;
-import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Getter
 public class MessageAction {
     private MessageReceivedEvent event;
     private List<Message> privateMessageList;
@@ -41,11 +39,6 @@ public class MessageAction {
 
     public static void unsuccessfulReaction(Message message) {
         message.addReaction(Emojis.CROSS_X).queue();
-    }
-
-    public MessageAction setOverrideMessage(Message overrideMessage) {
-        this.overrideMessage = overrideMessage;
-        return this;
     }
 
     public void executeActions() {
@@ -141,6 +134,35 @@ public class MessageAction {
 
     public MessageAction addChannelAction(String message) {
         channelMessageList.add(new MessageBuilder().append(message).build());
+        return this;
+    }
+
+    public MessageReceivedEvent getEvent() {
+        return this.event;
+    }
+
+    public List<Message> getPrivateMessageList() {
+        return this.privateMessageList;
+    }
+
+    public List<Message> getChannelMessageList() {
+        return this.channelMessageList;
+    }
+
+    public List<String> getEmojisList() {
+        return this.emojisList;
+    }
+
+    public List<Emote> getEmoteList() {
+        return this.emoteList;
+    }
+
+    public Message getOverrideMessage() {
+        return this.overrideMessage;
+    }
+
+    public MessageAction setOverrideMessage(Message overrideMessage) {
+        this.overrideMessage = overrideMessage;
         return this;
     }
 }

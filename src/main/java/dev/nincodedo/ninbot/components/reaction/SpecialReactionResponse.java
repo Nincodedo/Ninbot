@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.reaction;
 
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.apache.commons.lang3.StringUtils;
@@ -8,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 public class SpecialReactionResponse extends ReactionResponse {
-
-
     public SpecialReactionResponse(ReactionResponse response) {
         super(response);
     }
@@ -19,15 +16,16 @@ public class SpecialReactionResponse extends ReactionResponse {
         boolean canReact = true;
         String reactionResponse = response;
         if (reactionResponse.contains("$message.previous")) {
-            val lastMessageOptional = getPreviousMessage(channel, message);
+            final java.util.Optional<net.dv8tion.jda.api.entities.Message> lastMessageOptional =
+                    getPreviousMessage(channel, message);
             if (reactionResponse.contains("$message.previous.author") && lastMessageOptional.isPresent()) {
-                val lastMessage = lastMessageOptional.get();
-                val previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
+                final net.dv8tion.jda.api.entities.Message lastMessage = lastMessageOptional.get();
+                String previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
                         .getEffectiveName() : lastMessage.getAuthor().getName();
                 reactionResponse = reactionResponse.replace("$message.previous.author", previousAuthorName);
             }
             if (reactionResponse.contains("$message.previous.content") && lastMessageOptional.isPresent()) {
-                val lastMessage = lastMessageOptional.get();
+                final net.dv8tion.jda.api.entities.Message lastMessage = lastMessageOptional.get();
                 String previousMessageContent = lastMessage.getContentRaw();
                 if (reactionResponse.contains("#toUpper")) {
                     reactionResponse = reactionResponse.replace("#toUpper", "");
@@ -45,7 +43,9 @@ public class SpecialReactionResponse extends ReactionResponse {
     }
 
     private Optional<Message> getPreviousMessage(MessageChannel channel, Message message) {
-        val messageHistory = channel.getHistoryBefore(message, 1).complete().getRetrievedHistory();
+        final java.util.List<net.dv8tion.jda.api.entities.Message> messageHistory = channel.getHistoryBefore(message, 1)
+                .complete()
+                .getRetrievedHistory();
         if (!messageHistory.isEmpty() && !messageHistory.get(0).isWebhookMessage()) {
             return Optional.of(messageHistory.get(0));
         } else {

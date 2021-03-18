@@ -1,9 +1,10 @@
 package dev.nincodedo.ninbot.components.common.message;
 
-import lombok.experimental.UtilityClass;
+public final class MessageUtils {
+    private MessageUtils() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
-@UtilityClass
-public class MessageUtils {
     private static boolean isSpoiler(String message) {
         String checkMessage = message.replaceFirst("\\|\\|", "");
         return checkMessage.contains("||");

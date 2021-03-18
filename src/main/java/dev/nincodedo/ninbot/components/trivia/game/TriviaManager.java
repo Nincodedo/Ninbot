@@ -3,18 +3,17 @@ package dev.nincodedo.ninbot.components.trivia.game;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstanceRepository;
 import dev.nincodedo.ninbot.components.trivia.TriviaScoreService;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Timer;
 
-@Log4j2
 @Component
 public class TriviaManager {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(TriviaManager.class);
     private TriviaInstanceRepository triviaInstanceRepository;
     private TriviaScoreService triviaScoreService;
     private int triviaUnansweredLimit = 3;
@@ -29,8 +28,9 @@ public class TriviaManager {
 
     private void stopTrivia(TriviaInstance triviaInstance, JDA jda) {
         triviaInstance.getTriviaTimer().cancel();
-        jda.getTextChannelById(triviaInstance.getChannelId()).sendMessage(
-                "Trivia has ended. No answers from the last " + triviaUnansweredLimit + " questions").queue();
+        jda.getTextChannelById(triviaInstance.getChannelId())
+                .sendMessage("Trivia has ended. No answers from the last " + triviaUnansweredLimit + " questions")
+                .queue();
         triviaInstanceRepository.deleteByChannelId(triviaInstance.getChannelId());
     }
 
@@ -71,15 +71,17 @@ public class TriviaManager {
     private int askTriviaQuestion(TriviaInstance triviaInstance, JDA jda, int unansweredQuestionCount) {
         Timer timer = new Timer();
         triviaInstance.setTriviaTimer(timer);
-
-        val triviaQuestion = triviaInstance.getTriviaQuestion();
+        final dev.nincodedo.ninbot.components.trivia.game.TriviaQuestion triviaQuestion =
+                triviaInstance.getTriviaQuestion();
         triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
-        val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer()
-                , triviaScoreService);
+        final dev.nincodedo.ninbot.components.trivia.game.TriviaAnswerListener triviaAnswerListener =
+                new TriviaAnswerListener(triviaInstance
+                        .getChannelId(), triviaInstance.getAnswer(), triviaScoreService);
         jda.addEventListener(triviaAnswerListener);
-        val channel = jda.getTextChannelById(triviaInstance.getChannelId());
+        final net.dv8tion.jda.api.entities.TextChannel channel = jda.getTextChannelById(triviaInstance.getChannelId());
         channel.sendMessage(triviaQuestion.build()).queue();
-        val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceRepository, jda);
+        final dev.nincodedo.ninbot.components.trivia.game.TriviaTimeUpTask triviaTask =
+                new TriviaTimeUpTask(triviaInstance, triviaInstanceRepository, jda);
         long time = 30000L;
         timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 1), 0);
         timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 2), time);

@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.trivia;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaManager;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,7 +14,6 @@ import java.util.*;
 
 @Component
 public class TriviaCommand extends AbstractCommand {
-
     private TriviaManager triviaManager;
     private TriviaScoreService triviaScoreService;
 
@@ -30,7 +28,7 @@ public class TriviaCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "start" -> startTrivia(event, messageAction);
             case "stop" -> stopTrivia(event, messageAction);
@@ -52,7 +50,7 @@ public class TriviaCommand extends AbstractCommand {
         Collections.sort(triviaScores);
         for (int i = 0; i < triviaScores.size() && i < 5; i++) {
             TriviaScore triviaScore = triviaScores.get(i);
-            val member = event.getGuild().getMemberById(triviaScore.getUserId());
+            final net.dv8tion.jda.api.entities.Member member = event.getGuild().getMemberById(triviaScore.getUserId());
             if (member != null) {
                 embedBuilder.addField(member.getEffectiveName(), Integer.toString(triviaScore.getScore()), false);
             }
@@ -72,8 +70,7 @@ public class TriviaCommand extends AbstractCommand {
         embedBuilder.setTitle("Trivia Categories");
         List<Integer> keyList = new ArrayList<>(triviaCategoryMap.keySet());
         Collections.sort(keyList);
-
-        for (val categoryKey : keyList) {
+        for (final java.lang.Integer categoryKey : keyList) {
             embedBuilder.appendDescription(String.format("ID: %s %s%n", categoryKey,
                     triviaCategoryMap.get(categoryKey)));
         }
@@ -81,9 +78,7 @@ public class TriviaCommand extends AbstractCommand {
         return new MessageBuilder(embedBuilder).build();
     }
 
-
-    private void stopTrivia(MessageReceivedEvent event,
-            MessageAction messageAction) {
+    private void stopTrivia(MessageReceivedEvent event, MessageAction messageAction) {
         if (!triviaManager.isTriviaActiveInChannel(event.getChannel().getId())) {
             messageAction.addUnsuccessfulReaction();
             return;
@@ -93,14 +88,13 @@ public class TriviaCommand extends AbstractCommand {
         messageAction.addSuccessfulReaction();
     }
 
-    private void startTrivia(MessageReceivedEvent event,
-            MessageAction messageAction) {
-        val channel = event.getChannel();
+    private void startTrivia(MessageReceivedEvent event, MessageAction messageAction) {
+        final net.dv8tion.jda.api.entities.MessageChannel channel = event.getChannel();
         if (triviaManager.isTriviaActiveInChannel(channel.getId())) {
             messageAction.addUnsuccessfulReaction();
             return;
         }
-        val message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentStripped();
         int categoryId = 0;
         if (getCommandLength(message) == 4 && NumberUtils.isParsable(message.split("\\s+")[3])) {
             categoryId = Integer.parseInt(message.split("\\s+")[3]);

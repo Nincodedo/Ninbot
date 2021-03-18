@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.beans;
 
 import dev.nincodedo.sapconversational.SAPConversationalAIAPI;
 import dev.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
-import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -19,18 +18,16 @@ import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = {"dev.nincodedo.ninbot"})
-@Log4j2
 public class ApplicationBean {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(ApplicationBean.class);
     @Value("${ninbotToken}")
     private String ninbotToken;
-
     @Value("${sapToken}")
     private String sapToken;
-
     @Value("${twitchClientId}")
     private String twitchClientId;
-
     @Value("${twitchClientSecret}")
     private String twitchClientSecret;
 

@@ -3,8 +3,6 @@ package dev.nincodedo.ninbot.components.fun.dab;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -20,9 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Log4j2
 public class DabCommand extends AbstractCommand {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(DabCommand.class);
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
     private SecureRandom random;
@@ -43,7 +42,7 @@ public class DabCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped();
+        String content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
             doDabarinos(event, messageAction);
         } else {
@@ -53,9 +52,9 @@ public class DabCommand extends AbstractCommand {
     }
 
     private void doDabarinos(MessageReceivedEvent event, MessageAction messageAction) {
-        val channel = event.getChannel();
-        val mentionedUsers = event.getMessage().getMentionedUsers();
-        val dabUser = mentionedUsers.get(mentionedUsers.size() - 1);
+        final net.dv8tion.jda.api.entities.MessageChannel channel = event.getChannel();
+        final java.util.List<net.dv8tion.jda.api.entities.User> mentionedUsers = event.getMessage().getMentionedUsers();
+        final net.dv8tion.jda.api.entities.User dabUser = mentionedUsers.get(mentionedUsers.size() - 1);
         for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
                 messageAction.setOverrideMessage(message);
@@ -68,7 +67,6 @@ public class DabCommand extends AbstractCommand {
 
     private void dabOnMessage(MessageAction messageAction, ShardManager shardManager, User commandUser) {
         int dabCritPercentChance = 5;
-
         if (isUserNinbotSupporter(shardManager, commandUser)) {
             dabCritPercentChance = dabCritPercentChance * 2;
             log.trace("Made possible by Patreon");
@@ -76,37 +74,30 @@ public class DabCommand extends AbstractCommand {
         if (isDabEdition) {
             dabCritPercentChance = dabCritPercentChance * 2;
         }
-
-        val critInt = random.nextInt(100);
-        val critDab = critInt < dabCritPercentChance;
+        final int critInt = random.nextInt(100);
+        final boolean critDab = critInt < dabCritPercentChance;
         if (critDab) {
             messageAction.addReaction(critResponse.getEmojiList());
             messageAction.addReaction(dabResponse.getEmojiList());
         }
-
-        val list = shardManager.getEmotes().stream()
+        final java.util.List<net.dv8tion.jda.api.entities.Emote> list = shardManager.getEmotes()
+                .stream()
                 .filter(emote -> emote.getName().contains("dab"))
                 .collect(Collectors.toList());
-
         Collections.shuffle(list);
-
         List<String> emoteNameList = new ArrayList<>();
         List<Emote> emoteList = new ArrayList<>();
-        for (val emote : list) {
+        for (final net.dv8tion.jda.api.entities.Emote emote : list) {
             if (!emoteNameList.contains(emote.getName())) {
                 emoteNameList.add(emote.getName());
                 emoteList.add(emote);
             }
         }
-
         log.trace("Dabbing from {} potential dabs", emoteList.size());
-
         sendDabs(messageAction, emoteList);
     }
 
     void sendDabs(MessageAction messageAction, List<Emote> emoteList) {
-        messageAction.addReactionEmotes(emoteList.stream()
-                .limit(20)
-                .collect(Collectors.toList()));
+        messageAction.addReactionEmotes(emoteList.stream().limit(20).collect(Collectors.toList()));
     }
 }

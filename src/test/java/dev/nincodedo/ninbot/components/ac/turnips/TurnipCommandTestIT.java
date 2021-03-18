@@ -6,7 +6,7 @@ import dev.nincodedo.ninbot.components.ac.Villager;
 import dev.nincodedo.ninbot.components.ac.VillagerManager;
 import dev.nincodedo.ninbot.components.ac.VillagerRepository;
 import dev.nincodedo.ninbot.components.common.Emojis;
-import lombok.val;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -32,6 +32,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -64,7 +66,7 @@ class TurnipCommandTestIT {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot turnips");
 
-        val commandResults = turnipCommand.executeCommand(messageEvent);
+        MessageAction commandResults = turnipCommand.executeCommand(messageEvent);
 
         assertThat(TestUtils.returnPrivateMessageEmbededName(commandResults)).contains("Turnips Command Help");
     }
@@ -80,8 +82,8 @@ class TurnipCommandTestIT {
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
 
-        val commandResults = turnipCommand.executeCommand(messageEvent);
-        val villagers = villagerRepository.findAll();
+        MessageAction commandResults = turnipCommand.executeCommand(messageEvent);
+        List<Villager> villagers = villagerRepository.findAll();
 
         assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);
         assertThat(villagers).isNotEmpty();
@@ -96,16 +98,16 @@ class TurnipCommandTestIT {
         Clock weekdayClock = Clock.fixed(Instant.parse("2020-09-07T12:00:00.00Z"), ZoneId.systemDefault());
         turnipCommand.setClock(weekdayClock);
 
-        val before = villagerRepository.findByDiscordId("2").get();
-        val commandResults = turnipCommand.executeCommand(messageEvent);
-        val after = villagerRepository.findByDiscordId("2").get();
+        Villager before = villagerRepository.findByDiscordId("2").get();
+        MessageAction commandResults = turnipCommand.executeCommand(messageEvent);
+        Villager after = villagerRepository.findByDiscordId("2").get();
 
         assertThat(after.getTurnipsOwned()).isEqualTo(before.getTurnipsOwned());
         assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CROSS_X);
     }
 
     private Villager getVillager(String discordId, String serverId, int turnipsOwned, int bells) {
-        val optional = villagerRepository.findByDiscordId(discordId);
+        Optional<Villager> optional = villagerRepository.findByDiscordId(discordId);
         Villager villager;
         villager = optional.orElseGet(Villager::new);
         villager.setDiscordId(discordId);
@@ -131,9 +133,9 @@ class TurnipCommandTestIT {
         Clock sundayClock = Clock.fixed(Instant.parse("2020-09-06T12:00:00.00Z"), ZoneId.systemDefault());
         turnipCommand.setClock(sundayClock);
 
-        val before = villagerRepository.findByDiscordId("2").get();
-        val commandResults = turnipCommand.executeCommand(messageEvent);
-        val after = villagerRepository.findByDiscordId("2").get();
+        Villager before = villagerRepository.findByDiscordId("2").get();
+        MessageAction commandResults = turnipCommand.executeCommand(messageEvent);
+        Villager after = villagerRepository.findByDiscordId("2").get();
 
         assertThat(after.getTurnipsOwned()).isEqualTo(before.getTurnipsOwned() + 10);
         assertThat(TestUtils.returnEmoji(commandResults)).contains(Emojis.CHECK_MARK);

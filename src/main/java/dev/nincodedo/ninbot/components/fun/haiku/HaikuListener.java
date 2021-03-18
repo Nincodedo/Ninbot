@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
 
 @Component
 public class HaikuListener extends StatAwareListenerAdapter {
-
     private ComponentService componentService;
     private SyllableCounter syllableCounter;
     private Random random;
@@ -33,14 +31,13 @@ public class HaikuListener extends StatAwareListenerAdapter {
         componentService.registerComponent(componentName, ComponentType.ACTION);
     }
 
-
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild() || event.getAuthor().isBot()
                 || componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentStripped();
         isHaikuable(message).ifPresent(haikuLines -> {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.appendDescription(MessageUtils.addSpoilerText(
@@ -106,7 +103,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
     }
 
     private boolean isMessageOnlyCharacters(String message) {
-        return Pattern.compile("^[a-zA-Z\s.,!?]+$").matcher(message).matches();
+        return Pattern.compile("^[a-zA-Z .,!?]+$").matcher(message).matches();
     }
 
     boolean checkChance() {

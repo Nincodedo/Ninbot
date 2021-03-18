@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.fun.eightball;
 
-import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +11,10 @@ import java.util.List;
 import java.util.Random;
 
 @Component
-@Log4j2
 public class Magic8BallMessageBuilder {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(Magic8BallMessageBuilder.class);
     private Random random;
     private List<String> eightBallAnswers;
 

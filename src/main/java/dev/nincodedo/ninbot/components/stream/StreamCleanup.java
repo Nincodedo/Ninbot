@@ -1,7 +1,5 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,9 +7,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-@Log4j2
 public class StreamCleanup {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(StreamCleanup.class);
     private StreamingMemberRepository streamingMemberRepository;
     private ShardManager shardManager;
 
@@ -19,7 +18,6 @@ public class StreamCleanup {
         this.streamingMemberRepository = streamingMemberRepository;
         this.shardManager = shardManager;
     }
-
 
     //twice a day
     @Scheduled(fixedRate = 43200000L)
@@ -34,7 +32,7 @@ public class StreamCleanup {
 
     private void endOldStreams(StreamingMember streamingMember) {
         streamingMember.currentStream().ifPresent(streamInstance -> {
-            val guild = shardManager.getGuildById(streamingMember.getGuildId());
+            final net.dv8tion.jda.api.entities.Guild guild = shardManager.getGuildById(streamingMember.getGuildId());
             if (guild != null) {
                 guild.retrieveMemberById(streamingMember.getUserId()).queue(member -> {
                     if (member.getActivities().isEmpty()) {

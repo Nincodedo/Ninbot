@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class InfoCommand extends AbstractCommand {
-
     private GitProperties gitProperties;
     private MetricsEndpoint metricsEndpoint;
     private Instant timeStarted;
@@ -41,26 +39,29 @@ public class InfoCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(resourceBundle.getString("command.info.title"), Constants.NINBOT_GITHUB_URL,
                 event.getJDA()
-                        .getSelfUser()
-                        .getEffectiveAvatarUrl());
+                .getSelfUser()
+                .getEffectiveAvatarUrl());
         if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
-            val uptime = metricsEndpoint.metric("process.uptime", null);
-            val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
-            embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(),
-                    false)
+            final org.springframework.boot.actuate.metrics.MetricsEndpoint.MetricResponse uptime =
+                    metricsEndpoint.metric("process.uptime", null);
+            final long uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements()
+                    .get(0)
+                    .getValue()
+                    .longValue());
+            embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(), false)
                     .addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
                             uptimeMilliseconds), false)
                     .setFooter(resourceBundle.getString("command.info.startedAt"))
                     .setTimestamp(timeStarted);
         }
         embedBuilder.addField(resourceBundle.getString("command.info.githublink.name"),
-                String.format(resourceBundle.getString("command.info.githublink.value"), Constants.NINBOT_GITHUB_URL),
-                false)
+                String.format(resourceBundle.getString("command.info.githublink.value"), Constants.NINBOT_GITHUB_URL)
+                , false)
                 .addField(resourceBundle.getString("command.info.githublink.issues"),
                         Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false)
                 .addField(resourceBundle.getString("command.info.documentation.name"),
                         Constants.NINBOT_DOCUMENTATION_URL, false);
-        val patronsList = getPatronsList(event.getJDA().getShardManager());
+        String patronsList = getPatronsList(event.getJDA().getShardManager());
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle.getString("command.info.patreonthanks.name"), patronsList, false);
         }
@@ -69,27 +70,29 @@ public class InfoCommand extends AbstractCommand {
     }
 
     private String getPatronsList(ShardManager shardManager) {
-        val ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        final net.dv8tion.jda.api.entities.Guild ninbotPatronServer =
+                shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (ninbotPatronServer != null) {
-            return ninbotPatronServer
-                    .getMembersWithRoles(Collections.emptyList())
-                    .stream()
-                    .map(Member::getUser)
-                    .filter(user -> !user.isBot())
-                    .map(User::getName)
+            return
                     //get out of here ya freeloader
-                    .filter(userName -> !userName.equalsIgnoreCase("nincodedo"))
-                    .map(username -> username + "|||")
-                    .collect(Collectors.joining())
-                    .trim()
-                    .replace("|||", ", ");
+                    ninbotPatronServer.getMembersWithRoles(Collections.emptyList())
+                            .stream()
+                            .map(Member::getUser)
+                            .filter(user -> !user.isBot())
+                            .map(User::getName)
+                            .filter(userName -> !userName.equalsIgnoreCase("nincodedo"))
+                            .map(username -> username + "|||")
+                            .collect(Collectors.joining())
+                            .trim()
+                            .replace("|||", ", ");
         }
         return null;
     }
 
     private String getDurationString(ResourceBundle resourceBundle, long uptimeMilliseconds) {
         String duration = "";
-        val durationString = DurationFormatUtils.formatDuration(uptimeMilliseconds, "dd:HH:mm:ss", false).split(":");
+        String[] durationString = DurationFormatUtils.formatDuration(uptimeMilliseconds, "dd:HH:mm:ss", false)
+                .split(":");
         if (!"0".equals(durationString[3])) {
             duration += durationString[3] + " " + resourceBundle.getString("command.info.seconds");
         }

@@ -1,9 +1,6 @@
 package dev.nincodedo.ninbot.components.config;
 
-import lombok.experimental.UtilityClass;
-
-@UtilityClass
-public class ConfigConstants {
+public final class ConfigConstants {
     public static final String ANNOUNCE_CHANNEL = "announcementChannel";
     public static final String DADBOT_DENY_LIST_CHANNEL = "dadbotChannelDenyList";
     public static final String STREAMING_ANNOUNCE_USERS = "streamingAnnounceUsers";
@@ -20,4 +17,9 @@ public class ConfigConstants {
     public static final String ARCHIVE_CATEGORY_ID = "archiveCategoryId";
     public static final String PATHOGEN_DENY_LIST_CHANNEL = "pathogenDenyListChannel";
     public static final String EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID = "emoteAnnouncementChannelId";
+
+
+    private ConfigConstants() {
+        throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 }

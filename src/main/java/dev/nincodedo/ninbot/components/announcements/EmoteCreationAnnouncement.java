@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,18 +14,15 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-
 import java.util.ResourceBundle;
 
 @Component
 public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
-
     private ComponentService componentService;
     private ConfigService configService;
     private String componentName;
 
-    public EmoteCreationAnnouncement(StatManager statManager, ConfigService configService,
-            ComponentService componentService) {
+    public EmoteCreationAnnouncement(StatManager statManager, ConfigService configService, ComponentService componentService) {
         super(statManager);
         this.componentService = componentService;
         this.configService = configService;
@@ -39,13 +35,12 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val optionalChannelId = configService.getSingleValueByName(event.getGuild()
-                .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
+        final java.util.Optional<java.lang.String> optionalChannelId = configService.getSingleValueByName(event.getGuild().getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
         if (optionalChannelId.isPresent()) {
-            val emoteAddedChannelId = optionalChannelId.get();
-            val channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
+            String emoteAddedChannelId = optionalChannelId.get();
+            final net.dv8tion.jda.api.entities.TextChannel channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
             if (channel != null) {
-                val emote = event.getEmote();
+                final net.dv8tion.jda.api.entities.Emote emote = event.getEmote();
                 countOneStat(componentName, event.getGuild().getId());
                 channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild())).queue();
             }

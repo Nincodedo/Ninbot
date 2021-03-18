@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.config;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConfigCommand extends AbstractCommand {
-
-
     public ConfigCommand() {
         length = 3;
         name = "config";
@@ -24,7 +21,7 @@ public class ConfigCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":
                 if (getCommandLength(message) >= 5) {
@@ -67,8 +64,11 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private Message listConfigs(MessageReceivedEvent event) {
-        val configList = configService.getConfigsByServerId(event.getGuild().getId());
-        val serverName = event.getGuild().getName();
+        final java.util.List<dev.nincodedo.ninbot.components.config.Config> configList =
+                configService.getConfigsByServerId(event
+                        .getGuild()
+                        .getId());
+        String serverName = event.getGuild().getName();
         if (configList.isEmpty()) {
             return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"),
                     serverName)

@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import java.util.ResourceBundle;
 
 @Component
 public class Dadbot extends StatAwareListenerAdapter {
-
     private Random random;
     private ConfigService configService;
     private ComponentService componentService;
@@ -46,8 +44,8 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
-        val strippedMessage = event.getMessage().getContentStripped();
-        val first = strippedMessage.split("\\s+")[0];
+        String strippedMessage = event.getMessage().getContentStripped();
+        String first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
                 || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
                 || (!event.getChannelType().isGuild())) {
@@ -59,7 +57,8 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private boolean channelIsOnDenyList(String serverId, String channelId) {
-        val channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+        final java.util.List<dev.nincodedo.ninbot.components.config.Config> channelConfigList =
+                configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
@@ -69,7 +68,6 @@ public class Dadbot extends StatAwareListenerAdapter {
         }
         String strippedMessage = message.getContentStripped();
         StringBuilder stringBuilder = new StringBuilder();
-
         stringBuilder.append(resourceBundle.getString("listener.dad.hi")).append(" ");
         stringBuilder.append(MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
                 .trim(), message.getContentRaw()));

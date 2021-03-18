@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,6 @@ import java.util.concurrent.Executors;
 
 @Component
 public class PollScheduler implements Schedulable {
-
     private PollRepository pollRepository;
     private ExecutorService executorService;
     private PollSetup pollSetup;
@@ -36,10 +34,11 @@ public class PollScheduler implements Schedulable {
     }
 
     private void scheduleOne(Poll poll, ShardManager shardManager) {
-        val resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
-                .getLocale());
+        final java.util.ResourceBundle resourceBundle =
+                LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll
+                        .getServerId()).getLocale());
         poll.setResourceBundle(resourceBundle);
-        val channel = shardManager.getTextChannelById(poll.getChannelId());
+        final net.dv8tion.jda.api.entities.TextChannel channel = shardManager.getTextChannelById(poll.getChannelId());
         if (channel != null) {
             channel.retrieveMessageById(poll.getMessageId())
                     .queue(message -> pollSetup.setupAnnounce(poll, shardManager, message));

@@ -1,17 +1,17 @@
 package dev.nincodedo.ninbot.components.ac.turnips;
 
 import dev.nincodedo.ninbot.components.ac.turnips.generator.TurnipPriceGenerator;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
-@Log4j2
 @Component
 public class TurnipPricesManager {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(TurnipPricesManager.class);
     private final TurnipPricesRepository turnipPricesRepository;
     private final TurnipPriceGenerator turnipPriceGenerator;
     private final Random random;

@@ -5,8 +5,6 @@ import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.users.NinbotUser;
 import dev.nincodedo.ninbot.components.users.UserRepository;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -22,10 +20,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Log4j2
 @Component
 public class BirthdayScheduler implements Schedulable {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(BirthdayScheduler.class);
     private UserRepository userRepository;
 
     public BirthdayScheduler(UserRepository userRepository) {
@@ -38,11 +37,11 @@ public class BirthdayScheduler implements Schedulable {
 
     void scheduleBirthdayAnnouncement(NinbotUser ninbotUser, ShardManager shardManager) {
         log.trace("Checking if {} birthday should be scheduled", ninbotUser.getUserId());
-        val birthdayString = ninbotUser.getBirthday();
-        val birthdayOptional = getDateWithFormat(birthdayString);
+        String birthdayString = ninbotUser.getBirthday();
+        final java.util.Optional<java.util.Date> birthdayOptional = getDateWithFormat(birthdayString);
         if (birthdayOptional.isPresent()) {
-            val birthday = birthdayOptional.get();
-            val calendar = GregorianCalendar.from(ZonedDateTime.from(birthday.toInstant()
+            final java.util.Date birthday = birthdayOptional.get();
+            final java.util.GregorianCalendar calendar = GregorianCalendar.from(ZonedDateTime.from(birthday.toInstant()
                     .atZone(ZoneId.systemDefault())));
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             //apparently months start at 0
@@ -62,11 +61,12 @@ public class BirthdayScheduler implements Schedulable {
                     .toInstant()))) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
-                val announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
+                String announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
                         .getDefaultChannel()
                         .getId();
                 new Timer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
-                        Date.from(LocalDate.now(ZoneId.systemDefault())
+                        Date.from(LocalDate
+                                .now(ZoneId.systemDefault())
                                 .atStartOfDay(ZoneId.systemDefault())
                                 .plus(1, ChronoUnit.DAYS)
                                 .toInstant()));
@@ -83,7 +83,7 @@ public class BirthdayScheduler implements Schedulable {
 
     private Message buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
         MessageBuilder messageBuilder = new MessageBuilder();
-        val user = shardManager.getUserById(ninbotUser.getId());
+        final net.dv8tion.jda.api.entities.User user = shardManager.getUserById(ninbotUser.getId());
         messageBuilder.append("It's ");
         messageBuilder.append(user.getName());
         messageBuilder.append(" birthday today! ");
@@ -109,6 +109,7 @@ public class BirthdayScheduler implements Schedulable {
             }
         }
     }
+
 
     class Scheduler extends TimerTask {
         private ShardManager shardManager;

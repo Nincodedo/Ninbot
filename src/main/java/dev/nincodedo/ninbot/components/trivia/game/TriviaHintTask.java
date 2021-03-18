@@ -2,13 +2,11 @@ package dev.nincodedo.ninbot.components.trivia.game;
 
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstanceRepository;
-import lombok.val;
 import net.dv8tion.jda.api.JDA;
 
 import java.util.*;
 
 class TriviaHintTask extends TimerTask {
-
     private TriviaInstance triviaInstance;
     private TriviaInstanceRepository triviaInstanceRepository;
     private JDA jda;
@@ -27,7 +25,7 @@ class TriviaHintTask extends TimerTask {
     @Override
     public void run() {
         if (triviaInstanceRepository.existsByChannelId(triviaInstance.getChannelId())) {
-            val answer = triviaInstance.getAnswer();
+            String answer = triviaInstance.getAnswer();
             String hint = revealHint(answer, hintNumber);
             jda.getTextChannelById(triviaInstance.getChannelId()).sendMessage("Hint! " + hint).queue();
         }

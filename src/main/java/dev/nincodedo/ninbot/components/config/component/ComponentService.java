@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.config.component;
 
-import lombok.val;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -11,7 +10,6 @@ import java.util.List;
 @Repository
 @Transactional
 public class ComponentService {
-
     private ComponentRepository componentRepository;
     private DisabledComponentsRepository disabledComponentsRepository;
 
@@ -26,7 +24,9 @@ public class ComponentService {
     }
 
     public void registerComponent(String name, ComponentType componentType) {
-        val componentOptional = componentRepository.findByNameAndType(name, componentType);
+        final java.util.Optional<dev.nincodedo.ninbot.components.config.component.Component> componentOptional =
+                componentRepository
+                        .findByNameAndType(name, componentType);
         if (componentOptional.isEmpty()) {
             Component component = new Component(name, componentType);
             componentRepository.save(component);
@@ -35,8 +35,11 @@ public class ComponentService {
 
     @CacheEvict(allEntries = true, value = {"disable-component", "disabled-server-component"})
     public void disableComponent(String name, String serverId) {
-        val component = componentRepository.findByName(name);
-        val list = disabledComponentsRepository.findByComponentAndServerId(component, serverId);
+        final dev.nincodedo.ninbot.components.config.component.Component component =
+                componentRepository.findByName(name);
+        final java.util.List<dev.nincodedo.ninbot.components.config.component.DisabledComponents> list =
+                disabledComponentsRepository
+                        .findByComponentAndServerId(component, serverId);
         if (list.isEmpty()) {
             DisabledComponents disabledComponents = new DisabledComponents(serverId, component);
             disabledComponentsRepository.save(disabledComponents);
@@ -49,14 +52,15 @@ public class ComponentService {
 
     @Cacheable("disabled-component")
     public boolean isDisabled(String name, String serverId) {
-        val component = componentRepository.findByName(name);
+        final dev.nincodedo.ninbot.components.config.component.Component component =
+                componentRepository.findByName(name);
         return !getDisabledComponents(component, serverId).isEmpty();
     }
 
     void enableComponent(String name, String serverId) {
-        val component = componentRepository.findByName(name);
-        getDisabledComponents(component, serverId).forEach(disabledComponents ->
-                disabledComponentsRepository.delete(disabledComponents));
+        final dev.nincodedo.ninbot.components.config.component.Component component =
+                componentRepository.findByName(name);
+        getDisabledComponents(component, serverId).forEach(disabledComponents -> disabledComponentsRepository.delete(disabledComponents));
     }
 
     @Cacheable("disabled-server-component")

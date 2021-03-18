@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.subscribe;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ListCommand extends AbstractCommand {
-
     public ListCommand() {
         length = 2;
         name = "list";
@@ -28,7 +26,7 @@ public class ListCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped().split("\\s+");
+        String[] content = event.getMessage().getContentStripped().split("\\s+");
         if (content.length > 2) {
             listUsersInSubscription(content[2], event.getGuild()).ifPresent(messageAction::addChannelAction);
         } else {
@@ -38,9 +36,9 @@ public class ListCommand extends AbstractCommand {
     }
 
     private Optional<Message> listUsersInSubscription(String roleName, Guild guild) {
-        val role = guild.getRolesByName(roleName, true);
+        final java.util.List<net.dv8tion.jda.api.entities.Role> role = guild.getRolesByName(roleName, true);
         if (!role.isEmpty()) {
-            val users = guild.getMembersWithRoles(role);
+            final java.util.List<net.dv8tion.jda.api.entities.Member> users = guild.getMembersWithRoles(role);
             List<String> userNames = users.stream().map(Member::getEffectiveName).sorted().collect(Collectors.toList());
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle(String.format(resourceBundle.getString("command.list.usersinsub"), roleName));

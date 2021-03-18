@@ -4,9 +4,6 @@ import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAudit;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAuditRepository;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserService;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,20 +22,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Log4j2
 @Component
 public class PathogenManager {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(PathogenManager.class);
     private PathogenAuditRepository pathogenAuditRepository;
     private PathogenUserService pathogenUserService;
     private Random todayRandom;
     private Random random;
-    @Getter
     private int wordListLength = 15;
     private boolean healingWeek;
 
-    public PathogenManager(PathogenUserService pathogenUserService,
-            PathogenAuditRepository pathogenAuditRepository) {
+    public PathogenManager(PathogenUserService pathogenUserService, PathogenAuditRepository pathogenAuditRepository) {
         this.pathogenAuditRepository = pathogenAuditRepository;
         this.pathogenUserService = pathogenUserService;
         this.todayRandom = new Random(new Date().getTime());
@@ -82,48 +78,46 @@ public class PathogenManager {
         this.todayRandom = new Random(seed);
     }
 
-
-    public void spread(Guild guild, User spreadSource,
-            Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
-        val infectedRoles = guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
+    public void spread(Guild guild, User spreadSource, Map<User, Message> possiblePathogenVictims,
+            int messageAffectChance) {
+        final java.util.List<net.dv8tion.jda.api.entities.Role> infectedRoles =
+                guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
         if (infectedRoles.isEmpty()) {
             return;
         }
-        val infectedRole = infectedRoles.get(0);
+        final net.dv8tion.jda.api.entities.Role infectedRole = infectedRoles.get(0);
         //Infect/heal chance
         possiblePathogenVictims.keySet()
                 .stream()
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
-                    val channelId = possiblePathogenVictims.get(user).getChannel().getId();
-                    val pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
-                            guild.getId());
+                    String channelId = possiblePathogenVictims.get(user).getChannel().getId();
+                    final dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUser pathogenUser =
+                            pathogenUserService
+                                    .getByUserIdAndServerId(user.getId(), guild.getId());
                     if (healingWeek) {
                         guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully removed role, so add healing reaction
                             possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
-                            auditAction(spreadSource, channelId, user, "healing",
-                                    "Healed user %s in channel %s");
+                            auditAction(spreadSource, channelId, user, "healing", "Healed user %s in channel %s");
                             pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
                         });
                     } else {
                         guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
                             //Successfully added role, so add infected reaction
                             possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
-                            auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
-                                    + "in channel %s");
+                            auditAction(spreadSource, channelId, user, "infecting",
+                                    "Infected user %s " + "in channel %s");
                             pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
                         });
                     }
                 });
     }
 
-    private void auditAction(User spreadSource, String channelId, User targetUser, String action,
-            String description) {
+    private void auditAction(User spreadSource, String channelId, User targetUser, String action, String description) {
         PathogenAudit audit = new PathogenAudit();
         audit.setAction(action);
-        audit.setDescription(String.format(description, targetUser.getId(),
-                channelId));
+        audit.setDescription(String.format(description, targetUser.getId(), channelId));
         audit.setCreationDate(LocalDateTime.now());
         audit.setCreatedBy(spreadSource.getId());
         audit.setWeekId(healingWeekId());
@@ -134,7 +128,8 @@ public class PathogenManager {
         if (member == null) {
             return false;
         }
-        return member.getRoles().stream()
+        return member.getRoles()
+                .stream()
                 .anyMatch(role -> PathogenConfig.getROLE_NAME().equalsIgnoreCase(role.getName()));
     }
 
@@ -172,12 +167,16 @@ public class PathogenManager {
 
     boolean messageContainsSecretWordOfTheDay(String contentStripped) {
         List<String> messageList = Arrays.asList(contentStripped.split("\\s+"));
-        return getWordList()
-                .stream()
+        return getWordList().stream()
                 .anyMatch(secretWord -> messageList.stream().anyMatch(secretWord::equalsIgnoreCase));
     }
 
     boolean isSpreadableEvent(MessageReceivedEvent event) {
         return messageContainsSecretWordOfTheDay(event.getMessage().getContentStripped());
+    }
+
+
+    public int getWordListLength() {
+        return this.wordListLength;
     }
 }

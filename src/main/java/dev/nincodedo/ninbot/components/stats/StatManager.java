@@ -1,8 +1,6 @@
 package dev.nincodedo.ninbot.components.stats;
 
 import io.micrometer.core.instrument.util.NamedThreadFactory;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,10 +12,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Log4j2
 @Component
 public class StatManager {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(StatManager.class);
     private StatRepository statRepository;
     private ExecutorService executorService;
 
@@ -43,7 +42,8 @@ public class StatManager {
 
     public void addCount(String name, String category, String serverId, int count) {
         executorService.execute(() -> {
-            val optionalStat = statRepository.findByNameAndCategoryAndServerId(name, category, serverId);
+            final java.util.Optional<dev.nincodedo.ninbot.components.stats.Stat> optionalStat =
+                    statRepository.findByNameAndCategoryAndServerId(name, category, serverId);
             Stat stat;
             if (optionalStat.isPresent()) {
                 stat = optionalStat.get();
@@ -62,7 +62,8 @@ public class StatManager {
     public CompletableFuture<List<Stat>> getStatByCategoryAndServerId(String category, String serverId) {
         CompletableFuture<List<Stat>> future = new CompletableFuture<>();
         executorService.submit(() -> {
-            val statList = statRepository.findByCategoryAndServerId(category, serverId);
+            final java.util.List<dev.nincodedo.ninbot.components.stats.Stat> statList =
+                    statRepository.findByCategoryAndServerId(category, serverId);
             future.complete(statList);
             return null;
         });
@@ -72,7 +73,8 @@ public class StatManager {
     public CompletableFuture<List<Stat>> getStatByServerId(String serverId) {
         CompletableFuture<List<Stat>> future = new CompletableFuture<>();
         executorService.submit(() -> {
-            val statList = statRepository.findByServerId(serverId);
+            final java.util.List<dev.nincodedo.ninbot.components.stats.Stat> statList =
+                    statRepository.findByServerId(serverId);
             future.complete(statList);
             return null;
         });
@@ -80,15 +82,16 @@ public class StatManager {
     }
 
     public Map<String, List<Stat>> getStatMapByServerId(String serverId) {
-        val future = getStatByServerId(serverId);
+        final java.util.concurrent.CompletableFuture<java.util.List<dev.nincodedo.ninbot.components.stats.Stat>> future = getStatByServerId(serverId);
         Map<String, List<Stat>> statMap = new HashMap<>();
         try {
-            val statsList = future.get();
-            for (val stat : statsList) {
+            final java.util.List<dev.nincodedo.ninbot.components.stats.Stat> statsList = future.get();
+            for (final dev.nincodedo.ninbot.components.stats.Stat stat : statsList) {
                 if (!statMap.containsKey(stat.getCategory())) {
                     statMap.put(stat.getCategory(), new ArrayList<>());
                 }
-                val mapList = statMap.get(stat.getCategory());
+                final java.util.List<dev.nincodedo.ninbot.components.stats.Stat> mapList =
+                        statMap.get(stat.getCategory());
                 mapList.add(stat);
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -100,7 +103,8 @@ public class StatManager {
     public CompletableFuture<List<Stat>> getStatByCategory(String category) {
         CompletableFuture<List<Stat>> future = new CompletableFuture<>();
         executorService.submit(() -> {
-            val statList = statRepository.findByCategory(category);
+            final java.util.List<dev.nincodedo.ninbot.components.stats.Stat> statList =
+                    statRepository.findByCategory(category);
             future.complete(statList);
             return null;
         });

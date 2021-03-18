@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.reaction;
 
-import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
@@ -10,21 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class EmojiReactionResponse extends ReactionResponse {
-
     private static Map<String, String> letterMap;
 
     static {
         letterMap = new HashMap<>();
-        char unicodeChar = '\uDDE6';
+        char unicodeChar = '\udde6';
         char letterChar = 'A';
         for (int i = 0; i < 26; i++) {
-            letterMap.put(String.valueOf(letterChar), "\uD83C" + unicodeChar);
+            letterMap.put(String.valueOf(letterChar), "\ud83c" + unicodeChar);
             letterChar++;
             unicodeChar++;
         }
     }
 
-    @Getter
     private List<String> emojiList;
 
     public EmojiReactionResponse(ReactionResponse reactionResponse) {
@@ -51,5 +48,10 @@ public class EmojiReactionResponse extends ReactionResponse {
     @Override
     public void react(Message message, MessageChannel channel) {
         emojiList.forEach(emoji -> message.addReaction(emoji).queue());
+    }
+
+
+    public List<String> getEmojiList() {
+        return this.emojiList;
     }
 }

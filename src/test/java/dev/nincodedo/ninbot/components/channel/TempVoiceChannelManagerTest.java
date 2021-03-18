@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -43,13 +42,13 @@ class TempVoiceChannelManagerTest {
 
     @Test
     void onGuildVoiceJoin() {
-        val guild = Mockito.mock(Guild.class);
-        val joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
-        val jda = Mockito.mock(JDA.class);
-        val selfMember = Mockito.mock(Member.class);
-        val member = Mockito.mock(Member.class);
-        val voiceChannelJoined = Mockito.mock(VoiceChannel.class);
-        val restAction = Mockito.mock(ChannelAction.class);
+        Guild guild = Mockito.mock(Guild.class);
+        GuildVoiceJoinEvent joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
+        JDA jda = Mockito.mock(JDA.class);
+        Member selfMember = Mockito.mock(Member.class);
+        Member member = Mockito.mock(Member.class);
+        VoiceChannel voiceChannelJoined = Mockito.mock(VoiceChannel.class);
+        ChannelAction restAction = Mockito.mock(ChannelAction.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");

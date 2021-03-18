@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,7 +12,6 @@ import java.util.*;
 
 @Component
 public class PollSetup {
-
     private StatManager statManager;
     private PollRepository pollRepository;
     private Map<Long, PollListeners> pollListenersMap;
@@ -25,9 +23,9 @@ public class PollSetup {
     }
 
     void setupAnnounce(Poll poll, ShardManager shardManager, Message message) {
-        val choices = poll.getChoices();
+        final java.util.List<java.lang.String> choices = poll.getChoices();
         addPollChoiceEmotes(message, choices);
-        val announceTime = message.getTimeCreated()
+        final java.time.Instant announceTime = message.getTimeCreated()
                 .toInstant()
                 .plus(poll.getTimeLength(), ChronoUnit.MINUTES);
         //Poll announce time is in the future, or has not been announced yet
@@ -35,8 +33,7 @@ public class PollSetup {
             message.pin().queue();
             PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollRepository);
             Timer timer;
-            PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
-                    pollRepository, poll
+            PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager, pollRepository, poll
                     .getMessageId(), this);
             if (pollListenersMap.containsKey(poll.getId())) {
                 PollListeners pollListeners = pollListenersMap.remove(poll.getId());
@@ -52,9 +49,9 @@ public class PollSetup {
     }
 
     private void addPollChoiceEmotes(Message message, List<String> choices) {
-        char digitalOneEmoji = '\u0031';
+        char digitalOneEmoji = '1';
         for (int i = 0; i < choices.size(); i++) {
-            message.addReaction(digitalOneEmoji + "\u20E3").queue();
+            message.addReaction(digitalOneEmoji + "⃣").queue();
             digitalOneEmoji++;
         }
     }

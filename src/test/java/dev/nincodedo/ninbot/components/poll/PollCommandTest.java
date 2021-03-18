@@ -3,10 +3,9 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.LocaleService;
-import lombok.val;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,7 +40,7 @@ class PollCommandTest {
         Member member = Mockito.mock(Member.class);
         User user = Mockito.mock(User.class);
         MessageChannel messageChannel = Mockito.mock(MessageChannel.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
+        net.dv8tion.jda.api.requests.restaction.MessageAction messageAction = Mockito.mock(net.dv8tion.jda.api.requests.restaction.MessageAction.class);
         TextChannel textChannel = Mockito.mock(TextChannel.class);
         Guild guild = Mockito.mock(Guild.class);
         when(message.getGuild()).thenReturn(guild);
@@ -60,7 +59,7 @@ class PollCommandTest {
         when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
-        val actualMessageAction = pollCommand.executeCommand(messageEvent);
+        MessageAction actualMessageAction = pollCommand.executeCommand(messageEvent);
 
         assertThat(actualMessageAction).isNotNull();
         assertThat(actualMessageAction.getEmojisList()).isEmpty();
@@ -89,7 +88,7 @@ class PollCommandTest {
         when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(LocaleService.getLocale(messageEvent)).thenReturn(Locale.ENGLISH);
 
-        val actualMessageAction = pollCommand.executeCommand(messageEvent);
+        MessageAction actualMessageAction = pollCommand.executeCommand(messageEvent);
 
         assertThat(actualMessageAction).isNotNull();
         assertThat(actualMessageAction.getEmojisList()).contains(Emojis.CROSS_X);
@@ -110,7 +109,7 @@ class PollCommandTest {
         when(member.getEffectiveName()).thenReturn("Nincodedo");
         when(message.getContentStripped()).thenReturn("@Ninbot poll test \"1, 2, 3\" 10");
 
-        val poll = pollCommand.parsePollMessage(message, member);
+        Poll poll = pollCommand.parsePollMessage(message, member);
 
         assertThat(poll.getChoices()).isNotEmpty();
         assertThat(poll.getChoices()).hasSize(3);

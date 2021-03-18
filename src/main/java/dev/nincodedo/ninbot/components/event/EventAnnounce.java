@@ -3,16 +3,15 @@ package dev.nincodedo.ninbot.components.event;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ResourceBundle;
 import java.util.TimerTask;
 
-@Log4j2
 class EventAnnounce extends TimerTask {
 
+    private static final org.apache.logging.log4j.Logger log =
+            org.apache.logging.log4j.LogManager.getLogger(EventAnnounce.class);
     private Event event;
     private Guild guild;
     private int minutesBeforeStart;
@@ -28,11 +27,12 @@ class EventAnnounce extends TimerTask {
     @Override
     public void run() {
         log.debug("Running announce for event {}", event.getId());
-        val serverId = event.getServerId();
-        val config = configService.getSingleValueByName(serverId, ConfigConstants.ANNOUNCE_CHANNEL);
+        String serverId = event.getServerId();
+        final java.util.Optional<java.lang.String> config = configService.getSingleValueByName(serverId,
+                ConfigConstants.ANNOUNCE_CHANNEL);
         config.ifPresent(announceChannelId -> {
-            val channel = guild.getTextChannelById(announceChannelId);
-            val gameRoleId = guild.getRolesByName(event.getGameName(), true).get(0);
+            final net.dv8tion.jda.api.entities.TextChannel channel = guild.getTextChannelById(announceChannelId);
+            final net.dv8tion.jda.api.entities.Role gameRoleId = guild.getRolesByName(event.getGameName(), true).get(0);
             event.setResourceBundle(ResourceBundle.getBundle("lang", LocaleService.getLocale(guild)));
             channel.sendMessage(event.buildChannelMessage(gameRoleId.getId(), minutesBeforeStart)).queue();
         });

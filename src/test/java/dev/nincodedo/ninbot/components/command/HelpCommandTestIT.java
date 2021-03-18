@@ -3,9 +3,9 @@ package dev.nincodedo.ninbot.components.command;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.TestUtils;
 import dev.nincodedo.ninbot.components.common.RolePermission;
+import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -30,6 +30,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +58,7 @@ class HelpCommandTestIT {
 
     @Test
     void testEveryoneCommandsAllHaveHelpDescriptions() {
-        val helpCommand = (HelpCommand) commandParser.getCommandHashMap().get("help");
+        HelpCommand helpCommand = (HelpCommand) commandParser.getCommandHashMap().get("help");
         Guild guild = Mockito.mock(Guild.class);
         Member member = Mockito.mock(Member.class);
         User user = Mockito.mock(User.class);
@@ -66,11 +67,11 @@ class HelpCommandTestIT {
         when(guild.getOwner()).thenReturn(member);
         when(member.getUser()).thenReturn(user);
 
-        val messageAction = helpCommand.executeCommand(messageEvent);
+        MessageAction messageAction = helpCommand.executeCommand(messageEvent);
 
         Assertions.assertThat(messageAction).isNotNull();
         assertThat(messageAction.getPrivateMessageList()).isNotEmpty();
-        val everyoneCommands = commandParser.getCommandHashMap()
+        List<AbstractCommand> everyoneCommands = commandParser.getCommandHashMap()
                 .values()
                 .stream()
                 .filter(abstractCommand -> abstractCommand.getPermissionLevel().equals(RolePermission.EVERYONE))

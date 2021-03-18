@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.trivia;
 
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -9,7 +8,6 @@ import java.util.List;
 
 @Service
 public class TriviaScoreService {
-
     private TriviaScoreRepository triviaScoreRepository;
 
     public TriviaScoreService(TriviaScoreRepository triviaScoreRepository) {
@@ -23,7 +21,8 @@ public class TriviaScoreService {
 
     @Transactional
     public int addPoints(String userId, int points) {
-        val triviaScore = triviaScoreRepository.getFirstByUserId(userId);
+        final java.util.Optional<dev.nincodedo.ninbot.components.trivia.TriviaScore> triviaScore = triviaScoreRepository
+                .getFirstByUserId(userId);
         if (triviaScore.isPresent()) {
             triviaScore.get().setScore(triviaScore.get().getScore() + points);
             return triviaScore.get().getScore();
@@ -34,7 +33,8 @@ public class TriviaScoreService {
 
     @Transactional
     public int getPlayerScore(String userId) {
-        val triviaScore = triviaScoreRepository.getFirstByUserId(userId);
+        final java.util.Optional<dev.nincodedo.ninbot.components.trivia.TriviaScore> triviaScore = triviaScoreRepository
+                .getFirstByUserId(userId);
         return triviaScore.map(TriviaScore::getScore).orElse(0);
     }
 
