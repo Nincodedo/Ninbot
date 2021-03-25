@@ -49,7 +49,7 @@ public class SubscribeCommand extends AbstractCommand {
 
     private boolean isValidSubscribeRole(Role role, String serverId) {
         List<String> roleDenyList = configService.getValuesByName(serverId, ConfigConstants.ROLE_DENY_LIST);
-        roleDenyList.add(PathogenConfig.getROLE_NAME());
+        roleDenyList.add(PathogenConfig.getINFECTED_ROLE_NAME());
         return role != null && !roleDenyList.contains(role.getName());
     }
 

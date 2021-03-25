@@ -14,10 +14,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,7 +42,7 @@ public class PathogenCommand extends AbstractCommand {
 
     private Message getInfectionServerStats(Guild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        val roleList = guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
+        val roleList = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
         if (!roleList.isEmpty()) {
             val users = guild.getMembersWithRoles(roleList);
             List<String> userIds = users.stream().map(ISnowflake::getId).collect(Collectors.toList());
@@ -68,12 +65,17 @@ public class PathogenCommand extends AbstractCommand {
         val pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getAuthor()
                 .getId(), event.getGuild().getId());
         if (pathogenUser != null) {
-            if (pathogenUser.getInfectionLevel() == 0) {
+            if (pathogenUser.getVaccinated()) {
+                reactions.add(Emojis.getRandomDoctorEmoji());
+                reactions.add(Emojis.getNumberMap().get(0));
+                reactions.add(Emojis.THUMBS_UP);
+            } else if (pathogenUser.getInfectionLevel() == 0) {
                 reactions.add(Emojis.HAPPY_FACE);
+                reactions.add(Emojis.getNumberMap().get(0));
             } else if (pathogenUser.getInfectionLevel() > 0) {
                 reactions.add(Emojis.SICK_FACE);
+                reactions.add(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
             }
-            reactions.add(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
         }
         return reactions;
     }

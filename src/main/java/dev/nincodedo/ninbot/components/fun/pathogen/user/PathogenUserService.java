@@ -46,4 +46,15 @@ public class PathogenUserService {
     public List<PathogenUser> getAllByUserIdIsIn(List<String> userIds) {
         return pathogenUserRepository.getAllByUserIdIsIn(userIds);
     }
+
+    public void vaccinateUser(String userId, String serverId) {
+        PathogenUser pathogenUser = getByUserIdAndServerId(userId, serverId);
+        if (pathogenUser == null) {
+            pathogenUser = new PathogenUser();
+        }
+        pathogenUser.setVaccinated(true);
+        pathogenUser.setInfectionLevel(0);
+        pathogenUser.setLastInitialCure(new Date());
+        pathogenUserRepository.save(pathogenUser);
+    }
 }

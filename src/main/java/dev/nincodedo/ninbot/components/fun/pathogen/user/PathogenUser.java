@@ -19,4 +19,5 @@ public class PathogenUser {
     private Integer infectionLevel = 0;
     private Date lastInitialInfection;
     private Date lastInitialCure;
+    private Boolean vaccinated = false;
 }
