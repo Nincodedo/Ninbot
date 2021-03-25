@@ -3,8 +3,7 @@ package dev.nincodedo.ninbot.components.common;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @UtilityClass
 public class Emojis {
@@ -23,6 +22,8 @@ public class Emojis {
     public static final String PILLS = "\uD83D\uDC8A";
     public static final String COOLDOWN_5_CLOCK = "\uD83D\uDD54";
     public static final String PACMAN_LOADING_ID = "762932479811125248";
+    public static final List<String> DOCTOR_LIST = Arrays.asList("\uD83D\uDC68\u200D⚕️", "\uD83D\uDC69\u200D⚕️");
+    public static final String THUMBS_UP = "\uD83D\uDC4D";
     @Getter
     private static final Map<Integer, String> numberMap;
 
@@ -32,5 +33,9 @@ public class Emojis {
             String enclosingKeycap = "️⃣";
             numberMap.put(i, i + enclosingKeycap);
         }
+    }
+
+    public static String getRandomDoctorEmoji() {
+        return DOCTOR_LIST.get(new Random().nextInt(DOCTOR_LIST.size()));
     }
 }
