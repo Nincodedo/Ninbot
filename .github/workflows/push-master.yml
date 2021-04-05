@@ -31,7 +31,7 @@ jobs:
       - name: GitHub Docker Action
         uses: matootie/github-docker@v3.1.0
         with:
-          accessToken: ${{ secrets.GITHUB_PACKAGE_ACTIONS }}
+          accessToken: ${{ secrets.PACKAGE_ACTIONS_TOKEN }}
           tag: |
             latest
             ${{ github.sha }}
