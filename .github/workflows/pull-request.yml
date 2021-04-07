@@ -9,8 +9,9 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/checkout@master
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v2
         with:
+          distribution: 'adopt'
           java-version: '15'
       - name: Cache local Maven repository
         uses: actions/cache@v2.1.4
