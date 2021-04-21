@@ -48,7 +48,7 @@
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <pitest-maven.version>1.6.4</pitest-maven.version>
+        <pitest-maven.version>1.6.5</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.3</sap-conversational-ai-java-api.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
