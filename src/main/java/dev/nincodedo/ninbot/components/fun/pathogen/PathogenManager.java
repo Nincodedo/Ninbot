@@ -8,15 +8,16 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
@@ -84,7 +85,7 @@ public class PathogenManager {
 
     public void spread(Guild guild, User spreadSource,
             Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
-        val infectedRoles = guild.getRolesByName(PathogenConfig.getROLE_NAME(), true);
+        val infectedRoles = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
         if (infectedRoles.isEmpty()) {
             return;
         }
@@ -94,25 +95,46 @@ public class PathogenManager {
                 .stream()
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
+                    val pathogenTargetMessage = possiblePathogenVictims.get(user);
                     val channelId = possiblePathogenVictims.get(user).getChannel().getId();
                     val pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
                             guild.getId());
+                    val vaccinatedRoleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
                     if (healingWeek) {
-                        guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(aVoid -> {
-                            //Successfully removed role, so add healing reaction
-                            possiblePathogenVictims.get(user).addReaction(Emojis.PILLS).queue();
-                            auditAction(spreadSource, channelId, user, "healing",
-                                    "Healed user %s in channel %s");
-                            pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
-                        });
+                        if (vaccinatedRoleList.isEmpty() || !guild.getMember(user)
+                                .getRoles()
+                                .contains(vaccinatedRoleList.get(0))) {
+                            guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(success -> {
+                                //Successfully removed role, so add healing reaction
+                                pathogenTargetMessage.addReaction(Emojis.PILLS).queue();
+                                auditAction(spreadSource, channelId, user, "healing",
+                                        "Healed user %s in channel %s");
+                                pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
+                            });
+                        } else if (guild.getMember(user).getRoles().contains(vaccinatedRoleList.get(0))) {
+                            //No need to heal user since they have vaccination role
+                            pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
+                            pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
+                            auditAction(spreadSource, channelId, user, "no-heal-vaccinated", "User %s does not need "
+                                    + "healing, vaccinated, in channel %s");
+                        }
                     } else {
-                        guild.addRoleToMember(guild.getMember(user), infectedRole).queue(aVoid -> {
-                            //Successfully added role, so add infected reaction
-                            possiblePathogenVictims.get(user).addReaction(Emojis.SICK_FACE).queue();
-                            auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
+                        if (vaccinatedRoleList.isEmpty() || !guild.getMember(user)
+                                .getRoles()
+                                .contains(vaccinatedRoleList.get(0))) {
+                            guild.addRoleToMember(guild.getMember(user), infectedRole).queue(success -> {
+                                //Successfully added role, so add infected reaction
+                                pathogenTargetMessage.addReaction(Emojis.SICK_FACE).queue();
+                                auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
+                                        + "in channel %s");
+                                pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
+                            });
+                        } else if (guild.getMember(user).getRoles().contains(vaccinatedRoleList.get(0))) {
+                            pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
+                            pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
+                            auditAction(spreadSource, channelId, user, "vaccine-block", "Vaccine blocked user %s "
                                     + "in channel %s");
-                            pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
-                        });
+                        }
                     }
                 });
     }
@@ -127,6 +149,14 @@ public class PathogenManager {
         audit.setCreatedBy(spreadSource.getId());
         audit.setWeekId(healingWeekId());
         pathogenAuditRepository.save(audit);
+    }
+
+    boolean isInfectedMember(Member member) {
+        if (member == null) {
+            return false;
+        }
+        return member.getRoles().stream()
+                .anyMatch(role -> PathogenConfig.getINFECTED_ROLE_NAME().equalsIgnoreCase(role.getName()));
     }
 
     public Set<String> getWordList() {
@@ -147,12 +177,18 @@ public class PathogenManager {
     }
 
     private List<String> readWordList() {
-        try {
-            return Files.readAllLines(new ClassPathResource("listOfCommonWords.txt").getFile().toPath());
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
+                .getResourceAsStream("listOfCommonWords.txt")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+            }
         } catch (IOException e) {
             log.error("Failed to read common word file", e);
             return new ArrayList<>();
         }
+        return list;
     }
 
     boolean messageContainsSecretWordOfTheDay(String contentStripped) {

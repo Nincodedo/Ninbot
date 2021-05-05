@@ -22,7 +22,7 @@ public class StreamInstance {
     @ToString.Exclude
     private StreamingMember streamingMember;
 
-    public boolean isStreaming(){
+    public boolean isStreaming() {
         return endTimestamp == null;
     }
 }
