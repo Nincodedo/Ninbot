@@ -33,7 +33,7 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
-        <JDA.version>4.2.0_247</JDA.version>
+        <JDA.version>4.2.1_262</JDA.version>
         <archunit.version>0.18.0</archunit.version>
         <assertj-core.version>3.19.0</assertj-core.version>
         <commons-io.version>2.8.0</commons-io.version>
@@ -223,6 +223,11 @@
         <repository>
             <id>jcenter-snapshot</id>
             <url>https://oss.jfrog.org/artifactory/libs-release/</url>
+        </repository>
+        <repository>
+            <id>dv8tion</id>
+            <name>m2-dv8tion</name>
+            <url>https://m2.dv8tion.net/releases</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
