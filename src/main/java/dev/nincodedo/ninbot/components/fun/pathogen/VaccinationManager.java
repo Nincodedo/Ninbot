@@ -29,7 +29,14 @@ public class VaccinationManager {
                         .filter(member -> !member.getRoles().contains(vaccinatedRole))
                         .min(StreamUtils.shuffle())
                         .ifPresent(member -> guild.addRoleToMember(member, vaccinatedRole)
-                                .queue(success -> pathogenUserService.vaccinateUser(member.getId(), guild.getId())));
+                                .queue(success -> {
+                                    pathogenUserService.vaccinateUser(member.getId(), guild.getId());
+                                    val infectedRoleList =
+                                            guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), false);
+                                    if (!infectedRoleList.isEmpty()) {
+                                        guild.removeRoleFromMember(member.getId(), infectedRoleList.get(0)).queue();
+                                    }
+                                }));
             }
         }
     }
