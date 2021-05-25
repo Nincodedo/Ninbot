@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Component
 public class SimulateCommand extends CooldownCommand {
 
-    private static final String WEBHOOK_NAME = "ninbot";
     private Random random;
 
     public SimulateCommand() {

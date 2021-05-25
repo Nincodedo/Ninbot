@@ -39,7 +39,7 @@ public class CountdownScheduler implements Schedulable {
                 .atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
             val dayDifference = countdown.getDayDifference();
-            if (dayDifference > 7 && dayDifference % 7 != 0) {
+            if (isAnnounceable(dayDifference)) {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
             }
@@ -71,6 +71,10 @@ public class CountdownScheduler implements Schedulable {
             log.debug("Countdown {} is past, removing", countdown.getId());
             countdownRepository.delete(countdown);
         }
+    }
+
+    private boolean isAnnounceable(long dayDifference) {
+        return dayDifference > 100 && dayDifference % 100 != 0 || dayDifference > 7 && dayDifference % 7 != 0;
     }
 
     class Scheduler extends TimerTask {

@@ -56,10 +56,7 @@ public class BirthdayScheduler implements Schedulable {
             } catch (ParseException e) {
                 log.error("Failed to parse date", e);
             }
-            if (birthdateThisYear != null && DateUtils.isSameDay(birthdateThisYear, Date.from(LocalDate.now()
-                    .plus(1, ChronoUnit.DAYS)
-                    .atStartOfDay(ZoneId.systemDefault())
-                    .toInstant()))) {
+            if (isBirthdayTomorrow(birthdateThisYear)) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
                 val announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
@@ -72,6 +69,13 @@ public class BirthdayScheduler implements Schedulable {
                                 .toInstant()));
             }
         }
+    }
+
+    private boolean isBirthdayTomorrow(Date birthdateThisYear) {
+        return birthdateThisYear != null && DateUtils.isSameDay(birthdateThisYear, Date.from(LocalDate.now()
+                .plus(1, ChronoUnit.DAYS)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()));
     }
 
     private String getStringDate(int monthOfYear, int dayOfMonth, int year) {

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.components.common.message.MessageBuilderHelper;
+import dev.nincodedo.ninbot.components.common.message.MessageUtils;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -60,7 +60,7 @@ class Poll {
     private Message buildPollMessage(String footer) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(title);
-        embedBuilder.setColor(MessageBuilderHelper.getColor(userAvatarUrl));
+        embedBuilder.setColor(MessageUtils.getColor(userAvatarUrl));
         if (isPollOpen()) {
             embedBuilder.setTimestamp(Instant.now().plus(timeLength, ChronoUnit.MINUTES));
         } else {
