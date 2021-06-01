@@ -33,7 +33,7 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
-        <JDA.version>4.2.1_265</JDA.version>
+        <JDA.version>4.2.1_266</JDA.version>
         <archunit.version>0.18.0</archunit.version>
         <assertj-core.version>3.19.0</assertj-core.version>
         <commons-io.version>2.9.0</commons-io.version>
