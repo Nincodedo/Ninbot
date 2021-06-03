@@ -14,6 +14,7 @@ class VerifyArchitectureTest {
         JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo.ninbot");
         ArchRule rule = ArchRuleDefinition.classes().that().haveNameMatching(".*Command")
                 .and().haveNameNotMatching("Abstract.*")
+                .and().areNotInterfaces()
                 .should().beAssignableTo(AbstractCommand.class);
         rule.check(ninbotClasses);
     }
