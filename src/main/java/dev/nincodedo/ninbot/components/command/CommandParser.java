@@ -9,6 +9,7 @@ import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class CommandParser {
     private ComponentService componentService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
+    private Map<String, SlashCommand> slashCommandMap = new HashMap<>();
     private Map<String, String> commandAliasMap = new HashMap<>();
     private ExecutorService executorService;
 
@@ -91,5 +93,20 @@ public class CommandParser {
             command.getAliases().forEach(alias -> commandAliasMap.put(alias, command.getName()));
             commandAliasMap.put(command.getName(), command.getName());
         }
+    }
+
+    public void parseEvent(SlashCommandEvent slashCommandEvent) {
+        SlashCommand slashCommand = slashCommandMap.get(slashCommandEvent.getName());
+        if (slashCommand != null) {
+            slashCommand.execute(slashCommandEvent);
+        }
+    }
+
+    public void addSlashCommands(List<SlashCommand> slashCommands) {
+        slashCommands.forEach(this::addSlashCommand);
+    }
+
+    public void addSlashCommand(SlashCommand slashCommand) {
+        slashCommandMap.put(slashCommand.getName(), slashCommand);
     }
 }
