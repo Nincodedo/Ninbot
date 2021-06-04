@@ -1,13 +1,15 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.command.CommandOption;
+import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.info.GitProperties;
@@ -15,14 +17,16 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 @Log4j2
-public class DabCommand extends AbstractCommand {
+public class DabCommand extends AbstractCommand implements SlashCommand {
 
+    private static final int MESSAGE_SEARCH_LIMIT = 10;
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
     private SecureRandom random;
@@ -45,21 +49,24 @@ public class DabCommand extends AbstractCommand {
         MessageAction messageAction = new MessageAction(event);
         val content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
-            doDabarinos(event, messageAction);
+            doDabarinos(event.getJDA()
+                    .getShardManager(), event.getChannel(), event.getMessage(), event.getAuthor(), messageAction, null);
         } else {
             messageAction.addUnknownReaction();
         }
         return messageAction;
     }
 
-    private void doDabarinos(MessageReceivedEvent event, MessageAction messageAction) {
-        val channel = event.getChannel();
-        val mentionedUsers = event.getMessage().getMentionedUsers();
-        val dabUser = mentionedUsers.get(mentionedUsers.size() - 1);
-        for (Message message : channel.getHistoryBefore(event.getMessage(), 10).complete().getRetrievedHistory()) {
+    private void doDabarinos(ShardManager shardManager, MessageChannel channel, Message eventMessage,
+            User eventMessageAuthor, MessageAction messageAction, User dabbedOn) {
+        val mentionedUsers = eventMessage.getMentionedUsers();
+        val dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
+        for (Message message : channel.getHistoryBefore(eventMessage, MESSAGE_SEARCH_LIMIT)
+                .complete()
+                .getRetrievedHistory()) {
             if (message.getAuthor().equals(dabUser)) {
                 messageAction.setOverrideMessage(message);
-                dabOnMessage(messageAction, event.getJDA().getShardManager(), event.getAuthor());
+                dabOnMessage(messageAction, shardManager, eventMessageAuthor);
                 return;
             }
         }
@@ -108,5 +115,37 @@ public class DabCommand extends AbstractCommand {
         messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds all dab emojis to the last message of the user named";
+    }
+
+    @Override
+    public List<CommandOption> getCommandOptions() {
+        return Arrays.asList(new CommandOption(Command.OptionType.USER, "dabbed", "a poor soul", true));
+    }
+
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        MessageAction messageAction = new MessageAction();
+        //TODO what the hell is this, please fix it
+        doDabarinos(slashCommandEvent.getJDA()
+                        .getShardManager(), slashCommandEvent.getChannel(), slashCommandEvent.getChannel()
+                        .getIterableHistory()
+                        .complete()
+                        .get(0), slashCommandEvent.getUser(), messageAction,
+                slashCommandEvent.getOptionsByType(Command.OptionType.USER)
+                        .get(0)
+                        .getAsUser());
+        messageAction.executeActions();
+        slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
+                .getEmotesByName("ninbotdab", true)
+                .get(0))
+                .append(" ")
+                .append(slashCommandEvent.getOptionsByType(Command.OptionType.USER).get(0).getAsUser())
+                .build())
+                .queue();
     }
 }
