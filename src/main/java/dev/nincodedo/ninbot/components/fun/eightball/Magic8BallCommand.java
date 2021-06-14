@@ -5,9 +5,9 @@ import dev.nincodedo.ninbot.components.command.CommandOption;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.val;
-import net.dv8tion.jda.api.entities.Command;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
 
     @Override
     public List<CommandOption> getCommandOptions() {
-        return Arrays.asList(new CommandOption(Command.OptionType.STRING, "question", "Your question to the 8 ball",
+        return Arrays.asList(new CommandOption(OptionType.STRING, "question", "Your question to the 8 ball",
                 false));
     }
 

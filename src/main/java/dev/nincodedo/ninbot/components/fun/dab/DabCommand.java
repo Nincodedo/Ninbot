@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
@@ -124,7 +126,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
 
     @Override
     public List<CommandOption> getCommandOptions() {
-        return Arrays.asList(new CommandOption(Command.OptionType.USER, "dabbed", "a poor soul", true));
+        return Arrays.asList(new CommandOption(OptionType.USER, "dabbed", "a poor soul", true));
     }
 
     @Override
@@ -136,7 +138,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
                         .getIterableHistory()
                         .complete()
                         .get(0), slashCommandEvent.getUser(), messageAction,
-                slashCommandEvent.getOptionsByType(Command.OptionType.USER)
+                slashCommandEvent.getOptionsByType(OptionType.USER)
                         .get(0)
                         .getAsUser());
         messageAction.executeActions();
@@ -144,7 +146,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
                 .getEmotesByName("ninbotdab", true)
                 .get(0))
                 .append(" ")
-                .append(slashCommandEvent.getOptionsByType(Command.OptionType.USER).get(0).getAsUser())
+                .append(slashCommandEvent.getOptionsByType(OptionType.USER).get(0).getAsUser())
                 .build())
                 .queue();
     }

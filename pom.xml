@@ -33,7 +33,7 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
-        <JDA.version>feature~slash-commands</JDA.version>
+        <JDA.version>4.3.0_277</JDA.version>
         <archunit.version>0.19.0</archunit.version>
         <assertj-core.version>3.19.0</assertj-core.version>
         <commons-io.version>2.9.0</commons-io.version>
@@ -113,7 +113,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.DV8FromTheWorld</groupId>
+            <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>${JDA.version}</version>
             <exclusions>
