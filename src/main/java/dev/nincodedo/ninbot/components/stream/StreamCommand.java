@@ -1,16 +1,22 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.command.CommandOption;
+import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import lombok.val;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
-public class StreamCommand extends AbstractCommand {
+public class StreamCommand extends AbstractCommand implements SlashCommand {
 
     private StreamingMemberRepository streamingMemberRepository;
 
@@ -59,20 +65,41 @@ public class StreamCommand extends AbstractCommand {
         val event = messageAction.getEvent();
         val userId = event.getAuthor().getId();
         val serverId = event.getGuild().getId();
+        boolean foundUser = toggleConfig(userId, serverId);
+        messageAction.addReaction(foundUser ? Emojis.ON : Emojis.OFF);
+    }
+
+    private boolean toggleConfig(String userId, String serverId) {
         val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
         val streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
-        boolean foundUser = false;
+        boolean foundUser = true;
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {
                 configService.removeConfig(config);
-                messageAction.addReaction(Emojis.OFF);
-                foundUser = true;
+                foundUser = false;
                 break;
             }
         }
-        if (!foundUser) {
+        if (foundUser) {
             configService.addConfig(serverId, configName, userId);
-            messageAction.addReaction(Emojis.ON);
         }
+        return foundUser;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Toggles your stream announcements.";
+    }
+
+    @Override
+    public List<CommandOption> getCommandOptions() {
+        return Arrays.asList();
+    }
+
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
+        String response = "Stream announcements have been turned ";
+        slashCommandEvent.reply(isToggled ? response + "on." : response + "off.").setEphemeral(true).queue();
     }
 }
