@@ -5,7 +5,6 @@ import lombok.val;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.springframework.stereotype.Component;
 
@@ -39,10 +38,8 @@ public class SlashCommandRegistration extends ListenerAdapter {
                         }
                         CommandData commandData = new CommandData(slashCommand
                                 .getName(), slashCommand.getDescription());
-                        slashCommand.getCommandOptions()
-                                .forEach(commandOption -> commandData.addOptions(new OptionData(commandOption
-                                        .type(), commandOption.name(), commandOption.description()).setRequired(commandOption
-                                        .required())));
+                        slashCommand.getCommandOptions().forEach(commandData::addOptions);
+                        slashCommand.getSubcommandDatas().forEach(commandData::addSubcommands);
                         commandUpdateAction.addCommands(commandData).queue();
                     });
                 }

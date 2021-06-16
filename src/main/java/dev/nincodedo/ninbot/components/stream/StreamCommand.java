@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.command.CommandOption;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
@@ -10,9 +9,12 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import lombok.val;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -92,8 +94,13 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public List<CommandOption> getCommandOptions() {
+    public List<OptionData> getCommandOptions() {
         return Arrays.asList();
+    }
+
+    @Override
+    public List<SubcommandData> getSubcommandDatas() {
+        return Collections.emptyList();
     }
 
     @Override

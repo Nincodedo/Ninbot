@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.command.CommandOption;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
@@ -13,6 +12,8 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
@@ -125,8 +126,13 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public List<CommandOption> getCommandOptions() {
-        return Arrays.asList(new CommandOption(OptionType.USER, "dabbed", "a poor soul", true));
+    public List<OptionData> getCommandOptions() {
+        return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "a poor soul", true));
+    }
+
+    @Override
+    public List<SubcommandData> getSubcommandDatas() {
+        return Collections.emptyList();
     }
 
     @Override
