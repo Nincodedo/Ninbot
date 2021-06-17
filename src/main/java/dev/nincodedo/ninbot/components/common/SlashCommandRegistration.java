@@ -23,7 +23,7 @@ public class SlashCommandRegistration extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent readyEvent) {
         val shardManager = readyEvent.getJDA().getShardManager();
-        val guildIds = Arrays.asList(Constants.OCW_SERVER_ID, "497444318768922633");
+        val guildIds = Arrays.asList(Constants.OCW_SERVER_ID, "497444318768922633", "521780068649926692");
         guildIds.forEach(id -> {
             if (shardManager != null) {
                 val guild = shardManager.getGuildById(id);
