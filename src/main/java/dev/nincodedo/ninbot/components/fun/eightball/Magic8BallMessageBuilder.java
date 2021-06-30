@@ -25,14 +25,14 @@ public class Magic8BallMessageBuilder {
         this.eightBallAnswers = readMagic8BallList();
     }
 
-    Message getMagic8BallEmbed(String username) {
+    Message getMagic8BallEmbed(String questionAsked, String username) {
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball", username));
+        embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball and asks \"%s\"", username, questionAsked));
         embedBuilder.setThumbnail("https://i.imgur.com/80imnZ0.png");
         embedBuilder.appendDescription("The Magic 8 Ball says...\n\n");
         embedBuilder.appendDescription("_" + getMagic8BallAnswer() + "_");
-        messageBuilder.setEmbed(embedBuilder.build());
+        messageBuilder.setEmbeds(embedBuilder.build());
         return messageBuilder.build();
     }
 

@@ -29,7 +29,8 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = magic8BallMessageBuilder.getMagic8BallEmbed(event.getMember().getEffectiveName());
+        val question = event.getMessage().getContentStripped().substring(event.getMessage().getContentStripped().toLowerCase().indexOf("@ninbot 8ball "));
+        val message = magic8BallMessageBuilder.getMagic8BallEmbed(question, event.getMember().getEffectiveName());
         messageAction.addChannelAction(message);
         return messageAction;
     }
@@ -52,7 +53,8 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        val message = magic8BallMessageBuilder.getMagic8BallEmbed(slashCommandEvent.getMember().getEffectiveName());
+        val question = slashCommandEvent.getOption("question").getAsString();
+        val message = magic8BallMessageBuilder.getMagic8BallEmbed(question, slashCommandEvent.getMember().getEffectiveName());
         slashCommandEvent.reply(message).queue();
     }
 }
