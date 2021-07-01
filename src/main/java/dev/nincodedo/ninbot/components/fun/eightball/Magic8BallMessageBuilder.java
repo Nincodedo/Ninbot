@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -28,7 +29,11 @@ public class Magic8BallMessageBuilder {
     Message getMagic8BallEmbed(String questionAsked, String username) {
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball and asks \"%s\"", username, questionAsked));
+        if (StringUtils.isEmpty(StringUtils.trimToEmpty(questionAsked))) {
+            embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball", username));
+        } else {
+            embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball and asks \"%s\"", username, questionAsked));
+        }
         embedBuilder.setThumbnail("https://i.imgur.com/80imnZ0.png");
         embedBuilder.appendDescription("The Magic 8 Ball says...\n\n");
         embedBuilder.appendDescription("_" + getMagic8BallAnswer() + "_");
