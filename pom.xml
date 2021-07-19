@@ -36,7 +36,7 @@
         <JDA.version>4.3.0_296</JDA.version>
         <archunit.version>0.20.1</archunit.version>
         <assertj-core.version>3.20.2</assertj-core.version>
-        <commons-io.version>2.10.0</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.9</commons-text.version>
         <dice.version>2.1.2</dice.version>
