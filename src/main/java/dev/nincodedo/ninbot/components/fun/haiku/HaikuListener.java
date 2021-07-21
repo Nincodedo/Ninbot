@@ -93,7 +93,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
                     return Optional.empty();
                 } else if (syllableCount == 5 && counter + 1 == split.length) {
                     haikuLines = Optional.of(
-                            firstLine.toString() + "\n" + secondLine.toString() + "\n" + thirdLine.toString());
+                            firstLine + "\n" + secondLine + "\n" + thirdLine);
                     break;
                 }
             }

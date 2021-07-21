@@ -56,7 +56,7 @@ public class RollCommand extends AbstractCommand implements SlashCommand {
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.appendFormat(resourceBundle.getString("command.roll.result"), memberEffectiveName,
                 diceCommand[0], diceCommand[1], String
-                .valueOf(parsed.getTotalRoll()), parsed.toString());
+                        .valueOf(parsed.getTotalRoll()), parsed.toString());
         return messageBuilder.build();
     }
 

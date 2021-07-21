@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -23,7 +22,6 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static org.mockito.Mockito.*;
 

@@ -18,7 +18,8 @@ public class CommandListener extends ListenerAdapter {
     private ConfigService configService;
     private StatManager statManager;
 
-    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands, List<SlashCommand> slashCommands,
+    public CommandListener(CommandParser commandParser, List<AbstractCommand> commands,
+            List<SlashCommand> slashCommands,
             ComponentService componentService, ConfigService configService, StatManager statManager) {
         this.commandParser = commandParser;
         this.componentService = componentService;
@@ -47,7 +48,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent slashCommandEvent){
+    public void onSlashCommand(SlashCommandEvent slashCommandEvent) {
         commandParser.parseEvent(slashCommandEvent);
     }
 

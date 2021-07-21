@@ -33,6 +33,7 @@ public class MessageUtils {
 
     /**
      * Returns the average color of a user's avatar
+     *
      * @param avatarUrl
      * @return
      */
