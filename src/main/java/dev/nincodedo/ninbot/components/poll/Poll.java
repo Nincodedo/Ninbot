@@ -7,8 +7,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 
 import javax.persistence.*;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -28,7 +27,7 @@ class Poll {
     @OrderColumn(name = "choice_index")
     private List<String> choices;
     private String result;
-    private long timeLength;
+    private LocalDateTime endDateTime;
     private String userAvatarUrl;
     private String userName;
     private boolean pollOpen;
@@ -61,11 +60,7 @@ class Poll {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(title);
         embedBuilder.setColor(MessageUtils.getColor(userAvatarUrl));
-        if (isPollOpen()) {
-            embedBuilder.setTimestamp(Instant.now().plus(timeLength, ChronoUnit.MINUTES));
-        } else {
-            embedBuilder.setTimestamp(Instant.now());
-        }
+        embedBuilder.setTimestamp(endDateTime);
         embedBuilder.setAuthor(resourceBundle.getString("poll.announce.authortext") + userName, null, userAvatarUrl);
         embedBuilder.addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false);
         if (userChoicesAllowed && pollOpen) {

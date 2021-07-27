@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -67,9 +69,9 @@ public class PollCommand extends AbstractCommand {
             poll.setUserChoicesAllowed((poll.getChoices().remove("+")));
             val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
-                poll.setTimeLength(Long.parseLong(timeString));
+                poll.setEndDateTime(LocalDateTime.now().plus(Long.parseLong(timeString), ChronoUnit.MINUTES));
             } else {
-                poll.setTimeLength(5L);
+                poll.setEndDateTime(LocalDateTime.now().plus(5, ChronoUnit.MINUTES));
             }
         }
         return poll;

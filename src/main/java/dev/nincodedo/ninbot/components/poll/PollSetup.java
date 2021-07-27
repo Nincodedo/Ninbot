@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -27,11 +28,9 @@ public class PollSetup {
     void setupAnnounce(Poll poll, ShardManager shardManager, Message message) {
         val choices = poll.getChoices();
         addPollChoiceEmotes(message, choices);
-        val announceTime = message.getTimeCreated()
-                .toInstant()
-                .plus(poll.getTimeLength(), ChronoUnit.MINUTES);
+        val announceTime = poll.getEndDateTime();
         //Poll announce time is in the future, or has not been announced yet
-        if (announceTime.isAfter(Instant.now()) || poll.isPollOpen()) {
+        if (announceTime.isAfter(LocalDateTime.now()) || poll.isPollOpen()) {
             message.pin().queue();
             PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollRepository);
             Timer timer;
@@ -46,7 +45,7 @@ public class PollSetup {
             }
             timer = new Timer();
             pollListenersMap.put(poll.getId(), new PollListeners(timer, pollUserChoiceListener));
-            timer.schedule(pollResultsAnnouncer, Date.from(announceTime));
+            timer.schedule(pollResultsAnnouncer, Date.from(Instant.from(announceTime)));
             shardManager.addEventListener(pollUserChoiceListener);
         }
     }
