@@ -123,11 +123,6 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Adds all dab emojis to the last message of the user named";
-    }
-
-    @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "a poor soul", true));
     }

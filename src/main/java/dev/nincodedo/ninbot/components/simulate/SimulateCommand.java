@@ -44,8 +44,7 @@ public class SimulateCommand extends CooldownCommand {
             userMessages = getUserMessages(event.getGuild(), targetUser);
         } catch (ExecutionException | InterruptedException e) {
             log.error("Failed to run user simulation", e);
-            messageAction.addUnsuccessfulReaction();
-            return messageAction;
+            return messageAction.addUnsuccessfulReaction();
         }
         if (userMessages.isEmpty()) {
             return messageAction;

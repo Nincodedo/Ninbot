@@ -151,14 +151,6 @@ public class PathogenManager {
         pathogenAuditRepository.save(audit);
     }
 
-    boolean isInfectedMember(Member member) {
-        if (member == null) {
-            return false;
-        }
-        return member.getRoles().stream()
-                .anyMatch(role -> PathogenConfig.getINFECTED_ROLE_NAME().equalsIgnoreCase(role.getName()));
-    }
-
     public Set<String> getWordList() {
         setRandomSeed(false);
         List<String> list = readWordList();

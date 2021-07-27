@@ -31,5 +31,4 @@ public class BigSpikePriceGenerator extends PatternPriceGenerator {
         }
         return prices;
     }
-
 }

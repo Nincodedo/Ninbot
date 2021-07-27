@@ -61,11 +61,6 @@ public class RollCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return ResourceBundle.getBundle("lang", Locale.ENGLISH).getString("command.roll.description.text");
-    }
-
-    @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "notation", "Simple dice notation"));
     }

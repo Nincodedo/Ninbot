@@ -28,15 +28,13 @@ public class ArchiveChannelCommand extends AbstractCommand {
         TextChannel textChannel = getChannelFromMessage(message, event);
         //what are you doin
         if (textChannel == null) {
-            messageAction.addUnsuccessfulReaction();
-            return messageAction;
+            return messageAction.addUnsuccessfulReaction();
         }
         val guild = event.getGuild();
 
         String archiveCategoryId = getCategoryIdMovingTo(event, guild);
         if (archiveCategoryId == null) {
-            messageAction.addUnsuccessfulReaction();
-            return messageAction;
+            return messageAction.addUnsuccessfulReaction();
         }
         moveChannelToCategory(archiveCategoryId, textChannel, guild).queue(
                 aVoidSuccess -> updateChannelPermissions(event, textChannel.getId(), archiveCategoryId),

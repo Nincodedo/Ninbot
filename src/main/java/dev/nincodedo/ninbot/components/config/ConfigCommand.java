@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigCommand extends AbstractCommand {
 
-
     public ConfigCommand() {
         length = 3;
         name = "config";

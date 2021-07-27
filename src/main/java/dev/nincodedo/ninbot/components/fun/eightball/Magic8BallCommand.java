@@ -40,11 +40,6 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Summons the all knowing 8 ball";
-    }
-
-    @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "question", "Your question to the 8 ball",
                 false));

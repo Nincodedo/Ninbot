@@ -43,10 +43,6 @@ public class PathogenUserService {
         return pathogenUserRepository.getByUserIdAndServerId(userId, serverId);
     }
 
-    public List<PathogenUser> getAllByUserIdIsIn(List<String> userIds) {
-        return pathogenUserRepository.getAllByUserIdIsIn(userIds);
-    }
-
     public void vaccinateUser(String userId, String serverId) {
         PathogenUser pathogenUser = getByUserIdAndServerId(userId, serverId);
         if (pathogenUser == null) {

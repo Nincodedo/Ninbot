@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 @Log4j2
 public class WebhookHelper {
 
-    @Getter
     private Webhook webhook;
 
     /**

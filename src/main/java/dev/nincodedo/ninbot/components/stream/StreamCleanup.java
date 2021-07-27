@@ -20,7 +20,6 @@ public class StreamCleanup {
         this.shardManager = shardManager;
     }
 
-
     //twice a day
     @Scheduled(fixedRate = 43200000L)
     private void endOldStreams() {

@@ -89,11 +89,6 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Toggles your stream announcements.";
-    }
-
-    @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList();
     }
