@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -60,7 +61,7 @@ class Poll {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(title);
         embedBuilder.setColor(MessageUtils.getColor(userAvatarUrl));
-        embedBuilder.setTimestamp(endDateTime);
+        embedBuilder.setTimestamp(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
         embedBuilder.setAuthor(resourceBundle.getString("poll.announce.authortext") + userName, null, userAvatarUrl);
         embedBuilder.addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false);
         if (userChoicesAllowed && pollOpen) {

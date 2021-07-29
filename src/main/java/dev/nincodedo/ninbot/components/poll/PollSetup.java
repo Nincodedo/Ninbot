@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -45,7 +46,7 @@ public class PollSetup {
             }
             timer = new Timer();
             pollListenersMap.put(poll.getId(), new PollListeners(timer, pollUserChoiceListener));
-            timer.schedule(pollResultsAnnouncer, Date.from(Instant.from(announceTime)));
+            timer.schedule(pollResultsAnnouncer, Date.from(announceTime.atZone(ZoneId.systemDefault()).toInstant()));
             shardManager.addEventListener(pollUserChoiceListener);
         }
     }
