@@ -115,6 +115,5 @@ class PollCommandTest {
         assertThat(poll.getChoices()).isNotEmpty();
         assertThat(poll.getChoices()).hasSize(3);
         assertThat(poll.getTitle()).isEqualTo("test");
-        assertThat(poll.getTimeLength()).isEqualTo(10L);
     }
 }
