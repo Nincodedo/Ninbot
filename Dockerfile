@@ -1,4 +1,4 @@
-FROM maven:3.8.1-openjdk-16 AS build
+FROM maven:3.8.1-openjdk-17 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
