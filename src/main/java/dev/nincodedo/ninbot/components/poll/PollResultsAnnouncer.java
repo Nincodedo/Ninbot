@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
+import lombok.Setter;
 import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -13,6 +14,8 @@ class PollResultsAnnouncer extends TimerTask {
     private Poll poll;
     private Message pollMessage;
     private PollRepository pollRepository;
+    @Setter
+    private PollUserChoiceListener pollUserChoiceListener;
 
     PollResultsAnnouncer(Poll poll, Message pollMessage, PollRepository pollRepository) {
         this.poll = poll;
@@ -23,6 +26,10 @@ class PollResultsAnnouncer extends TimerTask {
     @Override
     public void run() {
         pollMessage.getChannel().sendMessage(announcePollResults()).queue(message -> pollRepository.save(poll));
+        if (pollUserChoiceListener != null) {
+            pollMessage.getJDA().getShardManager().removeEventListener(pollUserChoiceListener);
+        }
+        this.cancel();
     }
 
     private String announcePollResults() {

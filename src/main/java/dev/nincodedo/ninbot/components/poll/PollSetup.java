@@ -7,10 +7,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -40,14 +38,16 @@ public class PollSetup {
                     .getMessageId(), this);
             if (pollListenersMap.containsKey(poll.getId())) {
                 PollListeners pollListeners = pollListenersMap.remove(poll.getId());
-                timer = pollListeners.timer();
-                timer.cancel();
+                pollListeners.timer().cancel();
                 shardManager.removeEventListener(pollListeners.pollUserChoiceListener());
             }
             timer = new Timer();
             pollListenersMap.put(poll.getId(), new PollListeners(timer, pollUserChoiceListener));
+            if (poll.isUserChoicesAllowed()) {
+                shardManager.addEventListener(pollUserChoiceListener);
+                pollResultsAnnouncer.setPollUserChoiceListener(pollUserChoiceListener);
+            }
             timer.schedule(pollResultsAnnouncer, Date.from(announceTime.atZone(ZoneId.systemDefault()).toInstant()));
-            shardManager.addEventListener(pollUserChoiceListener);
         }
     }
 
@@ -66,11 +66,18 @@ public class PollSetup {
     void removeClosedPolls() {
         for (Map.Entry<Long, PollListeners> entry : pollListenersMap.entrySet()) {
             Long pollId = entry.getKey();
-            pollRepository.findById(pollId).ifPresent(poll -> {
+            var optionalPoll = pollRepository.findById(pollId);
+            if (optionalPoll.isPresent()) {
+                var poll = optionalPoll.get();
+                //a poll in the DB is closed, but still in this map? remove it
                 if (!poll.isPollOpen()) {
                     pollListenersMap.remove(pollId);
                 }
-            });
+            }
+            //a poll is in the map but not in the DB? remove it
+            else {
+                pollListenersMap.remove(pollId);
+            }
         }
     }
 }
