@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class Tally implements SlashCommand {
+public class TallyCommand implements SlashCommand {
 
     private static HashMap<String, Integer> tallyCount = new HashMap<>();
 
