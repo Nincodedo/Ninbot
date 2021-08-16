@@ -5,6 +5,7 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.components.command.SlashCommand;
 import org.junit.jupiter.api.Test;
 
 
@@ -15,7 +16,7 @@ class VerifyArchitectureTest {
         ArchRule rule = ArchRuleDefinition.classes().that().haveNameMatching(".*Command")
                 .and().haveNameNotMatching("Abstract.*")
                 .and().areNotInterfaces()
-                .should().beAssignableTo(AbstractCommand.class);
+                .should().beAssignableTo(AbstractCommand.class).orShould().beAssignableTo(SlashCommand.class);
         rule.check(ninbotClasses);
     }
 }
