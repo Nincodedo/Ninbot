@@ -43,15 +43,9 @@ public class TallyCommand implements SlashCommand {
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         switch (slashCommandEvent.getSubcommandName()) {
-            case "add":
-                addToTally(slashCommandEvent);
-                break;
-            case "get":
-                getTallyCount(slashCommandEvent);
-                break;
-            default:
-                slashCommandEvent.reply("dude what?").setEphemeral(true).queue();
-
+            case "add" -> addToTally(slashCommandEvent);
+            case "get" -> getTallyCount(slashCommandEvent);
+            default -> slashCommandEvent.reply("dude what?").setEphemeral(true).queue();
         }
     }
 

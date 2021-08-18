@@ -55,8 +55,7 @@ public class ComponentService {
 
     void enableComponent(String name, String serverId) {
         val component = componentRepository.findByName(name);
-        getDisabledComponents(component, serverId).forEach(disabledComponents ->
-                disabledComponentsRepository.delete(disabledComponents));
+        disabledComponentsRepository.deleteAll(getDisabledComponents(component, serverId));
     }
 
     @Cacheable("disabled-server-component")
