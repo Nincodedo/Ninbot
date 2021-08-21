@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -32,13 +31,13 @@ public class CountdownScheduler implements Schedulable {
     }
 
     void scheduleOne(Countdown countdown, ShardManager shardManager) {
-        val countdownDate = countdown.getEventDate();
-        val tomorrowDate = LocalDate.now(countdownDate.getZone())
+        var countdownDate = countdown.getEventDate();
+        var tomorrowDate = LocalDate.now(countdownDate.getZone())
                 .plus(1, ChronoUnit.DAYS)
                 .atStartOfDay()
                 .atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
-            val dayDifference = countdown.getDayDifference();
+            var dayDifference = countdown.getDayDifference();
             if (isAnnounceable(dayDifference)) {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
@@ -47,9 +46,9 @@ public class CountdownScheduler implements Schedulable {
             ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(countdown
                     .getServerId()));
             countdown.setResourceBundle(resourceBundle);
-            val countdownMessage = countdown.buildMessage();
-            val announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
-            val configChannelOptional = configService.getSingleValueByName(countdown.getServerId(),
+            var countdownMessage = countdown.buildMessage();
+            var announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
+            var configChannelOptional = configService.getSingleValueByName(countdown.getServerId(),
                     ConfigConstants.ANNOUNCE_CHANNEL);
             String announceChannel;
             if (announceChannelOptional.isPresent()) {

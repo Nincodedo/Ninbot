@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,9 +24,9 @@ public class PollSetup {
     }
 
     void setupAnnounce(Poll poll, ShardManager shardManager, Message message) {
-        val choices = poll.getChoices();
+        var choices = poll.getChoices();
         addPollChoiceEmotes(message, choices);
-        val announceTime = poll.getEndDateTime();
+        var announceTime = poll.getEndDateTime();
         //Poll announce time is in the future, or has not been announced yet
         if (announceTime.isAfter(LocalDateTime.now()) || poll.isPollOpen()) {
             message.pin().queue();

@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.stats;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,7 +34,7 @@ public class StatsCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "" -> messageAction.addChannelAction(displayRoleStats(event.getGuild()));
             case "details", "detailed", "detail" -> messageAction.addChannelAction(displayServerStats(event));
@@ -45,16 +44,16 @@ public class StatsCommand extends AbstractCommand {
     }
 
     private Message displayServerStats(MessageReceivedEvent event) {
-        val statMap = statManager.getStatMapByServerId(event.getGuild().getId());
+        var statMap = statManager.getStatMapByServerId(event.getGuild().getId());
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        for (val key : statMap.keySet()) {
-            val statList = statMap.get(key)
+        for (var key : statMap.keySet()) {
+            var statList = statMap.get(key)
                     .stream()
                     .sorted(Comparator.comparing(Stat::getCategory))
                     .limit(5)
                     .collect(Collectors.toList());
             embedBuilder.addField(WordUtils.capitalizeFully(key), "", false);
-            for (val stat : statList) {
+            for (var stat : statList) {
                 embedBuilder.addField(WordUtils.capitalizeFully(stat.getName()), String.valueOf(stat.getCount()),
                         false);
             }

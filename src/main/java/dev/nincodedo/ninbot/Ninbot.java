@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -33,7 +32,7 @@ public class Ninbot {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext context) {
         return args -> {
-            val shards = shardManager.getShards();
+            var shards = shardManager.getShards();
             log.info("Starting Ninbot with {} shard(s)", shards.size());
             shardManager.getShards()
                     .forEach(jda -> {

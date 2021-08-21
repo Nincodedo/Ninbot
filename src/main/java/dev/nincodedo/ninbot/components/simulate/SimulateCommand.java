@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.components.common.message.Impersonation;
 import dev.nincodedo.ninbot.components.common.message.ImpersonationController;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -37,8 +36,8 @@ public class SimulateCommand extends CooldownCommand {
     @Override
     protected MessageAction executeCooldownCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val mentionedUsers = event.getMessage().getMentionedUsers();
-        val targetUser = mentionedUsers.get(mentionedUsers.size() - 1);
+        var mentionedUsers = event.getMessage().getMentionedUsers();
+        var targetUser = mentionedUsers.get(mentionedUsers.size() - 1);
         List<Message> userMessages;
         try {
             userMessages = getUserMessages(event.getGuild(), targetUser);
@@ -52,11 +51,11 @@ public class SimulateCommand extends CooldownCommand {
         StringBuilder stringBuilder = new StringBuilder();
         int loopLength = random.nextInt(3) + 3;
         for (int i = 0; i < loopLength; i++) {
-            val message = userMessages.get(random.nextInt(userMessages.size())).getContentStripped() + " ";
+            var message = userMessages.get(random.nextInt(userMessages.size())).getContentStripped() + " ";
             stringBuilder.append(message);
         }
 
-        val member = event.getGuild().getMember(targetUser);
+        var member = event.getGuild().getMember(targetUser);
         ImpersonationController impersonationController =
                 new ImpersonationController(Impersonation.of(member.getEffectiveName(), targetUser
                         .getEffectiveAvatarUrl()), event.getGuild(), event.getTextChannel());
@@ -71,13 +70,13 @@ public class SimulateCommand extends CooldownCommand {
         if (memberWithLeastPermissions == null) {
             return new ArrayList<>();
         }
-        val guildChannels = guild.getChannels(false).parallelStream()
+        var guildChannels = guild.getChannels(false).parallelStream()
                 .filter(guildChannel -> guildChannel.getType().equals(ChannelType.TEXT))
                 .filter(memberWithLeastPermissions::hasAccess)
                 .unordered()
                 .limit(10)
                 .collect(Collectors.toList());
-        for (val guildChannel : guildChannels) {
+        for (var guildChannel : guildChannels) {
             //Limit to 1000 messages from those channels where the target is the message author, they're not
             //mentioning Ninbot and their post isn't blank (really only relevant to bots)
             TextChannel textChannel = (TextChannel) guildChannel;
@@ -99,7 +98,7 @@ public class SimulateCommand extends CooldownCommand {
     private Member getMemberWithLeastPermissions(Guild guild) {
         Member memberWithLeastPermissions = null;
         long count = Long.MAX_VALUE;
-        for (val member : guild.getMembersWithRoles(Collections.emptyList())) {
+        for (var member : guild.getMembersWithRoles(Collections.emptyList())) {
             if (member.getPermissions().size() < count) {
                 count = Permission.getRaw(member.getPermissions());
                 memberWithLeastPermissions = member;

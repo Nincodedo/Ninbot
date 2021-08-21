@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.trivia.game;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstanceRepository;
 import lombok.Getter;
-import lombok.val;
 import net.dv8tion.jda.api.JDA;
 
 import java.util.TimerTask;
@@ -27,7 +26,7 @@ public class TriviaTimeUpTask extends TimerTask {
     @Override
     public void run() {
         if (triviaInstanceRepository.existsByChannelId(triviaInstance.getChannelId())) {
-            val channel = jda.getTextChannelById(triviaInstance.getChannelId());
+            var channel = jda.getTextChannelById(triviaInstance.getChannelId());
             channel.sendMessage(String.format("Time is up! The correct answer was %s", triviaInstance.getAnswer()))
                     .queue();
             timeExpired = true;

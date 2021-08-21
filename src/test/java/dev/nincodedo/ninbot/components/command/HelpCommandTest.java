@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.simulate.SimulateCommand;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -57,7 +56,7 @@ class HelpCommandTest {
     @BeforeAll
     public static void before() {
         commandMap = new HashMap<>();
-        val simulateCommand = new SimulateCommand();
+        var simulateCommand = new SimulateCommand();
         commandMap.put(simulateCommand.getName(), simulateCommand);
     }
 
@@ -68,7 +67,7 @@ class HelpCommandTest {
         when(guild.getId()).thenReturn("1");
         when(componentService.isDisabled(anyString(), anyString())).thenReturn(false);
 
-        val messageAction = helpCommand.executeCommand(messageEvent);
+        var messageAction = helpCommand.executeCommand(messageEvent);
 
         Assertions.assertThat(messageAction).isNotNull();
         assertThat(messageAction.getPrivateMessageList()).isNotEmpty();
@@ -82,7 +81,7 @@ class HelpCommandTest {
         when(guild.getId()).thenReturn("1");
         when(componentService.isDisabled(anyString(), anyString())).thenReturn(false);
 
-        val messageAction = helpCommand.executeCommand(messageEvent);
+        var messageAction = helpCommand.executeCommand(messageEvent);
 
         Assertions.assertThat(messageAction).isNotNull();
         assertThat(messageAction.getPrivateMessageList()).isNotEmpty();

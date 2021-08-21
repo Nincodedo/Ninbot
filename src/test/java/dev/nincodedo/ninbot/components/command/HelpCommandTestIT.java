@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.TestUtils;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -57,7 +56,7 @@ class HelpCommandTestIT {
 
     @Test
     void testEveryoneCommandsAllHaveHelpDescriptions() {
-        val helpCommand = (HelpCommand) commandParser.getCommandHashMap().get("help");
+        var helpCommand = (HelpCommand) commandParser.getCommandHashMap().get("help");
         Guild guild = Mockito.mock(Guild.class);
         Member member = Mockito.mock(Member.class);
         User user = Mockito.mock(User.class);
@@ -66,11 +65,11 @@ class HelpCommandTestIT {
         when(guild.getOwner()).thenReturn(member);
         when(member.getUser()).thenReturn(user);
 
-        val messageAction = helpCommand.executeCommand(messageEvent);
+        var messageAction = helpCommand.executeCommand(messageEvent);
 
         Assertions.assertThat(messageAction).isNotNull();
         assertThat(messageAction.getPrivateMessageList()).isNotEmpty();
-        val everyoneCommands = commandParser.getCommandHashMap()
+        var everyoneCommands = commandParser.getCommandHashMap()
                 .values()
                 .stream()
                 .filter(abstractCommand -> abstractCommand.getPermissionLevel().equals(RolePermission.EVERYONE))

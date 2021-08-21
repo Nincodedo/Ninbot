@@ -8,7 +8,6 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import dev.nincodedo.sapconversational.SAPConversationalAIAPI;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -39,11 +38,11 @@ public class ConversationListener extends StatAwareListenerAdapter {
                 || !event.isFromGuild()) {
             return;
         }
-        val channelId = event.getChannel().getId();
-        val message = event.getMessage().getContentStripped();
+        var channelId = event.getChannel().getId();
+        var message = event.getMessage().getContentStripped();
         if (!event.getAuthor().isBot() && isConversationEnabledChannel(event.getGuild().getId(), channelId)
                 && isNormalConversation(message)) {
-            val botConversation = sapConversationalAIAPI.startBotConversation(channelId);
+            var botConversation = sapConversationalAIAPI.startBotConversation(channelId);
             botConversation.addParticipants(event.getAuthor().getName());
             try {
                 botConversation.getResponse(message).get().ifPresent(response ->
@@ -62,7 +61,7 @@ public class ConversationListener extends StatAwareListenerAdapter {
     }
 
     private boolean isConversationEnabledChannel(String serverId, String channelId) {
-        val channelList = configService.getValuesByName(serverId, ConfigConstants.CONVERSATION_CHANNELS);
+        var channelList = configService.getValuesByName(serverId, ConfigConstants.CONVERSATION_CHANNELS);
         return channelList.contains(channelId);
     }
 }

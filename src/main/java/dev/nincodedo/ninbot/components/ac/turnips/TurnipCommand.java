@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.common.message.Impersonation;
 import dev.nincodedo.ninbot.components.common.message.ImpersonationController;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.Setter;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -41,7 +40,7 @@ public class TurnipCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "join" -> messageAction.addCorrectReaction(joinTurnipEvent(event));
             case "buy" -> messageAction.addCorrectReaction(buyTurnips(event));
@@ -56,9 +55,9 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private Message getVillagerInventory(MessageReceivedEvent event) {
-        val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
+        var villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
         if (villagerOptional.isPresent()) {
-            val villager = villagerOptional.get();
+            var villager = villagerOptional.get();
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.wallet.title"),
                     event.getMember().getEffectiveName()));
@@ -72,15 +71,15 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private Message getLeaderboard(MessageReceivedEvent event) {
-        val villagerList = villagerManager.getTopTenBellVillagers();
+        var villagerList = villagerManager.getTopTenBellVillagers();
         if (villagerList.isEmpty()) {
             return null;
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(String.format(resourceBundle.getString("command.turnips.leaderboard.title"),
                 villagerList.size()));
-        for (val villager : villagerList) {
-            val user = event.getJDA().getShardManager().getUserById(villager.getDiscordId());
+        for (var villager : villagerList) {
+            var user = event.getJDA().getShardManager().getUserById(villager.getDiscordId());
             if (user != null) {
                 embedBuilder.addField(user.getName(), villager.getBellsTotalFormatted(), false);
             }
@@ -119,8 +118,8 @@ public class TurnipCommand extends AbstractCommand {
     }
 
     private int getCurrentPrice(long seed) {
-        val turnipPattern = turnipPricesManager.getTurnipPattern(seed);
-        val priceList = turnipPricesManager.getTurnipPricesList(turnipPattern, seed);
+        var turnipPattern = turnipPricesManager.getTurnipPattern(seed);
+        var priceList = turnipPricesManager.getTurnipPricesList(turnipPattern, seed);
         int priceIndex = ((LocalDate.now(clock).getDayOfWeek().getValue() - 1) * 2) + (
                 LocalDateTime.now(clock).getHour() >= 12 ? 1 : 0);
         return priceList.get(priceIndex);
@@ -148,11 +147,11 @@ public class TurnipCommand extends AbstractCommand {
         if (LocalDate.now(clock).getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             return false;
         }
-        val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
+        var villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
         if (villagerOptional.isPresent()) {
-            val villager = villagerOptional.get();
+            var villager = villagerOptional.get();
             int turnipPrice = getCurrentPrice(getSeed(event.getGuild().getIdLong()));
-            val message = event.getMessage().getContentStripped();
+            var message = event.getMessage().getContentStripped();
             int selling = 0;
             if (getCommandLength(message) > 3) {
                 String sellAmount = getSubcommand(message, 3);
@@ -172,12 +171,12 @@ public class TurnipCommand extends AbstractCommand {
         if (!LocalDate.now(clock).getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             return false;
         }
-        val villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
+        var villagerOptional = villagerManager.findByDiscordId(event.getAuthor().getId());
         if (villagerOptional.isPresent()) {
-            val villager = villagerOptional.get();
+            var villager = villagerOptional.get();
             long seed = getSeed(event.getGuild().getIdLong());
             int currentPrice = turnipPricesManager.getSundayTurnipPrices(seed);
-            val message = event.getMessage().getContentStripped();
+            var message = event.getMessage().getContentStripped();
             int amountBuying = getAmountBuying(villager, currentPrice, message);
             return villagerManager.buyTurnips(villager, amountBuying, currentPrice);
         }

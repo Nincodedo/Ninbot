@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUser;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserRepository;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,7 +34,7 @@ public class PathogenCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "stats" -> messageAction.addChannelAction(getInfectionServerStats(event.getGuild()));
             default -> messageAction.addReaction(getUserInfectionLevel(event));
@@ -45,11 +44,11 @@ public class PathogenCommand extends AbstractCommand {
 
     private Message getInfectionServerStats(Guild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        val roleList = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
+        var roleList = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
         if (!roleList.isEmpty()) {
-            val users = guild.getMembersWithRoles(roleList);
+            var users = guild.getMembersWithRoles(roleList);
             List<String> userIds = users.stream().map(ISnowflake::getId).collect(Collectors.toList());
-            val infectedUsers = pathogenUserRepository.getAllByUserIdIsIn(userIds);
+            var infectedUsers = pathogenUserRepository.getAllByUserIdIsIn(userIds);
             embedBuilder.addField(resourceBundle.getString("command.pathogen.stats.size"),
                     String.valueOf(infectedUsers.size()), false);
             infectedUsers.stream()
@@ -65,7 +64,7 @@ public class PathogenCommand extends AbstractCommand {
 
     private List<String> getUserInfectionLevel(MessageReceivedEvent event) {
         List<String> reactions = new ArrayList<>();
-        val pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getAuthor()
+        var pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getAuthor()
                 .getId(), event.getGuild().getId());
         if (pathogenUser != null) {
             if (pathogenUser.getVaccinated()) {

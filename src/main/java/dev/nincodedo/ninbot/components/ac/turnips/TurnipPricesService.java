@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.ac.turnips;
 
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -16,9 +15,9 @@ public class TurnipPricesService {
     }
 
     public TurnipPattern getPreviousPattern(long seed) {
-        val lastWeek = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
-        val twoWeeksAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
-        val optionalPrice = turnipPricesRepository.findFirstByCreatedBetween(lastWeek, twoWeeksAgo);
+        var lastWeek = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
+        var twoWeeksAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
+        var optionalPrice = turnipPricesRepository.findFirstByCreatedBetween(lastWeek, twoWeeksAgo);
         //if there's a previous week for the turnips, then return that pattern, otherwise generate one based on the seed
         long serverSeed = optionalPrice.map(TurnipPrices::getSeed).orElse(seed);
         return TurnipPattern.getRandomTurnipPattern(serverSeed);

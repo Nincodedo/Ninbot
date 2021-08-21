@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.common.message;
 
-import lombok.val;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -31,7 +30,7 @@ public class ImpersonationController {
     }
 
     private void setupWebhook() {
-        val webhookOptional = webhookHelper.getWebhookByName(guild, textChannel, webhookName);
+        var webhookOptional = webhookHelper.getWebhookByName(guild, textChannel, webhookName);
         if (webhookOptional.isPresent()) {
             webhookHelper.setWebhookIcon(impersonation.iconUrl())
                     .setName(impersonation.name())

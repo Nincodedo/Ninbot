@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,7 @@ public class DadbotCommand extends AbstractCommand {
     }
 
     private void toggleDenyListChannel(String serverId, String channelId) {
-        val channelDenyList = configService.getValuesByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+        var channelDenyList = configService.getValuesByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         if (!channelDenyList.contains(channelId)) {
             configService.addConfig(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL, channelId);
         } else {

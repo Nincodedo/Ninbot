@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.ac.turnips;
 import dev.nincodedo.ninbot.components.ac.VillagerRepository;
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +53,7 @@ public class TurnipPricesScheduler implements Schedulable {
             log.trace("Running turnips price reset");
             TurnipPrices turnipPrices = turnipPricesRepository.findAll().get(0);
             if (turnipPrices.getCreated().getDayOfMonth() != LocalDate.now().getDayOfMonth()) {
-                val villagerList = villagerRepository.findAll();
+                var villagerList = villagerRepository.findAll();
                 log.trace("Resetting turnip counts for {} villagers", villagerList.size());
                 villagerList.forEach(villager -> {
                     villager.setTurnipsOwned(10);

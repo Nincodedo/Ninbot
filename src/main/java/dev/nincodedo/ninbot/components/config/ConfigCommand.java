@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.config;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,7 +22,7 @@ public class ConfigCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(event.getMessage().getContentStripped())) {
             case "add":
                 if (getCommandLength(message) >= 5) {
@@ -66,8 +65,8 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private Message listConfigs(MessageReceivedEvent event) {
-        val configList = configService.getConfigsByServerId(event.getGuild().getId());
-        val serverName = event.getGuild().getName();
+        var configList = configService.getConfigsByServerId(event.getGuild().getId());
+        var serverName = event.getGuild().getName();
         if (configList.isEmpty()) {
             return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"),
                     serverName)

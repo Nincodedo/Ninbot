@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.common.Emojis;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -32,7 +31,7 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         if ("announce".equals(getSubcommand(message))) {
             if (getCommandLength(message) == 3) {
                 announceToggle(messageAction);
@@ -46,16 +45,16 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     }
 
     private void addTwitchUsername(MessageAction messageAction) {
-        val event = messageAction.getEvent();
-        val configOptional = configService.getConfigByServerIdAndName(event.getGuild()
+        var event = messageAction.getEvent();
+        var configOptional = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
-        val userId = event.getMember().getId();
-        val serverId = event.getGuild().getId();
+        var userId = event.getMember().getId();
+        var serverId = event.getGuild().getId();
         if (configOptional.isEmpty()) {
             configService.addConfig(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS, userId);
         }
-        val streamingMemberOptional = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId);
-        val twitchUsername = getSubcommandNoTransform(event.getMessage().getContentStripped(), 3);
+        var streamingMemberOptional = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId);
+        var twitchUsername = getSubcommandNoTransform(event.getMessage().getContentStripped(), 3);
         StreamingMember streamingMember = streamingMemberOptional.orElseGet(() -> new StreamingMember(userId,
                 serverId));
         streamingMember.setTwitchUsername(twitchUsername);
@@ -64,16 +63,16 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     }
 
     private void announceToggle(MessageAction messageAction) {
-        val event = messageAction.getEvent();
-        val userId = event.getAuthor().getId();
-        val serverId = event.getGuild().getId();
+        var event = messageAction.getEvent();
+        var userId = event.getAuthor().getId();
+        var serverId = event.getGuild().getId();
         boolean foundUser = toggleConfig(userId, serverId);
         messageAction.addReaction(foundUser ? Emojis.ON : Emojis.OFF);
     }
 
     private boolean toggleConfig(String userId, String serverId) {
-        val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
-        val streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
+        var configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
+        var streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
         boolean foundUser = true;
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {

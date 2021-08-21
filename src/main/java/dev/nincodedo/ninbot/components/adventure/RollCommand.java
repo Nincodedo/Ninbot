@@ -8,7 +8,6 @@ import com.bernardomg.tabletop.dice.parser.DiceParser;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -18,7 +17,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class RollCommand extends AbstractCommand implements SlashCommand {
@@ -38,8 +39,8 @@ public class RollCommand extends AbstractCommand implements SlashCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped();
-        val commandArgs = content.split("\\s+");
+        var content = event.getMessage().getContentStripped();
+        var commandArgs = content.split("\\s+");
         if (commandArgs.length == 2) {
             messageAction.addChannelAction(rollDice("1d20", event.getMember().getEffectiveName()));
         } else if (commandArgs.length == 3 && commandArgs[2].contains("d")) {
@@ -51,8 +52,8 @@ public class RollCommand extends AbstractCommand implements SlashCommand {
     }
 
     private Message rollDice(String diceArgs, String memberEffectiveName) {
-        val parsed = parser.parse(diceArgs, roller);
-        val diceCommand = diceArgs.split("d");
+        var parsed = parser.parse(diceArgs, roller);
+        var diceCommand = diceArgs.split("d");
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.appendFormat(resourceBundle.getString("command.roll.result"), memberEffectiveName,
                 diceCommand[0], diceCommand[1], String

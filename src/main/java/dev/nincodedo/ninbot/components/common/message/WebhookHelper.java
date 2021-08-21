@@ -4,7 +4,6 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
@@ -32,8 +31,8 @@ public class WebhookHelper {
      */
     public Optional<Webhook> getWebhookByName(Guild guild, TextChannel textChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
-            val webhooks = guild.retrieveWebhooks().complete();
-            for (val webhook : webhooks) {
+            var webhooks = guild.retrieveWebhooks().complete();
+            for (var webhook : webhooks) {
                 if (webhook.getName().equalsIgnoreCase(name)) {
                     webhook.getManager().setChannel(textChannel).complete();
                     this.webhook = webhook;

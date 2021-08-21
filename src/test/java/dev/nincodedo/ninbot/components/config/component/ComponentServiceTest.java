@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.config.component;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,7 +40,7 @@ class ComponentServiceTest {
 
         when(componentRepository.findAll()).thenReturn(componentList);
 
-        val list = componentService.getAllComponents();
+        var list = componentService.getAllComponents();
         assertThat(list).isNotEmpty();
     }
 

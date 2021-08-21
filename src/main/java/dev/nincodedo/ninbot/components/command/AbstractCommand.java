@@ -10,7 +10,6 @@ import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -41,7 +40,7 @@ public abstract class AbstractCommand {
     protected StatManager statManager;
 
     void execute(MessageReceivedEvent event, Locale serverLocale) {
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         resourceBundle = LocaleService.getResourceBundleOrDefault(serverLocale);
         if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
             log.trace("Executing command {} by {} in server {}: {}", name, event.getAuthor()
@@ -113,10 +112,10 @@ public abstract class AbstractCommand {
                 && guild.getOwner().getUser().equals(user))) {
             return true;
         } else {
-            val member = guild.getMember(user);
-            val configuredRole = configService.getSingleValueByName(guild.getId(),
+            var member = guild.getMember(user);
+            var configuredRole = configService.getSingleValueByName(guild.getId(),
                     "roleRank-" + rolePermission.getRoleName());
-            val roles =
+            var roles =
                     configuredRole.map(configuredRoleId ->
                             Collections.singletonList(guild.getRoleById(configuredRoleId)))
                             .orElseGet(() -> guild.getRolesByName(rolePermission.getRoleName(), true));
@@ -127,7 +126,7 @@ public abstract class AbstractCommand {
     protected abstract MessageAction executeCommand(MessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content) {
-        val commandLength = getCommandLength(content);
+        var commandLength = getCommandLength(content);
         if (checkExactLength) {
             return commandLength == length;
         } else {
@@ -181,7 +180,7 @@ public abstract class AbstractCommand {
      * @return true/false
      */
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        val guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        var guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (guild != null) {
             return guild.getMembers()
                     .stream()

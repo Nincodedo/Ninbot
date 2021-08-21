@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
@@ -62,15 +61,15 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     }
 
     private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member member) {
-        val channelNameType = channelJoined.getName().substring(2);
-        val channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
+        var channelNameType = channelJoined.getName().substring(2);
+        var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
         log.trace("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
                 guild.getId());
         createVoiceChannel(guild, channelJoined, channelName).queue(voiceChannel -> {
             TempVoiceChannel channel = new TempVoiceChannel(member.getId(), voiceChannel.getId());
             repository.save(channel);
             guild.moveVoiceMember(member, voiceChannel).queue(aVoid -> {
-                val position = channelJoined.getPosition();
+                var position = channelJoined.getPosition();
                 modifyVoiceChannelPositions(guild, channelJoined)
                         .selectPosition(voiceChannel)
                         .moveTo(position + 1)

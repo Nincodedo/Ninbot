@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.countdown;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -31,7 +30,7 @@ public class CountdownCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list" -> messageAction.addChannelAction(listCountdowns(event));
             case "" -> messageAction = displayHelp(event);
@@ -41,11 +40,11 @@ public class CountdownCommand extends AbstractCommand {
     }
 
     private Message listCountdowns(MessageReceivedEvent event) {
-        val list = countdownRepository.findByServerId(event.getGuild().getId());
+        var list = countdownRepository.findByServerId(event.getGuild().getId());
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (!list.isEmpty()) {
             embedBuilder.setTitle(resourceBundle.getString("command.countdown.list.title"));
-            for (val countdown : list) {
+            for (var countdown : list) {
                 countdown.setResourceBundle(resourceBundle);
                 embedBuilder.addField(countdown.getName(), countdown.getDescription(), false);
             }
@@ -58,11 +57,11 @@ public class CountdownCommand extends AbstractCommand {
     }
 
     private boolean setupCountdown(MessageReceivedEvent event) {
-        val message = event.getMessage().getContentStripped();
-        val splitMessage = message.split("\\s+");
+        var message = event.getMessage().getContentStripped();
+        var splitMessage = message.split("\\s+");
         if (splitMessage.length >= 3) {
-            val stringDate = splitMessage[2];
-            val countdownName = message.substring(message.indexOf(stringDate) + stringDate.length() + 1);
+            var stringDate = splitMessage[2];
+            var countdownName = message.substring(message.indexOf(stringDate) + stringDate.length() + 1);
             ZoneId serverTimezone = ZoneId.of(getServerTimeZone(event.getGuild().getId()));
             Countdown countdown = new Countdown();
             countdown.setChannelId(event.getChannel().getId())

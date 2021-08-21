@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -53,7 +52,7 @@ public class StreamListener extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        val guildId = guild.getId();
+        var guildId = guild.getId();
         if (hasStartedStreaming(event)) {
             Optional<String> userIdOptional = getUserIdFromEvent(event);
             if (userIdOptional.isPresent()) {
@@ -61,10 +60,10 @@ public class StreamListener extends StatAwareListenerAdapter {
                         streamingMemberRepository.findByUserIdAndGuildId(userIdOptional.get(), guildId)
                                 .orElseGet(() -> new StreamingMember(userIdOptional.get(), guildId));
                 //Grab all the values because this query will get cached easier rather than looking for individual IDs
-                val streamingAnnounceUser = configService.getValuesByName(guildId,
+                var streamingAnnounceUser = configService.getValuesByName(guildId,
                         ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
-                    val optionalCurrentStream = streamingMember.currentStream();
+                    var optionalCurrentStream = streamingMember.currentStream();
                     //if the streaming member does not have a current stream running, add a new one
                     if (optionalCurrentStream.isEmpty()) {
                         streamingMember.startNewStream();
@@ -72,14 +71,14 @@ public class StreamListener extends StatAwareListenerAdapter {
                     /*if the stream is recent (stream bounced), then keep using this one as the stream has not really
                     ended and set the end time to null. if its already null, well its just null again now*/
                     else if (isStreamRecent(optionalCurrentStream.get())) {
-                        val currentStream = optionalCurrentStream.get();
+                        var currentStream = optionalCurrentStream.get();
                         currentStream.setEndTimestamp(null);
                     }
                     String streamingUrl = getStreamingUrlFromEvent(event);
                     setTwitchUserName(streamingMember, streamingUrl);
                     streamingMemberRepository.save(streamingMember);
                     if (streamingMember.currentStream().isPresent()) {
-                        val currentStream = streamingMember.currentStream().get();
+                        var currentStream = streamingMember.currentStream().get();
                         if (currentStream.getAnnounceMessageId() == null) {
                             announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
                         }
@@ -169,9 +168,9 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     private void removeRole(Guild guild, Member member) {
-        val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
-            val streamingRole = guild.getRoleById(roleId);
+            var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
                 guild.removeRoleFromMember(member, streamingRole).queue();
             }
@@ -181,17 +180,17 @@ public class StreamListener extends StatAwareListenerAdapter {
 
     private void announceStream(Guild guild, Member member, String streamingUrl, Activity activity,
             StreamingMember streamingMember) {
-        val serverId = guild.getId();
-        val streamingAnnounceChannel = configService.getSingleValueByName(serverId,
+        var serverId = guild.getId();
+        var streamingAnnounceChannel = configService.getSingleValueByName(serverId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
-            val channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            val username = member.getEffectiveName();
+            var channel = guild.getTextChannelById(streamingAnnounceChannelString);
+            var username = member.getEffectiveName();
             if (streamingUrl != null && channel != null) {
                 String gameName = null;
                 String streamTitle = null;
                 if (activity != null && activity.isRich() && activity.asRichPresence().getState() != null) {
-                    val richActivity = activity.asRichPresence();
+                    var richActivity = activity.asRichPresence();
                     gameName = richActivity.getState();
                     streamTitle = richActivity.getDetails();
                     log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
@@ -222,9 +221,9 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     private void addRole(Guild guild, Member member) {
-        val streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
-            val streamingRole = guild.getRoleById(roleId);
+            var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
                 log.trace("Adding role {} to {}", streamingRole.getName(), member.getId());
                 guild.addRoleToMember(member, streamingRole).queue();

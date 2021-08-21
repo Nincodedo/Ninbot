@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.config.component;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -29,7 +28,7 @@ public class ComponentCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         switch (getSubcommand(message)) {
             case "list" -> messageAction.addChannelAction(listComponents(event.getGuild().getId()));
             case "disable" -> {
@@ -46,18 +45,18 @@ public class ComponentCommand extends AbstractCommand {
     }
 
     private void enableComponent(MessageReceivedEvent event) {
-        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
+        var componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.enableComponent(componentName, event.getGuild().getId());
     }
 
     private void disableComponent(MessageReceivedEvent event) {
-        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
+        var componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.disableComponent(componentName, event.getGuild().getId());
     }
 
     private Message listComponents(String serverId) {
-        val components = componentService.getAllComponents();
-        val disabledComponents = componentService.getDisabledComponents(serverId);
+        var components = componentService.getAllComponents();
+        var disabledComponents = componentService.getDisabledComponents(serverId);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         components.sort(Comparator.comparing(dev.nincodedo.ninbot.components.config.component.Component::getName));
         components.forEach(component -> {

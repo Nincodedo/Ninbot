@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Emote;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
@@ -25,9 +24,9 @@ public class HugeDabCommand extends DabCommand {
     @Override
     void sendDabs(MessageAction messageAction, List<Emote> emoteList) {
         try {
-            val channel = messageAction.getEvent().getChannel();
-            val emote = emoteList.get(new Random().nextInt(emoteList.size()));
-            val imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
+            var channel = messageAction.getEvent().getChannel();
+            var emote = emoteList.get(new Random().nextInt(emoteList.size()));
+            var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
             InputStream file = new URL(emote.getImageUrl()).openStream();
             channel.sendFile(file, emote.getName() + imageFileType).queue();
         } catch (IOException e) {

@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -43,7 +42,7 @@ public class HelpCommand extends AbstractCommand {
                                 .getPermissionLevel()))
                 .filter(commandName -> !componentService.isDisabled(commandName, event.getGuild().getId()))
                 .forEach(commandName -> {
-                    val command = commandMap.get(commandName);
+                    var command = commandMap.get(commandName);
                     command.setResourceBundle(resourceBundle);
                     try {
                         embedBuilder.addField(commandName, command.getCommandDescription(commandName), false);

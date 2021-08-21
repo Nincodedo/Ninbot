@@ -4,7 +4,6 @@ import com.vdurmont.emoji.EmojiParser;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +23,13 @@ public class HugemojiCommand extends AbstractCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val emoteList = event.getMessage().getEmotes();
-        val emojiList = EmojiParser.extractEmojis(event.getMessage().getContentStripped());
+        var emoteList = event.getMessage().getEmotes();
+        var emojiList = EmojiParser.extractEmojis(event.getMessage().getContentStripped());
         if (!emoteList.isEmpty()) {
             try {
-                val channel = event.getChannel();
-                val emote = emoteList.get(0);
-                val imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
+                var channel = event.getChannel();
+                var emote = emoteList.get(0);
+                var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
                 InputStream file = new URL(emote.getImageUrl()).openStream();
                 channel.sendFile(file, emote.getName() + imageFileType).queue();
             } catch (IOException e) {

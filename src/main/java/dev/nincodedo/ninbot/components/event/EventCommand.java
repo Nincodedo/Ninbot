@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.event;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -34,9 +33,9 @@ public class EventCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent messageReceivedEvent) {
         MessageAction messageAction = new MessageAction(messageReceivedEvent);
-        val content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
+        var content = messageReceivedEvent.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
-            val serverTimezone = getServerTimeZone(messageReceivedEvent.getGuild().getId());
+            var serverTimezone = getServerTimeZone(messageReceivedEvent.getGuild().getId());
             switch (getSubcommand(content)) {
                 case "list" -> messageAction.addChannelAction(listEvents(serverTimezone));
                 case "plan" -> {
@@ -58,7 +57,7 @@ public class EventCommand extends AbstractCommand {
     }
 
     private Message listEvents(String serverTimezone) {
-        val eventList = new ArrayList<Event>();
+        var eventList = new ArrayList<Event>();
         eventRepository.findAll().forEach(eventList::add);
         eventList.sort(Comparator.comparing(Event::getStartTime));
         if (eventList.isEmpty()) {
@@ -67,7 +66,7 @@ public class EventCommand extends AbstractCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(resourceBundle.getString("command.event.list.title"));
         embedBuilder.setColor(BLUE);
-        for (val event : eventList) {
+        for (var event : eventList) {
             event.setResourceBundle(resourceBundle);
             embedBuilder.addField(event.getName(), event.toString(), true);
         }

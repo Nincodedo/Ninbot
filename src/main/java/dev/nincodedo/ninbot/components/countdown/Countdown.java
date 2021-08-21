@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.val;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -30,7 +29,7 @@ class Countdown {
     private ResourceBundle resourceBundle;
 
     String buildMessage() {
-        val dayDifference = getDayDifference();
+        var dayDifference = getDayDifference();
         if (dayDifference == 1) {
             return String.format(resourceBundle.getString("countdown.announce.message.tomorrow"), name);
         } else if (dayDifference == 0) {
@@ -47,7 +46,7 @@ class Countdown {
     }
 
     long getDayDifference() {
-        val tomorrowDate = LocalDate.now(eventDate.getZone())
+        var tomorrowDate = LocalDate.now(eventDate.getZone())
                 .plus(1, ChronoUnit.DAYS)
                 .atStartOfDay()
                 .atZone(eventDate.getZone());

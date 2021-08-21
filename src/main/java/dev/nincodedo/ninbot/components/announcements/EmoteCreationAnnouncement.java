@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
@@ -41,13 +40,13 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val optionalChannelId = configService.getSingleValueByName(event.getGuild()
+        var optionalChannelId = configService.getSingleValueByName(event.getGuild()
                 .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
         if (optionalChannelId.isPresent()) {
-            val emoteAddedChannelId = optionalChannelId.get();
-            val channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
+            var emoteAddedChannelId = optionalChannelId.get();
+            var channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
             if (channel != null) {
-                val emote = event.getEmote();
+                var emote = event.getEmote();
                 countOneStat(componentName, event.getGuild().getId());
                 Member member = null;
                 if (event.getGuild()

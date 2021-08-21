@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.fun.eightball;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -29,12 +28,12 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
     @Override
     protected MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val originalMessage = event.getMessage().getContentStripped();
+        var originalMessage = event.getMessage().getContentStripped();
         String question = "";
         if (originalMessage.length() > "@ninbot 8ball ".length()) {
             question = originalMessage.substring(originalMessage.toLowerCase().indexOf("@ninbot 8ball "));
         }
-        val message = magic8BallMessageBuilder.getMagic8BallEmbed(question, event.getMember().getEffectiveName());
+        var message = magic8BallMessageBuilder.getMagic8BallEmbed(question, event.getMember().getEffectiveName());
         messageAction.addChannelAction(message);
         return messageAction;
     }
@@ -52,8 +51,8 @@ public class Magic8BallCommand extends AbstractCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        val question = slashCommandEvent.getOption("question").getAsString();
-        val message = magic8BallMessageBuilder.getMagic8BallEmbed(question, slashCommandEvent.getMember()
+        var question = slashCommandEvent.getOption("question").getAsString();
+        var message = magic8BallMessageBuilder.getMagic8BallEmbed(question, slashCommandEvent.getMember()
                 .getEffectiveName());
         slashCommandEvent.reply(message).queue();
     }

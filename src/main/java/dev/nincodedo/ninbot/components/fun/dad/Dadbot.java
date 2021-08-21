@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -46,8 +45,8 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
-        val strippedMessage = event.getMessage().getContentStripped();
-        val first = strippedMessage.split("\\s+")[0];
+        var strippedMessage = event.getMessage().getContentStripped();
+        var first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
                 || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
                 || (!event.getChannelType().isGuild())) {
@@ -59,7 +58,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private boolean channelIsOnDenyList(String serverId, String channelId) {
-        val channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+        var channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 

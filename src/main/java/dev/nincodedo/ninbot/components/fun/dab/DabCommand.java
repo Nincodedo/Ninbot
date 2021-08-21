@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
@@ -52,7 +51,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped();
+        var content = event.getMessage().getContentStripped();
         if (isCommandLengthCorrect(content)) {
             doDabarinos(event.getJDA()
                     .getShardManager(), event.getChannel(), event.getMessage(), event.getAuthor(), messageAction, null);
@@ -64,8 +63,8 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
 
     private void doDabarinos(ShardManager shardManager, MessageChannel channel, Message eventMessage,
             User eventMessageAuthor, MessageAction messageAction, User dabbedOn) {
-        val mentionedUsers = eventMessage.getMentionedUsers();
-        val dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
+        var mentionedUsers = eventMessage.getMentionedUsers();
+        var dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
         for (Message message : channel.getHistoryBefore(eventMessage, MESSAGE_SEARCH_LIMIT)
                 .complete()
                 .getRetrievedHistory()) {
@@ -89,14 +88,14 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
             dabCritPercentChance = dabCritPercentChance * 2;
         }
 
-        val critInt = random.nextInt(100);
-        val critDab = critInt < dabCritPercentChance;
+        var critInt = random.nextInt(100);
+        var critDab = critInt < dabCritPercentChance;
         if (critDab) {
             messageAction.addReaction(critResponse.getEmojiList());
             messageAction.addReaction(dabResponse.getEmojiList());
         }
 
-        val list = shardManager.getEmotes().stream()
+        var list = shardManager.getEmotes().stream()
                 .filter(emote -> emote.getName().contains("dab"))
                 .collect(Collectors.toList());
 
@@ -104,7 +103,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
 
         List<String> emoteNameList = new ArrayList<>();
         List<Emote> emoteList = new ArrayList<>();
-        for (val emote : list) {
+        for (var emote : list) {
             if (!emoteNameList.contains(emote.getName())) {
                 emoteNameList.add(emote.getName());
                 emoteList.add(emote);

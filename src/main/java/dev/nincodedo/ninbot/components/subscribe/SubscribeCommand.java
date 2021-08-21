@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
@@ -24,11 +23,11 @@ public class SubscribeCommand extends AbstractCommand {
     @Override
     public MessageAction executeCommand(MessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped().toLowerCase();
+        var content = event.getMessage().getContentStripped().toLowerCase();
         if (isCommandLengthCorrect(content)) {
-            val server = event.getGuild();
-            val subscribeTo = content.split("\\s+")[2];
-            val role = getRole(server, subscribeTo);
+            var server = event.getGuild();
+            var subscribeTo = content.split("\\s+")[2];
+            var role = getRole(server, subscribeTo);
             if (isValidSubscribeRole(role, event.getGuild().getId())) {
                 addOrRemoveSubscription(event, server, role);
                 messageAction.addSuccessfulReaction();
@@ -54,7 +53,7 @@ public class SubscribeCommand extends AbstractCommand {
     }
 
     private Role getRole(Guild server, String subscribeTo) {
-        val roleList = server.getRolesByName(subscribeTo, true);
+        var roleList = server.getRolesByName(subscribeTo, true);
         return roleList.isEmpty() ? null : roleList.get(0);
     }
 }

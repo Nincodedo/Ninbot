@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.command;
 
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -44,8 +43,8 @@ public class InfoCommand extends AbstractCommand {
                         .getSelfUser()
                         .getEffectiveAvatarUrl());
         if (getSubcommand(event.getMessage().getContentStripped()).equalsIgnoreCase("dev")) {
-            val uptime = metricsEndpoint.metric("process.uptime", null);
-            val uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
+            var uptime = metricsEndpoint.metric("process.uptime", null);
+            var uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
             embedBuilder.addField(resourceBundle.getString("command.info.git.hash"), gitProperties.getCommitId(),
                     false)
                     .addField(resourceBundle.getString("command.info.uptime"), getDurationString(resourceBundle,
@@ -60,7 +59,7 @@ public class InfoCommand extends AbstractCommand {
                         Constants.NINBOT_GITHUB_URL + "/issues/new/choose", false)
                 .addField(resourceBundle.getString("command.info.documentation.name"),
                         Constants.NINBOT_DOCUMENTATION_URL, false);
-        val patronsList = getPatronsList(event.getJDA().getShardManager());
+        var patronsList = getPatronsList(event.getJDA().getShardManager());
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle.getString("command.info.patreonthanks.name"), patronsList, false);
         }
@@ -69,7 +68,7 @@ public class InfoCommand extends AbstractCommand {
     }
 
     private String getPatronsList(ShardManager shardManager) {
-        val ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        var ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (ninbotPatronServer != null) {
             return ninbotPatronServer
                     .getMembersWithRoles(Collections.emptyList())
@@ -89,7 +88,7 @@ public class InfoCommand extends AbstractCommand {
 
     private String getDurationString(ResourceBundle resourceBundle, long uptimeMilliseconds) {
         String duration = "";
-        val durationString = DurationFormatUtils.formatDuration(uptimeMilliseconds, "dd:HH:mm:ss", false).split(":");
+        var durationString = DurationFormatUtils.formatDuration(uptimeMilliseconds, "dd:HH:mm:ss", false).split(":");
         if (!"0".equals(durationString[3])) {
             duration += durationString[3] + " " + resourceBundle.getString("command.info.seconds");
         }

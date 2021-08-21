@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.fun.pathogen;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAuditRepository;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +30,7 @@ class PathogenManagerTest {
         Random random = new Random();
         for (int i = 0; i < 1000; i++) {
             pathogenManager.setRandomSeed(random.nextLong());
-            val wordList = pathogenManager.getWordList();
+            var wordList = pathogenManager.getWordList();
 
             assertThat(wordList).hasSize(pathogenManager.getWordListLength());
             assertThat(wordList).doesNotHaveDuplicates();

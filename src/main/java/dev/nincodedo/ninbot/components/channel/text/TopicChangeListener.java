@@ -6,7 +6,6 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +33,8 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val channelIds = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
-        val eventChannel = event.getChannel();
+        var channelIds = configService.getValuesByName(event.getGuild().getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
+        var eventChannel = event.getChannel();
         if (StringUtils.isNotBlank(event.getNewTopic()) && (channelIds.contains(eventChannel.getId())
                 || channelIds.contains("*"))) {
             String message;
@@ -44,7 +43,7 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
                     .getMember(event.getJDA().getSelfUser())
                     .getPermissions(eventChannel)
                     .contains(Permission.VIEW_AUDIT_LOGS)) {
-                val auditLogs = event.getGuild().retrieveAuditLogs().complete();
+                var auditLogs = event.getGuild().retrieveAuditLogs().complete();
                 message = String.format(resourceBundle.getString("listener.topic.updated.withpermission"),
                         event.getGuild().getMember(auditLogs.get(0).getUser()).getEffectiveName(),
                         auditLogs.get(0).getChangeByKey("topic").getNewValue());

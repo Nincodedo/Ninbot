@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.event;
 
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.time.ZoneId;
@@ -26,7 +25,7 @@ class EventParser {
 
     private Map<String, String> parseMessage(String content) {
         Map<String, String> eventMap = new HashMap<>();
-        val messageList = content.split("\\s+");
+        var messageList = content.split("\\s+");
         int counter = 3;
         StringBuilder name = new StringBuilder();
         if (content.contains("\"")) {

@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.components.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.common.Constants;
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -56,18 +55,18 @@ public class PollCommand extends AbstractCommand {
         poll.setServerId(message.getGuild().getId());
         poll.setUserAvatarUrl(member.getUser().getAvatarUrl());
         poll.setUserName(member.getEffectiveName());
-        val pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
+        var pollMessage = message.getContentStripped().substring("@Ninbot poll ".length());
         poll.setChoices(new ArrayList<>());
         if (pollMessage.contains("\"")) {
             poll.setTitle(pollMessage.substring(0, pollMessage.indexOf("\"")).trim());
-            val pollOptions = pollMessage.substring(
+            var pollOptions = pollMessage.substring(
                     pollMessage.indexOf("\"") + 1, pollMessage.lastIndexOf("\"")).replace("\"", "");
             poll.setChoices(Arrays.stream(pollOptions.split(","))
                     .map(String::trim)
                     .collect(Collectors.toList()));
             //If a + is included in the choices, allowed for other users to add their own choices
             poll.setUserChoicesAllowed((poll.getChoices().remove("+")));
-            val timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
+            var timeString = pollMessage.substring(pollMessage.lastIndexOf("\"") + 1).trim();
             if (StringUtils.isNotBlank(timeString)) {
                 poll.setEndDateTime(LocalDateTime.now().plus(Long.parseLong(timeString), ChronoUnit.MINUTES));
             } else {

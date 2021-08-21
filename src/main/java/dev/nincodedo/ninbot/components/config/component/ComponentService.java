@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.config.component;
 
-import lombok.val;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,7 @@ public class ComponentService {
     }
 
     public void registerComponent(String name, ComponentType componentType) {
-        val componentOptional = componentRepository.findByNameAndType(name, componentType);
+        var componentOptional = componentRepository.findByNameAndType(name, componentType);
         if (componentOptional.isEmpty()) {
             Component component = new Component(name, componentType);
             componentRepository.save(component);
@@ -35,8 +34,8 @@ public class ComponentService {
 
     @CacheEvict(allEntries = true, value = {"disable-component", "disabled-server-component"})
     public void disableComponent(String name, String serverId) {
-        val component = componentRepository.findByName(name);
-        val list = disabledComponentsRepository.findByComponentAndServerId(component, serverId);
+        var component = componentRepository.findByName(name);
+        var list = disabledComponentsRepository.findByComponentAndServerId(component, serverId);
         if (list.isEmpty()) {
             DisabledComponents disabledComponents = new DisabledComponents(serverId, component);
             disabledComponentsRepository.save(disabledComponents);
@@ -49,12 +48,12 @@ public class ComponentService {
 
     @Cacheable("disabled-component")
     public boolean isDisabled(String name, String serverId) {
-        val component = componentRepository.findByName(name);
+        var component = componentRepository.findByName(name);
         return !getDisabledComponents(component, serverId).isEmpty();
     }
 
     void enableComponent(String name, String serverId) {
-        val component = componentRepository.findByName(name);
+        var component = componentRepository.findByName(name);
         disabledComponentsRepository.deleteAll(getDisabledComponents(component, serverId));
     }
 

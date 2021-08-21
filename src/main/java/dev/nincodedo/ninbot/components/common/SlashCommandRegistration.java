@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.common;
 
 import dev.nincodedo.ninbot.components.command.SlashCommand;
-import lombok.val;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -22,11 +21,11 @@ public class SlashCommandRegistration extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent readyEvent) {
-        val shardManager = readyEvent.getJDA().getShardManager();
-        val guildIds = Arrays.asList(Constants.OCW_SERVER_ID, "497444318768922633", "521780068649926692");
+        var shardManager = readyEvent.getJDA().getShardManager();
+        var guildIds = Arrays.asList(Constants.OCW_SERVER_ID, "497444318768922633", "521780068649926692");
         guildIds.forEach(id -> {
             if (shardManager != null) {
-                val guild = shardManager.getGuildById(id);
+                var guild = shardManager.getGuildById(id);
                 if (guild != null) {
                     CommandListUpdateAction commandUpdateAction = guild.updateCommands();
                     guild.retrieveCommands()
