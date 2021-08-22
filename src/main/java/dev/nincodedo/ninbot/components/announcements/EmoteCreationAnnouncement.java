@@ -9,8 +9,10 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -47,17 +49,32 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             if (channel != null) {
                 val emote = event.getEmote();
                 countOneStat(componentName, event.getGuild().getId());
-                channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild()))
+                Member member = null;
+                if (event.getGuild()
+                        .getMember(event.getJDA().getSelfUser())
+                        .getPermissions(channel)
+                        .contains(Permission.VIEW_AUDIT_LOGS)) {
+                    member = event.getGuild()
+                            .getMember(event.getGuild().retrieveAuditLogs().complete().get(0).getUser());
+
+                }
+                channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
                         .queue(message -> message.addReaction(emote).queue());
             }
         }
     }
 
     @NotNull
-    private Message buildAnnouncementMessage(Emote emote, Guild guild) {
+    private Message buildAnnouncementMessage(Emote emote, Guild guild, Member member) {
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append(resourceBundle.getString("listener.emote.announce.message"));
+        if (member != null) {
+            messageBuilder.append(" ");
+            messageBuilder.append(resourceBundle.getString("listener.emote.announce.message.member"));
+            messageBuilder.append(" ");
+            messageBuilder.append(member);
+        }
         messageBuilder.append("\n");
         messageBuilder.append(emote);
         return messageBuilder.build();
