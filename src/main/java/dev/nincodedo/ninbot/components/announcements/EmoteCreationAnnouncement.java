@@ -55,7 +55,6 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
                         .contains(Permission.VIEW_AUDIT_LOGS)) {
                     member = event.getGuild()
                             .getMember(event.getGuild().retrieveAuditLogs().complete().get(0).getUser());
-
                 }
                 channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
                         .queue(message -> message.addReaction(emote).queue());
@@ -71,7 +70,6 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         if (member != null) {
             messageBuilder.append(" ");
             messageBuilder.append(resourceBundle.getString("listener.emote.announce.message.member"));
-            messageBuilder.append(" ");
             messageBuilder.append(member);
         }
         messageBuilder.append("\n");
