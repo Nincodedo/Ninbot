@@ -1,18 +1,15 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -28,8 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Log4j2
-public class DabCommand extends AbstractCommand implements SlashCommand {
+@Slf4j
+public class DabCommand implements SlashCommand {
 
     private static final int MESSAGE_SEARCH_LIMIT = 10;
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
@@ -38,34 +35,23 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
     private boolean isDabEdition;
 
     public DabCommand(GitProperties gitProperties) {
-        length = 3;
-        name = "dab";
-        checkExactLength = false;
         random = new SecureRandom();
         isDabEdition = isDabEdition(gitProperties.getCommitId());
+    }
+
+    @Override
+    public String getName() {
+        return "dab";
     }
 
     private boolean isDabEdition(String commitId) {
         return commitId != null && commitId.toLowerCase().contains("dab");
     }
 
-    @Override
-    public MessageAction executeCommand(MessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped();
-        if (isCommandLengthCorrect(content)) {
-            doDabarinos(event.getJDA()
-                    .getShardManager(), event.getChannel(), event.getMessage(), event.getAuthor(), messageAction, null);
-        } else {
-            messageAction.addUnknownReaction();
-        }
-        return messageAction;
-    }
-
     private void doDabarinos(ShardManager shardManager, MessageChannel channel, Message eventMessage,
             User eventMessageAuthor, MessageAction messageAction, User dabbedOn) {
-        val mentionedUsers = eventMessage.getMentionedUsers();
-        val dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
+        var mentionedUsers = eventMessage.getMentionedUsers();
+        var dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
         for (Message message : channel.getHistoryBefore(eventMessage, MESSAGE_SEARCH_LIMIT)
                 .complete()
                 .getRetrievedHistory()) {
@@ -89,14 +75,14 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
             dabCritPercentChance = dabCritPercentChance * 2;
         }
 
-        val critInt = random.nextInt(100);
-        val critDab = critInt < dabCritPercentChance;
+        var critInt = random.nextInt(100);
+        var critDab = critInt < dabCritPercentChance;
         if (critDab) {
             messageAction.addReaction(critResponse.getEmojiList());
             messageAction.addReaction(dabResponse.getEmojiList());
         }
 
-        val list = shardManager.getEmotes().stream()
+        var list = shardManager.getEmotes().stream()
                 .filter(emote -> emote.getName().contains("dab"))
                 .collect(Collectors.toList());
 
@@ -104,7 +90,7 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
 
         List<String> emoteNameList = new ArrayList<>();
         List<Emote> emoteList = new ArrayList<>();
-        for (val emote : list) {
+        for (var emote : list) {
             if (!emoteNameList.contains(emote.getName())) {
                 emoteNameList.add(emote.getName());
                 emoteList.add(emote);
@@ -146,11 +132,11 @@ public class DabCommand extends AbstractCommand implements SlashCommand {
                         .getAsUser());
         messageAction.executeActions();
         slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
-                .getEmotesByName("ninbotdab", true)
-                .get(0))
-                .append(" ")
-                .append(slashCommandEvent.getOptionsByType(OptionType.USER).get(0).getAsUser())
-                .build())
+                                .getEmotesByName("ninbotdab", true)
+                                .get(0))
+                        .append(" ")
+                        .append(slashCommandEvent.getOptionsByType(OptionType.USER).get(0).getAsUser())
+                        .build())
                 .queue();
     }
 }

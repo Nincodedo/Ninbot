@@ -58,17 +58,19 @@ class Poll {
     }
 
     private Message buildPollMessage(String footer) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(title);
-        embedBuilder.setColor(MessageUtils.getColor(userAvatarUrl));
-        embedBuilder.setTimestamp(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        embedBuilder.setAuthor(resourceBundle.getString("poll.announce.authortext") + userName, null, userAvatarUrl);
-        embedBuilder.addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false);
+        return new MessageBuilder(new EmbedBuilder().setTitle(title)
+                .setColor(MessageUtils.getColor(userAvatarUrl))
+                .setTimestamp(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
+                .setAuthor(resourceBundle.getString("poll.announce.authortext") + userName, null, userAvatarUrl)
+                .addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false)
+                .setFooter(buildFooter(footer), null)).build();
+    }
+
+    private String buildFooter(String footer) {
         if (userChoicesAllowed && pollOpen) {
             footer = "Reply to this message to add your own poll choice. " + footer;
         }
-        embedBuilder.setFooter(footer, null);
-        return new MessageBuilder(embedBuilder).build();
+        return footer;
     }
 
     private String buildPollChoices() {

@@ -35,15 +35,13 @@ class Event {
         if (minutesBeforeStart > 0) {
             return String.format(resourceBundle.getString("event.announce.message.startinginxminutes"), roleId, name,
                     authorName, minutesBeforeStart);
+        } else if (endTime != null) {
+            return String.format(resourceBundle.getString("event.announce.message.startingnowandendatx"), roleId,
+                    name, authorName,
+                    endTime);
         } else {
-            if (endTime != null) {
-                return String.format(resourceBundle.getString("event.announce.message.startingnowandendatx"), roleId,
-                        name, authorName,
-                        endTime);
-            } else {
-                return String.format(resourceBundle.getString("event.announce.message.startingnow"), roleId, name,
-                        authorName);
-            }
+            return String.format(resourceBundle.getString("event.announce.message.startingnow"), roleId, name,
+                    authorName);
         }
     }
 

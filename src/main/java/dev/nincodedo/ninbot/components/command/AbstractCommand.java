@@ -6,15 +6,13 @@ import dev.nincodedo.ninbot.components.common.RolePermission;
 import dev.nincodedo.ninbot.components.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.common.message.WebhookHelper;
 import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.Data;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-@Log4j2
+@Slf4j
 @Data
 public abstract class AbstractCommand {
 
@@ -40,33 +38,19 @@ public abstract class AbstractCommand {
     @Autowired
     protected StatManager statManager;
 
-    void execute(MessageReceivedEvent event, Locale serverLocale) {
-        val message = event.getMessage().getContentStripped();
-        resourceBundle = LocaleService.getResourceBundleOrDefault(serverLocale);
-        if (event.isFromGuild() && userHasPermission(event.getGuild(), event.getAuthor(), permissionLevel)) {
-            log.trace("Executing command {} by {} in server {}: {}", name, event.getAuthor()
-                    .getId(), event.getGuild().getId(), message);
-            if (getSubcommand(message).equalsIgnoreCase("help")) {
-                statManager.addOneCount(name, StatCategory.COMMAND_HELP, event.getGuild().getId());
-                displayHelp(event).executeActions();
-            } else {
-                statManager.addOneCount(name, StatCategory.COMMAND, event.getGuild().getId());
-                executeCommand(event).executeActions();
-            }
-        } else if (!event.isFromGuild()) {
-            log.warn("User executed command from outside of a Guild. Name: {}, Channel ID: {}", event.getAuthor()
-                    .getId(), event.getChannel().getId());
-            event.getChannel().sendMessage("Ninbot only processes commands on servers").queue();
+    void execute(PrivateMessageReceivedEvent event) {
+        var message = event.getMessage().getContentStripped();
+        resourceBundle = LocaleService.getResourceBundleOrDefault(Locale.ENGLISH);
+        log.trace("Executing command {} by {}: {}", name, event.getAuthor()
+                .getId(), message);
+        if (getSubcommand(message).equalsIgnoreCase("help")) {
+            displayHelp(event).executeActions();
         } else {
-            log.debug("User {} does not have permission to run {} on server {}: {}", event.getAuthor()
-                    .getId(), name, event.getGuild().getId(), message);
-            new MessageAction(event)
-                    .addUnsuccessfulReaction()
-                    .executeActions();
+            executeCommand(event).executeActions();
         }
     }
 
-    protected MessageAction displayHelp(MessageReceivedEvent event) {
+    protected MessageAction displayHelp(PrivateMessageReceivedEvent event) {
         String help = resourceBundle.getString("command.help.description.label") + ": ";
         help += resourceBundle.containsKey(String.format("command.%s.help.text", name)) ? resourceBundle.getString(
                 String.format("command.%s.help.text", name)) : getCommandDescription(name);
@@ -79,7 +63,7 @@ public abstract class AbstractCommand {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
-                + ".help.title")), help, false)
+                        + ".help.title")), help, false)
                 .setColor(Color.BLUE);
         MessageAction messageAction = new MessageAction(event);
         messageAction.addPrivateMessageAction(embedBuilder.build());
@@ -113,21 +97,21 @@ public abstract class AbstractCommand {
                 && guild.getOwner().getUser().equals(user))) {
             return true;
         } else {
-            val member = guild.getMember(user);
-            val configuredRole = configService.getSingleValueByName(guild.getId(),
+            var member = guild.getMember(user);
+            var configuredRole = configService.getSingleValueByName(guild.getId(),
                     "roleRank-" + rolePermission.getRoleName());
-            val roles =
+            var roles =
                     configuredRole.map(configuredRoleId ->
-                            Collections.singletonList(guild.getRoleById(configuredRoleId)))
+                                    Collections.singletonList(guild.getRoleById(configuredRoleId)))
                             .orElseGet(() -> guild.getRolesByName(rolePermission.getRoleName(), true));
             return guild.getMembersWithRoles(roles).contains(member);
         }
     }
 
-    protected abstract MessageAction executeCommand(MessageReceivedEvent event);
+    protected abstract MessageAction executeCommand(PrivateMessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content) {
-        val commandLength = getCommandLength(content);
+        var commandLength = getCommandLength(content);
         if (checkExactLength) {
             return commandLength == length;
         } else {
@@ -181,7 +165,7 @@ public abstract class AbstractCommand {
      * @return true/false
      */
     protected boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        val guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        var guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (guild != null) {
             return guild.getMembers()
                     .stream()

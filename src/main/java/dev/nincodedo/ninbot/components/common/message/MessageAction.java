@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,11 @@ public class MessageAction {
     public MessageAction(MessageReceivedEvent event) {
         this();
         this.event = event;
+    }
+
+    public MessageAction(PrivateMessageReceivedEvent event){
+        this();
+        this.event = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getMessage());
     }
 
     public static void successfulReaction(Message message) {

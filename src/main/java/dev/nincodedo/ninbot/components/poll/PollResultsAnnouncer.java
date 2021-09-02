@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import lombok.Setter;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 
@@ -33,7 +32,7 @@ class PollResultsAnnouncer extends TimerTask {
     }
 
     private String announcePollResults() {
-        val newMessage = pollMessage.getChannel().retrieveMessageById(pollMessage.getId()).complete();
+        var newMessage = pollMessage.getChannel().retrieveMessageById(pollMessage.getId()).complete();
         int highCount = 0;
         List<String> winningChoices = new ArrayList<>();
         List<MessageReaction> reactions = newMessage.getReactions();
@@ -48,7 +47,7 @@ class PollResultsAnnouncer extends TimerTask {
                 winningChoices.add(poll.getChoices().get(i));
             }
         }
-        val resourceBundle = poll.getResourceBundle();
+        var resourceBundle = poll.getResourceBundle();
 
         String pollClosedMessage = resourceBundle.getString("poll.announce.closed");
         if (highCount <= 1) {

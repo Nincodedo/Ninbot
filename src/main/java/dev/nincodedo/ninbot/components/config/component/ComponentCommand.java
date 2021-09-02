@@ -1,19 +1,17 @@
 package dev.nincodedo.ninbot.components.config.component;
 
+import dev.nincodedo.ninbot.common.RolePermission;
+import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.RolePermission;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import org.apache.commons.text.WordUtils;
-import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 
-@Component
 public class ComponentCommand extends AbstractCommand {
 
     private ComponentService componentService;
@@ -26,38 +24,27 @@ public class ComponentCommand extends AbstractCommand {
         this.permissionLevel = RolePermission.ADMIN;
     }
 
+    //TODO implement SlashCommand
     @Override
-    protected MessageAction executeCommand(MessageReceivedEvent event) {
+    protected MessageAction executeCommand(PrivateMessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
-        switch (getSubcommand(message)) {
-            case "list" -> messageAction.addChannelAction(listComponents(event.getGuild().getId()));
-            case "disable" -> {
-                disableComponent(event);
-                messageAction.addSuccessfulReaction();
-            }
-            case "enable" -> {
-                enableComponent(event);
-                messageAction.addSuccessfulReaction();
-            }
-            default -> messageAction = displayHelp(event);
-        }
+
         return messageAction;
     }
 
     private void enableComponent(MessageReceivedEvent event) {
-        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
+        var componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.enableComponent(componentName, event.getGuild().getId());
     }
 
     private void disableComponent(MessageReceivedEvent event) {
-        val componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
+        var componentName = getSubcommand(event.getMessage().getContentStripped(), 3);
         componentService.disableComponent(componentName, event.getGuild().getId());
     }
 
     private Message listComponents(String serverId) {
-        val components = componentService.getAllComponents();
-        val disabledComponents = componentService.getDisabledComponents(serverId);
+        var components = componentService.getAllComponents();
+        var disabledComponents = componentService.getDisabledComponents(serverId);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         components.sort(Comparator.comparing(dev.nincodedo.ninbot.components.config.component.Component::getName));
         components.forEach(component -> {

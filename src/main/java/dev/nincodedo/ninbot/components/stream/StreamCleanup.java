@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-@Log4j2
+@Slf4j
 public class StreamCleanup {
 
     private StreamingMemberRepository streamingMemberRepository;
@@ -33,7 +32,7 @@ public class StreamCleanup {
 
     private void endOldStreams(StreamingMember streamingMember) {
         streamingMember.currentStream().ifPresent(streamInstance -> {
-            val guild = shardManager.getGuildById(streamingMember.getGuildId());
+            var guild = shardManager.getGuildById(streamingMember.getGuildId());
             if (guild != null) {
                 guild.retrieveMemberById(streamingMember.getUserId()).queue(member -> {
                     if (member.getActivities().isEmpty()) {

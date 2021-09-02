@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.components.common.LocaleService;
 import dev.nincodedo.ninbot.components.common.message.MessageUtils;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Message;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-@Log4j2
+@Slf4j
 public class StreamMessageBuilder {
 
     Message buildStreamAnnounceMessage(String avatarUrl, String username,

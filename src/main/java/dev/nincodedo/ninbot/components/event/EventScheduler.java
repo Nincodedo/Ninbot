@@ -2,8 +2,7 @@ package dev.nincodedo.ninbot.components.event;
 
 import dev.nincodedo.ninbot.components.common.Schedulable;
 import dev.nincodedo.ninbot.components.config.ConfigService;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Date.from;
 
-@Log4j2
+@Slf4j
 @Component
 public class EventScheduler implements Schedulable {
 
@@ -34,7 +33,7 @@ public class EventScheduler implements Schedulable {
 
     public void scheduleAll(ShardManager shardManager) {
         log.trace("scheduling events");
-        val eventList = new ArrayList<Event>();
+        var eventList = new ArrayList<Event>();
         eventRepository.findAll().forEach(eventList::add);
         eventList.sort(Comparator.comparing(Event::getStartTime));
         eventList.forEach(event -> scheduleOne(event, shardManager));
@@ -62,7 +61,7 @@ public class EventScheduler implements Schedulable {
         } else {
             Timer timer = new Timer();
             log.trace("Scheduling {} for {}", event.getId(), event.getStartTime());
-            val guild = shardManager.getGuildById(event.getServerId());
+            var guild = shardManager.getGuildById(event.getServerId());
             scheduleOne(event, timer, eventStartTime, 0, guild);
             scheduleOne(event, timer, eventEarlyReminder, minutesBeforeStart, guild);
             timer.schedule(new EventRemove(event, eventRepository), from(eventEndTime));

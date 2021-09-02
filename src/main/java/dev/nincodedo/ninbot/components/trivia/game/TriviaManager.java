@@ -3,15 +3,14 @@ package dev.nincodedo.ninbot.components.trivia.game;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstance;
 import dev.nincodedo.ninbot.components.trivia.TriviaInstanceRepository;
 import dev.nincodedo.ninbot.components.trivia.TriviaScoreService;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Timer;
 
-@Log4j2
+@Slf4j
 @Component
 public class TriviaManager {
 
@@ -72,14 +71,14 @@ public class TriviaManager {
         Timer timer = new Timer();
         triviaInstance.setTriviaTimer(timer);
 
-        val triviaQuestion = triviaInstance.getTriviaQuestion();
+        var triviaQuestion = triviaInstance.getTriviaQuestion();
         triviaInstance.setAnswer(triviaQuestion.getCorrectAnswer().trim());
-        val triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer()
+        var triviaAnswerListener = new TriviaAnswerListener(triviaInstance.getChannelId(), triviaInstance.getAnswer()
                 , triviaScoreService);
         jda.addEventListener(triviaAnswerListener);
-        val channel = jda.getTextChannelById(triviaInstance.getChannelId());
+        var channel = jda.getTextChannelById(triviaInstance.getChannelId());
         channel.sendMessage(triviaQuestion.build()).queue();
-        val triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceRepository, jda);
+        var triviaTask = new TriviaTimeUpTask(triviaInstance, triviaInstanceRepository, jda);
         long time = 30000L;
         timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 1), 0);
         timer.schedule(new TriviaHintTask(triviaInstance, triviaInstanceRepository, jda, 2), time);

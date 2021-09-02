@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.trivia.game;
 
 import dev.nincodedo.ninbot.components.trivia.TriviaScoreService;
 import lombok.Getter;
-import lombok.val;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -29,7 +28,7 @@ public class TriviaAnswerListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.getAuthor().isBot() && event.getChannel().getId().equals(channelId)) {
             someAnswerOfSorts = true;
-            val message = event.getMessage().getContentStripped().toLowerCase().trim();
+            var message = event.getMessage().getContentStripped().toLowerCase().trim();
             if (message.equalsIgnoreCase(answer)) {
                 triviaScoreService.addUser(event.getAuthor().getId());
                 int newScore = triviaScoreService.addPoints(event.getAuthor().getId(), 1);

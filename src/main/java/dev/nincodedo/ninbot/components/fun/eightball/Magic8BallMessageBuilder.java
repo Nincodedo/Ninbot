@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.eightball;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 @Component
-@Log4j2
+@Slf4j
 public class Magic8BallMessageBuilder {
 
     private Random random;

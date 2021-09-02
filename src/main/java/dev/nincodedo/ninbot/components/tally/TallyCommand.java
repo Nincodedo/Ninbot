@@ -35,23 +35,17 @@ public class TallyCommand implements SlashCommand {
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
-        return Arrays.asList(new SubcommandData("add", "Add to the thing you're tallying.").addOptions(Arrays.asList(new OptionData(OptionType.STRING, "name", "Name of the thing you're tallying.", true), new OptionData(OptionType.INTEGER, "count", "How many you want to add to the tally. Defaults to 1.", false))),
-                new SubcommandData("get", "Gets the current tally count.").addOption(OptionType.STRING, "name", "Name"
-                        + " of the thing you're tallying.", true));
+        return Arrays.asList(new SubcommandData(TallyCommandName.ADD.get(), "Add to the thing you're tallying.").addOptions(Arrays.asList(new OptionData(OptionType.STRING, "name", "Name of the thing you're tallying.", true), new OptionData(OptionType.INTEGER, "count", "How many you want to add to the tally. Defaults to 1.", false))),
+                new SubcommandData(TallyCommandName.GET.get(), "Gets the current tally count.").addOption(OptionType.STRING, "name",
+                        "Name of the thing you're tallying.", true));
     }
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        switch (slashCommandEvent.getSubcommandName()) {
-            case "add":
-                addToTally(slashCommandEvent);
-                break;
-            case "get":
-                getTallyCount(slashCommandEvent);
-                break;
-            default:
-                slashCommandEvent.reply("dude what?").setEphemeral(true).queue();
-
+        switch (TallyCommandName.valueOf(slashCommandEvent.getSubcommandName())) {
+            case ADD -> addToTally(slashCommandEvent);
+            case GET -> getTallyCount(slashCommandEvent);
+            default -> slashCommandEvent.reply("dude what?").setEphemeral(true).queue();
         }
     }
 

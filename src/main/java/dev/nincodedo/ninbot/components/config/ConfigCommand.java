@@ -1,16 +1,14 @@
 package dev.nincodedo.ninbot.components.config;
 
+import dev.nincodedo.ninbot.common.RolePermission;
+import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.RolePermission;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.stereotype.Component;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
-@Component
 public class ConfigCommand extends AbstractCommand {
 
     public ConfigCommand() {
@@ -20,42 +18,11 @@ public class ConfigCommand extends AbstractCommand {
         permissionLevel = RolePermission.ADMIN;
     }
 
+    //TODO implement SlashCommand
     @Override
-    public MessageAction executeCommand(MessageReceivedEvent event) {
+    protected MessageAction executeCommand(PrivateMessageReceivedEvent event) {
         MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
-        switch (getSubcommand(event.getMessage().getContentStripped())) {
-            case "add":
-                if (getCommandLength(message) >= 5) {
-                    addConfig(message, event.getGuild().getId());
-                    messageAction.addSuccessfulReaction();
-                } else {
-                    messageAction.addUnsuccessfulReaction();
-                }
-                break;
-            case "remove":
-                if (getCommandLength(message) >= 5) {
-                    removeConfig(message, event.getGuild().getId());
-                    messageAction.addSuccessfulReaction();
-                } else {
-                    messageAction.addUnsuccessfulReaction();
-                }
-                break;
-            case "update":
-                if (getCommandLength(message) >= 5) {
-                    updateConfig(message, event.getGuild().getId());
-                    messageAction.addSuccessfulReaction();
-                } else {
-                    messageAction.addUnsuccessfulReaction();
-                }
-                break;
-            case "list":
-                messageAction.addChannelAction(listConfigs(event));
-                break;
-            default:
-                messageAction.addUnknownReaction();
-                break;
-        }
+
         return messageAction;
     }
 
@@ -66,11 +33,11 @@ public class ConfigCommand extends AbstractCommand {
     }
 
     private Message listConfigs(MessageReceivedEvent event) {
-        val configList = configService.getConfigsByServerId(event.getGuild().getId());
-        val serverName = event.getGuild().getName();
+        var configList = configService.getConfigsByServerId(event.getGuild().getId());
+        var serverName = event.getGuild().getName();
         if (configList.isEmpty()) {
             return new MessageBuilder().appendFormat(resourceBundle.getString("command.config.noconfigfound"),
-                    serverName)
+                            serverName)
                     .build();
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();

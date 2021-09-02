@@ -1,49 +1,43 @@
 package dev.nincodedo.ninbot.components.subscribe;
 
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
+import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
-import lombok.val;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
-public class SubscribeCommand extends AbstractCommand {
+public class SubscribeCommand implements SlashCommand {
 
-    public SubscribeCommand() {
-        length = 3;
-        name = "subscribe";
+    private ConfigService configService;
+
+    public SubscribeCommand(ConfigService configService) {
+        this.configService = configService;
     }
 
     @Override
-    public MessageAction executeCommand(MessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
-        val content = event.getMessage().getContentStripped().toLowerCase();
-        if (isCommandLengthCorrect(content)) {
-            val server = event.getGuild();
-            val subscribeTo = content.split("\\s+")[2];
-            val role = getRole(server, subscribeTo);
-            if (isValidSubscribeRole(role, event.getGuild().getId())) {
-                addOrRemoveSubscription(event, server, role);
-                messageAction.addSuccessfulReaction();
-            } else {
-                messageAction.addChannelAction(new MessageBuilder()
-                        .appendFormat(resourceBundle.getString("command.subscribe.norolefound"), subscribeTo)
-                        .build());
-            }
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        var server = slashCommandEvent.getGuild();
+        var role = slashCommandEvent.getOption("subscription").getAsRole();
+        if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
+            addOrRemoveSubscription(slashCommandEvent, server, role);
+            slashCommandEvent.reply(Emojis.CHECK_MARK).setEphemeral(true).queue();
         } else {
-            messageAction.addUnknownReaction();
+            slashCommandEvent.reply(resourceBundle().getString("")).setEphemeral(true).queue();
         }
-        return messageAction;
     }
 
-    void addOrRemoveSubscription(MessageReceivedEvent event, Guild guild, Role role) {
+    void addOrRemoveSubscription(SlashCommandEvent event, Guild guild, Role role) {
         guild.addRoleToMember(event.getMember(), role).queue();
     }
 
@@ -53,8 +47,18 @@ public class SubscribeCommand extends AbstractCommand {
         return role != null && !roleDenyList.contains(role.getName());
     }
 
-    private Role getRole(Guild server, String subscribeTo) {
-        val roleList = server.getRolesByName(subscribeTo, true);
-        return roleList.isEmpty() ? null : roleList.get(0);
+    @Override
+    public String getName() {
+        return "subscribe";
+    }
+
+    @Override
+    public List<OptionData> getCommandOptions() {
+        return List.of(new OptionData(OptionType.ROLE, "subscription", "Role you want subscribe to.", true));
+    }
+
+    @Override
+    public List<SubcommandData> getSubcommandDatas() {
+        return Collections.emptyList();
     }
 }
