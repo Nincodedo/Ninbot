@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
-import dev.nincodedo.ninbot.components.common.StreamUtils;
+import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserService;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common.message;
+package dev.nincodedo.ninbot.common.message;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;

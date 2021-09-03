@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot;
 
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.message.MessageAction;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
-import dev.nincodedo.ninbot.components.common.Emojis;
+import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAudit;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAuditRepository;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserService;

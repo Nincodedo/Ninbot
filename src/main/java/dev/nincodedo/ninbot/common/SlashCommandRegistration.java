@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.common;
 
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import lombok.extern.slf4j.Slf4j;

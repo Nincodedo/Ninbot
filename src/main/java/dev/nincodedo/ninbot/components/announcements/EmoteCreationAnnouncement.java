@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.announcements;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;

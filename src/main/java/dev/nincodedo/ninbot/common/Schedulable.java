@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.common;
 
 import net.dv8tion.jda.api.sharding.ShardManager;
 

@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.countdown;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.Schedulable;
-import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.Schedulable;
+import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import lombok.extern.slf4j.Slf4j;

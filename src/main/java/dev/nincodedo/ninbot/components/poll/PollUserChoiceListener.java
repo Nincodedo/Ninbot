@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
+import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.stats.StatManager;

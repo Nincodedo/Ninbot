@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.common;
 
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.event;
 
-import dev.nincodedo.ninbot.components.common.Schedulable;
+import dev.nincodedo.ninbot.common.Schedulable;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;

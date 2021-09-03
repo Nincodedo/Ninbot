@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static dev.nincodedo.ninbot.components.common.Emojis.QUESTION_MARK;
+import static dev.nincodedo.ninbot.common.Emojis.QUESTION_MARK;
 
 @Slf4j
 @Component

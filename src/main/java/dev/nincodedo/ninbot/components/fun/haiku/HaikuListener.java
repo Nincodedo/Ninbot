@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.haiku;
 
-import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.components.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;

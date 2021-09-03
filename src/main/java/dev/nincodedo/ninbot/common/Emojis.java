@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.common;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;

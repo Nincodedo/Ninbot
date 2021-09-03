@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.Schedulable;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.Schedulable;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.command;
 
-import dev.nincodedo.ninbot.components.common.Constants;
-import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.StreamUtils;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.common.StreamUtils;
+import dev.nincodedo.ninbot.common.message.MessageAction;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.time.Instant;

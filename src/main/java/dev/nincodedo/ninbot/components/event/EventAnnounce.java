@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.event;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
+import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import lombok.extern.slf4j.Slf4j;

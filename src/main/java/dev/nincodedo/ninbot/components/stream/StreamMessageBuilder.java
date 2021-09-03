@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.message.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

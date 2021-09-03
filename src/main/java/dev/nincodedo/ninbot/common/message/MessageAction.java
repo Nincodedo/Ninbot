@@ -1,6 +1,6 @@
-package dev.nincodedo.ninbot.components.common.message;
+package dev.nincodedo.ninbot.common.message;
 
-import dev.nincodedo.ninbot.components.common.Emojis;
+import dev.nincodedo.ninbot.common.Emojis;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

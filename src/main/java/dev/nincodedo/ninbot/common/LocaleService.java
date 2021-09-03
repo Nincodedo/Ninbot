@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common;
+package dev.nincodedo.ninbot.common;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

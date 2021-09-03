@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.components.common.Emojis;
+import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.JDA;

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.components.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.message.MessageUtils;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

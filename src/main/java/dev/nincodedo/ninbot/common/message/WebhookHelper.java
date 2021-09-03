@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.common.message;
+package dev.nincodedo.ninbot.common.message;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
