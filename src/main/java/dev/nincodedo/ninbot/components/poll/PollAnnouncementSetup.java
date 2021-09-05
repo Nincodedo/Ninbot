@@ -11,13 +11,13 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Component
-public class PollSetup {
+public class PollAnnouncementSetup {
 
     private StatManager statManager;
     private PollRepository pollRepository;
     private Map<Long, PollListeners> pollListenersMap;
 
-    PollSetup(PollRepository pollRepository, StatManager statManager) {
+    PollAnnouncementSetup(PollRepository pollRepository, StatManager statManager) {
         this.pollRepository = pollRepository;
         this.statManager = statManager;
         pollListenersMap = new HashMap<>();
@@ -64,7 +64,7 @@ public class PollSetup {
     @Scheduled(fixedRate = 43200000L)
     void removeClosedPolls() {
         List<Long> pollIds = new ArrayList<>(pollListenersMap.keySet());
-        pollRepository.findByIds(pollIds)
+        pollRepository.findAllByIdIn(pollIds)
                 .stream()
                 .filter(poll -> !poll.isPollOpen())
                 .forEach(poll -> pollListenersMap.remove(poll.getId()));

@@ -14,12 +14,12 @@ public class PollScheduler implements Schedulable {
 
     private PollRepository pollRepository;
     private ExecutorService executorService;
-    private PollSetup pollSetup;
+    private PollAnnouncementSetup pollAnnouncementSetup;
 
-    public PollScheduler(PollRepository pollRepository, PollSetup pollSetup) {
+    public PollScheduler(PollRepository pollRepository, PollAnnouncementSetup pollAnnouncementSetup) {
         this.pollRepository = pollRepository;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("poll-scheduler"));
-        this.pollSetup = pollSetup;
+        this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PollScheduler implements Schedulable {
         var channel = shardManager.getTextChannelById(poll.getChannelId());
         if (channel != null) {
             channel.retrieveMessageById(poll.getMessageId())
-                    .queue(message -> pollSetup.setupAnnounce(poll, shardManager, message));
+                    .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
         }
     }
 }

@@ -8,17 +8,16 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class PollUserChoiceListener extends StatAwareListenerAdapter {
 
-    private static final int POLL_CHOICE_LIMIT = 9;
     private PollRepository pollRepository;
-    private PollSetup pollSetup;
+    private PollAnnouncementSetup pollAnnouncementSetup;
     private String pollMessageId;
 
     public PollUserChoiceListener(StatManager statManager, PollRepository pollRepository, String pollMessageId,
-            PollSetup pollSetup) {
+            PollAnnouncementSetup pollAnnouncementSetup) {
         super(statManager);
         this.pollRepository = pollRepository;
         this.pollMessageId = pollMessageId;
-        this.pollSetup = pollSetup;
+        this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
 
     @Override
@@ -31,11 +30,11 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
                 var message = event.getMessage().getContentStripped();
                 var poll = pollOptional.get();
                 var pollChoices = poll.getChoices();
-                if (!pollChoices.contains(message) && pollChoices.size() < POLL_CHOICE_LIMIT) {
+                if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
                     poll.getChoices().add(message);
                     pollRepository.save(poll);
                     refMessage.editMessage(poll.build()).queue();
-                    pollSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
+                    pollAnnouncementSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
                 } else {
                     new MessageAction().setOverrideMessage(event.getMessage())
                             .addUnsuccessfulReaction()

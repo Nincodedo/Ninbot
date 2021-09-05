@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,6 +16,7 @@ import java.util.ResourceBundle;
 
 @Entity
 @Data
+@Accessors(chain = true)
 class Poll {
     @Transient
     ResourceBundle resourceBundle;
