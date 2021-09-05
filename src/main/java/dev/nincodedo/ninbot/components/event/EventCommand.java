@@ -82,9 +82,10 @@ public class EventCommand implements SlashCommand {
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(new SubcommandData(EventCommandName.PLAN.get(), "Create a new event.")
-                        .addOption(OptionType.ROLE, "gamename", "Name of the game the event is used by.", true)
-                        .addOption(OptionType.STRING, "name", "Name of the event.", true)
-                        .addOption(OptionType.STRING, "starttime", "Date/Time the event starts.", true),
+                        .addOption(OptionType.STRING, "name", "The name of the event.", true)
+                        .addOption(OptionType.STRING, "date", "The start date of the event, in MM-DD-YYYY format", true)
+                        .addOption(OptionType.STRING, "game", "The game associated with the event.")
+                        .addOption(OptionType.STRING, "time", "The start time of the event. Defaults to midnight."),
                 new SubcommandData(EventCommandName.LIST.get(), "List the events on this server."));
     }
 }
