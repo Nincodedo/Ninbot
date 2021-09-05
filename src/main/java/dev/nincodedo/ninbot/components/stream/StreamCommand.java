@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;

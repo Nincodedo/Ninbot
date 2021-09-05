@@ -63,23 +63,13 @@ public class PollSetup {
      */
     @Scheduled(fixedRate = 43200000L)
     void removeClosedPolls() {
-        for (Map.Entry<Long, PollListeners> entry : pollListenersMap.entrySet()) {
-            Long pollId = entry.getKey();
-            var optionalPoll = pollRepository.findById(pollId);
-            if (optionalPoll.isPresent()) {
-                var poll = optionalPoll.get();
-                //a poll in the DB is closed, but still in this map? remove it
-                if (!poll.isPollOpen()) {
-                    pollListenersMap.remove(pollId);
-                }
-            }
-            //a poll is in the map but not in the DB? remove it
-            else {
-                pollListenersMap.remove(pollId);
-            }
-        }
+        List<Long> pollIds = new ArrayList<>(pollListenersMap.keySet());
+        pollRepository.findByIds(pollIds)
+                .stream()
+                .filter(poll -> !poll.isPollOpen())
+                .forEach(poll -> pollListenersMap.remove(poll.getId()));
     }
-}
 
-record PollListeners(Timer timer, PollUserChoiceListener pollUserChoiceListener) {
+    record PollListeners(Timer timer, PollUserChoiceListener pollUserChoiceListener) {
+    }
 }

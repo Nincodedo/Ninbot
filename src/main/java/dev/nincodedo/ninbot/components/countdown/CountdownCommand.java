@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -42,9 +42,9 @@ public class CountdownCommand implements SlashCommand {
         if (subcommandName == null) {
             return;
         }
-        switch (slashCommandEvent.getSubcommandName()) {
-            case "list" -> slashCommandEvent.reply(listCountdowns(slashCommandEvent)).setEphemeral(true).queue();
-            case "create" -> slashCommandEvent.reply(setupCountdown(slashCommandEvent)).setEphemeral(true).queue();
+        switch (CountdownCommandName.valueOf(slashCommandEvent.getSubcommandName())) {
+            case LIST -> slashCommandEvent.reply(listCountdowns(slashCommandEvent)).setEphemeral(true).queue();
+            case CREATE -> slashCommandEvent.reply(setupCountdown(slashCommandEvent)).setEphemeral(true).queue();
         }
     }
 
@@ -124,13 +124,13 @@ public class CountdownCommand implements SlashCommand {
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
-                new SubcommandData("create", "Create a new countdown.")
+                new SubcommandData(CountdownCommandName.CREATE.get(), "Create a new countdown.")
                         .addOption(OptionType.STRING, "name", "The name for this countdown.", true)
                         .addOption(OptionType.STRING, "month", "The numerical month for this countdown.", true)
                         .addOption(OptionType.STRING, "day", "The numerical day for this countdown.", true)
                         .addOption(OptionType.STRING, "year", "The year for this countdown. Defaults to the upcoming "
                                 + "date this month and day fall."),
-                new SubcommandData("list", "List all the current countdowns for this server.")
+                new SubcommandData(CountdownCommandName.LIST.get(), "List all the current countdowns for this server.")
         );
     }
 }

@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;

@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.command;
+package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.LocaleService;

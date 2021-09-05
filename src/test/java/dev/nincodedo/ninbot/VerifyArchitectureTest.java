@@ -4,7 +4,7 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import org.junit.jupiter.api.Test;
 
 

@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.command;
+package dev.nincodedo.ninbot.common.command;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;

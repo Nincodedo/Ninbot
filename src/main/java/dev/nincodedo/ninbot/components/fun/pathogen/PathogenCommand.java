@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserRepository;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;

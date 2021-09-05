@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.command;
+package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;

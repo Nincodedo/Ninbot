@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.config.component;
 
 import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.command.AbstractCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;

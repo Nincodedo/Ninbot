@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.trivia;
 
 import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.command.AbstractCommand;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;

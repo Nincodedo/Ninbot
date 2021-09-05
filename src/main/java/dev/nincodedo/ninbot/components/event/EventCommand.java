@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.event;
 
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;

@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.command.AbstractCommand;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;

@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.subscribe;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
