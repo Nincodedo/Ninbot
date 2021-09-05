@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
+import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.components.command.SlashCommand;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
@@ -18,7 +19,6 @@ import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -50,16 +50,10 @@ public class DabCommand implements SlashCommand {
 
     private void doDabarinos(ShardManager shardManager, MessageChannel channel, Message eventMessage,
             User eventMessageAuthor, MessageAction messageAction, User dabbedOn) {
-        var mentionedUsers = eventMessage.getMentionedUsers();
-        var dabUser = dabbedOn == null ? mentionedUsers.get(mentionedUsers.size() - 1) : dabbedOn;
-        for (Message message : channel.getHistoryBefore(eventMessage, MESSAGE_SEARCH_LIMIT)
-                .complete()
-                .getRetrievedHistory()) {
-            if (message.getAuthor().equals(dabUser)) {
-                messageAction.setOverrideMessage(message);
-                dabOnMessage(messageAction, shardManager, eventMessageAuthor);
-                return;
-            }
+        if (eventMessage.getAuthor().equals(dabbedOn)) {
+            messageAction.setOverrideMessage(eventMessage);
+            dabOnMessage(messageAction, shardManager, eventMessageAuthor);
+            return;
         }
         messageAction.addUnsuccessfulReaction();
     }
@@ -82,23 +76,13 @@ public class DabCommand implements SlashCommand {
             messageAction.addReaction(dabResponse.getEmojiList());
         }
 
-        var list = shardManager.getEmotes().stream()
+        var emoteList = shardManager.getEmotes().stream()
                 .filter(emote -> emote.getName().contains("dab"))
+                .sorted(StreamUtils.shuffle())
+                .distinct()
                 .collect(Collectors.toList());
 
-        Collections.shuffle(list);
-
-        List<String> emoteNameList = new ArrayList<>();
-        List<Emote> emoteList = new ArrayList<>();
-        for (var emote : list) {
-            if (!emoteNameList.contains(emote.getName())) {
-                emoteNameList.add(emote.getName());
-                emoteList.add(emote);
-            }
-        }
-
         log.trace("Dabbing from {} potential dabs", emoteList.size());
-
         sendDabs(messageAction, emoteList);
     }
 
@@ -110,7 +94,7 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "a poor soul", true));
+        return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "the poor soul.", true));
     }
 
     @Override
