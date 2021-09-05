@@ -1,23 +1,57 @@
 package dev.nincodedo.ninbot.components.fun.hugemoji;
 
-import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.common.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
-public class HugemojiCommand extends AbstractCommand {
+@Component
+public class HugemojiCommand implements SlashCommand {
 
-    public HugemojiCommand() {
-        name = "hugemoji";
-        length = 3;
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        var stringEmote = slashCommandEvent.getOption("emote").getAsString().split(":")[1];
+        var emoteList = slashCommandEvent.getGuild().getEmotesByName(stringEmote, true);
+        if (!emoteList.isEmpty()) {
+            try {
+                var emote = emoteList.get(0);
+                var channel = slashCommandEvent.getChannel();
+                var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
+                InputStream file = new URL(emote.getImageUrl()).openStream();
+                channel.sendFile(file, emote.getName() + imageFileType).queue();
+                slashCommandEvent.reply(Emojis.CHECK_MARK).setEphemeral(true).queue();
+            } catch (IOException e) {
+                slashCommandEvent.reply(Emojis.CROSS_X).setEphemeral(true).queue();
+            }
+        } else {
+            slashCommandEvent.reply("This ain't an emote I know about.").setEphemeral(true).queue();
+        }
     }
 
-    //TODO implement SlashCommand
     @Override
-    protected MessageAction executeCommand(PrivateMessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
+    public String getName() {
+        return "hugemoji";
+    }
 
-        return messageAction;
+    @Override
+    public List<OptionData> getCommandOptions() {
+        return Arrays.asList(new OptionData(OptionType.STRING, "emote", "The emote to biggify.", true));
+    }
+
+    @Override
+    public List<SubcommandData> getSubcommandDatas() {
+        return Collections.emptyList();
     }
 }
