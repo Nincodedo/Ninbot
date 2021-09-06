@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StreamUtils;
-import dev.nincodedo.ninbot.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.time.Instant;
@@ -19,12 +19,12 @@ public abstract class CooldownCommand extends AbstractCommand {
     protected int cooldownValue;
     protected Map<String, Date> cooldownMap = new HashMap<>();
 
-    protected MessageAction executeCommand(MessageReceivedEvent event) {
+    protected MessageReceivedEventMessageAction executeCommand(MessageReceivedEvent event) {
         var lastTimeCommandUsed = cooldownMap.get(name);
         if (lastTimeCommandUsed != null && Instant.now()
                 .minus(cooldownValue, cooldownUnit)
                 .isBefore(lastTimeCommandUsed.toInstant())) {
-            return new MessageAction(event).addReaction(Emojis.COOLDOWN_5_CLOCK);
+            return new MessageReceivedEventMessageAction(event).addReaction(Emojis.COOLDOWN_5_CLOCK);
         } else {
             var loadingEmote = event.getJDA()
                     .getShardManager()
@@ -40,5 +40,5 @@ public abstract class CooldownCommand extends AbstractCommand {
         }
     }
 
-    protected abstract MessageAction executeCooldownCommand(MessageReceivedEvent event);
+    protected abstract MessageReceivedEventMessageAction executeCooldownCommand(MessageReceivedEvent event);
 }

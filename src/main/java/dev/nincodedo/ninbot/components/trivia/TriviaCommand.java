@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.trivia;
 
-import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.common.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import dev.nincodedo.ninbot.components.trivia.game.TriviaManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -27,8 +27,8 @@ public class TriviaCommand extends AbstractCommand {
 
     //TODO implement SlashCommand
     @Override
-    protected MessageAction executeCommand(PrivateMessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
+    protected MessageReceivedEventMessageAction executeCommand(PrivateMessageReceivedEvent event) {
+        MessageReceivedEventMessageAction messageAction = new MessageReceivedEventMessageAction(event);
 
         return messageAction;
     }
@@ -74,7 +74,7 @@ public class TriviaCommand extends AbstractCommand {
 
 
     private void stopTrivia(MessageReceivedEvent event,
-            MessageAction messageAction) {
+            MessageReceivedEventMessageAction messageAction) {
         if (!triviaManager.isTriviaActiveInChannel(event.getChannel().getId())) {
             messageAction.addUnsuccessfulReaction();
             return;
@@ -85,7 +85,7 @@ public class TriviaCommand extends AbstractCommand {
     }
 
     private void startTrivia(MessageReceivedEvent event,
-            MessageAction messageAction) {
+            MessageReceivedEventMessageAction messageAction) {
         var channel = event.getChannel();
         if (triviaManager.isTriviaActiveInChannel(channel.getId())) {
             messageAction.addUnsuccessfulReaction();

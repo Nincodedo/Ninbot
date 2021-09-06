@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.config;
 
 import dev.nincodedo.ninbot.common.RolePermission;
-import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.common.command.AbstractCommand;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -20,8 +20,8 @@ public class ConfigCommand extends AbstractCommand {
 
     //TODO implement SlashCommand
     @Override
-    protected MessageAction executeCommand(PrivateMessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
+    protected MessageReceivedEventMessageAction executeCommand(PrivateMessageReceivedEvent event) {
+        MessageReceivedEventMessageAction messageAction = new MessageReceivedEventMessageAction(event);
 
         return messageAction;
     }

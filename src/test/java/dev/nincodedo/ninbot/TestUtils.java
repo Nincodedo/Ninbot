@@ -1,28 +1,29 @@
 package dev.nincodedo.ninbot;
 
-import dev.nincodedo.ninbot.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.List;
 
 public class TestUtils {
-    public static List<String> returnEmoji(MessageAction messageAction) {
+    public static List<String> returnEmoji(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getEmojisList();
     }
 
-    public static String returnMessage(MessageAction messageAction) {
+    public static String returnMessage(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getChannelMessageList().get(0).getContentRaw();
     }
 
-    public static String returnEmbeddedTitle(MessageAction messageAction) {
+    public static String returnEmbeddedTitle(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getChannelMessageList().get(0).getEmbeds().get(0).getTitle();
     }
 
-    public static List<MessageEmbed.Field> returnPrivateMessageEmbedFields(MessageAction messageAction) {
+    public static List<MessageEmbed.Field> returnPrivateMessageEmbedFields(
+            MessageReceivedEventMessageAction messageAction) {
         return messageAction.getPrivateMessageList().get(0).getEmbeds().get(0).getFields();
     }
 
-    public static String returnEmbeddedName(MessageAction messageAction) {
+    public static String returnEmbeddedName(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
@@ -32,7 +33,7 @@ public class TestUtils {
                 .getName();
     }
 
-    public static String returnEmbeddedValue(MessageAction messageAction) {
+    public static String returnEmbeddedValue(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
@@ -42,11 +43,11 @@ public class TestUtils {
                 .getValue();
     }
 
-    public static String returnPrivateMessageEmbededName(MessageAction messageAction) {
+    public static String returnPrivateMessageEmbededName(MessageReceivedEventMessageAction messageAction) {
         return messageAction.getPrivateMessageList().get(0).getEmbeds().get(0).getFields().get(0).getName();
     }
 
-    public static String returnPrivateMessage(MessageAction commandResults) {
+    public static String returnPrivateMessage(MessageReceivedEventMessageAction commandResults) {
         return commandResults.getPrivateMessageList().get(0).getContentRaw();
     }
 }

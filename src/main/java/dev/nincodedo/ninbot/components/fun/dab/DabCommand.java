@@ -1,13 +1,12 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
-import dev.nincodedo.ninbot.common.message.MessageAction;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DabCommand implements SlashCommand {
 
-    private static final int MESSAGE_SEARCH_LIMIT = 10;
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
     private SecureRandom random;
@@ -48,17 +46,23 @@ public class DabCommand implements SlashCommand {
         return commitId != null && commitId.toLowerCase().contains("dab");
     }
 
-    private void doDabarinos(ShardManager shardManager, MessageChannel channel, Message eventMessage,
-            User eventMessageAuthor, MessageAction messageAction, User dabbedOn) {
-        if (eventMessage.getAuthor().equals(dabbedOn)) {
-            messageAction.setOverrideMessage(eventMessage);
+    private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
+            User eventMessageAuthor, MessageReceivedEventMessageAction messageAction, User dabbedOn) {
+        var eventMessageOptional = messageChannel.getIterableHistory()
+                .stream()
+                .limit(10)
+                .filter(message -> message.getAuthor().equals(dabbedOn))
+                .findFirst();
+        if (eventMessageOptional.isPresent()) {
+            messageAction.setOverrideMessage(eventMessageOptional.get());
             dabOnMessage(messageAction, shardManager, eventMessageAuthor);
             return;
         }
         messageAction.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(MessageAction messageAction, ShardManager shardManager, User commandUser) {
+    private void dabOnMessage(MessageReceivedEventMessageAction messageAction, ShardManager shardManager,
+            User commandUser) {
         int dabCritPercentChance = 5;
 
         if (isUserNinbotSupporter(shardManager, commandUser)) {
@@ -86,7 +90,7 @@ public class DabCommand implements SlashCommand {
         sendDabs(messageAction, emoteList);
     }
 
-    void sendDabs(MessageAction messageAction, List<Emote> emoteList) {
+    void sendDabs(MessageReceivedEventMessageAction messageAction, List<Emote> emoteList) {
         messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
@@ -104,22 +108,18 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        MessageAction messageAction = new MessageAction();
+        MessageReceivedEventMessageAction messageAction = new MessageReceivedEventMessageAction();
         //TODO what the hell is this, please fix it
         doDabarinos(slashCommandEvent.getJDA()
-                        .getShardManager(), slashCommandEvent.getChannel(), slashCommandEvent.getChannel()
-                        .getIterableHistory()
-                        .complete()
-                        .get(0), slashCommandEvent.getUser(), messageAction,
-                slashCommandEvent.getOptionsByType(OptionType.USER)
-                        .get(0)
-                        .getAsUser());
+                        .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
+                messageAction,
+                slashCommandEvent.getOption("dabbed").getAsUser());
         messageAction.executeActions();
         slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
                                 .getEmotesByName("ninbotdab", true)
                                 .get(0))
                         .append(" ")
-                        .append(slashCommandEvent.getOptionsByType(OptionType.USER).get(0).getAsUser())
+                        .append(slashCommandEvent.getOption("dabbed").getAsUser())
                         .build())
                 .queue();
     }

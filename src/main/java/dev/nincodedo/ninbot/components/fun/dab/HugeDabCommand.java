@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
-import dev.nincodedo.ninbot.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Emote;
 import org.springframework.boot.info.GitProperties;
@@ -25,7 +25,7 @@ public class HugeDabCommand extends DabCommand {
     }
 
     @Override
-    void sendDabs(MessageAction messageAction, List<Emote> emoteList) {
+    void sendDabs(MessageReceivedEventMessageAction messageAction, List<Emote> emoteList) {
         try {
             var channel = messageAction.getEvent().getChannel();
             var emote = emoteList.get(new Random().nextInt(emoteList.size()));
