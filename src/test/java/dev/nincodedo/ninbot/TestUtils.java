@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TestUtils {
     public static List<String> returnEmoji(MessageReceivedEventMessageAction messageAction) {
-        return messageAction.getEmojisList();
+        return messageAction.getReactions();
     }
 
     public static String returnMessage(MessageReceivedEventMessageAction messageAction) {

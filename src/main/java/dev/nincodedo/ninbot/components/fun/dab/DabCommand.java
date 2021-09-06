@@ -2,7 +2,8 @@ package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
-import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
+import dev.nincodedo.ninbot.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageAction;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -42,12 +43,30 @@ public class DabCommand implements SlashCommand {
         return "dab";
     }
 
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        MessageAction<SlashCommandEventMessageAction> messageAction = new SlashCommandEventMessageAction(slashCommandEvent);
+        //TODO what the hell is this, please fix it
+        doDabarinos(slashCommandEvent.getJDA()
+                        .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
+                messageAction,
+                slashCommandEvent.getOption("dabbed").getAsUser());
+        messageAction.executeActions();
+        slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
+                                .getEmotesByName("ninbotdab", true)
+                                .get(0))
+                        .append(" ")
+                        .append(slashCommandEvent.getOption("dabbed").getAsUser())
+                        .build())
+                .queue();
+    }
+
     private boolean isDabEdition(String commitId) {
         return commitId != null && commitId.toLowerCase().contains("dab");
     }
 
     private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
-            User eventMessageAuthor, MessageReceivedEventMessageAction messageAction, User dabbedOn) {
+            User eventMessageAuthor, MessageAction<SlashCommandEventMessageAction> messageAction, User dabbedOn) {
         var eventMessageOptional = messageChannel.getIterableHistory()
                 .stream()
                 .limit(10)
@@ -61,7 +80,7 @@ public class DabCommand implements SlashCommand {
         messageAction.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(MessageReceivedEventMessageAction messageAction, ShardManager shardManager,
+    private void dabOnMessage(MessageAction<SlashCommandEventMessageAction> messageAction, ShardManager shardManager,
             User commandUser) {
         int dabCritPercentChance = 5;
 
@@ -90,7 +109,7 @@ public class DabCommand implements SlashCommand {
         sendDabs(messageAction, emoteList);
     }
 
-    void sendDabs(MessageReceivedEventMessageAction messageAction, List<Emote> emoteList) {
+    void sendDabs(MessageAction<SlashCommandEventMessageAction> messageAction, List<Emote> emoteList) {
         messageAction.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
@@ -104,23 +123,5 @@ public class DabCommand implements SlashCommand {
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
-        MessageReceivedEventMessageAction messageAction = new MessageReceivedEventMessageAction();
-        //TODO what the hell is this, please fix it
-        doDabarinos(slashCommandEvent.getJDA()
-                        .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
-                messageAction,
-                slashCommandEvent.getOption("dabbed").getAsUser());
-        messageAction.executeActions();
-        slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
-                                .getEmotesByName("ninbotdab", true)
-                                .get(0))
-                        .append(" ")
-                        .append(slashCommandEvent.getOption("dabbed").getAsUser())
-                        .build())
-                .queue();
     }
 }

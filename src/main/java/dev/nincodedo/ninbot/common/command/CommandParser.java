@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
@@ -23,7 +22,6 @@ import static dev.nincodedo.ninbot.common.Emojis.QUESTION_MARK;
 @Component
 public class CommandParser {
 
-    private ConfigService configService;
     private ComponentService componentService;
     @Getter
     private Map<String, AbstractCommand> commandHashMap = new HashMap<>();
@@ -31,8 +29,7 @@ public class CommandParser {
     private Map<String, String> commandAliasMap = new HashMap<>();
     private ExecutorService executorService;
 
-    CommandParser(ConfigService configService, ComponentService componentService) {
-        this.configService = configService;
+    CommandParser(ComponentService componentService) {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
         this.componentService = componentService;
     }
