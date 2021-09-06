@@ -2,8 +2,8 @@ package dev.nincodedo.ninbot.components.fun.dab;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
-import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageAction;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -45,13 +45,13 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        MessageAction<SlashCommandEventMessageAction> messageAction = new SlashCommandEventMessageAction(slashCommandEvent);
+        MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         //TODO what the hell is this, please fix it
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
-                messageAction,
+                messageExecutor,
                 slashCommandEvent.getOption("dabbed").getAsUser());
-        messageAction.executeActions();
+        messageExecutor.executeActions();
         slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
                                 .getEmotesByName("ninbotdab", true)
                                 .get(0))
@@ -66,21 +66,21 @@ public class DabCommand implements SlashCommand {
     }
 
     private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
-            User eventMessageAuthor, MessageAction<SlashCommandEventMessageAction> messageAction, User dabbedOn) {
+            User eventMessageAuthor, MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, User dabbedOn) {
         var eventMessageOptional = messageChannel.getIterableHistory()
                 .stream()
                 .limit(10)
                 .filter(message -> message.getAuthor().equals(dabbedOn))
                 .findFirst();
         if (eventMessageOptional.isPresent()) {
-            messageAction.setOverrideMessage(eventMessageOptional.get());
-            dabOnMessage(messageAction, shardManager, eventMessageAuthor);
+            messageExecutor.setOverrideMessage(eventMessageOptional.get());
+            dabOnMessage(messageExecutor, shardManager, eventMessageAuthor);
             return;
         }
-        messageAction.addUnsuccessfulReaction();
+        messageExecutor.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(MessageAction<SlashCommandEventMessageAction> messageAction, ShardManager shardManager,
+    private void dabOnMessage(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, ShardManager shardManager,
             User commandUser) {
         int dabCritPercentChance = 5;
 
@@ -95,8 +95,8 @@ public class DabCommand implements SlashCommand {
         var critInt = random.nextInt(100);
         var critDab = critInt < dabCritPercentChance;
         if (critDab) {
-            messageAction.addReaction(critResponse.getEmojiList());
-            messageAction.addReaction(dabResponse.getEmojiList());
+            messageExecutor.addReaction(critResponse.getEmojiList());
+            messageExecutor.addReaction(dabResponse.getEmojiList());
         }
 
         var emoteList = shardManager.getEmotes().stream()
@@ -106,11 +106,11 @@ public class DabCommand implements SlashCommand {
                 .collect(Collectors.toList());
 
         log.trace("Dabbing from {} potential dabs", emoteList.size());
-        sendDabs(messageAction, emoteList);
+        sendDabs(messageExecutor, emoteList);
     }
 
-    void sendDabs(MessageAction<SlashCommandEventMessageAction> messageAction, List<Emote> emoteList) {
-        messageAction.addReactionEmotes(emoteList.stream()
+    void sendDabs(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, List<Emote> emoteList) {
+        messageExecutor.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .collect(Collectors.toList()));
     }

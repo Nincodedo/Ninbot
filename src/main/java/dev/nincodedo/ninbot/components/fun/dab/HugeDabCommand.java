@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.dab;
 
-import dev.nincodedo.ninbot.common.message.MessageAction;
-import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageAction;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Emote;
 import org.springframework.boot.info.GitProperties;
@@ -26,9 +26,9 @@ public class HugeDabCommand extends DabCommand {
     }
 
     @Override
-    void sendDabs(MessageAction<SlashCommandEventMessageAction> messageAction, List<Emote> emoteList) {
+    void sendDabs(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, List<Emote> emoteList) {
         try {
-            var channel = messageAction.getChannel();
+            var channel = messageExecutor.getChannel();
             var emote = emoteList.get(new Random().nextInt(emoteList.size()));
             var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
             InputStream file = new URL(emote.getImageUrl()).openStream();

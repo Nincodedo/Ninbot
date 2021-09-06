@@ -38,7 +38,7 @@ class ConfigCommandTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config test");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //assertThat(TestUtils.returnEmoji(actualMessageAction)).contains(Emojis.QUESTION_MARK);
     }
@@ -50,7 +50,7 @@ class ConfigCommandTest {
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //verify(configService).addConfig(new Config("1", "name", "value"));
         //assertThat(TestUtils.returnEmoji(actualMessageAction)).contains(Emojis.CHECK_MARK);
@@ -61,7 +61,7 @@ class ConfigCommandTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config add name");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //assertThat(TestUtils.returnEmoji(actualMessageAction)).contains(Emojis.CROSS_X);
     }
@@ -71,7 +71,7 @@ class ConfigCommandTest {
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped()).thenReturn("@Ninbot config remove name");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //assertThat(TestUtils.returnEmoji(actualMessageAction)).contains(Emojis.CROSS_X);
     }
@@ -83,7 +83,7 @@ class ConfigCommandTest {
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //verify(configService).removeConfig(new Config("1", "name", "value"));
         //assertThat(TestUtils.returnEmoji(actualMessageAction)).contains(Emojis.CHECK_MARK);
@@ -97,7 +97,7 @@ class ConfigCommandTest {
         when(guild.getId()).thenReturn("1");
         when(guild.getName()).thenReturn("Test Server");
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //assertThat(TestUtils.returnMessage(actualMessageAction)).contains("Test Server");
     }
@@ -113,7 +113,7 @@ class ConfigCommandTest {
         when(guild.getName()).thenReturn("Test Server");
         when(configService.getConfigsByServerId("1")).thenReturn(configList);
 
-        //MessageAction actualMessageAction = configCommand.executeCommand(messageEvent);
+        //MessageExecutor actualMessageAction = configCommand.executeCommand(messageEvent);
 
         //assertThat(TestUtils.returnEmbeddedTitle(actualMessageAction)).contains("Test Server");
         //assertThat(TestUtils.returnEmbeddedName(actualMessageAction)).isEqualToIgnoringCase("name");

@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.common.message;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,36 +13,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class MessageReceivedEventMessageAction extends MessageAction<MessageReceivedEventMessageAction> {
+public class MessageReceivedEventMessageExecutor extends MessageExecutor<MessageReceivedEventMessageExecutor> {
     private MessageReceivedEvent event;
     private List<Message> privateMessageList;
     private List<Message> channelMessageList;
 
-    public MessageReceivedEventMessageAction() {
+    public MessageReceivedEventMessageExecutor() {
         super();
         privateMessageList = new ArrayList<>();
         channelMessageList = new ArrayList<>();
     }
 
-    public MessageReceivedEventMessageAction(MessageReceivedEvent event) {
+    public MessageReceivedEventMessageExecutor(MessageReceivedEvent event) {
         this();
         this.event = event;
     }
 
-    public MessageReceivedEventMessageAction(PrivateMessageReceivedEvent event) {
+    public MessageReceivedEventMessageExecutor(PrivateMessageReceivedEvent event) {
         this();
         this.event = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getMessage());
     }
 
     @Override
     public void executeActions() {
-        Message eventMessage = null;
-        if (event != null) {
-            eventMessage = event.getMessage();
-        }
-        if (overrideMessage != null) {
-            eventMessage = overrideMessage;
-        }
+        super.executeActions();
         if (event != null) {
             for (Message message : privateMessageList) {
                 event.getAuthor().openPrivateChannel().queue(privateChannel -> {
@@ -59,18 +52,10 @@ public class MessageReceivedEventMessageAction extends MessageAction<MessageRece
                 }
             }
         }
-        if (eventMessage != null) {
-            for (String emoji : reactions) {
-                eventMessage.addReaction(emoji).queue();
-            }
-            for (Emote emote : reactionEmotes) {
-                eventMessage.addReaction(emote).queue();
-            }
-        }
     }
 
     @Override
-    public MessageReceivedEventMessageAction returnThis() {
+    public MessageReceivedEventMessageExecutor returnThis() {
         return this;
     }
 
@@ -79,26 +64,31 @@ public class MessageReceivedEventMessageAction extends MessageAction<MessageRece
         return event.getChannel();
     }
 
-    public MessageReceivedEventMessageAction addChannelAction(Message message) {
+    @Override
+    public Message getMessage() {
+        return overrideMessage != null ? overrideMessage : event.getMessage();
+    }
+
+    public MessageReceivedEventMessageExecutor addChannelAction(Message message) {
         channelMessageList.add(message);
         return this;
     }
 
-    public MessageReceivedEventMessageAction addChannelAction(EmbedBuilder embedBuilder) {
+    public MessageReceivedEventMessageExecutor addChannelAction(EmbedBuilder embedBuilder) {
         channelMessageList.add(new MessageBuilder(embedBuilder).build());
         return this;
     }
 
-    public MessageReceivedEventMessageAction addPrivateMessageAction(MessageEmbed messageEmbed) {
+    public MessageReceivedEventMessageExecutor addPrivateMessageAction(MessageEmbed messageEmbed) {
         return addPrivateMessageAction(new MessageBuilder(messageEmbed).build());
     }
 
-    private MessageReceivedEventMessageAction addPrivateMessageAction(Message message) {
+    private MessageReceivedEventMessageExecutor addPrivateMessageAction(Message message) {
         privateMessageList.add(message);
         return this;
     }
 
-    public MessageReceivedEventMessageAction addChannelAction(String message) {
+    public MessageReceivedEventMessageExecutor addChannelAction(String message) {
         channelMessageList.add(new MessageBuilder().append(message).build());
         return this;
     }

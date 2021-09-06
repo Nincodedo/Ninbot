@@ -1,29 +1,29 @@
 package dev.nincodedo.ninbot;
 
-import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.List;
 
 public class TestUtils {
-    public static List<String> returnEmoji(MessageReceivedEventMessageAction messageAction) {
+    public static List<String> returnEmoji(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getReactions();
     }
 
-    public static String returnMessage(MessageReceivedEventMessageAction messageAction) {
+    public static String returnMessage(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getChannelMessageList().get(0).getContentRaw();
     }
 
-    public static String returnEmbeddedTitle(MessageReceivedEventMessageAction messageAction) {
+    public static String returnEmbeddedTitle(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getChannelMessageList().get(0).getEmbeds().get(0).getTitle();
     }
 
     public static List<MessageEmbed.Field> returnPrivateMessageEmbedFields(
-            MessageReceivedEventMessageAction messageAction) {
+            MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getPrivateMessageList().get(0).getEmbeds().get(0).getFields();
     }
 
-    public static String returnEmbeddedName(MessageReceivedEventMessageAction messageAction) {
+    public static String returnEmbeddedName(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
@@ -33,7 +33,7 @@ public class TestUtils {
                 .getName();
     }
 
-    public static String returnEmbeddedValue(MessageReceivedEventMessageAction messageAction) {
+    public static String returnEmbeddedValue(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getChannelMessageList()
                 .get(0)
                 .getEmbeds()
@@ -43,11 +43,11 @@ public class TestUtils {
                 .getValue();
     }
 
-    public static String returnPrivateMessageEmbededName(MessageReceivedEventMessageAction messageAction) {
+    public static String returnPrivateMessageEmbededName(MessageReceivedEventMessageExecutor messageAction) {
         return messageAction.getPrivateMessageList().get(0).getEmbeds().get(0).getFields().get(0).getName();
     }
 
-    public static String returnPrivateMessage(MessageReceivedEventMessageAction commandResults) {
+    public static String returnPrivateMessage(MessageReceivedEventMessageExecutor commandResults) {
         return commandResults.getPrivateMessageList().get(0).getContentRaw();
     }
 }

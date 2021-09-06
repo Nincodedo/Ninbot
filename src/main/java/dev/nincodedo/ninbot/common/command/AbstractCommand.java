@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.RolePermission;
-import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageAction;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.WebhookHelper;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
@@ -50,7 +50,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    protected MessageReceivedEventMessageAction displayHelp(PrivateMessageReceivedEvent event) {
+    protected MessageReceivedEventMessageExecutor displayHelp(PrivateMessageReceivedEvent event) {
         String help = resourceBundle.getString("command.help.description.label") + ": ";
         help += resourceBundle.containsKey(String.format("command.%s.help.text", name)) ? resourceBundle.getString(
                 String.format("command.%s.help.text", name)) : getCommandDescription(name);
@@ -65,7 +65,7 @@ public abstract class AbstractCommand {
         embedBuilder.addField(String.format("%s %s", StringUtils.capitalize(name), resourceBundle.getString("command"
                         + ".help.title")), help, false)
                 .setColor(Color.BLUE);
-        MessageReceivedEventMessageAction messageAction = new MessageReceivedEventMessageAction(event);
+        MessageReceivedEventMessageExecutor messageAction = new MessageReceivedEventMessageExecutor(event);
         messageAction.addPrivateMessageAction(embedBuilder.build());
         messageAction.addSuccessfulReaction();
         return messageAction;
@@ -108,7 +108,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    protected abstract MessageReceivedEventMessageAction executeCommand(PrivateMessageReceivedEvent event);
+    protected abstract MessageReceivedEventMessageExecutor executeCommand(PrivateMessageReceivedEvent event);
 
     protected boolean isCommandLengthCorrect(String content) {
         var commandLength = getCommandLength(content);
