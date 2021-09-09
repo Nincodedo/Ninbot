@@ -101,11 +101,6 @@
             <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Nincodedo</groupId>
-            <artifactId>sap-conversational-ai-java-api</artifactId>
-            <version>${sap-conversational-ai-java-api.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.crydee</groupId>
             <artifactId>syllable-counter</artifactId>
             <version>${syllable-counter.version}</version>

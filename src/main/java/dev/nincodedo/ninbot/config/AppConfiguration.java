@@ -1,7 +1,5 @@
 package dev.nincodedo.ninbot.config;
 
-import dev.nincodedo.sapconversational.SAPConversationalAIAPI;
-import dev.nincodedo.sapconversational.SAPConversationalAIAPIBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -48,10 +46,5 @@ public class AppConfiguration {
             log.error("Failed to login", e);
         }
         return null;
-    }
-
-    @Bean
-    public SAPConversationalAIAPI sapConversationalAIAPI() {
-        return new SAPConversationalAIAPIBuilder(sapToken).build();
     }
 }
