@@ -23,4 +23,9 @@ public class NinbotUser {
     private LocalDateTime createdAt = LocalDateTime.now();
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    @PreUpdate
+    private void updateModified() {
+        modifiedAt = LocalDateTime.now();
+    }
 }

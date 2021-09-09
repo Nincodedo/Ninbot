@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +49,6 @@ public class UserCommand implements SlashCommand {
         NinbotUser ninbotUser;
         if (optionalUser.isPresent()) {
             ninbotUser = optionalUser.get();
-            ninbotUser.setModifiedAt(LocalDateTime.now());
         } else {
             ninbotUser = new NinbotUser();
             ninbotUser.setUserId(userId);
