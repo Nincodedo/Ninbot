@@ -1,5 +1,6 @@
-package dev.nincodedo.ninbot.common;
+package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.ReadyEvent;

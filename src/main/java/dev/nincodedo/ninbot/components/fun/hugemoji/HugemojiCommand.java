@@ -49,9 +49,4 @@ public class HugemojiCommand implements SlashCommand {
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "emote", "The emote to biggify.", true));
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

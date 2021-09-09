@@ -119,9 +119,4 @@ public class DabCommand implements SlashCommand {
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "the poor soul.", true));
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

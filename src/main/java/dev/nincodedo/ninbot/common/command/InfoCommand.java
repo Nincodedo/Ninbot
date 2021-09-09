@@ -114,9 +114,4 @@ public class InfoCommand implements SlashCommand {
     public List<OptionData> getCommandOptions() {
         return List.of(new OptionData(OptionType.BOOLEAN, "extra", "Return additional details."));
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

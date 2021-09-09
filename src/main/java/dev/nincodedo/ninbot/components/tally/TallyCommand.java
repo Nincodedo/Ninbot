@@ -29,11 +29,6 @@ public class TallyCommand implements SlashCommand {
     }
 
     @Override
-    public List<OptionData> getCommandOptions() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(new SubcommandData(TallyCommandName.ADD.get(), "Add to the thing you're tallying.").addOptions(Arrays.asList(new OptionData(OptionType.STRING, "name", "Name of the thing you're tallying.", true), new OptionData(OptionType.INTEGER, "count", "How many you want to add to the tally. Defaults to 1.", false))),
                 new SubcommandData(TallyCommandName.GET.get(), "Gets the current tally count.").addOption(OptionType.STRING, "name",

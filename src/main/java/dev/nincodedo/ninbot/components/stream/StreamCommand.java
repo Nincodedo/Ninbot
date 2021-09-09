@@ -49,11 +49,6 @@ public class StreamCommand implements SlashCommand {
     }
 
     @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
         String response = "Stream announcements have been turned ";

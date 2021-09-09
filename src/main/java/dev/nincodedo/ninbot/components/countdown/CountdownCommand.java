@@ -117,11 +117,6 @@ public class CountdownCommand implements SlashCommand {
     }
 
     @Override
-    public List<OptionData> getCommandOptions() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
                 new SubcommandData(CountdownCommandName.CREATE.get(), "Create a new countdown.")

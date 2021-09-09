@@ -64,11 +64,6 @@ public class UserCommand implements SlashCommand {
     }
 
     @Override
-    public List<OptionData> getCommandOptions() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
                 new SubcommandData("birthday", "Set your birthday for announcements.")

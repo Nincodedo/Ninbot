@@ -40,11 +40,6 @@ public class TopicChangeCommand implements SlashCommand {
     }
 
     @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void execute(SlashCommandEvent event) {
         var channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);

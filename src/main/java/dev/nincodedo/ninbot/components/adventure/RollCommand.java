@@ -51,11 +51,6 @@ public class RollCommand implements SlashCommand {
     }
 
     @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         if (slashCommandEvent.getOption("notation") != null) {
             String notation = slashCommandEvent.getOption("notation").getAsString();

@@ -53,9 +53,4 @@ public class DefineCommand implements SlashCommand {
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "word", "The word to lookup.", true));
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

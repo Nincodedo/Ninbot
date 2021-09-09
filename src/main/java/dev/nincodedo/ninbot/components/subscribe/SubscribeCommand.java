@@ -56,9 +56,4 @@ public class SubscribeCommand implements SlashCommand {
     public List<OptionData> getCommandOptions() {
         return List.of(new OptionData(OptionType.ROLE, "subscription", "Role you want subscribe to.", true));
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

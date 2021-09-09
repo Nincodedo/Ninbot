@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -27,9 +28,13 @@ public interface SlashCommand {
         return ResourceBundle.getBundle("lang", Locale.ENGLISH);
     }
 
-    List<OptionData> getCommandOptions();
+    default List<OptionData> getCommandOptions() {
+        return Collections.emptyList();
+    }
 
-    List<SubcommandData> getSubcommandDatas();
+    default List<SubcommandData> getSubcommandDatas() {
+        return Collections.emptyList();
+    }
 
     void execute(SlashCommandEvent slashCommandEvent);
 

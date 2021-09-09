@@ -31,11 +31,6 @@ public class Magic8BallCommand implements SlashCommand {
     }
 
     @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         var questionOption = slashCommandEvent.getOption("question");
         var question = questionOption != null ? questionOption.getAsString() : "";

@@ -90,9 +90,4 @@ public class PollCommand implements SlashCommand {
                 new OptionData(OptionType.STRING, "choice9", "Extra poll choice.")
         );
     }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }

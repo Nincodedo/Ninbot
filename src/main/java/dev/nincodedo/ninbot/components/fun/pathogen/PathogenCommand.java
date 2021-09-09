@@ -51,14 +51,4 @@ public class PathogenCommand implements SlashCommand {
     public String getName() {
         return "pathogen";
     }
-
-    @Override
-    public List<OptionData> getCommandOptions() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
-    }
 }
