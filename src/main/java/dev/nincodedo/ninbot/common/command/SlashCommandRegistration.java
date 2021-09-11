@@ -1,14 +1,11 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.common.Constants;
-import dev.nincodedo.ninbot.common.command.SlashCommand;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,17 +22,16 @@ public class SlashCommandRegistration extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent readyEvent) {
         var shardManager = readyEvent.getJDA().getShardManager();
-        var guildIds = Arrays.asList(Constants.OCW_SERVER_ID, "497444318768922633", "521780068649926692");
-        for (String id : guildIds) {
-            if (shardManager != null) {
-                var guild = shardManager.getGuildById(id);
-                if (guild != null) {
-                    List<CommandData> commandDataList = slashCommands.stream()
-                            .map(this::convertToCommandData)
-                            .collect(Collectors.toList());
-                    guild.updateCommands().addCommands(commandDataList).queue();
-                }
-            }
+        if (shardManager != null) {
+            shardManager.getGuilds().forEach(guild -> {
+                        if (guild != null) {
+                            List<CommandData> commandDataList = slashCommands.stream()
+                                    .map(this::convertToCommandData)
+                                    .collect(Collectors.toList());
+                            guild.updateCommands().addCommands(commandDataList).queue();
+                        }
+                    }
+            );
         }
     }
 
