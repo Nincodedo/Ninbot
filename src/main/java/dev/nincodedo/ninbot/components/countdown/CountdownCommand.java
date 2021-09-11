@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -25,9 +23,9 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 @Component
 public class CountdownCommand implements SlashCommand {
 
-    private CountdownRepository countdownRepository;
-    private CountdownScheduler countdownScheduler;
-    private ConfigService configService;
+    private final CountdownRepository countdownRepository;
+    private final CountdownScheduler countdownScheduler;
+    private final ConfigService configService;
 
     public CountdownCommand(CountdownRepository countdownRepository, CountdownScheduler countdownScheduler,
             ConfigService configService) {
@@ -42,7 +40,7 @@ public class CountdownCommand implements SlashCommand {
         if (subcommandName == null) {
             return;
         }
-        switch (CountdownCommandName.valueOf(slashCommandEvent.getSubcommandName())) {
+        switch (CountdownCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
             case LIST -> slashCommandEvent.reply(listCountdowns(slashCommandEvent)).setEphemeral(true).queue();
             case CREATE -> slashCommandEvent.reply(setupCountdown(slashCommandEvent)).setEphemeral(true).queue();
         }
@@ -57,8 +55,6 @@ public class CountdownCommand implements SlashCommand {
                 countdown.setResourceBundle(resourceBundle());
                 embedBuilder.addField(countdown.getName(), countdown.getDescription(), false);
             }
-            String serverTimezone = getServerTimeZone(event.getGuild().getId());
-            embedBuilder.setFooter(resourceBundle().getString("command.countdown.list.footer") + serverTimezone, null);
         } else {
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.nocountdownsfound"));
         }
@@ -83,27 +79,32 @@ public class CountdownCommand implements SlashCommand {
     private String getCountdownDate(SlashCommandEvent slashCommandEvent) {
         String countdownDate;
         var year = slashCommandEvent.getOption("year");
+        var month = String.format("%02d",
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get())
+                        .getAsString()));
+        var day = String.format("%02d",
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get())
+                .getAsString()));
         //year is not supplied so we'll figure it out
         if (year == null) {
-            var possibleCountdownDate = String.format("%s-%s-%s", LocalDate.now()
-                    .getYear(), slashCommandEvent.getOption("month")
-                    .getAsString(), slashCommandEvent.getOption("day").getAsString());
-            LocalDate thisYearPossibleCountdownDate = LocalDate.parse(possibleCountdownDate,
+            var possibleCountdownDate = getDateFormatted(String.valueOf(LocalDate.now().getYear()), month, day);
+            var thisYearPossibleCountdownDate = LocalDate.parse(possibleCountdownDate,
                     DateTimeFormatter.ISO_LOCAL_DATE);
             if (thisYearPossibleCountdownDate.isAfter(LocalDate.now())) {
                 countdownDate = possibleCountdownDate;
             } else {
-                countdownDate = String.format("%s-%s-%s",
-                        LocalDate.now().getYear() + 1, slashCommandEvent.getOption("month")
-                                .getAsString(), slashCommandEvent.getOption("day").getAsString());
+                countdownDate = getDateFormatted(String.valueOf(LocalDate.now().getYear() + 1), month, day);
             }
         }
         //year is supplied to we'll just use it
         else {
-            countdownDate = String.format("%s-%s-%s", year.getAsString(), slashCommandEvent.getOption("month")
-                    .getAsString(), slashCommandEvent.getOption("day").getAsString());
+            countdownDate = getDateFormatted(year.getAsString(), month, day);
         }
         return countdownDate;
+    }
+
+    private String getDateFormatted(String year, String month, String day) {
+        return String.format("%s-%s-%s", year, month, day);
     }
 
     private String getServerTimeZone(String serverId) {
@@ -113,19 +114,24 @@ public class CountdownCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "countdown";
+        return CountdownCommandName.COUNTDOWN.get();
     }
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
-                new SubcommandData(CountdownCommandName.CREATE.get(), "Create a new countdown.")
-                        .addOption(OptionType.STRING, "name", "The name for this countdown.", true)
-                        .addOption(OptionType.STRING, "month", "The numerical month for this countdown.", true)
-                        .addOption(OptionType.STRING, "day", "The numerical day for this countdown.", true)
-                        .addOption(OptionType.STRING, "year", "The year for this countdown. Defaults to the upcoming "
-                                + "date this month and day fall."),
-                new SubcommandData(CountdownCommandName.LIST.get(), "List all the current countdowns for this server.")
+                new SubcommandData(CountdownCommandName.Subcommand.CREATE.get(), "Create a new countdown.")
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The name for this "
+                                + "countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.MONTH.get(), "The numerical month "
+                                + "for this countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.DAY.get(), "The numerical day for "
+                                + "this countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.YEAR.get(),
+                                "The year for this countdown. Defaults to the upcoming "
+                                        + "date this month and day fall."),
+                new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current "
+                        + "countdowns for this server.")
         );
     }
 }
