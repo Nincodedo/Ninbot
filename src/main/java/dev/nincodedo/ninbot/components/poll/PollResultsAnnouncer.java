@@ -59,8 +59,8 @@ class PollResultsAnnouncer extends TimerTask {
                             + pollClosedMessage);
         } else if (winningChoices.size() > 1) {
             poll.setResult(
-                    String.format(resourceBundle.getString("poll.announce.tie"), listWinners(winningChoices), (highCount
-                            - 1))
+                    String.format(resourceBundle.getString("poll.announce.tie"), listWinners(winningChoices), highCount
+                            - 1)
                             + pollClosedMessage);
         }
         pollMessage.editMessage(poll.buildClosed()).queue();

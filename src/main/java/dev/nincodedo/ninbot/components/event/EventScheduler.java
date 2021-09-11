@@ -55,7 +55,7 @@ public class EventScheduler implements Schedulable {
             eventEndTime = eventStartTime.plus(1, DAYS);
         }
         if (eventEndTime.isBefore(now()) ||
-                (event.getEndTime() == null && eventStartTime.plus(1, DAYS).isBefore(now()))) {
+                event.getEndTime() == null && eventStartTime.plus(1, DAYS).isBefore(now())) {
             log.debug("Removing event {}, the end time is passed", event.getId());
             new EventRemove(event, eventRepository).run();
         } else {

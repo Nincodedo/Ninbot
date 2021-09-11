@@ -49,7 +49,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         var first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
                 || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
-                || (!event.getChannelType().isGuild())) {
+                || !event.getChannelType().isGuild()) {
             return;
         }
         if (StringUtils.isNotBlank(strippedMessage) && strippedMessage.split("\\s+").length >= 1 && checkChance()) {

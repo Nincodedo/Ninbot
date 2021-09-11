@@ -93,8 +93,8 @@ public abstract class AbstractCommand {
     }
 
     protected boolean userHasPermission(Guild guild, User user, RolePermission rolePermission) {
-        if (RolePermission.EVERYONE.equals(rolePermission) || (RolePermission.ADMIN.equals(rolePermission)
-                && guild.getOwner().getUser().equals(user))) {
+        if (RolePermission.EVERYONE.equals(rolePermission) || RolePermission.ADMIN.equals(rolePermission)
+                && guild.getOwner().getUser().equals(user)) {
             return true;
         } else {
             var member = guild.getMember(user);
