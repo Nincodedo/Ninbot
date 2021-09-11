@@ -2,11 +2,11 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
@@ -41,8 +41,7 @@ class Countdown {
 
     public String getDescription() {
         return resourceBundle.getString("command.countdown.list.starttime")
-                + getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE) + "\n"
-                + resourceBundle.getString("command.countdown.list.daysuntil") + getDayDifference();
+                + TimeFormat.RELATIVE.format(getEventDate().toEpochSecond() * 1000);
     }
 
     long getDayDifference() {
