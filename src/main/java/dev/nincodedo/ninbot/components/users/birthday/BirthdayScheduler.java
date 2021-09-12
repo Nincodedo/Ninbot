@@ -39,7 +39,7 @@ public class BirthdayScheduler implements Schedulable {
         log.trace("Checking if {} birthday should be scheduled", ninbotUser.getUserId());
         var birthdayString = ninbotUser.getBirthday();
         var birthdayOptional = getDateWithFormat(birthdayString);
-        if (birthdayOptional.isPresent()) {
+        if (birthdayOptional.isPresent() && ninbotUser.getAnnounceBirthday()) {
             var birthday = birthdayOptional.get();
             var calendar = GregorianCalendar.from(ZonedDateTime.from(birthday.toInstant()
                     .atZone(ZoneId.systemDefault())));

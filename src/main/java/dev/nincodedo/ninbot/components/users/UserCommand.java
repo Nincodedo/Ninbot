@@ -36,7 +36,9 @@ public class UserCommand implements SlashCommand {
     }
 
     private void toggleAnnouncement(SlashCommandEvent slashCommandEvent) {
-        //TODO add toggle for birthday announcements
+        userRepository.getFirstByUserId(slashCommandEvent.getUser().getId())
+                .ifPresent(ninbotUser -> ninbotUser.setAnnounceBirthday(!ninbotUser.getAnnounceBirthday()));
+        slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();
     }
 
     private void updateBirthday(SlashCommandEvent slashCommandEvent) {

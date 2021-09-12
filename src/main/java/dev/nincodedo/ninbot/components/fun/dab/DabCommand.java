@@ -44,7 +44,6 @@ public class DabCommand implements SlashCommand {
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        //TODO what the hell is this, please fix it
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
                 messageExecutor,
