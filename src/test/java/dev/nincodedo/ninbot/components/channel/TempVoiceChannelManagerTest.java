@@ -20,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.Arrays;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,10 +60,15 @@ class TempVoiceChannelManagerTest {
         when(selfMember.hasPermission(any(Permission.class))).thenReturn(true);
         when(member.getEffectiveName()).thenReturn("Nincodedo");
         when(member.getId()).thenReturn("1");
+        when(voiceChannelJoined.createCopy()).thenReturn(restAction);
+        when(restAction.setName(anyString())).thenReturn(restAction);
+        when(restAction.addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                Permission.VOICE_DEAF_OTHERS), null)).thenReturn(restAction);
         when(guild.createVoiceChannel(anyString())).thenReturn(restAction);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
 
-        verify(guild, times(1)).createVoiceChannel("Nincodedo's wot");
+        verify(tempVoiceChannelRepository, times(1)).save(new TempVoiceChannel("1", "1"));
     }
 }
