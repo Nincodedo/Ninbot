@@ -27,7 +27,7 @@ public class PathogenCommand implements SlashCommand {
         var pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getUser()
                 .getId(), event.getGuild().getId());
         if (pathogenUser != null) {
-            if (pathogenUser.getVaccinated()) {
+            if (Boolean.TRUE.equals(pathogenUser.getVaccinated())) {
                 messageBuilder.append(Emojis.getRandomDoctorEmoji());
                 messageBuilder.append(Emojis.getNumberMap().get(0));
                 messageBuilder.append(Emojis.THUMBS_UP);

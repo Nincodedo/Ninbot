@@ -65,7 +65,7 @@ public class PollCommand implements SlashCommand {
                 .filter(optionMapping -> optionMapping.getName().contains("choice") &&
                         !optionMapping.getName().contains("1") && !optionMapping.getName().contains("2"))
                 .map(OptionMapping::getAsString)
-                .collect(Collectors.toList()));
+                .toList());
         return pollChoices;
     }
 

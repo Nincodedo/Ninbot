@@ -30,8 +30,6 @@ public class UserCommand implements SlashCommand {
                 slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();
             }
             case "announcement" -> toggleAnnouncement(slashCommandEvent);
-            default -> {
-            }
         }
     }
 

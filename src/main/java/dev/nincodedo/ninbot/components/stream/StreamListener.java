@@ -77,8 +77,9 @@ public class StreamListener extends StatAwareListenerAdapter {
                     String streamingUrl = getStreamingUrlFromEvent(event);
                     setTwitchUserName(streamingMember, streamingUrl);
                     streamingMemberRepository.save(streamingMember);
-                    if (streamingMember.currentStream().isPresent()) {
-                        var currentStream = streamingMember.currentStream().get();
+                    var currentStreamOptional = streamingMember.currentStream();
+                    if (currentStreamOptional.isPresent()) {
+                        var currentStream = currentStreamOptional.get();
                         if (currentStream.getAnnounceMessageId() == null) {
                             announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
                         }

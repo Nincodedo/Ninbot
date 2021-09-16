@@ -23,21 +23,20 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         var refMessage = event.getMessage().getReferencedMessage();
-        if (refMessage != null && refMessage.getId().equals(pollMessageId)) {
-            var pollOptional = pollRepository.findByMessageIdAndPollOpen(pollMessageId, true);
-            if (pollOptional.isPresent() && pollOptional.get().isPollOpen() && pollOptional.get()
-                    .isUserChoicesAllowed()) {
-                var message = event.getMessage().getContentStripped();
-                var poll = pollOptional.get();
-                var pollChoices = poll.getChoices();
-                if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
-                    poll.getChoices().add(message);
-                    pollRepository.save(poll);
-                    refMessage.editMessage(poll.build()).queue();
-                    pollAnnouncementSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
-                } else {
-                    event.getMessage().addReaction(Emojis.CROSS_X).queue();
-                }
+        var pollOptional = pollRepository.findByMessageIdAndPollOpen(pollMessageId, true);
+        if (refMessage != null && refMessage.getId().equals(pollMessageId) && pollOptional.isPresent()
+                && pollOptional.get().isPollOpen() && pollOptional.get()
+                .isUserChoicesAllowed()) {
+            var message = event.getMessage().getContentStripped();
+            var poll = pollOptional.get();
+            var pollChoices = poll.getChoices();
+            if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
+                poll.getChoices().add(message);
+                pollRepository.save(poll);
+                refMessage.editMessage(poll.build()).queue();
+                pollAnnouncementSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
+            } else {
+                event.getMessage().addReaction(Emojis.CROSS_X).queue();
             }
         }
     }

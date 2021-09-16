@@ -27,7 +27,7 @@ public class SlashCommandRegistration extends ListenerAdapter {
                         if (guild != null) {
                             List<CommandData> commandDataList = slashCommands.stream()
                                     .map(this::convertToCommandData)
-                                    .collect(Collectors.toList());
+                                    .toList();
                             guild.updateCommands().addCommands(commandDataList).queue();
                         }
                     }

@@ -37,7 +37,7 @@ public abstract class MessageExecutor<T> {
                     .map(stringEmote -> getMessage().addReaction(stringEmote));
             //Combine them into one large RestAction and queue it
             RestAction.allOf(Stream.concat(reactionStream, reactionEmoteStream)
-                    .collect(Collectors.toList())).queue();
+                    .toList()).queue();
         }
     }
 

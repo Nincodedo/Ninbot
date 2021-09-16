@@ -39,7 +39,7 @@ public class ReactionsReader {
             }
             return reactionResponseList.stream()
                     .map(this::generateResponse)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             log.error("Failed to load reaction responses JSON", e);
         }

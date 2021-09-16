@@ -12,10 +12,16 @@ import java.util.List;
 @Component
 public class Magic8BallCommand implements SlashCommand {
 
-    private Magic8BallMessageBuilder magic8BallMessageBuilder;
-
-    public Magic8BallCommand(Magic8BallMessageBuilder magic8BallMessageBuilder) {
-        this.magic8BallMessageBuilder = magic8BallMessageBuilder;
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        Magic8BallMessageBuilder magic8BallMessageBuilder = new Magic8BallMessageBuilder();
+        var questionOption = slashCommandEvent.getOption("question");
+        var question = questionOption != null ? questionOption.getAsString() : "";
+        var message = magic8BallMessageBuilder
+                .question(question)
+                .memberName(slashCommandEvent.getMember().getEffectiveName())
+                .build();
+        slashCommandEvent.reply(message).queue();
     }
 
     @Override
@@ -26,14 +32,5 @@ public class Magic8BallCommand implements SlashCommand {
     @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "question", "Your question to the 8 ball."));
-    }
-
-    @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
-        var questionOption = slashCommandEvent.getOption("question");
-        var question = questionOption != null ? questionOption.getAsString() : "";
-        var message = magic8BallMessageBuilder.getMagic8BallEmbed(question, slashCommandEvent.getMember()
-                .getEffectiveName());
-        slashCommandEvent.reply(message).queue();
     }
 }

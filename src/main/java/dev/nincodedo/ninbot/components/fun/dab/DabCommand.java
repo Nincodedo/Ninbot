@@ -100,7 +100,7 @@ public class DabCommand implements SlashCommand {
                 .filter(emote -> emote.getName().contains("dab"))
                 .sorted(StreamUtils.shuffle())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
         log.trace("Dabbing from {} potential dabs", emoteList.size());
         sendDabs(messageExecutor, emoteList);
@@ -109,7 +109,7 @@ public class DabCommand implements SlashCommand {
     void sendDabs(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, List<Emote> emoteList) {
         messageExecutor.addReactionEmotes(emoteList.stream()
                 .limit(20)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     @Override
