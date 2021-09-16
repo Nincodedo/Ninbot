@@ -41,7 +41,7 @@ public class InfoCommand implements SlashCommand {
                 slashCommandEvent.getJDA()
                         .getSelfUser()
                         .getEffectiveAvatarUrl());
-        var extra = slashCommandEvent.getOption("extra");
+        var extra = slashCommandEvent.getOption(InfoCommandName.Option.EXTRA.get());
         if (extra != null && extra.getAsBoolean()) {
             var uptime = metricsEndpoint.metric("process.uptime", null);
             var uptimeMilliseconds = TimeUnit.SECONDS.toMillis(uptime.getMeasurements().get(0).getValue().longValue());
@@ -106,11 +106,11 @@ public class InfoCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "info";
+        return InfoCommandName.INFO.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return List.of(new OptionData(OptionType.BOOLEAN, "extra", "Return additional details."));
+        return List.of(new OptionData(OptionType.BOOLEAN, InfoCommandName.Option.EXTRA.get(), "Return additional details."));
     }
 }

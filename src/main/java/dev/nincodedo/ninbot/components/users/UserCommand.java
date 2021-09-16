@@ -24,12 +24,12 @@ public class UserCommand implements SlashCommand {
         if (slashCommandEvent.getSubcommandName() == null) {
             return;
         }
-        switch (slashCommandEvent.getSubcommandName()) {
-            case "birthday" -> {
+        switch (UserCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName())) {
+            case BIRTHDAY -> {
                 updateBirthday(slashCommandEvent);
                 slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();
             }
-            case "announcement" -> toggleAnnouncement(slashCommandEvent);
+            case ANNOUNCEMENT -> toggleAnnouncement(slashCommandEvent);
         }
     }
 
@@ -40,7 +40,8 @@ public class UserCommand implements SlashCommand {
     }
 
     private void updateBirthday(SlashCommandEvent slashCommandEvent) {
-        var birthday = slashCommandEvent.getOption("month").getAsString() + "-" + slashCommandEvent.getOption("day")
+        var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get()).getAsString() + "-"
+                + slashCommandEvent.getOption(UserCommandName.Option.DAY.get())
                 .getAsString();
         String userId = slashCommandEvent.getMember().getId();
         var optionalUser = userRepository.getFirstByUserId(userId);
@@ -58,15 +59,17 @@ public class UserCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "user";
+        return UserCommandName.USER.get();
     }
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
-                new SubcommandData("birthday", "Set your birthday for announcements.")
-                        .addOption(OptionType.INTEGER, "month", "Month of your birthday.", true)
-                        .addOption(OptionType.INTEGER, "day", "Day of your birthday.", true),
-                new SubcommandData("announcement", "Toggles your birthday announcement on or off."));
+                new SubcommandData(UserCommandName.Subcommand.BIRTHDAY.get(), "Set your birthday for announcements.")
+                        .addOption(OptionType.INTEGER, UserCommandName.Option.MONTH.get(), "Month of your birthday.",
+                                true)
+                        .addOption(OptionType.INTEGER, UserCommandName.Option.DAY.get(), "Day of your birthday.", true),
+                new SubcommandData(UserCommandName.Subcommand.ANNOUNCEMENT.get(), "Toggles your birthday announcement"
+                        + " on or off."));
     }
 }

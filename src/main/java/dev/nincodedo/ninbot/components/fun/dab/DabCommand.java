@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -38,22 +37,23 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "dab";
+        return DabCommandName.DAB.get();
     }
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
+        MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor =
+                new SlashCommandEventMessageExecutor(slashCommandEvent);
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
                 messageExecutor,
-                slashCommandEvent.getOption("dabbed").getAsUser());
+                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser());
         messageExecutor.executeActions();
         slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
                                 .getEmotesByName("ninbotdab", true)
                                 .get(0))
                         .append(" ")
-                        .append(slashCommandEvent.getOption("dabbed").getAsUser())
+                        .append(slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser())
                         .build())
                 .queue();
     }
@@ -77,7 +77,8 @@ public class DabCommand implements SlashCommand {
         messageExecutor.addUnsuccessfulReaction();
     }
 
-    private void dabOnMessage(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, ShardManager shardManager,
+    private void dabOnMessage(MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor,
+            ShardManager shardManager,
             User commandUser) {
         int dabCritPercentChance = 5;
 
@@ -114,6 +115,6 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.USER, "dabbed", "the poor soul.", true));
+        return Arrays.asList(new OptionData(OptionType.USER, DabCommandName.Option.DABBED.get(), "the poor soul.", true));
     }
 }

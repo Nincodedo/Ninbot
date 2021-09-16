@@ -44,6 +44,6 @@ public class PathogenCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "pathogen";
+        return PathogenCommandName.PATHOGEN.get();
     }
 }

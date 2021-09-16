@@ -40,7 +40,7 @@ public class EventCommand implements SlashCommand {
             return;
         }
         var serverTimezone = getServerTimeZone(slashCommandEvent.getGuild().getId());
-        switch (EventCommandName.valueOf(subcommandName)) {
+        switch (EventCommandName.Subcommand.valueOf(subcommandName)) {
             case LIST -> slashCommandEvent.reply(listEvents(serverTimezone)).queue();
             case PLAN -> planEvent(slashCommandEvent, serverTimezone);
         }
@@ -77,16 +77,20 @@ public class EventCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "event";
+        return EventCommandName.EVENT.get();
     }
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
-        return Arrays.asList(new SubcommandData(EventCommandName.PLAN.get(), "Create a new event.")
-                        .addOption(OptionType.STRING, "name", "The name of the event.", true)
-                        .addOption(OptionType.STRING, "date", "The start date of the event, in MM-DD-YYYY format", true)
-                        .addOption(OptionType.STRING, "game", "The game associated with the event.")
-                        .addOption(OptionType.STRING, "time", "The start time of the event. Defaults to midnight."),
-                new SubcommandData(EventCommandName.LIST.get(), "List the events on this server."));
+        return Arrays.asList(new SubcommandData(EventCommandName.Subcommand.PLAN.get(), "Create a new event.")
+                        .addOption(OptionType.STRING, EventCommandName.Option.NAME.get(), "The name of the event.",
+                                true)
+                        .addOption(OptionType.STRING, EventCommandName.Option.DATE.get(), "The start date of the "
+                                + "event, in MM-DD-YYYY format", true)
+                        .addOption(OptionType.STRING, EventCommandName.Option.GAME.get(), "The game associated with "
+                                + "the event.")
+                        .addOption(OptionType.STRING, EventCommandName.Option.TIME.get(), "The start time of the "
+                                + "event. Defaults to midnight."),
+                new SubcommandData(EventCommandName.Subcommand.LIST.get(), "List the events on this server."));
     }
 }

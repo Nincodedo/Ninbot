@@ -1,13 +1,13 @@
-package dev.nincodedo.ninbot.components.event;
+package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.common.command.CommandNameEnum;
 
-enum EventCommandName implements CommandNameEnum {
-    EVENT;
+enum UserCommandName implements CommandNameEnum {
+    USER;
     enum Subcommand implements CommandNameEnum {
-        LIST, PLAN
+        BIRTHDAY, ANNOUNCEMENT
     }
     enum Option implements CommandNameEnum {
-        NAME, DATE, GAME, TIME
+        MONTH, DAY
     }
 }

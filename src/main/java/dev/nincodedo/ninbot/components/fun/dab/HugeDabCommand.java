@@ -22,7 +22,7 @@ public class HugeDabCommand extends DabCommand {
 
     @Override
     public String getName() {
-        return "hugedab";
+        return DabCommandName.HUGEDAB.get();
     }
 
     @Override

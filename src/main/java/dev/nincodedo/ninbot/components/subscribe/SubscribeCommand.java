@@ -32,7 +32,7 @@ public class SubscribeCommand implements SlashCommand {
     public void execute(SlashCommandEvent slashCommandEvent) {
         slashCommandEvent.deferReply(true).queue();
         var server = slashCommandEvent.getGuild();
-        var role = slashCommandEvent.getOption("subscription").getAsRole();
+        var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get()).getAsRole();
         if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
             try {
                 addOrRemoveSubscription(slashCommandEvent.getInteraction()
@@ -68,11 +68,11 @@ public class SubscribeCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "subscribe";
+        return SubscribeCommandName.SUBSCRIBE.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return List.of(new OptionData(OptionType.ROLE, "subscription", "Role you want subscribe to.", true));
+        return List.of(new OptionData(OptionType.ROLE, SubscribeCommandName.Option.SUBSCRIPTION.get(), "Role you want subscribe to.", true));
     }
 }

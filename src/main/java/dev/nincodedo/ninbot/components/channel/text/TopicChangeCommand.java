@@ -24,17 +24,12 @@ public class TopicChangeCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "topic-change";
+        return TopicChangeCommandName.TOPICCHANGE.get();
     }
 
     @Override
     public RolePermission getRolePermission() {
         return RolePermission.MODS;
-    }
-
-    @Override
-    public List<OptionData> getCommandOptions() {
-        return List.of(new OptionData(OptionType.STRING, "topic", "New topic to change to.", true));
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Magic8BallCommand implements SlashCommand {
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
         Magic8BallMessageBuilder magic8BallMessageBuilder = new Magic8BallMessageBuilder();
-        var questionOption = slashCommandEvent.getOption("question");
+        var questionOption = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get());
         var question = questionOption != null ? questionOption.getAsString() : "";
         var message = magic8BallMessageBuilder
                 .question(question)
@@ -26,11 +26,12 @@ public class Magic8BallCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "8ball";
+        return Magic8BallCommandName.EIGHTBALL.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, "question", "Your question to the 8 ball."));
+        return Arrays.asList(new OptionData(OptionType.STRING, Magic8BallCommandName.Option.QUESTION.get(), "Your "
+                + "question to the 8 ball."));
     }
 }

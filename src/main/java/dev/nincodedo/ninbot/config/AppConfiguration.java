@@ -19,18 +19,19 @@ import java.util.List;
 @ComponentScan(basePackages = {"dev.nincodedo.ninbot"})
 @Slf4j
 public class AppConfiguration {
-
-    @Value("${ninbotToken}")
+    private String sapToken;
+    private String twitchClientId;
+    private String twitchClientSecret;
     private String ninbotToken;
 
-    @Value("${sapToken}")
-    private String sapToken;
-
-    @Value("${twitchClientId}")
-    private String twitchClientId;
-
-    @Value("${twitchClientSecret}")
-    private String twitchClientSecret;
+    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken, @Value("${sapToken}") String sapToken,
+            @Value("${twitchClientId}") String twitchClientId,
+            @Value("${twitchClientSecret}") String twitchClientSecret) {
+        this.ninbotToken = ninbotToken;
+        this.sapToken = sapToken;
+        this.twitchClientId = twitchClientId;
+        this.twitchClientSecret = twitchClientSecret;
+    }
 
     @Autowired
     @Bean

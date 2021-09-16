@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class PollCommand implements SlashCommand {
@@ -45,11 +44,11 @@ public class PollCommand implements SlashCommand {
                 .setUserAvatarUrl(member.getUser().getAvatarUrl())
                 .setUserName(member.getEffectiveName())
                 .setChoices(getPollChoices(slashCommandEvent))
-                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption("question")).getAsString());
+                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get())).getAsString());
         //If user choice is set to true, allowed for other users to add their own choices by replying
-        var userChoiceOption = slashCommandEvent.getOption("user-choices");
+        var userChoiceOption = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get());
         poll.setUserChoicesAllowed(userChoiceOption != null && userChoiceOption.getAsBoolean());
-        var timeOption = slashCommandEvent.getOption("poll-length");
+        var timeOption = slashCommandEvent.getOption(PollCommandName.Option.POLLLENGTH.get());
         poll.setEndDateTime(LocalDateTime.now()
                 .plus(timeOption != null ? timeOption.getAsLong() : 5, ChronoUnit.MINUTES));
         return poll;
@@ -57,12 +56,12 @@ public class PollCommand implements SlashCommand {
 
     private List<String> getPollChoices(SlashCommandEvent slashCommandEvent) {
         List<String> pollChoices = new ArrayList<>();
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption("choice1")).getAsString());
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption("choice2")).getAsString());
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get())).getAsString());
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE2.get())).getAsString());
         pollChoices.addAll(slashCommandEvent.getOptions()
                 .stream()
                 .filter(Objects::nonNull)
-                .filter(optionMapping -> optionMapping.getName().contains("choice") &&
+                .filter(optionMapping -> optionMapping.getName().contains(PollCommandName.Option.CHOICE.get()) &&
                         !optionMapping.getName().contains("1") && !optionMapping.getName().contains("2"))
                 .map(OptionMapping::getAsString)
                 .toList());
@@ -71,25 +70,27 @@ public class PollCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "poll";
+        return PollCommandName.POLL.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(
-                new OptionData(OptionType.STRING, "question", "Poll question.", true),
-                new OptionData(OptionType.STRING, "choice1", "First poll choice.", true),
-                new OptionData(OptionType.STRING, "choice2", "Second poll choice.", true),
-                new OptionData(OptionType.INTEGER, "poll-length", "Poll time length in minutes. (Defaults to 5.)"),
-                new OptionData(OptionType.BOOLEAN, "user-choices", "Allow other users to add their own choices. "
-                        + "(Defaults to false.)"),
-                new OptionData(OptionType.STRING, "choice3", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice4", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice5", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice6", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice7", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice8", "Extra poll choice."),
-                new OptionData(OptionType.STRING, "choice9", "Extra poll choice.")
+                new OptionData(OptionType.STRING, PollCommandName.Option.QUESTION.get(), "Poll question.", true),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE1.get(), "First poll choice.", true),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE2.get(), "Second poll choice.", true),
+                new OptionData(OptionType.INTEGER, PollCommandName.Option.POLLLENGTH.get(), "Poll time length in "
+                        + "minutes. (Defaults to 5.)"),
+                new OptionData(OptionType.BOOLEAN, PollCommandName.Option.USERCHOICES.get(),
+                        "Allow other users to add their own choices. "
+                                + "(Defaults to false. Can only be used on polls with less than 9 choices.)"),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE3.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE4.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE5.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE6.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE7.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE8.get(), "Extra poll choice."),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE9.get(), "Extra poll choice.")
         );
     }
 }

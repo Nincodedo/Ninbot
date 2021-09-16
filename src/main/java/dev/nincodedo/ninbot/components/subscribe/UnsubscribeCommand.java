@@ -17,7 +17,7 @@ public class UnsubscribeCommand extends SubscribeCommand {
 
     @Override
     public String getName() {
-        return "unsubscribe";
+        return SubscribeCommandName.UNSUBSCRIBE.get();
     }
 
     @Override

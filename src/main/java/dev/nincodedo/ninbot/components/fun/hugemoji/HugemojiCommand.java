@@ -20,7 +20,9 @@ public class HugemojiCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        var stringEmote = slashCommandEvent.getOption("emote").getAsString().split(":")[1];
+        var stringEmote = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
+                .getAsString()
+                .split(":")[1];
         var emoteList = slashCommandEvent.getGuild().getEmotesByName(stringEmote, true);
         if (!emoteList.isEmpty()) {
             try {
@@ -40,11 +42,11 @@ public class HugemojiCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "hugemoji";
+        return HugemojiCommandName.HUGEMOJI.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, "emote", "The emote to biggify.", true));
+        return Arrays.asList(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(), "The emote to biggify.", true));
     }
 }

@@ -25,7 +25,7 @@ public class DefineCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        String word = slashCommandEvent.getOption("word").getAsString();
+        String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get()).getAsString();
         Map<String, String> definition = defineWordAPI.defineWord(word);
         if (definition == null) {
             slashCommandEvent.reply(Emojis.CROSS_X).setEphemeral(true).queue();
@@ -44,11 +44,11 @@ public class DefineCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "define";
+        return DefineCommandName.DEFINE.get();
     }
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, "word", "The word to lookup.", true));
+        return Arrays.asList(new OptionData(OptionType.STRING, DefineCommandName.Option.WORD.get(), "The word to lookup.", true));
     }
 }

@@ -38,7 +38,7 @@ public class StreamCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "stream";
+        return StreamCommandName.STREAM.get();
     }
 
     @Override
