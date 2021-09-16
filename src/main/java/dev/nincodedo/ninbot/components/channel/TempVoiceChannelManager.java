@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @Component
 @Slf4j
@@ -67,10 +68,14 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
                 .addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
                         Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
                         Permission.VOICE_DEAF_OTHERS), null)
-                .queue(voiceChannel -> {
-                    repository.save(new TempVoiceChannel(member.getId(), voiceChannel.getId()));
-                    guild.moveVoiceMember(member, voiceChannel).queue();
-                });
+                .queue(saveAndMove(guild, member));
+    }
+
+    Consumer<VoiceChannel> saveAndMove(Guild guild, Member member) {
+        return voiceChannel -> {
+            repository.save(new TempVoiceChannel(member.getId(), voiceChannel.getId()));
+            guild.moveVoiceMember(member, voiceChannel).queue();
+        };
     }
 
     @Override
