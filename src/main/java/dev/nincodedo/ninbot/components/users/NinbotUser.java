@@ -19,7 +19,7 @@ public class NinbotUser {
     @Column(nullable = false)
     private String serverId;
     private String birthday;
-    @Column(nullable = false, columnDefinition = "false")
+    @Column(nullable = false)
     private Boolean announceBirthday = false;
     @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
