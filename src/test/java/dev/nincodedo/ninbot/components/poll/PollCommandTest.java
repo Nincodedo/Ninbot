@@ -83,8 +83,8 @@ class PollCommandTest {
         when(choice3.getAsString()).thenReturn("3rd");
         when(slashCommandEvent.getOption("question")).thenReturn(questionOption);
         when(questionOption.getAsString()).thenReturn("test");
-        when(slashCommandEvent.getOption("user-choices")).thenReturn(null);
-        when(slashCommandEvent.getOption("poll-length")).thenReturn(null);
+        when(slashCommandEvent.getOption("userchoices")).thenReturn(null);
+        when(slashCommandEvent.getOption("polllength")).thenReturn(null);
         when(guild.getId()).thenReturn("1");
         when(member.getUser()).thenReturn(user);
         when(textChannel.getId()).thenReturn("1");
