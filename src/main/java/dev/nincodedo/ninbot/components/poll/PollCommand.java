@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,10 +32,10 @@ public class PollCommand implements SlashCommand {
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());
         slashCommandEvent.reply(poll.build())
-                .queue(interactionHook -> {
-                    poll.setMessageId(interactionHook.getInteraction().getId());
+                .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
+                    poll.setMessageId(message.getId());
                     pollScheduler.addPoll(poll, slashCommandEvent.getJDA().getShardManager());
-                });
+                }));
     }
 
     Poll parsePollMessage(SlashCommandEvent slashCommandEvent, Member member) {
@@ -59,8 +62,8 @@ public class PollCommand implements SlashCommand {
         pollChoices.addAll(slashCommandEvent.getOptions()
                 .stream()
                 .filter(Objects::nonNull)
-                .filter(optionMapping -> optionMapping.getName().contains("choice") && (
-                        !optionMapping.getName().contains("1") || !optionMapping.getName().contains("2")))
+                .filter(optionMapping -> optionMapping.getName().contains("choice") &&
+                        !optionMapping.getName().contains("1") && !optionMapping.getName().contains("2"))
                 .map(OptionMapping::getAsString)
                 .collect(Collectors.toList()));
         return pollChoices;
