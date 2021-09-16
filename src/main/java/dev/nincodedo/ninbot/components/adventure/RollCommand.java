@@ -28,6 +28,13 @@ public class RollCommand implements SlashCommand {
         roller = new DiceRoller();
     }
 
+    @Override
+    public void execute(SlashCommandEvent slashCommandEvent) {
+        var notationOption = slashCommandEvent.getOption("notation");
+        var notation = notationOption == null ? "1d20" : notationOption.getAsString();
+        slashCommandEvent.reply(rollDice(notation, slashCommandEvent.getMember().getEffectiveName())).queue();
+    }
+
     private Message rollDice(String diceArgs, String memberEffectiveName) {
         var parsed = parser.parse(diceArgs, roller);
         var diceCommand = diceArgs.split("d");
@@ -46,17 +53,5 @@ public class RollCommand implements SlashCommand {
     @Override
     public List<OptionData> getCommandOptions() {
         return Arrays.asList(new OptionData(OptionType.STRING, "notation", "Simple dice notation"));
-    }
-
-    @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
-        if (slashCommandEvent.getOption("notation") != null) {
-            String notation = slashCommandEvent.getOption("notation").getAsString();
-            slashCommandEvent.reply(rollDice(notation, slashCommandEvent.getMember().getEffectiveName())).queue();
-        } else if (slashCommandEvent.getOption("notation") == null) {
-            slashCommandEvent.reply(rollDice("1d20", slashCommandEvent.getMember().getEffectiveName())).queue();
-        } else {
-            slashCommandEvent.reply("wot").queue();
-        }
     }
 }

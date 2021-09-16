@@ -11,7 +11,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import static java.awt.Color.BLUE;
 
@@ -32,8 +35,12 @@ public class EventCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
+        var subcommandName = slashCommandEvent.getSubcommandName();
+        if (subcommandName == null) {
+            return;
+        }
         var serverTimezone = getServerTimeZone(slashCommandEvent.getGuild().getId());
-        switch (EventCommandName.valueOf(slashCommandEvent.getSubcommandName())) {
+        switch (EventCommandName.valueOf(subcommandName)) {
             case LIST -> slashCommandEvent.reply(listEvents(serverTimezone)).queue();
             case PLAN -> planEvent(slashCommandEvent, serverTimezone);
         }

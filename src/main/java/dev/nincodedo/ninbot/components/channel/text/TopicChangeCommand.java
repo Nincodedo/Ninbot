@@ -41,14 +41,14 @@ public class TopicChangeCommand implements SlashCommand {
     public void execute(SlashCommandEvent event) {
         var channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
-        if (channelConfig.isPresent()) {
-            configService.removeConfig(channelConfig.get());
+        channelConfig.ifPresentOrElse(config -> {
+            configService.removeConfig(config);
             event.reply(Emojis.OFF).setEphemeral(true).queue();
-        } else {
+        }, () -> {
             Config config = new Config(event.getGuild()
                     .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL, event.getChannel().getId());
             configService.addConfig(config);
             event.reply(Emojis.ON).setEphemeral(true).queue();
-        }
+        });
     }
 }
