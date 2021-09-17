@@ -24,7 +24,7 @@ public class UserCommand implements SlashCommand {
         if (slashCommandEvent.getSubcommandName() == null) {
             return;
         }
-        switch (UserCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName())) {
+        switch (UserCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
             case BIRTHDAY -> {
                 updateBirthday(slashCommandEvent);
                 slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();

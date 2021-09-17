@@ -40,8 +40,8 @@ public class EventCommand implements SlashCommand {
             return;
         }
         var serverTimezone = getServerTimeZone(slashCommandEvent.getGuild().getId());
-        switch (EventCommandName.Subcommand.valueOf(subcommandName)) {
-            case LIST -> slashCommandEvent.reply(listEvents(serverTimezone)).queue();
+        switch (EventCommandName.Subcommand.valueOf(subcommandName.toUpperCase())) {
+            case LIST -> slashCommandEvent.reply(listEvents(serverTimezone)).setEphemeral(true).queue();
             case PLAN -> planEvent(slashCommandEvent, serverTimezone);
         }
     }

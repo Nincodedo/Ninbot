@@ -25,7 +25,13 @@ public class CommandParser {
     public void parseEvent(SlashCommandEvent slashCommandEvent) {
         SlashCommand slashCommand = slashCommandMap.get(slashCommandEvent.getName());
         if (slashCommand != null) {
-            slashCommand.execute(slashCommandEvent);
+            executorService.execute(() -> {
+                try {
+                    slashCommand.execute(slashCommandEvent);
+                } catch (Exception e) {
+                    log.error("Slash command {} failed with an exception", slashCommand.getName(), e);
+                }
+            });
         }
     }
 

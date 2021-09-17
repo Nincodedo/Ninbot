@@ -22,8 +22,10 @@ public class SlashCommandRegistration extends ListenerAdapter {
     public void onReady(ReadyEvent readyEvent) {
         var shardManager = readyEvent.getJDA().getShardManager();
         if (shardManager != null) {
-            shardManager.getGuilds().forEach(guild -> {
+            shardManager.getGuilds()
+                    .forEach(guild -> {
                         if (guild != null) {
+                            guild.updateCommands().complete();
                             List<CommandData> commandDataList = slashCommands.stream()
                                     .map(this::convertToCommandData)
                                     .toList();
@@ -38,9 +40,6 @@ public class SlashCommandRegistration extends ListenerAdapter {
         CommandData commandData = new CommandData(slashCommand
                 .getName(), slashCommand.getDescription());
         try {
-            if (slashCommand.getName().equals("hugedab")) {
-                return commandData;
-            }
             slashCommand.getCommandOptions().forEach(commandData::addOptions);
             slashCommand.getSubcommandDatas().forEach(commandData::addSubcommands);
             return commandData;

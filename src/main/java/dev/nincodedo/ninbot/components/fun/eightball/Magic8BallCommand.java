@@ -17,11 +17,11 @@ public class Magic8BallCommand implements SlashCommand {
         Magic8BallMessageBuilder magic8BallMessageBuilder = new Magic8BallMessageBuilder();
         var questionOption = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get());
         var question = questionOption != null ? questionOption.getAsString() : "";
-        var message = magic8BallMessageBuilder
+        var messageEmbed = magic8BallMessageBuilder
                 .question(question)
                 .memberName(slashCommandEvent.getMember().getEffectiveName())
                 .build();
-        slashCommandEvent.reply(message).queue();
+        slashCommandEvent.replyEmbeds(messageEmbed).queue();
     }
 
     @Override

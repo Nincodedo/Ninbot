@@ -2,8 +2,7 @@ package dev.nincodedo.ninbot.components.fun.eightball;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -26,8 +25,7 @@ public class Magic8BallMessageBuilder {
         this.eightBallAnswers = readMagic8BallList();
     }
 
-    Message build() {
-        MessageBuilder messageBuilder = new MessageBuilder();
+    MessageEmbed build() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (StringUtils.isEmpty(StringUtils.trimToEmpty(question))) {
             embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball", memberName));
@@ -37,8 +35,7 @@ public class Magic8BallMessageBuilder {
         embedBuilder.setThumbnail("https://i.imgur.com/80imnZ0.png");
         embedBuilder.appendDescription("The Magic 8 Ball says...\n\n");
         embedBuilder.appendDescription("_" + getMagic8BallAnswer() + "_");
-        messageBuilder.setEmbeds(embedBuilder.build());
-        return messageBuilder.build();
+        return embedBuilder.build();
     }
 
     private String getMagic8BallAnswer() {
