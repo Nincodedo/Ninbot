@@ -1,5 +1,5 @@
 # Commands
-All commands are slash commands found in Discord's chat message men.
+All commands are slash commands found in Discord's chat message menu.
   * [User Commands](#user-commands)
     * [8 ball](#8-ball)
     * [Countdown](#countdown)
