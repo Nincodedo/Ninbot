@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.requests.RestAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Getter
 public abstract class MessageExecutor<T> {
@@ -18,29 +17,38 @@ public abstract class MessageExecutor<T> {
     List<String> reactions;
     List<Emote> reactionEmotes;
     Message overrideMessage;
+    List<Message> messageResponses;
 
     public MessageExecutor() {
         reactions = new ArrayList<>();
         reactionEmotes = new ArrayList<>();
+        messageResponses = new ArrayList<>();
     }
 
     public void executeActions() {
         //map all the emote reactions to RestActions
         if (getMessage() != null) {
-            Stream<RestAction<Void>> reactionEmoteStream = reactionEmotes
+            List<RestAction<Void>> reactionRestActionList = reactionEmotes
                     .stream()
-                    .map(emote -> getMessage().addReaction(emote));
+                    .map(emote -> getMessage().addReaction(emote)).toList();
             //map all the emoji reactions to RestActions
-            Stream<RestAction<Void>> reactionStream = reactions
-                    .stream()
-                    .map(stringEmote -> getMessage().addReaction(stringEmote));
+            reactionRestActionList.addAll(reactions.stream()
+                    .map(stringEmote -> getMessage().addReaction(stringEmote))
+                    .toList());
             //Combine them into one large RestAction and queue it
-            RestAction.allOf(Stream.concat(reactionStream, reactionEmoteStream)
-                    .toList()).queue();
+            RestAction.allOf(reactionRestActionList).queue();
         }
+        executeMessageActions();
     }
 
+    public abstract void executeMessageActions();
+
     public abstract T returnThis();
+
+    public T addMessageResponse(Message message) {
+        messageResponses.add(message);
+        return returnThis();
+    }
 
     public T addCorrectReaction(boolean isSuccessful) {
         if (isSuccessful) {

@@ -29,7 +29,7 @@ public class SubscribeCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         slashCommandEvent.deferReply(true).queue();
         var server = slashCommandEvent.getGuild();
         var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get()).getAsRole();

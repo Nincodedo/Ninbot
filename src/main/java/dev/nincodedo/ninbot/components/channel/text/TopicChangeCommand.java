@@ -29,7 +29,7 @@ public class TopicChangeCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void executeCommandAction(SlashCommandEvent event) {
         var channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
         channelConfig.ifPresentOrElse(config -> {

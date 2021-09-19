@@ -26,7 +26,7 @@ public class PollCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());

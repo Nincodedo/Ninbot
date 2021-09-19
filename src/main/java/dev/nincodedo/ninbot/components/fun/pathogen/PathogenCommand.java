@@ -18,7 +18,7 @@ public class PathogenCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         slashCommandEvent.reply(getUserInfectionLevel(slashCommandEvent)).queue();
     }
 

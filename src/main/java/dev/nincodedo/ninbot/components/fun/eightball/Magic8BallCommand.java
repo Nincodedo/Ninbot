@@ -13,7 +13,7 @@ import java.util.List;
 public class Magic8BallCommand implements SlashCommand {
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         Magic8BallMessageBuilder magic8BallMessageBuilder = new Magic8BallMessageBuilder();
         var questionOption = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get());
         var question = questionOption != null ? questionOption.getAsString() : "";

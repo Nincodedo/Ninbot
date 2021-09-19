@@ -25,7 +25,7 @@ import java.util.List;
 public class HugemojiCommand implements SlashCommand {
 
     @Override
-    public void execute(@NotNull SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(@NotNull SlashCommandEvent slashCommandEvent) {
         var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
                 .getAsString();
         List<Emote> emoteList = new ArrayList<>();

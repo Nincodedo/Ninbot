@@ -35,7 +35,7 @@ public class CountdownCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
         if (subcommandName == null) {
             return;

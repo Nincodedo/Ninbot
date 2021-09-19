@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.fun.dad;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -45,6 +47,8 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private void parseMessage(MessageReceivedEvent event) {
+        MessageExecutor<MessageReceivedEventMessageExecutor> messageExecutor =
+                new MessageReceivedEventMessageExecutor(event);
         var strippedMessage = event.getMessage().getContentStripped();
         var first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))

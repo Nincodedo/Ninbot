@@ -35,7 +35,7 @@ public class InfoCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(resourceBundle().getString("command.info.title"), Constants.NINBOT_GITHUB_URL,
                 slashCommandEvent.getJDA()

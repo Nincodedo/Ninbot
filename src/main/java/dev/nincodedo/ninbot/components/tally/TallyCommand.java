@@ -43,7 +43,7 @@ public class TallyCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommand = slashCommandEvent.getSubcommandName();
         if (subcommand == null) {
             return;

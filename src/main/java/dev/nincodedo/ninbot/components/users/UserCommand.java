@@ -20,7 +20,7 @@ public class UserCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         if (slashCommandEvent.getSubcommandName() == null) {
             return;
         }

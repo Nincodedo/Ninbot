@@ -24,7 +24,7 @@ public class DefineCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get()).getAsString();
         Map<String, String> definition = defineWordAPI.defineWord(word);
         if (definition == null) {

@@ -47,7 +47,7 @@ public class StreamCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
         String response = "Stream announcements have been turned ";
         slashCommandEvent.reply(isToggled ? response + "on." : response + "off.").setEphemeral(true).queue();

@@ -41,7 +41,7 @@ public class DabCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
         MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor =
                 new SlashCommandEventMessageExecutor(slashCommandEvent);
         doDabarinos(slashCommandEvent.getJDA()
