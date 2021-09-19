@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.reaction;
 
-import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatCategory;

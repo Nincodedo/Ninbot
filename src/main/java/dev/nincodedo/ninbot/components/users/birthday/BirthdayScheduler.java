@@ -1,12 +1,11 @@
 package dev.nincodedo.ninbot.components.users.birthday;
 
-import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.Schedulable;
-import dev.nincodedo.ninbot.components.common.message.GenericAnnounce;
+import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.common.Schedulable;
+import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.users.NinbotUser;
 import dev.nincodedo.ninbot.components.users.UserRepository;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -22,7 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Log4j2
+@Slf4j
 @Component
 public class BirthdayScheduler implements Schedulable {
 
@@ -38,11 +37,11 @@ public class BirthdayScheduler implements Schedulable {
 
     void scheduleBirthdayAnnouncement(NinbotUser ninbotUser, ShardManager shardManager) {
         log.trace("Checking if {} birthday should be scheduled", ninbotUser.getUserId());
-        val birthdayString = ninbotUser.getBirthday();
-        val birthdayOptional = getDateWithFormat(birthdayString);
-        if (birthdayOptional.isPresent()) {
-            val birthday = birthdayOptional.get();
-            val calendar = GregorianCalendar.from(ZonedDateTime.from(birthday.toInstant()
+        var birthdayString = ninbotUser.getBirthday();
+        var birthdayOptional = getDateWithFormat(birthdayString);
+        if (birthdayOptional.isPresent() && Boolean.TRUE.equals(ninbotUser.getAnnounceBirthday())) {
+            var birthday = birthdayOptional.get();
+            var calendar = GregorianCalendar.from(ZonedDateTime.from(birthday.toInstant()
                     .atZone(ZoneId.systemDefault())));
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             //apparently months start at 0
@@ -59,7 +58,7 @@ public class BirthdayScheduler implements Schedulable {
             if (isBirthdayTomorrow(birthdateThisYear)) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
-                val announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
+                var announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
                         .getDefaultChannel()
                         .getId();
                 new Timer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
@@ -87,7 +86,7 @@ public class BirthdayScheduler implements Schedulable {
 
     private Message buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
         MessageBuilder messageBuilder = new MessageBuilder();
-        val user = shardManager.getUserById(ninbotUser.getId());
+        var user = shardManager.getUserById(ninbotUser.getId());
         messageBuilder.append("It's ");
         messageBuilder.append(user.getName());
         messageBuilder.append(" birthday today! ");

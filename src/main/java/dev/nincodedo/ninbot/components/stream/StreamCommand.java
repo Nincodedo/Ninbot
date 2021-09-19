@@ -1,79 +1,27 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
-import dev.nincodedo.ninbot.components.common.Emojis;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import lombok.val;
+import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
-public class StreamCommand extends AbstractCommand implements SlashCommand {
+public class StreamCommand implements SlashCommand {
 
-    private StreamingMemberRepository streamingMemberRepository;
+    private ConfigService configService;
 
-    public StreamCommand(StreamingMemberRepository streamingMemberRepository) {
-        name = "stream";
-        length = 2;
-        checkExactLength = false;
-        this.streamingMemberRepository = streamingMemberRepository;
-    }
-
-    @Override
-    protected MessageAction executeCommand(MessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
-        val message = event.getMessage().getContentStripped();
-        if ("announce".equals(getSubcommand(message))) {
-            if (getCommandLength(message) == 3) {
-                announceToggle(messageAction);
-            } else if (getCommandLength(message) == 4) {
-                addTwitchUsername(messageAction);
-            }
-        } else {
-            messageAction = displayHelp(event);
-        }
-        return messageAction;
-    }
-
-    private void addTwitchUsername(MessageAction messageAction) {
-        val event = messageAction.getEvent();
-        val configOptional = configService.getConfigByServerIdAndName(event.getGuild()
-                .getId(), ConfigConstants.STREAMING_ANNOUNCE_USERS);
-        val userId = event.getMember().getId();
-        val serverId = event.getGuild().getId();
-        if (configOptional.isEmpty()) {
-            configService.addConfig(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS, userId);
-        }
-        val streamingMemberOptional = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId);
-        val twitchUsername = getSubcommandNoTransform(event.getMessage().getContentStripped(), 3);
-        StreamingMember streamingMember = streamingMemberOptional.orElseGet(() -> new StreamingMember(userId,
-                serverId));
-        streamingMember.setTwitchUsername(twitchUsername);
-        streamingMemberRepository.save(streamingMember);
-        messageAction.addSuccessfulReaction();
-    }
-
-    private void announceToggle(MessageAction messageAction) {
-        val event = messageAction.getEvent();
-        val userId = event.getAuthor().getId();
-        val serverId = event.getGuild().getId();
-        boolean foundUser = toggleConfig(userId, serverId);
-        messageAction.addReaction(foundUser ? Emojis.ON : Emojis.OFF);
+    public StreamCommand(ConfigService configService) {
+        this.configService = configService;
     }
 
     private boolean toggleConfig(String userId, String serverId) {
-        val configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
-        val streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
+        var configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
+        var streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
         boolean foundUser = true;
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {
@@ -89,13 +37,13 @@ public class StreamCommand extends AbstractCommand implements SlashCommand {
     }
 
     @Override
-    public List<OptionData> getCommandOptions() {
-        return Arrays.asList();
+    public String getName() {
+        return StreamCommandName.STREAM.get();
     }
 
     @Override
-    public List<SubcommandData> getSubcommandDatas() {
-        return Collections.emptyList();
+    public List<OptionData> getCommandOptions() {
+        return List.of();
     }
 
     @Override

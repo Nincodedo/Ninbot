@@ -1,46 +1,68 @@
 package dev.nincodedo.ninbot.components.fun.hugemoji;
 
+import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.common.message.MessageAction;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
+import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-@Log4j2
+@Slf4j
 @Component
-public class HugemojiCommand extends AbstractCommand {
+public class HugemojiCommand implements SlashCommand {
 
-    public HugemojiCommand() {
-        name = "hugemoji";
-        length = 3;
+    @Override
+    public void execute(@NotNull SlashCommandEvent slashCommandEvent) {
+        var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
+                .getAsString();
+        List<Emote> emoteList = new ArrayList<>();
+        List<String> emojiList = new ArrayList<>();
+        if (EmojiManager.isEmoji(possibleEmoteString)) {
+            emojiList = new ArrayList<>(EmojiParser.extractEmojis(possibleEmoteString));
+        } else if (possibleEmoteString.contains(":")) {
+            var stringEmote = possibleEmoteString.split(":")[1];
+            emoteList = slashCommandEvent.getGuild().getEmotesByName(stringEmote, true);
+        }
+        if (!emoteList.isEmpty()) {
+            try {
+                var emote = emoteList.get(0);
+                var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
+                InputStream file = new URL(emote.getImageUrl()).openStream();
+                slashCommandEvent.replyEmbeds(new EmbedBuilder().setImage(
+                                "attachment://" + emote.getName() + imageFileType).build())
+                        .addFile(file, emote.getName() + imageFileType)
+                        .queue();
+            } catch (IOException e) {
+                slashCommandEvent.reply(Emojis.CROSS_X).setEphemeral(true).queue();
+            }
+        } else if (!emojiList.isEmpty()) {
+            emojiList.forEach(emoji -> slashCommandEvent.reply(emoji).queue());
+        } else {
+            slashCommandEvent.reply("This ain't an emote I know about.").setEphemeral(true).queue();
+        }
     }
 
     @Override
-    protected MessageAction executeCommand(MessageReceivedEvent event) {
-        MessageAction messageAction = new MessageAction(event);
-        val emoteList = event.getMessage().getEmotes();
-        val emojiList = EmojiParser.extractEmojis(event.getMessage().getContentStripped());
-        if (!emoteList.isEmpty()) {
-            try {
-                val channel = event.getChannel();
-                val emote = emoteList.get(0);
-                val imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
-                InputStream file = new URL(emote.getImageUrl()).openStream();
-                channel.sendFile(file, emote.getName() + imageFileType).queue();
-            } catch (IOException e) {
-                log.error("Failed to upload emote image", e);
-            }
-        } else if (!emojiList.isEmpty()) {
-            messageAction.addChannelAction(emojiList.get(0));
-        } else {
-            messageAction.addUnsuccessfulReaction();
-        }
-        return messageAction;
+    public String getName() {
+        return HugemojiCommandName.HUGEMOJI.get();
+    }
+
+    @Override
+    public List<OptionData> getCommandOptions() {
+        return Arrays.asList(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(), "The emote to "
+                + "biggify.", true));
     }
 }

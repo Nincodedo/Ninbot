@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.reaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -14,9 +14,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Log4j2
+@Slf4j
 @Component
 public class ReactionsReader {
 
@@ -39,7 +38,7 @@ public class ReactionsReader {
             }
             return reactionResponseList.stream()
                     .map(this::generateResponse)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             log.error("Failed to load reaction responses JSON", e);
         }

@@ -1,13 +1,12 @@
 package dev.nincodedo.ninbot.components.announcements;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.val;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
@@ -41,13 +40,13 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val optionalChannelId = configService.getSingleValueByName(event.getGuild()
+        var optionalChannelId = configService.getSingleValueByName(event.getGuild()
                 .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
         if (optionalChannelId.isPresent()) {
-            val emoteAddedChannelId = optionalChannelId.get();
-            val channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
+            var emoteAddedChannelId = optionalChannelId.get();
+            var channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
             if (channel != null) {
-                val emote = event.getEmote();
+                var emote = event.getEmote();
                 countOneStat(componentName, event.getGuild().getId());
                 Member member = null;
                 if (event.getGuild()
@@ -56,7 +55,6 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
                         .contains(Permission.VIEW_AUDIT_LOGS)) {
                     member = event.getGuild()
                             .getMember(event.getGuild().retrieveAuditLogs().complete().get(0).getUser());
-
                 }
                 channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
                         .queue(message -> message.addReaction(emote).queue());
@@ -72,7 +70,6 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         if (member != null) {
             messageBuilder.append(" ");
             messageBuilder.append(resourceBundle.getString("listener.emote.announce.message.member"));
-            messageBuilder.append(" ");
             messageBuilder.append(member);
         }
         messageBuilder.append("\n");

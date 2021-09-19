@@ -10,5 +10,5 @@ public interface PollRepository extends CrudRepository<Poll, Long> {
 
     Optional<Poll> findByMessageIdAndPollOpen(String messageId, boolean isPollOpen);
 
-    Optional<Poll> findById(Long id);
+    List<Poll> findAllByIdIn(List<Long> ids);
 }

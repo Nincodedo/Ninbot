@@ -19,8 +19,15 @@ public class NinbotUser {
     @Column(nullable = false)
     private String serverId;
     private String birthday;
+    @Column(nullable = false)
+    private Boolean announceBirthday = false;
     @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    @PreUpdate
+    private void updateModified() {
+        modifiedAt = LocalDateTime.now();
+    }
 }

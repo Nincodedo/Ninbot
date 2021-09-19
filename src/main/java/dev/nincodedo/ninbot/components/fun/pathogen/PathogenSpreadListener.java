@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.fun.pathogen;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import lombok.val;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -37,7 +36,7 @@ public class PathogenSpreadListener extends ListenerAdapter {
                 || !pathogenManager.isSpreadableEvent(event)) {
             return;
         }
-        val serverId = event.getGuild().getId();
+        var serverId = event.getGuild().getId();
         int messageSearchLimit = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_SEARCH_LIMIT,
                 serverId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
         int messageAffectChance = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE

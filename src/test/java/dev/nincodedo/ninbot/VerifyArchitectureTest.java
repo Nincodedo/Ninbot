@@ -1,22 +1,65 @@
 package dev.nincodedo.ninbot;
 
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
-import dev.nincodedo.ninbot.components.command.AbstractCommand;
-import dev.nincodedo.ninbot.components.command.SlashCommand;
+import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
+import com.tngtech.archunit.library.GeneralCodingRules;
+import dev.nincodedo.ninbot.common.command.CommandNameEnum;
+import dev.nincodedo.ninbot.common.command.SlashCommand;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
 
 
 class VerifyArchitectureTest {
+
+    JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo.ninbot");
+
+    static List<ArchRule> generalRules() {
+        return List.of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.because("All logging should go "
+                        + "through Slf4j"),
+                GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION.because("That's illegal"),
+                GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING.because("That's also illegal"));
+    }
+
+    static List<ArchRule> slashCommandRules() {
+        final GivenClassesConjunction slashCommandClasses = ArchRuleDefinition.classes()
+                .that()
+                .haveNameMatching(".*Command")
+                .and()
+                .areNotInterfaces();
+        return List.of(slashCommandClasses
+                        .should()
+                        .implement(SlashCommand.class)
+                        .because("Slash commands need the SlashCommand implementation to be auto registered"),
+                slashCommandClasses.should()
+                        .dependOnClassesThat(JavaClass.Predicates.simpleNameEndingWith("CommandName"))
+                        .because("Slash commands should use CommandName enums"));
+    }
+
     @Test
-    void testCommandClasses() {
-        JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo.ninbot");
-        ArchRule rule = ArchRuleDefinition.classes().that().haveNameMatching(".*Command")
-                .and().haveNameNotMatching("Abstract.*")
+    void testCommandNameEnums() {
+        ArchRuleDefinition.classes().that().haveNameMatching(".*CommandName")
                 .and().areNotInterfaces()
-                .should().beAssignableTo(AbstractCommand.class).orShould().beAssignableTo(SlashCommand.class);
+                .should().implement(CommandNameEnum.class)
+                .andShould().bePackagePrivate()
+                .check(ninbotClasses);
+    }
+
+    @ParameterizedTest
+    @MethodSource("slashCommandRules")
+    void testSlashCommandClasses(ArchRule rule) {
+        rule.check(ninbotClasses);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generalRules")
+    void testGeneralCodingRules(ArchRule rule) {
         rule.check(ninbotClasses);
     }
 }

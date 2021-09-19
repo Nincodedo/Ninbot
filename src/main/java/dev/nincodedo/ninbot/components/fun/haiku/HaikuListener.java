@@ -1,12 +1,11 @@
 package dev.nincodedo.ninbot.components.fun.haiku;
 
-import dev.nincodedo.ninbot.components.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.components.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
-import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -40,7 +39,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
                 || componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        val message = event.getMessage().getContentStripped();
+        var message = event.getMessage().getContentStripped();
         isHaikuable(message).ifPresent(haikuLines -> {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.appendDescription(MessageUtils.addSpoilerText(

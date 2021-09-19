@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.config;
 
-import lombok.val;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,14 +28,14 @@ public class ConfigService {
     @Transactional
     @Cacheable("config-values-by-name")
     public List<String> getValuesByName(String serverId, String configName) {
-        val list = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        var list = configRepository.getConfigsByServerIdAndName(serverId, configName);
         return list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Transactional
     public Optional<String> getSingleValueByName(String serverId, String configName) {
-        val list = configRepository.getConfigsByServerIdAndName(serverId, configName);
-        val valueList = list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
+        var list = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        var valueList = list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
         if (valueList.isEmpty()) {
             return Optional.empty();
         } else {
@@ -93,7 +92,7 @@ public class ConfigService {
     @Cacheable("global-configs-by-name")
     public Optional<Config> getGlobalConfigByName(String configName, String serverId) {
         //First try to find config by server ID. If none found, then use the global
-        val serverConfig = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        var serverConfig = configRepository.getConfigsByServerIdAndName(serverId, configName);
         if (serverConfig.isEmpty()) {
             return configRepository.getConfigByNameAndGlobal(configName, true);
         } else {

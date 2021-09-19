@@ -1,9 +1,8 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.components.common.LocaleService;
-import dev.nincodedo.ninbot.components.common.Schedulable;
+import dev.nincodedo.ninbot.common.LocaleService;
+import dev.nincodedo.ninbot.common.Schedulable;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +14,12 @@ public class PollScheduler implements Schedulable {
 
     private PollRepository pollRepository;
     private ExecutorService executorService;
-    private PollSetup pollSetup;
+    private PollAnnouncementSetup pollAnnouncementSetup;
 
-    public PollScheduler(PollRepository pollRepository, PollSetup pollSetup) {
+    public PollScheduler(PollRepository pollRepository, PollAnnouncementSetup pollAnnouncementSetup) {
         this.pollRepository = pollRepository;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("poll-scheduler"));
-        this.pollSetup = pollSetup;
+        this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
 
     @Override
@@ -36,13 +35,13 @@ public class PollScheduler implements Schedulable {
     }
 
     private void scheduleOne(Poll poll, ShardManager shardManager) {
-        val resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
+        var resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
                 .getLocale());
         poll.setResourceBundle(resourceBundle);
-        val channel = shardManager.getTextChannelById(poll.getChannelId());
+        var channel = shardManager.getTextChannelById(poll.getChannelId());
         if (channel != null) {
             channel.retrieveMessageById(poll.getMessageId())
-                    .queue(message -> pollSetup.setupAnnounce(poll, shardManager, message));
+                    .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
         }
     }
 }

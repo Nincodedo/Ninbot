@@ -1,8 +1,7 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
-import dev.nincodedo.ninbot.components.common.StreamUtils;
+import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserService;
-import lombok.val;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,10 @@ public class VaccinationManager {
 
     @Scheduled(cron = "0 0 0 * * SUN")
     public void randomVaccination() {
-        for (val guild : shardManager.getGuilds()) {
-            val roleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
+        for (var guild : shardManager.getGuilds()) {
+            var roleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
             if (!roleList.isEmpty()) {
-                val vaccinatedRole = roleList.get(0);
+                var vaccinatedRole = roleList.get(0);
                 guild.getMembers()
                         .stream()
                         .filter(member -> !member.getRoles().contains(vaccinatedRole))
@@ -31,7 +30,7 @@ public class VaccinationManager {
                         .ifPresent(member -> guild.addRoleToMember(member, vaccinatedRole)
                                 .queue(success -> {
                                     pathogenUserService.vaccinateUser(member.getId(), guild.getId());
-                                    val infectedRoleList =
+                                    var infectedRoleList =
                                             guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), false);
                                     if (!infectedRoleList.isEmpty()) {
                                         guild.removeRoleFromMember(member.getId(), infectedRoleList.get(0)).queue();

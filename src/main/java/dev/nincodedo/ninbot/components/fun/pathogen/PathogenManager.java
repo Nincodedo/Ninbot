@@ -1,14 +1,12 @@
 package dev.nincodedo.ninbot.components.fun.pathogen;
 
-import dev.nincodedo.ninbot.components.common.Emojis;
+import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAudit;
 import dev.nincodedo.ninbot.components.fun.pathogen.audit.PathogenAuditRepository;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserService;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -25,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Log4j2
+@Slf4j
 @Component
 public class PathogenManager {
 
@@ -85,21 +83,21 @@ public class PathogenManager {
 
     public void spread(Guild guild, User spreadSource,
             Map<User, Message> possiblePathogenVictims, int messageAffectChance) {
-        val infectedRoles = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
+        var infectedRoles = guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), true);
         if (infectedRoles.isEmpty()) {
             return;
         }
-        val infectedRole = infectedRoles.get(0);
+        var infectedRole = infectedRoles.get(0);
         //Infect/heal chance
         possiblePathogenVictims.keySet()
                 .stream()
                 .filter(user -> !user.isBot() && random.nextInt(100) < messageAffectChance)
                 .forEach(user -> {
-                    val pathogenTargetMessage = possiblePathogenVictims.get(user);
-                    val channelId = possiblePathogenVictims.get(user).getChannel().getId();
-                    val pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
+                    var pathogenTargetMessage = possiblePathogenVictims.get(user);
+                    var channelId = possiblePathogenVictims.get(user).getChannel().getId();
+                    var pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
                             guild.getId());
-                    val vaccinatedRoleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
+                    var vaccinatedRoleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
                     if (healingWeek) {
                         if (vaccinatedRoleList.isEmpty() || !guild.getMember(user)
                                 .getRoles()

@@ -2,12 +2,11 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.val;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
@@ -30,7 +29,7 @@ class Countdown {
     private ResourceBundle resourceBundle;
 
     String buildMessage() {
-        val dayDifference = getDayDifference();
+        var dayDifference = getDayDifference();
         if (dayDifference == 1) {
             return String.format(resourceBundle.getString("countdown.announce.message.tomorrow"), name);
         } else if (dayDifference == 0) {
@@ -42,12 +41,11 @@ class Countdown {
 
     public String getDescription() {
         return resourceBundle.getString("command.countdown.list.starttime")
-                + getEventDate().format(DateTimeFormatter.ISO_OFFSET_DATE) + "\n"
-                + resourceBundle.getString("command.countdown.list.daysuntil") + getDayDifference();
+                + TimeFormat.RELATIVE.format(getEventDate().toEpochSecond() * 1000);
     }
 
     long getDayDifference() {
-        val tomorrowDate = LocalDate.now(eventDate.getZone())
+        var tomorrowDate = LocalDate.now(eventDate.getZone())
                 .plus(1, ChronoUnit.DAYS)
                 .atStartOfDay()
                 .atZone(eventDate.getZone());
