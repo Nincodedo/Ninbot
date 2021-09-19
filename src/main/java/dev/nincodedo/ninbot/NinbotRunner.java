@@ -74,6 +74,6 @@ public class NinbotRunner {
 
     @Scheduled(fixedRate = 3600000)
     private void setNinbotActivity() {
-        shardManager.setActivity(Activity.playing("say \"@Ninbot help\" for list of commands"));
+        shardManager.setActivity(Activity.playing("Check out my fancy new slash commands!"));
     }
 }
