@@ -1,4 +1,4 @@
-FROM maven:3.8.2-openjdk-17 AS build
+FROM maven:3.8.1-openjdk-16 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
@@ -6,7 +6,7 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM eclipse-temurin:17-jdk-focal
+FROM adoptopenjdk/openjdk16:debianslim-jre
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 RUN mkdir /app
