@@ -98,41 +98,35 @@ public class PathogenManager {
                     var pathogenUser = pathogenUserService.getByUserIdAndServerId(user.getId(),
                             guild.getId());
                     var vaccinatedRoleList = guild.getRolesByName(PathogenConfig.getVACCINATED_ROLE_NAME(), false);
+                    var member = guild.getMember(user);
+                    if (member == null) {
+                        return;
+                    }
                     if (healingWeek) {
-                        if (vaccinatedRoleList.isEmpty() || !guild.getMember(user)
-                                .getRoles()
-                                .contains(vaccinatedRoleList.get(0))) {
-                            guild.removeRoleFromMember(guild.getMember(user), infectedRole).queue(success -> {
-                                //Successfully removed role, so add healing reaction
-                                pathogenTargetMessage.addReaction(Emojis.PILLS).queue();
-                                auditAction(spreadSource, channelId, user, "healing",
-                                        "Healed user %s in channel %s");
-                                pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
-                            });
-                        } else if (guild.getMember(user).getRoles().contains(vaccinatedRoleList.get(0))) {
-                            //No need to heal user since they have vaccination role
-                            pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
-                            pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
-                            auditAction(spreadSource, channelId, user, "no-heal-vaccinated", "User %s does not need "
-                                    + "healing, vaccinated, in channel %s");
+                        if (vaccinatedRoleList.isEmpty() || !member.getRoles().contains(vaccinatedRoleList.get(0))) {
+                            //Successfully removed role and add healing reaction, then do audit
+                            guild.removeRoleFromMember(member, infectedRole)
+                                    .and(pathogenTargetMessage.addReaction(Emojis.PILLS))
+                                    .queue(success -> {
+                                        auditAction(spreadSource, channelId, user, "healing",
+                                                "Healed user %s in channel %s");
+                                        pathogenUserService.uninfectedUser(pathogenUser, user.getId(), guild.getId());
+                                    });
                         }
-                    } else {
-                        if (vaccinatedRoleList.isEmpty() || !guild.getMember(user)
-                                .getRoles()
-                                .contains(vaccinatedRoleList.get(0))) {
-                            guild.addRoleToMember(guild.getMember(user), infectedRole).queue(success -> {
-                                //Successfully added role, so add infected reaction
-                                pathogenTargetMessage.addReaction(Emojis.SICK_FACE).queue();
-                                auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
-                                        + "in channel %s");
-                                pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
-                            });
-                        } else if (guild.getMember(user).getRoles().contains(vaccinatedRoleList.get(0))) {
-                            pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
-                            pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
-                            auditAction(spreadSource, channelId, user, "vaccine-block", "Vaccine blocked user %s "
-                                    + "in channel %s");
-                        }
+                    } else if (vaccinatedRoleList.isEmpty() || !member.getRoles().contains(vaccinatedRoleList.get(0))) {
+                        //Successfully added role and add infected reaction, then do audit
+                        guild.addRoleToMember(member, infectedRole)
+                                .and(pathogenTargetMessage.addReaction(Emojis.SICK_FACE))
+                                .queue(success -> {
+                                    auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
+                                            + "in channel %s");
+                                    pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
+                                });
+                    } else if (member.getRoles().contains(vaccinatedRoleList.get(0))) {
+                        pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
+                        pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
+                        auditAction(spreadSource, channelId, user, "vaccine-block", "Vaccine blocked user %s "
+                                + "in channel %s");
                     }
                 });
     }
