@@ -44,7 +44,11 @@ public class TallyCommand implements SlashCommand {
 
     @Override
     public void execute(SlashCommandEvent slashCommandEvent) {
-        switch (TallyCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName())) {
+        var subcommand = slashCommandEvent.getSubcommandName();
+        if (subcommand == null) {
+            return;
+        }
+        switch (TallyCommandName.Subcommand.valueOf(subcommand.toUpperCase())) {
             case ADD -> addToTally(slashCommandEvent);
             case GET -> getTallyCount(slashCommandEvent);
         }
