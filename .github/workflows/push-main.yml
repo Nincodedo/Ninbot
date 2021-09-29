@@ -1,8 +1,8 @@
 on:
   push:
     branches:
-      - master
-name: Master Build/Deploy
+      - main
+name: Build and Deploy
 env:
   GCLOUD_PROJECT: ${{ secrets.GCLOUD_PROJECT }}
   GCLOUD_EMAIL: ${{ secrets.GCLOUD_EMAIL }}
