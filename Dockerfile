@@ -6,7 +6,11 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM eclipse-temurin:17-focal
+FROM debian:buster
+ENV JAVA_HOME=/opt/java/openjdk
+COPY --from=eclipse-temurin:17 $JAVA_HOME $JAVA_HOME
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 RUN mkdir /app
