@@ -6,7 +6,8 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM eclipse-temurin:17-focal
+FROM openjdk:17-jdk-slim-buster
+
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 LABEL org.opencontainers.image.source = "https://github.com/Nincodedo/Ninbot"
