@@ -49,6 +49,7 @@ public class DefineCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, DefineCommandName.Option.WORD.get(), "The word to lookup.", true));
+        return Arrays.asList(new OptionData(OptionType.STRING, DefineCommandName.Option.WORD.get(), "The word to "
+                + "lookup.", true));
     }
 }

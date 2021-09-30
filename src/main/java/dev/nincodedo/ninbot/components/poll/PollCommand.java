@@ -44,7 +44,8 @@ public class PollCommand implements SlashCommand {
                 .setUserAvatarUrl(member.getUser().getAvatarUrl())
                 .setUserName(member.getEffectiveName())
                 .setChoices(getPollChoices(slashCommandEvent))
-                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get())).getAsString());
+                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get()))
+                        .getAsString());
         //If user choice is set to true, allowed for other users to add their own choices by replying
         var userChoiceOption = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get());
         poll.setUserChoicesAllowed(userChoiceOption != null && userChoiceOption.getAsBoolean());
@@ -56,8 +57,10 @@ public class PollCommand implements SlashCommand {
 
     private List<String> getPollChoices(SlashCommandEvent slashCommandEvent) {
         List<String> pollChoices = new ArrayList<>();
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get())).getAsString());
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE2.get())).getAsString());
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get()))
+                .getAsString());
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE2.get()))
+                .getAsString());
         pollChoices.addAll(slashCommandEvent.getOptions()
                 .stream()
                 .filter(Objects::nonNull)
@@ -82,7 +85,8 @@ public class PollCommand implements SlashCommand {
                 new OptionData(OptionType.INTEGER, PollCommandName.Option.POLLLENGTH.get(), "Poll time length in "
                         + "minutes. (Defaults to 5.)"),
                 new OptionData(OptionType.BOOLEAN, PollCommandName.Option.USERCHOICES.get(),
-                        "Allow other users to add their own choices. (Defaults to false. Must have less than 9 choices.)"),
+                        "Allow other users to add their own choices. (Defaults to false. Must have less than 9 "
+                                + "choices.)"),
                 new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE3.get(), "Extra poll choice."),
                 new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE4.get(), "Extra poll choice."),
                 new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE5.get(), "Extra poll choice."),

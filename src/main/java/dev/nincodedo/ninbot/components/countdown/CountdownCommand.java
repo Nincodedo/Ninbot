@@ -84,7 +84,7 @@ public class CountdownCommand implements SlashCommand {
                         .getAsString()));
         var day = String.format("%02d",
                 Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get())
-                .getAsString()));
+                        .getAsString()));
         //year is not supplied so we'll figure it out
         if (year == null) {
             var possibleCountdownDate = getDateFormatted(String.valueOf(LocalDate.now().getYear()), month, day);
