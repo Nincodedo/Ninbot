@@ -9,6 +9,7 @@ RUN mvn package -P git-commit
 FROM adoptopenjdk/openjdk16:debianslim-jre
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
+LABEL org.opencontainers.image.source = "https://github.com/Nincodedo/Ninbot"
 RUN mkdir /app
 RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
 WORKDIR /app
