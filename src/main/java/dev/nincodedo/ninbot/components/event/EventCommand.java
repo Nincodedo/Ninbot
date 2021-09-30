@@ -1,6 +1,9 @@
 package dev.nincodedo.ninbot.components.event;
 
+import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -34,16 +37,21 @@ public class EventCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommandName == null) {
-            return;
+            return messageExecutor;
         }
         var serverTimezone = getServerTimeZone(slashCommandEvent.getGuild().getId());
         switch (EventCommandName.Subcommand.valueOf(subcommandName.toUpperCase())) {
-            case LIST -> slashCommandEvent.reply(listEvents(serverTimezone)).setEphemeral(true).queue();
-            case PLAN -> planEvent(slashCommandEvent, serverTimezone);
+            case LIST -> messageExecutor.addEphemeralMessage(listEvents(serverTimezone));
+            case PLAN -> {
+                planEvent(slashCommandEvent, serverTimezone);
+                messageExecutor.addEphemeralMessage(Emojis.CHECK_MARK);
+            }
         }
+        return messageExecutor;
     }
 
     private void planEvent(SlashCommandEvent slashCommandEvent, String serverTimezone) {

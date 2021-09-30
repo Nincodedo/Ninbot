@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,15 +37,17 @@ public class CountdownCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommandName == null) {
-            return;
+            return messageExecutor;
         }
         switch (CountdownCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
-            case LIST -> slashCommandEvent.reply(listCountdowns(slashCommandEvent)).setEphemeral(true).queue();
-            case CREATE -> slashCommandEvent.reply(setupCountdown(slashCommandEvent)).setEphemeral(true).queue();
+            case LIST -> messageExecutor.addEphemeralMessage(listCountdowns(slashCommandEvent));
+            case CREATE -> messageExecutor.addEphemeralMessage(setupCountdown(slashCommandEvent));
         }
+        return messageExecutor;
     }
 
     private Message listCountdowns(SlashCommandEvent event) {

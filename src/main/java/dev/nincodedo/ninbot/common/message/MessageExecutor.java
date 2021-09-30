@@ -2,10 +2,12 @@ package dev.nincodedo.ninbot.common.message;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import lombok.Getter;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +49,11 @@ public abstract class MessageExecutor<T> {
 
     public T addMessageResponse(Message message) {
         messageResponses.add(message);
+        return returnThis();
+    }
+
+    public T addMessageResponse(String message) {
+        messageResponses.add(new MessageBuilder().append(message).build());
         return returnThis();
     }
 

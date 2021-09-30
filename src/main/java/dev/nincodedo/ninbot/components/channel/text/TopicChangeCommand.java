@@ -2,7 +2,9 @@ package dev.nincodedo.ninbot.components.channel.text;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.RolePermission;
-import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.PermissionAware;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -10,12 +12,10 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TopicChangeCommand implements SlashCommand {
-
-    private ConfigService configService;
+public class TopicChangeCommand extends PermissionAware {
 
     public TopicChangeCommand(ConfigService configService) {
-        this.configService = configService;
+        super(configService);
     }
 
     @Override
@@ -29,17 +29,20 @@ public class TopicChangeCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent event) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent event) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(event);
         var channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
                 .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
-        channelConfig.ifPresentOrElse(config -> {
+        if (channelConfig.isPresent()) {
+            var config = channelConfig.get();
             configService.removeConfig(config);
-            event.reply(Emojis.OFF).setEphemeral(true).queue();
-        }, () -> {
+            messageExecutor.addEphemeralMessage(Emojis.OFF);
+        } else {
             Config config = new Config(event.getGuild()
                     .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL, event.getChannel().getId());
             configService.addConfig(config);
-            event.reply(Emojis.ON).setEphemeral(true).queue();
-        });
+            messageExecutor.addEphemeralMessage(Emojis.ON);
+        }
+        return messageExecutor;
     }
 }

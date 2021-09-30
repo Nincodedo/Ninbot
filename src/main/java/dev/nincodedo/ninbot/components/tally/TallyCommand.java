@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot.components.tally;
 
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -43,34 +45,39 @@ public class TallyCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommand = slashCommandEvent.getSubcommandName();
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommand == null) {
-            return;
+            return messageExecutor;
         }
         switch (TallyCommandName.Subcommand.valueOf(subcommand.toUpperCase())) {
-            case ADD -> addToTally(slashCommandEvent);
-            case GET -> getTallyCount(slashCommandEvent);
+            case ADD -> addToTally(slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get()),
+                    slashCommandEvent.getOption(TallyCommandName.Option.NAME.get())
+                            .getAsString()
+                            .toLowerCase(), messageExecutor);
+            case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get())
+                    .getAsString()
+                    .toLowerCase(), messageExecutor);
         }
+        return messageExecutor;
     }
 
-    private void getTallyCount(SlashCommandEvent slashCommandEvent) {
-        String name = slashCommandEvent.getOption(TallyCommandName.Option.NAME.get()).getAsString().toLowerCase();
-        Integer currentCount = tallyCount.get(name);
+    private void getTallyCount(String name, SlashCommandEventMessageExecutor messageExecutor) {
+        var currentCount = tallyCount.get(name);
         if (currentCount == null) {
-            slashCommandEvent.reply("No count for " + name).setEphemeral(true).queue();
+            messageExecutor.addEphemeralMessage("No count for " + name);
         } else {
-            slashCommandEvent.reply(name + " count: " + currentCount).queue();
+            messageExecutor.addMessageResponse(name + " count: " + currentCount);
         }
     }
 
-    private void addToTally(SlashCommandEvent slashCommandEvent) {
-        String name = slashCommandEvent.getOption(TallyCommandName.Option.NAME.get()).getAsString().toLowerCase();
-        OptionMapping optionMapping = slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get());
-        Integer count = optionMapping == null ? 1 : (int) optionMapping.getAsLong();
+    private void addToTally(OptionMapping optionalCount, String name,
+            MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor) {
+        var count = optionalCount == null ? 1 : (int) optionalCount.getAsLong();
         tallyCount.putIfAbsent(name, 0);
         tallyCount.put(name, tallyCount.get(name) + count);
         int currentCount = tallyCount.get(name);
-        slashCommandEvent.reply(name + " count: " + currentCount).queue();
+        messageExecutor.addMessageResponse(name + " count: " + currentCount);
     }
 }

@@ -2,6 +2,9 @@ package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.RolePermission;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -20,7 +23,7 @@ public interface SlashCommand {
     String getName();
 
     default boolean shouldCheckPermissions() {
-        return true;
+        return false;
     }
 
     default RolePermission getRolePermission() {
@@ -47,22 +50,25 @@ public interface SlashCommand {
         return Collections.emptyList();
     }
 
-    default void execute(SlashCommandEvent slashCommandEvent) {
-        var permissionGranted = executePreCommandActions(slashCommandEvent);
-        if (shouldCheckPermissions()) {
-            if (permissionGranted) {
-                executeCommandAction(slashCommandEvent);
-            }
-        } else if (shouldCheckPermissions() && !permissionGranted) {
-            slashCommandEvent.reply("You do not have permission to execute this command.").setEphemeral(true).queue();
+    default MessageExecutor<SlashCommandEventMessageExecutor> execute(SlashCommandEvent slashCommandEvent) {
+        if (shouldCheckPermissions() && executePreCommandActions(slashCommandEvent) || !shouldCheckPermissions()) {
+            return executeCommandAction(slashCommandEvent);
+        } else {
+            return new SlashCommandEventMessageExecutor(slashCommandEvent).addEphemeralMessage("You do not have "
+                    + "permission to execute this command.");
         }
     }
 
-    void executeCommandAction(SlashCommandEvent slashCommandEvent);
+    MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent);
+
+    default ConfigService configService() {
+        return null;
+    }
 
 
     /**
      * Runs pre command actions, such as permission checks.
+     *
      * @param slashCommandEvent the event being executed
      * @return true if the user has permission to run the command, otherwise false.
      */
@@ -88,8 +94,13 @@ public interface SlashCommand {
                 return true;
             }
             case ADMIN, MODS -> {
-                //TODO implement config service lookup
-                return false;
+                var configuredRole = configService().getSingleValueByName(guild.getId(),
+                        "roleRank-" + getRolePermission().getRoleName());
+                var roles =
+                        configuredRole.map(configuredRoleId ->
+                                        Collections.singletonList(guild.getRoleById(configuredRoleId)))
+                                .orElseGet(() -> guild.getRolesByName(getRolePermission().getRoleName(), true));
+                return guild.getMembersWithRoles(roles).contains(member);
             }
         }
         return false;

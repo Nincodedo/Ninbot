@@ -6,6 +6,8 @@ import com.bernardomg.tabletop.dice.interpreter.DiceRoller;
 import com.bernardomg.tabletop.dice.parser.DefaultDiceParser;
 import com.bernardomg.tabletop.dice.parser.DiceParser;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -20,7 +22,6 @@ import java.util.List;
 public class RollCommand implements SlashCommand {
 
     private final DiceParser parser;
-
     private final DiceInterpreter<RollHistory> roller;
 
     public RollCommand() {
@@ -29,10 +30,13 @@ public class RollCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor =
+                new SlashCommandEventMessageExecutor(slashCommandEvent);
         var notationOption = slashCommandEvent.getOption(RollCommandName.Option.NOTATION.get());
         var notation = notationOption == null ? "1d20" : notationOption.getAsString();
-        slashCommandEvent.reply(rollDice(notation, slashCommandEvent.getMember().getEffectiveName())).queue();
+        messageExecutor.addMessageResponse(rollDice(notation, slashCommandEvent.getMember().getEffectiveName()));
+        return messageExecutor;
     }
 
     private Message rollDice(String diceArgs, String memberEffectiveName) {

@@ -41,21 +41,20 @@ public class DabCommand implements SlashCommand {
     }
 
     @Override
-    public void executeCommandAction(SlashCommandEvent slashCommandEvent) {
-        MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor =
-                new SlashCommandEventMessageExecutor(slashCommandEvent);
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
                 messageExecutor,
                 slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser());
-        messageExecutor.executeActions();
-        slashCommandEvent.reply(new MessageBuilder().append(slashCommandEvent.getGuild()
-                                .getEmotesByName("ninbotdab", true)
-                                .get(0))
-                        .append(" ")
-                        .append(slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser())
-                        .build())
-                .queue();
+
+        messageExecutor.addMessageResponse(new MessageBuilder().append(slashCommandEvent.getGuild()
+                        .getEmotesByName("ninbotdab", true)
+                        .get(0))
+                .append(" ")
+                .append(slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser())
+                .build());
+        return messageExecutor;
     }
 
     private boolean isDabEdition(String commitId) {

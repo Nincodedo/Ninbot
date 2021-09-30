@@ -4,6 +4,8 @@ import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
@@ -25,7 +27,9 @@ import java.util.List;
 public class HugemojiCommand implements SlashCommand {
 
     @Override
-    public void executeCommandAction(@NotNull SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
                 .getAsString();
         List<Emote> emoteList = new ArrayList<>();
@@ -46,13 +50,14 @@ public class HugemojiCommand implements SlashCommand {
                         .addFile(file, emote.getName() + imageFileType)
                         .queue();
             } catch (IOException e) {
-                slashCommandEvent.reply(Emojis.CROSS_X).setEphemeral(true).queue();
+                messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
             }
         } else if (!emojiList.isEmpty()) {
-            emojiList.forEach(emoji -> slashCommandEvent.reply(emoji).queue());
+            emojiList.forEach(messageExecutor::addMessageResponse);
         } else {
-            slashCommandEvent.reply("This ain't an emote I know about.").setEphemeral(true).queue();
+            messageExecutor.addEphemeralMessage("This ain't an emote I know about.");
         }
+        return messageExecutor;
     }
 
     @Override
