@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class ReactionsReader {
+class ReactionsReader {
 
     private List<String> badCharacters = Arrays.asList(" ", "!", ":");
 

@@ -69,8 +69,8 @@ public class CountdownCommand implements SlashCommand {
         var stringDate = getCountdownDate(slashCommandEvent);
         var countdownName = slashCommandEvent.getOption("name").getAsString();
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
-        Countdown countdown = new Countdown();
-        countdown.setChannelId(slashCommandEvent.getChannel().getId())
+        Countdown countdown = new Countdown()
+                .setChannelId(slashCommandEvent.getChannel().getId())
                 .setEventDate(LocalDate.parse(stringDate, ISO_LOCAL_DATE)
                         .atStartOfDay(serverTimezone))
                 .setName(countdownName)

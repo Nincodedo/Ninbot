@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import lombok.Getter;
 
-public enum ReactionMatchType {
+enum ReactionMatchType {
     EXACT("exact"), CONTAINS("contains"), REGEX("regex");
 
     @Getter

@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.components.config.ConfigService;
 
-public abstract class PermissionAware implements SlashCommand {
+public abstract class PermissionAware {
 
     protected ConfigService configService;
 
@@ -10,12 +10,10 @@ public abstract class PermissionAware implements SlashCommand {
         this.configService = configService;
     }
 
-    @Override
     public boolean shouldCheckPermissions() {
         return true;
     }
 
-    @Override
     public ConfigService configService() {
         return configService;
     }

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
-public class SpecialReactionResponse extends ReactionResponse {
+class SpecialReactionResponse extends ReactionResponse {
 
 
     public SpecialReactionResponse(ReactionResponse response) {
