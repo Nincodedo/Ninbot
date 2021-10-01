@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,15 +37,17 @@ public class CountdownCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommandName == null) {
-            return;
+            return messageExecutor;
         }
         switch (CountdownCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
-            case LIST -> slashCommandEvent.reply(listCountdowns(slashCommandEvent)).setEphemeral(true).queue();
-            case CREATE -> slashCommandEvent.reply(setupCountdown(slashCommandEvent)).setEphemeral(true).queue();
+            case LIST -> messageExecutor.addEphemeralMessage(listCountdowns(slashCommandEvent));
+            case CREATE -> messageExecutor.addEphemeralMessage(setupCountdown(slashCommandEvent));
         }
+        return messageExecutor;
     }
 
     private Message listCountdowns(SlashCommandEvent event) {
@@ -65,8 +69,8 @@ public class CountdownCommand implements SlashCommand {
         var stringDate = getCountdownDate(slashCommandEvent);
         var countdownName = slashCommandEvent.getOption("name").getAsString();
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
-        Countdown countdown = new Countdown();
-        countdown.setChannelId(slashCommandEvent.getChannel().getId())
+        Countdown countdown = new Countdown()
+                .setChannelId(slashCommandEvent.getChannel().getId())
                 .setEventDate(LocalDate.parse(stringDate, ISO_LOCAL_DATE)
                         .atStartOfDay(serverTimezone))
                 .setName(countdownName)

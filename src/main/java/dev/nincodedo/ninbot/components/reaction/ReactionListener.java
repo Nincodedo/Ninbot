@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ReactionListener extends StatAwareListenerAdapter {
+class ReactionListener extends StatAwareListenerAdapter {
 
     private List<ReactionResponse> reactionResponseList;
     private ComponentService componentService;

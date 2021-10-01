@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -26,15 +28,17 @@ public class PollCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());
-        slashCommandEvent.reply(poll.build())
+        messageExecutor.replyMessage(poll.build())
                 .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
                     poll.setMessageId(message.getId());
                     pollScheduler.addPoll(poll, slashCommandEvent.getJDA().getShardManager());
                 }));
+        return messageExecutor;
     }
 
     Poll parsePollMessage(SlashCommandEvent slashCommandEvent, Member member) {

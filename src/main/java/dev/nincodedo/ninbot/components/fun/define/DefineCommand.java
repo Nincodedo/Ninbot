@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.fun.define;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,14 +26,16 @@ public class DefineCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get()).getAsString();
         Map<String, String> definition = defineWordAPI.defineWord(word);
         if (definition == null) {
-            slashCommandEvent.reply(Emojis.CROSS_X).setEphemeral(true).queue();
+            messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
         } else {
-            slashCommandEvent.reply(buildMessage(definition, word)).queue();
+            messageExecutor.addMessageResponse(buildMessage(definition, word));
         }
+        return messageExecutor;
     }
 
     private Message buildMessage(Map<String, String> definition, String word) {

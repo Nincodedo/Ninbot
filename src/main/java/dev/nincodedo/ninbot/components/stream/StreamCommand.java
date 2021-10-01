@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.Config;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -47,9 +49,11 @@ public class StreamCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
         String response = "Stream announcements have been turned ";
-        slashCommandEvent.reply(isToggled ? response + "on." : response + "off.").setEphemeral(true).queue();
+        messageExecutor.addEphemeralMessage(isToggled ? response + "on." : response + "off.");
+        return messageExecutor;
     }
 }

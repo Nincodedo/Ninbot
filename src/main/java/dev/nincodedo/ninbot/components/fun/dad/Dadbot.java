@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.fun.dad;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -40,21 +42,24 @@ public class Dadbot extends StatAwareListenerAdapter {
         if (event.isFromGuild() && !event.getAuthor().isBot()
                 && !componentService.isDisabled(componentName, event.getGuild().getId())) {
             resourceBundle = LocaleService.getResourceBundleOrDefault(event.getGuild());
-            parseMessage(event);
+            parseMessage(event).executeActions();
         }
     }
 
-    private void parseMessage(MessageReceivedEvent event) {
+    private MessageExecutor<MessageReceivedEventMessageExecutor> parseMessage(MessageReceivedEvent event) {
+        MessageExecutor<MessageReceivedEventMessageExecutor> messageExecutor =
+                new MessageReceivedEventMessageExecutor(event);
         var strippedMessage = event.getMessage().getContentStripped();
         var first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
                 || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
                 || !event.getChannelType().isGuild()) {
-            return;
+            return messageExecutor;
         }
         if (StringUtils.isNotBlank(strippedMessage) && strippedMessage.split("\\s+").length >= 1 && checkChance()) {
-            hiImDad(event.getMessage(), event);
+            hiImDad(event.getMessage(), event, messageExecutor);
         }
+        return messageExecutor;
     }
 
     private boolean channelIsOnDenyList(String serverId, String channelId) {
@@ -62,20 +67,19 @@ public class Dadbot extends StatAwareListenerAdapter {
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
-    private void hiImDad(Message message, MessageReceivedEvent event) {
+    private void hiImDad(Message message, MessageReceivedEvent event,
+            MessageExecutor<MessageReceivedEventMessageExecutor> messageExecutor) {
         if (channelIsOnDenyList(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
         String strippedMessage = message.getContentStripped();
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(resourceBundle.getString("listener.dad.hi")).append(" ");
-        stringBuilder.append(MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
-                .trim(), message.getContentRaw()));
-        stringBuilder.append(resourceBundle.getString("listener.dad.imdad"));
-        event.getChannel()
-                .sendMessage(stringBuilder)
-                .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
+        String stringBuilder = resourceBundle.getString("listener.dad.hi") + " "
+                + MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
+                .trim(), message.getContentRaw())
+                + resourceBundle.getString("listener.dad.imdad");
+        messageExecutor.addMessageResponse(stringBuilder);
+        countOneStat(componentName, event.getGuild().getId());
     }
 
     private boolean checkChance() {

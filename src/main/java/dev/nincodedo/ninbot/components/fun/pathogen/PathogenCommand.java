@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.fun.pathogen;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.fun.pathogen.user.PathogenUserRepository;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,8 +20,10 @@ public class PathogenCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
-        slashCommandEvent.reply(getUserInfectionLevel(slashCommandEvent)).queue();
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
+        messageExecutor.addMessageResponse(getUserInfectionLevel(slashCommandEvent));
+        return messageExecutor;
     }
 
     private Message getUserInfectionLevel(SlashCommandEvent event) {

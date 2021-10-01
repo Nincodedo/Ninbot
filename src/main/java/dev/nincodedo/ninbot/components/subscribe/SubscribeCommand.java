@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.subscribe;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.fun.pathogen.PathogenConfig;
@@ -29,8 +31,9 @@ public class SubscribeCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
-        slashCommandEvent.deferReply(true).queue();
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
+        messageExecutor.deferEphemeralReply();
         var server = slashCommandEvent.getGuild();
         var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get()).getAsRole();
         if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
@@ -41,8 +44,9 @@ public class SubscribeCommand implements SlashCommand {
                 slashCommandEvent.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
             }
         } else {
-            slashCommandEvent.reply(resourceBundle().getString("")).setEphemeral(true).queue();
+            messageExecutor.addEphemeralMessage(resourceBundle().getString(""));
         }
+        return messageExecutor;
     }
 
     void addOrRemoveSubscription(InteractionHook interactionHook, Member member, Guild guild,
@@ -63,6 +67,7 @@ public class SubscribeCommand implements SlashCommand {
     private boolean isValidSubscribeRole(Role role, String serverId) {
         List<String> roleDenyList = configService.getValuesByName(serverId, ConfigConstants.ROLE_DENY_LIST);
         roleDenyList.add(PathogenConfig.getINFECTED_ROLE_NAME());
+        roleDenyList.add(PathogenConfig.getVACCINATED_ROLE_NAME());
         return role != null && !roleDenyList.contains(role.getName());
     }
 

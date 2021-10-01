@@ -2,6 +2,8 @@ package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -13,48 +15,44 @@ import java.util.List;
 @Component
 public class UserCommand implements SlashCommand {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public UserCommand(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserCommand(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (slashCommandEvent.getSubcommandName() == null) {
-            return;
+            return messageExecutor;
         }
         switch (UserCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
             case BIRTHDAY -> {
                 updateBirthday(slashCommandEvent);
-                slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();
+                messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
             }
-            case ANNOUNCEMENT -> toggleAnnouncement(slashCommandEvent);
+            case ANNOUNCEMENT -> {
+                toggleAnnouncement(slashCommandEvent);
+                messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
+            }
         }
+        return messageExecutor;
     }
 
     private void toggleAnnouncement(SlashCommandEvent slashCommandEvent) {
-        userRepository.getFirstByUserId(slashCommandEvent.getUser().getId())
-                .ifPresent(ninbotUser -> ninbotUser.setAnnounceBirthday(!ninbotUser.getAnnounceBirthday()));
-        slashCommandEvent.reply(Emojis.THUMBS_UP).setEphemeral(true).queue();
+        var userId = slashCommandEvent.getUser().getId();
+        userService.toggleBirthdayAnnouncement(userId);
+
     }
 
     private void updateBirthday(SlashCommandEvent slashCommandEvent) {
         var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get()).getAsString() + "-"
                 + slashCommandEvent.getOption(UserCommandName.Option.DAY.get())
                 .getAsString();
-        String userId = slashCommandEvent.getMember().getId();
-        var optionalUser = userRepository.getFirstByUserId(userId);
-        NinbotUser ninbotUser;
-        if (optionalUser.isPresent()) {
-            ninbotUser = optionalUser.get();
-        } else {
-            ninbotUser = new NinbotUser();
-            ninbotUser.setUserId(userId);
-            ninbotUser.setServerId(slashCommandEvent.getGuild().getId());
-        }
-        ninbotUser.setBirthday(birthday);
-        userRepository.save(ninbotUser);
+        var userId = slashCommandEvent.getMember().getId();
+        var guildId = slashCommandEvent.getGuild().getId();
+        userService.updateBirthday(userId, guildId, birthday);
     }
 
     @Override

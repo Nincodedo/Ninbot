@@ -1,6 +1,9 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -35,7 +38,8 @@ public class InfoCommand implements SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(resourceBundle().getString("command.info.title"), Constants.NINBOT_GITHUB_URL,
                 slashCommandEvent.getJDA()
@@ -64,7 +68,8 @@ public class InfoCommand implements SlashCommand {
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle().getString("command.info.patreonthanks.name"), patronsList, false);
         }
-        slashCommandEvent.reply(new MessageBuilder(embedBuilder).build()).queue();
+        messageExecutor.addMessageResponse(new MessageBuilder(embedBuilder).build());
+        return messageExecutor;
     }
 
     private String getPatronsList(ShardManager shardManager) {
