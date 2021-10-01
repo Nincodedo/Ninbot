@@ -1,21 +1,22 @@
 package dev.nincodedo.ninbot.components.reaction;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 
-@NoArgsConstructor
 @Data
-abstract class ReactionResponse {
+class ReactionResponse {
 
     protected String response;
     protected String target;
     protected List<String> responses;
     protected ReactionMatchType reactionMatchType;
+
+    public ReactionResponse() {
+    }
 
     public ReactionResponse(ReactionResponse reactionResponse) {
         this.response = reactionResponse.response;
@@ -24,7 +25,9 @@ abstract class ReactionResponse {
         this.reactionMatchType = reactionResponse.reactionMatchType;
     }
 
-    abstract void react(Message message, MessageChannel channel);
+    void react(Message message, MessageChannel channel) {
+        //NO-OP
+    }
 
     boolean canRespond(MessageReceivedEvent event) {
         return switch (reactionMatchType) {
