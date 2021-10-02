@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,13 +29,20 @@ public abstract class MessageExecutor<T> {
     public void executeActions() {
         //map all the emote reactions to RestActions
         if (getMessage() != null) {
-            List<RestAction<Void>> reactionRestActionList = reactionEmotes
+            List<RestAction<Void>> reactionRestActionList = new ArrayList<>();
+            var reactionEmoteList = reactionEmotes
                     .stream()
                     .map(emote -> getMessage().addReaction(emote)).toList();
+            if (reactionEmoteList != null) {
+                reactionRestActionList.addAll(reactionEmoteList);
+            }
             //map all the emoji reactions to RestActions
-            reactionRestActionList.addAll(reactions.stream()
+            var reactionList = reactions.stream()
                     .map(stringEmote -> getMessage().addReaction(stringEmote))
-                    .toList());
+                    .toList();
+            if (reactionList != null) {
+                reactionRestActionList.addAll(reactionList);
+            }
             //Combine them into one large RestAction and queue it
             RestAction.allOf(reactionRestActionList).queue();
         }
