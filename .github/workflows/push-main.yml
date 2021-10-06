@@ -41,7 +41,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v0.3.0
         with:
           cluster_name: ninbot-cluster
-          location: us-central1
+          location: us-central1-c
           credentials: ${{ secrets.GKE_JSON }}
       - name: GKE Deploy
         run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:$GITHUB_SHA

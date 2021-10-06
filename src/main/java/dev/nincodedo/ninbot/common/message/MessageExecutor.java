@@ -44,7 +44,9 @@ public abstract class MessageExecutor<T> {
                 reactionRestActionList.addAll(reactionList);
             }
             //Combine them into one large RestAction and queue it
-            RestAction.allOf(reactionRestActionList).queue();
+            if (!reactionRestActionList.isEmpty()) {
+                RestAction.allOf(reactionRestActionList).queue();
+            }
         }
         executeMessageActions();
     }
