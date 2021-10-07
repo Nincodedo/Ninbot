@@ -15,27 +15,28 @@ public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashComma
     private SlashCommandEvent slashCommandEvent;
     private List<Message> ephemeralMessageResponses;
     private List<MessageEmbed> messageEmbeds;
+    private List<MessageEmbed> ephemeralMessageEmbeds;
 
     public SlashCommandEventMessageExecutor(SlashCommandEvent slashCommandEvent) {
         super();
         this.slashCommandEvent = slashCommandEvent;
         this.ephemeralMessageResponses = new ArrayList<>();
         this.messageEmbeds = new ArrayList<>();
+        this.ephemeralMessageEmbeds = new ArrayList<>();
     }
 
     public void executeMessageActions() {
         if (!messageResponses.isEmpty()) {
-            MessageBuilder messageBuilder = new MessageBuilder();
-            messageResponses.forEach(messageBuilder::append);
-            slashCommandEvent.reply(messageBuilder.build()).queue();
+            messageResponses.forEach(message -> slashCommandEvent.reply(message).queue());
         }
         if (!ephemeralMessageResponses.isEmpty()) {
-            MessageBuilder ephemeralMessageBuilder = new MessageBuilder();
-            ephemeralMessageResponses.forEach(ephemeralMessageBuilder::append);
-            slashCommandEvent.reply(ephemeralMessageBuilder.build()).setEphemeral(true).queue();
+            ephemeralMessageResponses.forEach(message -> slashCommandEvent.reply(message).setEphemeral(true).queue());
         }
         if (!messageEmbeds.isEmpty()) {
             slashCommandEvent.replyEmbeds(messageEmbeds).queue();
+        }
+        if (!ephemeralMessageEmbeds.isEmpty()) {
+            slashCommandEvent.replyEmbeds(ephemeralMessageEmbeds).setEphemeral(true).queue();
         }
     }
 
@@ -51,6 +52,11 @@ public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashComma
 
     public SlashCommandEventMessageExecutor addEphemeralMessage(Message message) {
         ephemeralMessageResponses.add(message);
+        return returnThis();
+    }
+
+    public SlashCommandEventMessageExecutor addEphemeralMessage(MessageEmbed messageEmbed) {
+        ephemeralMessageEmbeds.add(messageEmbed);
         return returnThis();
     }
 

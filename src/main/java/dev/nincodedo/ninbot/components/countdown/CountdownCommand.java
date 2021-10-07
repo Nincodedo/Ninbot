@@ -9,6 +9,7 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -50,7 +51,7 @@ public class CountdownCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private Message listCountdowns(SlashCommandEvent event) {
+    private MessageEmbed listCountdowns(SlashCommandEvent event) {
         var list = countdownRepository.findByServerId(event.getGuild().getId());
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (!list.isEmpty()) {
@@ -62,7 +63,7 @@ public class CountdownCommand implements SlashCommand {
         } else {
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.nocountdownsfound"));
         }
-        return new MessageBuilder(embedBuilder).build();
+        return embedBuilder.build();
     }
 
     private Message setupCountdown(SlashCommandEvent slashCommandEvent) {
