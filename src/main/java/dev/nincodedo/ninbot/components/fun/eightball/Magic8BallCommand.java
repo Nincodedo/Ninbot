@@ -14,10 +14,15 @@ import java.util.List;
 @Component
 public class Magic8BallCommand implements SlashCommand {
 
+    private Magic8BallMessageBuilder magic8BallMessageBuilder;
+
+    public Magic8BallCommand(Magic8BallMessageBuilder magic8BallMessageBuilder) {
+        this.magic8BallMessageBuilder = magic8BallMessageBuilder;
+    }
+
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        Magic8BallMessageBuilder magic8BallMessageBuilder = new Magic8BallMessageBuilder();
         var questionOption = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get());
         var question = questionOption != null ? questionOption.getAsString() : "";
         var messageEmbed = magic8BallMessageBuilder

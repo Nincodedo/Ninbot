@@ -15,9 +15,8 @@ import javax.security.auth.login.LoginException;
 import java.util.EnumSet;
 import java.util.List;
 
-@Configuration
-@ComponentScan(basePackages = {"dev.nincodedo.ninbot"})
 @Slf4j
+@Configuration
 public class AppConfiguration {
     private String twitchClientId;
     private String twitchClientSecret;

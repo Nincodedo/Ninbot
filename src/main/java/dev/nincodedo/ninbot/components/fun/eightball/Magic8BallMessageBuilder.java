@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Component
 @Slf4j
 public class Magic8BallMessageBuilder {
 
@@ -20,9 +24,9 @@ public class Magic8BallMessageBuilder {
     private String question;
     private String memberName;
 
-    public Magic8BallMessageBuilder() {
+    public Magic8BallMessageBuilder(@Value("classpath:magic8BallAnswers.txt") Resource answerFile) {
         this.random = new Random();
-        this.eightBallAnswers = readMagic8BallList();
+        this.eightBallAnswers = readMagic8BallList(answerFile);
     }
 
     MessageEmbed build() {
@@ -42,10 +46,9 @@ public class Magic8BallMessageBuilder {
         return eightBallAnswers.get(random.nextInt(eightBallAnswers.size()));
     }
 
-    private List<String> readMagic8BallList() {
+    private List<String> readMagic8BallList(Resource answerFile) {
         List<String> answers = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
-                .getResourceAsStream("magic8BallAnswers.txt")))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(answerFile.getInputStream()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 answers.add(line);
