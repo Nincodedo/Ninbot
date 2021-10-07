@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.common.message;
 
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,9 +14,9 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
 
     @Override
     public void executeMessageActions() {
-        MessageBuilder messageBuilder = new MessageBuilder();
-        messageResponses.forEach(messageBuilder::append);
-        getChannel().sendMessage(messageBuilder.build()).queue();
+        if (!messageResponses.isEmpty()) {
+            messageResponses.forEach(message -> getChannel().sendMessage(message).queue());
+        }
     }
 
     @Override
