@@ -44,11 +44,6 @@ public class StreamCommand implements SlashCommand {
     }
 
     @Override
-    public List<OptionData> getCommandOptions() {
-        return List.of();
-    }
-
-    @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());

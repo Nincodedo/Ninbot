@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
@@ -24,7 +25,7 @@ import java.util.List;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Component
-public class CountdownCommand implements SlashCommand {
+public class CountdownCommand implements SlashCommand, SlashSubcommand<CountdownCommandName.Subcommand> {
 
     private final CountdownRepository countdownRepository;
     private final CountdownScheduler countdownScheduler;
@@ -44,7 +45,7 @@ public class CountdownCommand implements SlashCommand {
         if (subcommandName == null) {
             return messageExecutor;
         }
-        switch (CountdownCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
+        switch (getSubcommand(subcommandName)) {
             case LIST -> messageExecutor.addEphemeralMessage(listCountdowns(slashCommandEvent));
             case CREATE -> messageExecutor.addEphemeralMessage(setupCountdown(slashCommandEvent));
         }
@@ -138,5 +139,10 @@ public class CountdownCommand implements SlashCommand {
                 new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current "
                         + "countdowns for this server.")
         );
+    }
+
+    @Override
+    public Class<CountdownCommandName.Subcommand> enumSubcommandClass() {
+        return CountdownCommandName.Subcommand.class;
     }
 }

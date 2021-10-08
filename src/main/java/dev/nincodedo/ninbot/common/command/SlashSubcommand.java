@@ -1,12 +1,16 @@
 package dev.nincodedo.ninbot.common.command;
 
-public interface SlashSubcommand<T extends Enum<T>> extends SlashCommand{
+import org.jetbrains.annotations.NotNull;
+
+public interface SlashSubcommand<T extends Enum<T>> {
     Class<T> enumSubcommandClass();
 
-    default T getSubcommand(String subcommand) {
-        if (subcommand == null) {
-            return null;
-        }
+    /**
+     * Returns the Enum subcommand of the input String.
+     * @param subcommand String subcommand
+     * @return Enum subcommand that matches the string
+     */
+    default T getSubcommand(@NotNull String subcommand) {
         return Enum.valueOf(enumSubcommandClass(), subcommand.toUpperCase());
     }
 }

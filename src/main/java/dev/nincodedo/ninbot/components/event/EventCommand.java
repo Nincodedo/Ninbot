@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.event;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
@@ -22,7 +23,7 @@ import java.util.List;
 import static java.awt.Color.BLUE;
 
 @Component
-public class EventCommand implements SlashCommand {
+public class EventCommand implements SlashCommand, SlashSubcommand<EventCommandName.Subcommand> {
 
     private EventRepository eventRepository;
     private EventScheduler eventScheduler;
@@ -44,7 +45,7 @@ public class EventCommand implements SlashCommand {
             return messageExecutor;
         }
         var serverTimezone = getServerTimeZone(slashCommandEvent.getGuild().getId());
-        switch (EventCommandName.Subcommand.valueOf(subcommandName.toUpperCase())) {
+        switch (getSubcommand(subcommandName)) {
             case LIST -> messageExecutor.addEphemeralMessage(listEvents(serverTimezone));
             case PLAN -> {
                 planEvent(slashCommandEvent, serverTimezone);
@@ -100,5 +101,10 @@ public class EventCommand implements SlashCommand {
                         .addOption(OptionType.STRING, EventCommandName.Option.TIME.get(), "The start time of the "
                                 + "event. Defaults to midnight."),
                 new SubcommandData(EventCommandName.Subcommand.LIST.get(), "List the events on this server."));
+    }
+
+    @Override
+    public Class<EventCommandName.Subcommand> enumSubcommandClass() {
+        return EventCommandName.Subcommand.class;
     }
 }

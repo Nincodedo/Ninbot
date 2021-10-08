@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class UserCommand implements SlashCommand {
+public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandName.Subcommand> {
 
     private UserService userService;
 
@@ -24,10 +25,11 @@ public class UserCommand implements SlashCommand {
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        if (slashCommandEvent.getSubcommandName() == null) {
+        var subcommandName = slashCommandEvent.getSubcommandName();
+        if (subcommandName == null) {
             return messageExecutor;
         }
-        switch (UserCommandName.Subcommand.valueOf(slashCommandEvent.getSubcommandName().toUpperCase())) {
+        switch (getSubcommand(subcommandName)) {
             case BIRTHDAY -> {
                 updateBirthday(slashCommandEvent);
                 messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
@@ -69,5 +71,10 @@ public class UserCommand implements SlashCommand {
                         .addOption(OptionType.INTEGER, UserCommandName.Option.DAY.get(), "Day of your birthday.", true),
                 new SubcommandData(UserCommandName.Subcommand.ANNOUNCEMENT.get(), "Toggles your birthday announcement"
                         + " on or off."));
+    }
+
+    @Override
+    public Class<UserCommandName.Subcommand> enumSubcommandClass() {
+        return UserCommandName.Subcommand.class;
     }
 }

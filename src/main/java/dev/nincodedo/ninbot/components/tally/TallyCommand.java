@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.tally;
 
 import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class TallyCommand implements SlashCommand {
+public class TallyCommand implements SlashCommand, SlashSubcommand<TallyCommandName.Subcommand> {
 
     private static HashMap<String, Integer> tallyCount = new HashMap<>();
 
@@ -51,7 +52,7 @@ public class TallyCommand implements SlashCommand {
         if (subcommand == null) {
             return messageExecutor;
         }
-        switch (TallyCommandName.Subcommand.valueOf(subcommand.toUpperCase())) {
+        switch (getSubcommand(subcommand)) {
             case ADD -> addToTally(slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get()),
                     slashCommandEvent.getOption(TallyCommandName.Option.NAME.get())
                             .getAsString()
@@ -79,5 +80,10 @@ public class TallyCommand implements SlashCommand {
         tallyCount.put(name, tallyCount.get(name) + count);
         int currentCount = tallyCount.get(name);
         messageExecutor.addMessageResponse(name + " count: " + currentCount);
+    }
+
+    @Override
+    public Class<TallyCommandName.Subcommand> enumSubcommandClass() {
+        return TallyCommandName.Subcommand.class;
     }
 }
