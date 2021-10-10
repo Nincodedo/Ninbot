@@ -26,10 +26,14 @@ public class GenericAnnounce extends TimerTask {
 
     @Override
     public void run() {
+        var channel = shardManager.getTextChannelById(announcementChannelId);
+        if (channel == null) {
+            return;
+        }
         if (announceString != null) {
-            shardManager.getTextChannelById(announcementChannelId).sendMessage(announceString).queue();
+            channel.sendMessage(announceString).queue();
         } else if (announceMessage != null) {
-            shardManager.getTextChannelById(announcementChannelId).sendMessage(announceMessage).queue();
+            channel.sendMessage(announceMessage).queue();
         }
     }
 }

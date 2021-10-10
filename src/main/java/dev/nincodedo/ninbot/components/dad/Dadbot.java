@@ -47,8 +47,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private MessageExecutor<MessageReceivedEventMessageExecutor> parseMessage(MessageReceivedEvent event) {
-        MessageExecutor<MessageReceivedEventMessageExecutor> messageExecutor =
-                new MessageReceivedEventMessageExecutor(event);
+        var messageExecutor = new MessageReceivedEventMessageExecutor(event);
         var strippedMessage = event.getMessage().getContentStripped();
         var first = strippedMessage.split("\\s+")[0];
         if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))

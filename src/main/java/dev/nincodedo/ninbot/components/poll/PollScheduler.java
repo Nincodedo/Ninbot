@@ -12,12 +12,12 @@ import java.util.concurrent.Executors;
 @Component
 public class PollScheduler implements Schedulable {
 
-    private PollRepository pollRepository;
+    private PollService pollService;
     private ExecutorService executorService;
     private PollAnnouncementSetup pollAnnouncementSetup;
 
-    public PollScheduler(PollRepository pollRepository, PollAnnouncementSetup pollAnnouncementSetup) {
-        this.pollRepository = pollRepository;
+    public PollScheduler(PollService pollService, PollAnnouncementSetup pollAnnouncementSetup) {
+        this.pollService = pollService;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("poll-scheduler"));
         this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
@@ -25,12 +25,11 @@ public class PollScheduler implements Schedulable {
     @Override
     public void scheduleAll(ShardManager shardManager) {
         //Only find open polls (ones that have not been announced)
-        pollRepository.findAllByPollOpen(true)
-                .forEach(poll -> executorService.execute(() -> scheduleOne(poll, shardManager)));
+        pollService.findAllOpenPolls().forEach(poll -> executorService.execute(() -> scheduleOne(poll, shardManager)));
     }
 
     void addPoll(Poll poll, ShardManager shardManager) {
-        pollRepository.save(poll);
+        pollService.save(poll);
         scheduleOne(poll, shardManager);
     }
 

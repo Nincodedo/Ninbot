@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
-public class WebhookHelper {
+class WebhookHelper {
 
     private Webhook webhook;
 

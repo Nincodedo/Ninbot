@@ -12,26 +12,30 @@ class PollResultsAnnouncer extends TimerTask {
 
     private Poll poll;
     private Message pollMessage;
-    private PollRepository pollRepository;
+    private PollService pollService;
     @Setter
     private PollUserChoiceListener pollUserChoiceListener;
 
-    PollResultsAnnouncer(Poll poll, Message pollMessage, PollRepository pollRepository) {
+    PollResultsAnnouncer(Poll poll, Message pollMessage, PollService pollService) {
         this.poll = poll;
         this.pollMessage = pollMessage;
-        this.pollRepository = pollRepository;
+        this.pollService = pollService;
     }
 
     @Override
     public void run() {
-        pollMessage.getChannel().sendMessage(announcePollResults()).queue(message -> pollRepository.save(poll));
-        if (pollUserChoiceListener != null) {
+        pollMessage.getChannel()
+                .sendMessage(getPollResultsMessage())
+                .and(pollMessage.editMessage(poll.buildClosed()))
+                .and(pollMessage.unpin())
+                .queue(success -> pollService.save(poll));
+        if (pollUserChoiceListener != null && pollMessage.getJDA().getShardManager() != null) {
             pollMessage.getJDA().getShardManager().removeEventListener(pollUserChoiceListener);
         }
         this.cancel();
     }
 
-    private String announcePollResults() {
+    private String getPollResultsMessage() {
         var newMessage = pollMessage.getChannel().retrieveMessageById(pollMessage.getId()).complete();
         int highCount = 0;
         List<String> winningChoices = new ArrayList<>();
@@ -63,8 +67,6 @@ class PollResultsAnnouncer extends TimerTask {
                             - 1)
                             + pollClosedMessage);
         }
-        pollMessage.editMessage(poll.buildClosed()).queue();
-        pollMessage.unpin().queue();
         return poll.getResult();
     }
 

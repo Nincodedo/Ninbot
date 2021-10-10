@@ -30,6 +30,9 @@ public class PollCommand implements SlashCommand {
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
+        if (slashCommandEvent.getMember() == null || slashCommandEvent.getGuild() == null) {
+            return messageExecutor;
+        }
         Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());

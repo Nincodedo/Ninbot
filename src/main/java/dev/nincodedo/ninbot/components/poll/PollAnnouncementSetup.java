@@ -14,11 +14,11 @@ import java.util.*;
 public class PollAnnouncementSetup {
 
     private StatManager statManager;
-    private PollRepository pollRepository;
+    private PollService pollService;
     private Map<Long, PollListeners> pollListenersMap;
 
-    PollAnnouncementSetup(PollRepository pollRepository, StatManager statManager) {
-        this.pollRepository = pollRepository;
+    PollAnnouncementSetup(PollService pollService, StatManager statManager) {
+        this.pollService = pollService;
         this.statManager = statManager;
         pollListenersMap = new HashMap<>();
     }
@@ -30,10 +30,10 @@ public class PollAnnouncementSetup {
         //Poll announce time is in the future, or has not been announced yet
         if (announceTime.isAfter(LocalDateTime.now()) || poll.isPollOpen()) {
             message.pin().queue();
-            PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollRepository);
+            PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollService);
             Timer timer;
             PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
-                    pollRepository, poll
+                    pollService, poll
                     .getMessageId(), this);
             if (pollListenersMap.containsKey(poll.getId())) {
                 PollListeners pollListeners = pollListenersMap.remove(poll.getId());
@@ -63,11 +63,7 @@ public class PollAnnouncementSetup {
      */
     @Scheduled(fixedRate = 43200000L)
     void removeClosedPolls() {
-        List<Long> pollIds = new ArrayList<>(pollListenersMap.keySet());
-        pollRepository.findAllByIdIn(pollIds)
-                .stream()
-                .filter(poll -> !poll.isPollOpen())
-                .forEach(poll -> pollListenersMap.remove(poll.getId()));
+        pollService.findAllClosedPolls().forEach(poll -> pollListenersMap.remove(poll.getId()));
     }
 
     record PollListeners(Timer timer, PollUserChoiceListener pollUserChoiceListener) {

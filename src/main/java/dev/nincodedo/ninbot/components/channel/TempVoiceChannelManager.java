@@ -45,11 +45,11 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasPermission(guild,
-                Permission.MANAGE_CHANNEL), channelJoined
+        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild
+        ), channelJoined
                 .getName(), channelJoined.getName()
                 .startsWith(Emojis.PLUS));
-        if (hasPermission(guild, Permission.MANAGE_CHANNEL) && channelJoined
+        if (hasManageChannelPermission(guild) && channelJoined
                 .getName()
                 .startsWith(Emojis.PLUS)) {
             countOneStat(componentName, guild.getId());
@@ -93,8 +93,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        if (isTemporaryChannel(voiceChannel.getId()) && hasPermission(guild, Permission.MANAGE_CHANNEL)
-                && voiceChannel.getMembers()
+        if (isTemporaryChannel(voiceChannel.getId()) && hasManageChannelPermission(guild) && voiceChannel.getMembers()
                 .isEmpty()) {
             deleteTemporaryChannel(voiceChannel);
         }
@@ -111,7 +110,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
                                 .ifPresent(tempVoiceChannel -> repository.delete(tempVoiceChannel)));
     }
 
-    private boolean hasPermission(Guild guild, Permission permission) {
-        return guild.getSelfMember().hasPermission(permission);
+    private boolean hasManageChannelPermission(Guild guild) {
+        return guild.getSelfMember().hasPermission(Permission.MANAGE_CHANNEL);
     }
 }

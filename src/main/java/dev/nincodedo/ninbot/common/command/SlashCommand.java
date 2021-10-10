@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
 
 public interface SlashCommand {
 
+    Locale defaultLocale = Locale.ENGLISH;
+
     String getName();
 
     default boolean shouldCheckPermissions() {
@@ -31,11 +33,19 @@ public interface SlashCommand {
     }
 
     default String getDescription() {
-        return ResourceBundle.getBundle("lang", Locale.ENGLISH).getString("command." + getName() + ".description.text");
+        return getDescription(defaultLocale);
+    }
+
+    default String getDescription(Locale locale) {
+        return resourceBundle(locale).getString("command." + getName() + ".description.text");
     }
 
     default ResourceBundle resourceBundle() {
-        return ResourceBundle.getBundle("lang", Locale.ENGLISH);
+        return resourceBundle(defaultLocale);
+    }
+
+    default ResourceBundle resourceBundle(Locale locale) {
+        return ResourceBundle.getBundle("lang", locale);
     }
 
     default String resource(String resourceBundleKey) {
@@ -86,7 +96,8 @@ public interface SlashCommand {
      * @return true if the user has permission to run the command, otherwise false.
      */
     default boolean userHasPermission(Guild guild, Member member) {
-        if (member != null && guild != null && member.equals(guild.getOwner())) {
+        if (member != null && guild != null && guild.getOwner() != null && member.getId()
+                .equals(guild.getOwner().getId())) {
             return true;
         }
         switch (getRolePermission()) {
@@ -94,6 +105,9 @@ public interface SlashCommand {
                 return true;
             }
             case ADMIN, MODS -> {
+                if (guild == null) {
+                    return false;
+                }
                 var configuredRole = configService().getSingleValueByName(guild.getId(),
                         "roleRank-" + getRolePermission().getRoleName());
                 var roles =
@@ -116,13 +130,8 @@ public interface SlashCommand {
      */
     default boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
         var guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
-        if (guild != null) {
-            return guild.getMembers()
-                    .stream()
-                    .anyMatch(member -> member.getId().equals(user.getId()));
-        } else {
-            return false;
-        }
+        return guild != null && guild.getMembers()
+                .stream()
+                .anyMatch(member -> member.getId().equals(user.getId()));
     }
 }
-

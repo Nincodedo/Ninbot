@@ -8,14 +8,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class PollUserChoiceListener extends StatAwareListenerAdapter {
 
-    private PollRepository pollRepository;
+    private PollService pollService;
     private PollAnnouncementSetup pollAnnouncementSetup;
     private String pollMessageId;
 
-    public PollUserChoiceListener(StatManager statManager, PollRepository pollRepository, String pollMessageId,
+    public PollUserChoiceListener(StatManager statManager, PollService pollService, String pollMessageId,
             PollAnnouncementSetup pollAnnouncementSetup) {
         super(statManager);
-        this.pollRepository = pollRepository;
+        this.pollService = pollService;
         this.pollMessageId = pollMessageId;
         this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
@@ -23,7 +23,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         var refMessage = event.getMessage().getReferencedMessage();
-        var pollOptional = pollRepository.findByMessageIdAndPollOpen(pollMessageId, true);
+        var pollOptional = pollService.findByMessageIdAndPollOpen(pollMessageId, true);
         if (refMessage != null && refMessage.getId().equals(pollMessageId) && pollOptional.isPresent()
                 && pollOptional.get().isPollOpen() && pollOptional.get()
                 .isUserChoicesAllowed()) {
@@ -32,7 +32,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
             var pollChoices = poll.getChoices();
             if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
                 poll.getChoices().add(message);
-                pollRepository.save(poll);
+                pollService.save(poll);
                 refMessage.editMessage(poll.build()).queue();
                 pollAnnouncementSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
             } else {

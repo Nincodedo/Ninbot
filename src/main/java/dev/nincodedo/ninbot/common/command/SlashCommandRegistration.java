@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Component
@@ -23,16 +24,19 @@ public class SlashCommandRegistration extends ListenerAdapter {
     public void onReady(ReadyEvent readyEvent) {
         var shardManager = readyEvent.getJDA().getShardManager();
         if (shardManager != null) {
-            shardManager.getGuilds().forEach(this::registerCommands);
+            var guilds = shardManager.getGuilds();
+            log.trace("Registering slash commands on {} guild(s)", guilds.size());
+            guilds.forEach(this::registerCommands);
         }
     }
 
     private void registerCommands(Guild guild) {
         if (guild != null) {
             try {
+                log.trace("Registering slash commands for guild {}", guild.getId());
                 guild.updateCommands().complete();
                 List<CommandData> commandDataList = slashCommands.stream()
-                        .map(this::convertToCommandData)
+                        .map(slashCommand -> convertToCommandData(slashCommand, guild.getLocale()))
                         .toList();
                 guild.updateCommands().addCommands(commandDataList).queue();
             } catch (Exception e) {
@@ -43,7 +47,7 @@ public class SlashCommandRegistration extends ListenerAdapter {
         }
     }
 
-    private CommandData convertToCommandData(SlashCommand slashCommand) {
+    private CommandData convertToCommandData(SlashCommand slashCommand, Locale locale) {
         CommandData commandData = new CommandData(slashCommand
                 .getName(), slashCommand.getDescription());
         try {

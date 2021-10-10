@@ -32,15 +32,18 @@ public class TopicChangeCommand extends PermissionAware implements SlashCommand 
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent event) {
         var messageExecutor = new SlashCommandEventMessageExecutor(event);
-        var channelConfig = configService.getConfigByServerIdAndName(event.getGuild()
-                .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL);
+        var guild = event.getGuild();
+        if (guild == null) {
+            return messageExecutor;
+        }
+        var channelConfig = configService.getConfigByServerIdAndName(guild.getId(),
+                ConfigConstants.TOPIC_CHANGE_CHANNEL);
         if (channelConfig.isPresent()) {
             var config = channelConfig.get();
             configService.removeConfig(config);
             messageExecutor.addEphemeralMessage(Emojis.OFF);
         } else {
-            Config config = new Config(event.getGuild()
-                    .getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL, event.getChannel().getId());
+            Config config = new Config(guild.getId(), ConfigConstants.TOPIC_CHANGE_CHANNEL, event.getChannel().getId());
             configService.addConfig(config);
             messageExecutor.addEphemeralMessage(Emojis.ON);
         }

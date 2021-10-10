@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -73,6 +72,9 @@ public class InfoCommand implements SlashCommand {
     }
 
     private String getPatronsList(ShardManager shardManager) {
+        if (shardManager == null) {
+            return null;
+        }
         var ninbotPatronServer = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
         if (ninbotPatronServer != null) {
             return ninbotPatronServer
