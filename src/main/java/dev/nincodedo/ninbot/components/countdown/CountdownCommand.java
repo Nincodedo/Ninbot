@@ -46,8 +46,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             return messageExecutor;
         }
         switch (getSubcommand(subcommandName)) {
-            case LIST -> messageExecutor.addEphemeralMessage(listCountdowns(slashCommandEvent));
-            case CREATE -> messageExecutor.addEphemeralMessage(setupCountdown(slashCommandEvent));
+            case LIST -> messageExecutor.addMessageEmbed(listCountdowns(slashCommandEvent));
+            case CREATE -> messageExecutor.addMessageResponse(setupCountdown(slashCommandEvent));
         }
         return messageExecutor;
     }
