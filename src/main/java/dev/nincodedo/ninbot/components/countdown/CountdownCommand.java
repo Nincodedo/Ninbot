@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -54,6 +55,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
 
     private MessageEmbed listCountdowns(SlashCommandEvent event) {
         var list = countdownRepository.findByServerId(event.getGuild().getId());
+        list.sort(Comparator.comparing(Countdown::getEventDate));
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (!list.isEmpty()) {
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.title"));
@@ -76,10 +78,19 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 .setEventDate(LocalDate.parse(stringDate, ISO_LOCAL_DATE)
                         .atStartOfDay(serverTimezone))
                 .setName(countdownName)
-                .setServerId(slashCommandEvent.getGuild().getId());
+                .setServerId(slashCommandEvent.getGuild().getId())
+                .setCreatorId(slashCommandEvent.getUser().getId());
         countdownRepository.save(countdown);
         countdownScheduler.scheduleOne(countdown, slashCommandEvent.getJDA().getShardManager());
-        return new MessageBuilder().append(Emojis.CHECK_MARK).build();
+        countdown.setResourceBundle(resourceBundle(slashCommandEvent.getGuild().getLocale()));
+        return new MessageBuilder().append("Created ")
+                .append(countdown.getName())
+                .append(" ")
+                .append("starts ")
+                .append(countdown.getEventDateDescription())
+                .append(" ")
+                .append(Emojis.CHECK_MARK)
+                .build();
     }
 
     private String getCountdownDate(SlashCommandEvent slashCommandEvent) {

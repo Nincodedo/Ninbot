@@ -3,9 +3,12 @@ package dev.nincodedo.ninbot.components.countdown;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.utils.TimeFormat;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
@@ -24,9 +27,18 @@ class Countdown {
     private ZonedDateTime eventDate;
     @Column(nullable = false)
     private String serverId;
+    @CreatedBy
+    private String creatorId;
     private String channelId;
+    @CreatedDate
+    private LocalDateTime createdAt;
     @Transient
     private ResourceBundle resourceBundle;
+
+    @PrePersist
+    void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 
     String buildMessage() {
         var dayDifference = getDayDifference();
@@ -39,9 +51,12 @@ class Countdown {
         }
     }
 
+    public String getEventDateDescription() {
+        return TimeFormat.RELATIVE.format(getEventDate().toEpochSecond() * 1000);
+    }
+
     public String getDescription() {
-        return resourceBundle.getString("command.countdown.list.starttime")
-                + TimeFormat.RELATIVE.format(getEventDate().toEpochSecond() * 1000);
+        return resourceBundle.getString("command.countdown.list.starttime") + getEventDateDescription();
     }
 
     long getDayDifference() {
