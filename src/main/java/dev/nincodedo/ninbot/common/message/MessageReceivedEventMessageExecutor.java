@@ -1,12 +1,20 @@
 package dev.nincodedo.ninbot.common.message;
 
+import dev.nincodedo.ninbot.common.message.impersonation.Impersonation;
+import dev.nincodedo.ninbot.common.message.impersonation.Impersonator;
+import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.concurrent.ExecutionException;
+
+@Slf4j
 public class MessageReceivedEventMessageExecutor extends MessageExecutor<MessageReceivedEventMessageExecutor> {
 
     private MessageReceivedEvent messageReceivedEvent;
+    private Impersonation impersonation = null;
 
     public MessageReceivedEventMessageExecutor(MessageReceivedEvent event) {
         this.messageReceivedEvent = event;
@@ -15,13 +23,35 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
     @Override
     public void executeMessageActions() {
         if (!messageResponses.isEmpty()) {
-            messageResponses.forEach(message -> getChannel().sendMessage(message).queue());
+            messageResponses.forEach(this::sendMessage);
+        }
+    }
+
+    public void impersonate(Impersonation impersonation) {
+        this.impersonation = impersonation;
+    }
+
+    private void sendMessage(Message message) {
+        if (impersonation == null) {
+            getChannel().sendMessage(message).queue();
+        } else {
+            Impersonator impersonator = new Impersonator(impersonation, getGuild(),
+                    messageReceivedEvent.getTextChannel());
+            try {
+                impersonator.sendMessage(message).get();
+            } catch (InterruptedException | ExecutionException e) {
+                log.error("Failed to send webhook message in guild {}", getGuild().getId(), e);
+            }
         }
     }
 
     @Override
     public MessageReceivedEventMessageExecutor returnThis() {
         return this;
+    }
+
+    public Guild getGuild() {
+        return messageReceivedEvent.getGuild();
     }
 
     @Override

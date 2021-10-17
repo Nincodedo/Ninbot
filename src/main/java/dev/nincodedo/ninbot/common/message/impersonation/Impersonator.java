@@ -1,9 +1,13 @@
-package dev.nincodedo.ninbot.common.message;
+package dev.nincodedo.ninbot.common.message.impersonation;
 
+import club.minnced.discord.webhook.receive.ReadonlyMessage;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class ImpersonationController {
+import java.util.concurrent.CompletableFuture;
+
+public class Impersonator {
 
     private Impersonation impersonation;
     private Guild guild;
@@ -11,17 +15,18 @@ public class ImpersonationController {
     private WebhookHelper webhookHelper;
     private String webhookName = "ninbot";
 
-    public ImpersonationController(Impersonation impersonation, Guild guild, TextChannel textChannel) {
+    public Impersonator(Impersonation impersonation, Guild guild, TextChannel textChannel) {
         this.impersonation = impersonation;
         this.guild = guild;
         this.textChannel = textChannel;
         this.webhookHelper = new WebhookHelper();
     }
 
-    public void sendMessage(String message) {
+    public CompletableFuture<ReadonlyMessage> sendMessage(Message message) {
         setupWebhook();
-        webhookHelper.sendMessage(message);
+        var future = webhookHelper.sendMessage(message);
         tearDown();
+        return future;
     }
 
     private void tearDown() {
