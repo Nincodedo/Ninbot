@@ -1,20 +1,19 @@
-package dev.nincodedo.ninbot.common.message;
+package dev.nincodedo.ninbot.common.message.impersonation;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.receive.ReadonlyMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.WebhookManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 class WebhookHelper {
@@ -53,13 +52,11 @@ class WebhookHelper {
         return webhook.getManager();
     }
 
-    public void sendMessage(String message) {
+    public @NotNull CompletableFuture<ReadonlyMessage> sendMessage(Message message) {
         WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
-        messageBuilder.append(message);
+        messageBuilder.append(message.getContentRaw());
         try (WebhookClient client = new WebhookClientBuilder(webhook.getUrl()).build()) {
-            client.send(messageBuilder.build()).get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Failed to send webhook message", e);
+            return client.send(messageBuilder.build());
         }
     }
 }

@@ -5,10 +5,13 @@ import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.message.impersonation.Impersonation;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -18,15 +21,18 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class Dadbot extends StatAwareListenerAdapter {
 
+    private static final int DISCORD_NICKNAME_LENGTH_LIMIT = 32;
     private Random random;
     private ConfigService configService;
     private ComponentService componentService;
     private String componentName;
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
+    private Impersonation dadbotImpersonation;
 
     @Autowired
     public Dadbot(ConfigService configService, ComponentService componentService, StatManager statManager) {
@@ -35,6 +41,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         this.configService = configService;
         componentName = "dad";
         this.componentService = componentService;
+        this.dadbotImpersonation = Impersonation.of("Dadbot", "https://i.imgur.com/zfKodNp.png");
     }
 
     @Override
@@ -67,18 +74,35 @@ public class Dadbot extends StatAwareListenerAdapter {
     }
 
     private void hiImDad(Message message, MessageReceivedEvent event,
-            MessageExecutor<MessageReceivedEventMessageExecutor> messageExecutor) {
+            MessageReceivedEventMessageExecutor messageExecutor) {
         if (channelIsOnDenyList(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
+        messageExecutor.impersonate(dadbotImpersonation);
         String strippedMessage = message.getContentStripped();
 
-        String stringBuilder = resourceBundle.getString("listener.dad.hi") + " "
-                + MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
-                .trim(), message.getContentRaw())
+        String dadName = MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
+                .trim(), message.getContentRaw());
+        String dadResponse = resourceBundle.getString("listener.dad.hi") + " "
+                + dadName
                 + resourceBundle.getString("listener.dad.imdad");
-        messageExecutor.addMessageResponse(stringBuilder);
+        messageExecutor.addMessageResponse(dadResponse);
+        dadJoke(dadName, message.getMember());
         countOneStat(componentName, event.getGuild().getId());
+    }
+
+    private void dadJoke(String dadName, Member member) {
+        var self = member.getGuild().getSelfMember();
+        if (dadName.length() > DISCORD_NICKNAME_LENGTH_LIMIT || !self.hasPermission(Permission.NICKNAME_MANAGE)
+                || !self.canInteract(member)) {
+            return;
+        }
+        var oldName = member.getNickname();
+        member.modifyNickname(StringUtils.capitalize(dadName))
+                .reason("Dad joke")
+                .queue(success -> member.modifyNickname(oldName)
+                        .reason("Dad joke done")
+                        .queueAfter(2, TimeUnit.MINUTES));
     }
 
     private boolean checkChance() {
