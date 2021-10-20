@@ -1,4 +1,4 @@
-FROM ghcr.io/carlossg/maven:3.8.2-eclipse-temurin-17 AS build
+FROM maven:3.8.3-eclipse-temurin-17 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
