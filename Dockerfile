@@ -1,4 +1,4 @@
-FROM maven:3.8.1-openjdk-16 AS build
+FROM maven:3.8.3-eclipse-temurin-17 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
@@ -6,7 +6,8 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM adoptopenjdk/openjdk16:debianslim-jre
+FROM openjdk:17-jdk-slim-buster
+
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 LABEL org.opencontainers.image.source = "https://github.com/Nincodedo/Ninbot"

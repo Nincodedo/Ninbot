@@ -34,6 +34,13 @@ public class NinbotRunner {
     }
 
     public static void main(String[] args) {
+        //TODO remove once openjdk docker image is updated to Java 17.0.2+
+        // https://github.com/docker-library/openjdk/commits/master
+        final int cores = Runtime.getRuntime().availableProcessors();
+        if (cores <= 1) {
+            log.info("Available Cores {}, setting Parallelism Flag", cores);
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "1");
+        }
         SpringApplication.run(NinbotRunner.class, args);
     }
 
