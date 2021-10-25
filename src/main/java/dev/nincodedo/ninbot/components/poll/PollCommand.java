@@ -36,7 +36,7 @@ public class PollCommand implements SlashCommand {
         Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());
-        messageExecutor.replyMessage(poll.build())
+        slashCommandEvent.reply(poll.build())
                 .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
                     poll.setMessageId(message.getId());
                     pollScheduler.addPoll(poll, slashCommandEvent.getJDA().getShardManager());
