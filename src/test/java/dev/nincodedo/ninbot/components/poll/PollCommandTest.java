@@ -35,7 +35,6 @@ class PollCommandTest {
     @Test
     void executePollCommand() {
         Member member = Mockito.mock(Member.class);
-        User user = Mockito.mock(User.class);
         TextChannel textChannel = Mockito.mock(TextChannel.class);
         Guild guild = Mockito.mock(Guild.class);
         ReplyAction replyAction = Mockito.mock(ReplyAction.class);
@@ -54,20 +53,18 @@ class PollCommandTest {
         when(questionOption.getAsString()).thenReturn("why?");
         when(guild.getId()).thenReturn("1");
         when(textChannel.getId()).thenReturn("1");
-        when(member.getUser()).thenReturn(user);
-        when(user.getAvatarUrl()).thenReturn("http://google.com/a-url");
+        when(member.getEffectiveAvatarUrl()).thenReturn("http://google.com/a-url");
         when(guild.getLocale()).thenReturn(Locale.ENGLISH);
 
-        pollCommand.execute(slashCommandEvent);
+        var actualMessageAction = pollCommand.execute(slashCommandEvent);
 
-        //assertThat(actualMessageAction).isNotNull();
-        //assertThat(actualMessageAction.getEmojisList()).isEmpty();
+        assertThat(actualMessageAction).isNotNull();
+        assertThat(actualMessageAction.getReactions()).isEmpty();
     }
 
     @Test
     void parsePollMessage() {
         Member member = Mockito.mock(Member.class);
-        User user = Mockito.mock(User.class);
         TextChannel textChannel = Mockito.mock(TextChannel.class);
         Guild guild = Mockito.mock(Guild.class);
         OptionMapping choice1 = Mockito.mock(OptionMapping.class);
@@ -86,9 +83,8 @@ class PollCommandTest {
         when(slashCommandEvent.getOption("userchoices")).thenReturn(null);
         when(slashCommandEvent.getOption("polllength")).thenReturn(null);
         when(guild.getId()).thenReturn("1");
-        when(member.getUser()).thenReturn(user);
         when(textChannel.getId()).thenReturn("1");
-        when(user.getAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
+        when(member.getEffectiveAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
         when(member.getEffectiveName()).thenReturn("Nincodedo");
 
         var poll = pollCommand.parsePollMessage(slashCommandEvent, member);

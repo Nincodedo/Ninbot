@@ -48,7 +48,7 @@ public class PollCommand implements SlashCommand {
         Poll poll = new Poll()
                 .setChannelId(slashCommandEvent.getTextChannel().getId())
                 .setServerId(slashCommandEvent.getGuild().getId())
-                .setUserAvatarUrl(member.getUser().getAvatarUrl())
+                .setUserAvatarUrl(member.getEffectiveAvatarUrl())
                 .setUserName(member.getEffectiveName())
                 .setChoices(getPollChoices(slashCommandEvent))
                 .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get()))
