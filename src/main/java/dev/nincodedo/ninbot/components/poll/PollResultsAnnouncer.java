@@ -25,7 +25,9 @@ class PollResultsAnnouncer extends TimerTask {
     @Override
     public void run() {
         pollMessage.getChannel()
-                .sendMessage(getPollResultsMessage())
+                .retrieveMessageById(pollMessage.getId())
+                .complete()
+                .reply(getPollResultsMessage())
                 .and(pollMessage.editMessage(poll.buildClosed()))
                 .and(pollMessage.unpin())
                 .queue(success -> pollService.save(poll));

@@ -36,7 +36,7 @@ public class PollCommand implements SlashCommand {
         Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
         poll.setResourceBundle(resourceBundle());
         poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());
-        messageExecutor.replyMessage(poll.build())
+        slashCommandEvent.reply(poll.build())
                 .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
                     poll.setMessageId(message.getId());
                     pollScheduler.addPoll(poll, slashCommandEvent.getJDA().getShardManager());
@@ -48,7 +48,7 @@ public class PollCommand implements SlashCommand {
         Poll poll = new Poll()
                 .setChannelId(slashCommandEvent.getTextChannel().getId())
                 .setServerId(slashCommandEvent.getGuild().getId())
-                .setUserAvatarUrl(member.getUser().getAvatarUrl())
+                .setUserAvatarUrl(member.getEffectiveAvatarUrl())
                 .setUserName(member.getEffectiveName())
                 .setChoices(getPollChoices(slashCommandEvent))
                 .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get()))
@@ -72,7 +72,8 @@ public class PollCommand implements SlashCommand {
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(optionMapping -> optionMapping.getName().contains(PollCommandName.Option.CHOICE.get()) &&
-                        !optionMapping.getName().contains("1") && !optionMapping.getName().contains("2"))
+                        !optionMapping.getName().contains("1") && !optionMapping.getName().contains("2")
+                        && !optionMapping.getName().contains("user"))
                 .map(OptionMapping::getAsString)
                 .toList());
         return pollChoices;
