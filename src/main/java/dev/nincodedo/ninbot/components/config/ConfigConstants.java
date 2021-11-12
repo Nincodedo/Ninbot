@@ -15,7 +15,6 @@ public class ConfigConstants {
     public static final String DEFAULT_TIMEZONE = "GMT-6";
     public static final String PATHOGEN_MESSAGE_SEARCH_LIMIT = "pathogenMessageSearchLimit";
     public static final String PATHOGEN_MESSAGE_AFFECT_CHANCE = "pathogenMessageAffectChance";
-    public static final String ARCHIVE_CATEGORY_ID = "archiveCategoryId";
     public static final String PATHOGEN_DENY_LIST_CHANNEL = "pathogenDenyListChannel";
     public static final String EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID = "emoteAnnouncementChannelId";
 }

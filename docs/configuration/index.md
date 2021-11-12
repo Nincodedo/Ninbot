@@ -7,11 +7,6 @@ Name: announcementChannel
 
 Usage: Channel ID for Event announcements.
 
-## Archive Category
-Name: archiveCategoryId
-
-Usage: Category ID for archived channels.
-
 ## Dadbot Deny List
 Name: dadbotChannelDenyList
 
@@ -41,16 +36,6 @@ Usage: Deny list of role names you don't want to show up in the subscribe/unsubs
 Name: streamingRole
 
 Usage: Role ID for role you want to be assigned when someone starts streaming.
-
-## Conversation Channels
-Name: conversationChannels
-
-Usage: Channel IDs that Ninbot can have normal conversations in. Managed by the Conversation command.
-
-## Leaderboard Name
-Name: leaderboardName
-
-Usage: Name of the server wide leaderboard for the Leaderboard, Win, and Lose commands.
 
 ## Topic Change Channel
 Name: topicChangeChannel
