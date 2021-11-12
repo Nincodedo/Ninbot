@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.dab;
 
+import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
@@ -48,7 +49,8 @@ public class DabCommand implements SlashCommand {
                 messageExecutor,
                 slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser());
 
-        messageExecutor.addMessageResponse(new MessageBuilder().append(slashCommandEvent.getGuild()
+        messageExecutor.addMessageResponse(new MessageBuilder().append(slashCommandEvent.getJDA()
+                        .getGuildById(Constants.OCW_SERVER_ID)
                         .getEmotesByName("ninbotdab", true)
                         .get(0))
                 .append(" ")
