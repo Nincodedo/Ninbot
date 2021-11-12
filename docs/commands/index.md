@@ -5,7 +5,6 @@ All commands are slash commands found in Discord's chat message menu.
     * [Countdown](#countdown)
     * [Dab](#dab)
     * [Define](#define)
-    * [Events](#events)
     * [Help](#help)
     * [Hugemoji](#hugemoji)
     * [Info](#info)
@@ -31,15 +30,6 @@ Adds all dab emojis to the last message of the user named.
  
 ### Define
 Defines a word.
-    
-### Events
-List or schedule events.
-#### Subcommands
-##### List
-Shows all future events.
-    
-##### Plan
-Create a new event.
     
 ### Help
 Shows you a list of commands available to you. You can also use help after any main command to get more information.
