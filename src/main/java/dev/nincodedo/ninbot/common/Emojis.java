@@ -20,8 +20,6 @@ public class Emojis {
     public static final String BALLOON = "\uD83C\uDF88";
     public static final String PARTY_POPPER = "\uD83C\uDF89";
     public static final String PILLS = "\uD83D\uDC8A";
-    public static final String COOLDOWN_5_CLOCK = "\uD83D\uDD54";
-    public static final String PACMAN_LOADING_ID = "762932479811125248";
     public static final List<String> DOCTOR_LIST = Arrays.asList("\uD83D\uDC68\u200D⚕️", "\uD83D\uDC69\u200D⚕️");
     public static final String THUMBS_UP = "\uD83D\uDC4D";
     @Getter

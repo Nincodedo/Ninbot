@@ -15,14 +15,6 @@ public class LocaleService {
 
     private static Locale defaultLocale = Locale.ENGLISH;
 
-    public static Locale getLocale(MessageReceivedEvent event) {
-        if (event.getChannelType().isGuild()) {
-            return event.getGuild().getLocale();
-        } else {
-            return defaultLocale;
-        }
-    }
-
     public static Locale getLocale(Guild guild) {
         return guild.getLocale();
     }

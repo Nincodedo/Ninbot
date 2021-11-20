@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.DegreesOfNinbot;
-import dev.nincodedo.ninbot.common.release.ReleaseType;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
