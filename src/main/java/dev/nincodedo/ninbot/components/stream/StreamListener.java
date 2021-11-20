@@ -147,15 +147,14 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     public boolean hasStartedStreaming(GenericEvent event) {
-        if (event instanceof UserActivityStartEvent startEvent) {
-            return startEvent.getNewActivity().getType().equals(Activity.ActivityType.STREAMING);
-        } else if (event instanceof UserActivityEndEvent endEvent) {
-            return false;
-        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent) {
-            return guildVoiceStreamEvent.isStream();
-        } else {
-            return false;
-        }
+        return switch (event) {
+            case UserActivityStartEvent startEvent -> startEvent.getNewActivity()
+                    .getType()
+                    .equals(Activity.ActivityType.STREAMING);
+            case UserActivityEndEvent ignored -> false;
+            case GuildVoiceStreamEvent guildVoiceStreamEvent -> guildVoiceStreamEvent.isStream();
+            case null, default -> false;
+        };
     }
 
     @Override
