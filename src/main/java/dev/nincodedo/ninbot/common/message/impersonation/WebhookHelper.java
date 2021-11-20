@@ -21,7 +21,7 @@ class WebhookHelper {
     private Webhook webhook;
 
     /**
-     * Returns Optional of the webhook if found
+     * Returns Optional of the webhook if found.
      *
      * @param guild       the guild to check for the webhook
      * @param textChannel the text channel to set the webhook to
