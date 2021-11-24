@@ -1,5 +1,7 @@
 package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.DegreesOfNinbot;
+import dev.nincodedo.ninbot.common.release.ReleaseType;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -44,6 +46,7 @@ public class SlashCommandRegistration extends ListenerAdapter {
                 log.trace("Registering slash commands for guild {}", guild.getId());
                 guild.updateCommands().complete();
                 List<CommandData> commandDataList = slashCommands.stream()
+                        .filter(slashCommand -> DegreesOfNinbot.releaseAllowed(slashCommand.getReleaseType(), guild))
                         .map(slashCommand -> convertToCommandData(slashCommand, guild.getLocale()))
                         .toList();
                 guild.updateCommands().addCommands(commandDataList).queue();
