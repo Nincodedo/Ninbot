@@ -37,8 +37,9 @@ public class NinbotRunner {
         //TODO remove once openjdk docker image is updated to Java 17.0.2+
         // https://github.com/docker-library/openjdk/commits/master
         final int cores = Runtime.getRuntime().availableProcessors();
+        log.trace("Available Cores: {}", cores);
         if (cores <= 1) {
-            log.info("Available Cores {}, setting Parallelism Flag", cores);
+            log.info("Only one core available, setting Parallelism Flag");
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "1");
         }
         SpringApplication.run(NinbotRunner.class, args);
@@ -47,8 +48,7 @@ public class NinbotRunner {
     private static void waitForShardStartup(JDA jda) {
         try {
             jda.awaitReady();
-            log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo()
-                    .getShardId(), jda.getGuilds().size());
+            log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo().getShardId(), jda.getGuilds().size());
             jda.getGuilds().forEach(guild ->
                     log.info("Server ID: {}, Server Name: {}, Owner ID: {}, Owner Name: {}", guild.getId(),
                             guild.getName(), guild.getOwnerId(), guild.getOwner()
@@ -77,7 +77,6 @@ public class NinbotRunner {
             }));
         };
     }
-
 
     @Scheduled(fixedRate = 3600000)
     private void setNinbotActivity() {

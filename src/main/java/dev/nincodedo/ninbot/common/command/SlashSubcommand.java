@@ -7,6 +7,7 @@ public interface SlashSubcommand<T extends Enum<T>> {
 
     /**
      * Returns the Enum subcommand of the input String.
+     *
      * @param subcommand String subcommand
      * @return Enum subcommand that matches the string
      */
