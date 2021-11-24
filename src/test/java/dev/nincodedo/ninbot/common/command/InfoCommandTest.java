@@ -58,10 +58,10 @@ class InfoCommandTest {
 
         var actualString = infoCommand.getPatronsList(shardManager);
 
-        assertThat(actualString).isNotEmpty();
-        assertThat(actualString).contains(", ");
-        assertThat(actualString).contains("User 1");
-        assertThat(actualString).contains("User 2");
-        assertThat(actualString).doesNotContain("Bot");
+        assertThat(actualString).isNotEmpty()
+                .contains(", ")
+                .contains("User 1")
+                .contains("User 2")
+                .doesNotContain("Bot");
     }
 }

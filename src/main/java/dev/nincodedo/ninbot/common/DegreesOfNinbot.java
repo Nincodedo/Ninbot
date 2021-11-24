@@ -6,6 +6,11 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 public class DegreesOfNinbot {
+
+    private DegreesOfNinbot() {
+        //no-op
+    }
+
     public static boolean releaseAllowed(ReleaseType releaseType, Guild guild) {
         var allowedRelease = degreeCalculation(guild.getJDA().getShardManager(), guild.getOwner().getUser(), guild);
         //if the ReleaseType is PUBLIC or the allowedRelease and releaseType are the same, then this is allowed.
