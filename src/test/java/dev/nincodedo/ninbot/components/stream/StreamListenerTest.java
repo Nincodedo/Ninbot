@@ -55,6 +55,8 @@ class StreamListenerTest {
         Role streamingRole = mock(Role.class);
         RichPresence richPresence = mock(RichPresence.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
+        Message message = mock(Message.class);
+
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
@@ -77,6 +79,10 @@ class StreamListenerTest {
         when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
+        when(textChannel.getLatestMessageId()).thenReturn("123");
+        when(textChannel.retrieveMessageById("123")).thenReturn(auditableRestAction);
+        when(auditableRestAction.complete()).thenReturn(message);
+        when(message.getContentRaw()).thenReturn("some other stream announcement");
 
         streamListener.onGenericUserPresence(userActivityStartEvent);
 

@@ -1,12 +1,15 @@
 package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.DegreesOfNinbot;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,12 +33,19 @@ public class SlashCommandRegistration extends ListenerAdapter {
         }
     }
 
+    @Override
+    public void onGuildJoin(@Nonnull GuildJoinEvent event) {
+        log.trace("Registering slash commands on joined guild {}", event.getGuild().getId());
+        registerCommands(event.getGuild());
+    }
+
     private void registerCommands(Guild guild) {
         if (guild != null) {
             try {
                 log.trace("Registering slash commands for guild {}", guild.getId());
                 guild.updateCommands().complete();
                 List<CommandData> commandDataList = slashCommands.stream()
+                        .filter(slashCommand -> DegreesOfNinbot.releaseAllowed(slashCommand.getReleaseType(), guild))
                         .map(slashCommand -> convertToCommandData(slashCommand, guild.getLocale()))
                         .toList();
                 guild.updateCommands().addCommands(commandDataList).queue();

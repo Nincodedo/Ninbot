@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.common;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -14,14 +13,6 @@ import java.util.ResourceBundle;
 public class LocaleService {
 
     private static Locale defaultLocale = Locale.ENGLISH;
-
-    public static Locale getLocale(MessageReceivedEvent event) {
-        if (event.getChannelType().isGuild()) {
-            return event.getGuild().getLocale();
-        } else {
-            return defaultLocale;
-        }
-    }
 
     public static Locale getLocale(Guild guild) {
         return guild.getLocale();

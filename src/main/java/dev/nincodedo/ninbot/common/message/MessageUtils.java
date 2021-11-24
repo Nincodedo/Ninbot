@@ -17,7 +17,7 @@ public class MessageUtils {
     }
 
     /**
-     * Puts spoiler tags around an entire string if the raw message had any spoiler tags
+     * Puts spoiler tags around an entire string if the raw message had any spoiler tags.
      *
      * @param message    the content stripped string
      * @param rawMessage the raw content string
@@ -32,7 +32,7 @@ public class MessageUtils {
     }
 
     /**
-     * Returns the average color of a user's avatar
+     * Returns the average color of a user's avatar.
      *
      * @param avatarUrl
      * @return

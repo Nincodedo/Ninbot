@@ -27,11 +27,14 @@ public class CommandParser {
         if (slashCommand != null) {
             executorService.execute(() -> {
                 try {
+                    log.trace("Running slash command {} in server {} by user {}", slashCommand.getName(),
+                            slashCommandEvent.getGuild()
+                                    .getId(), slashCommandEvent.getUser().getId());
                     slashCommand.execute(slashCommandEvent).executeActions();
                 } catch (Exception e) {
                     log.error("Slash command {} failed with an exception: Ran in server {} by {}",
                             slashCommand.getName(), slashCommandEvent.getGuild()
-                            .getId(), slashCommandEvent.getUser().getId(), e);
+                                    .getId(), slashCommandEvent.getUser().getId(), e);
                 }
             });
         }

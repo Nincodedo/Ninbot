@@ -147,15 +147,14 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     public boolean hasStartedStreaming(GenericEvent event) {
-        if (event instanceof UserActivityStartEvent startEvent) {
-            return startEvent.getNewActivity().getType().equals(Activity.ActivityType.STREAMING);
-        } else if (event instanceof UserActivityEndEvent endEvent) {
-            return false;
-        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent) {
-            return guildVoiceStreamEvent.isStream();
-        } else {
-            return false;
-        }
+        return switch (event) {
+            case UserActivityStartEvent startEvent -> startEvent.getNewActivity()
+                    .getType()
+                    .equals(Activity.ActivityType.STREAMING);
+            case UserActivityEndEvent ignored -> false;
+            case GuildVoiceStreamEvent guildVoiceStreamEvent -> guildVoiceStreamEvent.isStream();
+            case null, default -> false;
+        };
     }
 
     @Override
@@ -196,14 +195,20 @@ public class StreamListener extends StatAwareListenerAdapter {
                     streamTitle = richActivity.getDetails();
                     log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                 }
-                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member.getUser()
-                                        .getEffectiveAvatarUrl(), username, streamingUrl,
-                                gameName, streamTitle, serverId, guild.getLocale()))
-                        .queue(message -> {
-                            countOneStat(componentName, guild.getId());
-                            updateStreamMemberWithMessageId(streamingMember, message.getId());
-                        });
-                log.trace("Queued stream message for {} to channel {}", username, channel.getId());
+                var announceMessage = streamMessageBuilder.buildStreamAnnounceMessage(member.getUser()
+                                .getEffectiveAvatarUrl(), username, streamingUrl,
+                        gameName, streamTitle, serverId, guild.getLocale());
+                if (!channel.retrieveMessageById(channel.getLatestMessageId())
+                        .complete()
+                        .getContentRaw()
+                        .equals(announceMessage.getContentRaw())) {
+                    channel.sendMessage(announceMessage)
+                            .queue(message -> {
+                                countOneStat(componentName, guild.getId());
+                                updateStreamMemberWithMessageId(streamingMember, message.getId());
+                            });
+                    log.trace("Queued stream message for {} to channel {}", username, channel.getId());
+                }
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
                         , username, guild.getId());

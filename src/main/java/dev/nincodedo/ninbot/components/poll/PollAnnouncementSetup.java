@@ -59,7 +59,7 @@ public class PollAnnouncementSetup {
     }
 
     /**
-     * Twice a day remove closed polls from the map, just in case
+     * Twice a day remove closed polls from the map, just in case.
      */
     @Scheduled(fixedRate = 43200000L)
     void removeClosedPolls() {

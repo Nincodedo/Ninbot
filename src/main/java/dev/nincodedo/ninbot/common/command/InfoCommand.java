@@ -71,7 +71,7 @@ public class InfoCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private String getPatronsList(ShardManager shardManager) {
+    String getPatronsList(ShardManager shardManager) {
         if (shardManager == null) {
             return null;
         }
@@ -80,15 +80,12 @@ public class InfoCommand implements SlashCommand {
             return ninbotPatronServer
                     .getMembersWithRoles(Collections.emptyList())
                     .stream()
+                    .filter(member -> !member.isOwner())
                     .map(Member::getUser)
                     .filter(user -> !user.isBot())
                     .map(User::getName)
-                    //get out of here ya freeloader
-                    .filter(userName -> !userName.equalsIgnoreCase("nincodedo"))
-                    .map(username -> username + "|||")
-                    .collect(Collectors.joining())
-                    .trim()
-                    .replace("|||", ", ");
+                    .collect(Collectors.joining(", "))
+                    .trim();
         }
         return null;
     }
