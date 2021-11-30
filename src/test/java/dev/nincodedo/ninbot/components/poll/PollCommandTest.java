@@ -41,7 +41,7 @@ class PollCommandTest {
         OptionMapping choice1 = Mockito.mock(OptionMapping.class);
         OptionMapping choice2 = Mockito.mock(OptionMapping.class);
         OptionMapping questionOption = Mockito.mock(OptionMapping.class);
-        when(slashCommandEvent.getTextChannel()).thenReturn(textChannel);
+        when(slashCommandEvent.getChannel()).thenReturn(textChannel);
         when(slashCommandEvent.getGuild()).thenReturn(guild);
         when(slashCommandEvent.getMember()).thenReturn(member);
         when(slashCommandEvent.getOption("choice1")).thenReturn(choice1);
@@ -71,7 +71,7 @@ class PollCommandTest {
         OptionMapping choice2 = Mockito.mock(OptionMapping.class);
         OptionMapping choice3 = Mockito.mock(OptionMapping.class);
         OptionMapping questionOption = Mockito.mock(OptionMapping.class);
-        when(slashCommandEvent.getTextChannel()).thenReturn(textChannel);
+        when(slashCommandEvent.getChannel()).thenReturn(textChannel);
         when(slashCommandEvent.getGuild()).thenReturn(guild);
         when(slashCommandEvent.getOption("choice1")).thenReturn(choice1);
         when(slashCommandEvent.getOption("choice2")).thenReturn(choice2);
