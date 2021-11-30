@@ -7,9 +7,7 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -41,7 +39,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
     }
 
-    private void checkIfShouldCreateTempChannel(Guild guild, Member member, VoiceChannel channelJoined) {
+    private void checkIfShouldCreateTempChannel(Guild guild, Member member, AudioChannel channelJoined) {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
@@ -57,18 +55,20 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         }
     }
 
-    private void createTemporaryChannel(VoiceChannel channelJoined, Guild guild, Member member) {
+    private void createTemporaryChannel(AudioChannel channelJoined, Guild guild, Member member) {
         var channelNameType = channelJoined.getName().substring(2);
         var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
         log.trace("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
                 guild.getId());
-
-        channelJoined.createCopy()
-                .setName(channelName)
-                .addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
-                        Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                        Permission.VOICE_DEAF_OTHERS), null)
-                .queue(saveAndMove(guild, member));
+        if (channelJoined.getType().equals(ChannelType.VOICE)) {
+            var voiceChannel = (VoiceChannel) channelJoined;
+            voiceChannel.createCopy()
+                    .setName(channelName)
+                    .addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                            Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                            Permission.VOICE_DEAF_OTHERS), null)
+                    .queue(saveAndMove(guild, member));
+        }
     }
 
     Consumer<VoiceChannel> saveAndMove(Guild guild, Member member) {
@@ -89,13 +89,13 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
     }
 
-    private void checkIfShouldDeleteTempChannel(Guild guild, VoiceChannel voiceChannel) {
+    private void checkIfShouldDeleteTempChannel(Guild guild, AudioChannel audioChannel) {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        if (isTemporaryChannel(voiceChannel.getId()) && hasManageChannelPermission(guild) && voiceChannel.getMembers()
+        if (isTemporaryChannel(audioChannel.getId()) && hasManageChannelPermission(guild) && audioChannel.getMembers()
                 .isEmpty()) {
-            deleteTemporaryChannel(voiceChannel);
+            deleteTemporaryChannel(audioChannel);
         }
     }
 
@@ -103,10 +103,10 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         return repository.findByVoiceChannelId(voiceChannelId).isPresent();
     }
 
-    private void deleteTemporaryChannel(VoiceChannel voiceChannel) {
-        voiceChannel.delete()
+    private void deleteTemporaryChannel(AudioChannel audioChannel) {
+        audioChannel.delete()
                 .queueAfter(10, TimeUnit.SECONDS, success ->
-                        repository.findByVoiceChannelId(voiceChannel.getId())
+                        repository.findByVoiceChannelId(audioChannel.getId())
                                 .ifPresent(tempVoiceChannel -> repository.delete(tempVoiceChannel)));
     }
 
