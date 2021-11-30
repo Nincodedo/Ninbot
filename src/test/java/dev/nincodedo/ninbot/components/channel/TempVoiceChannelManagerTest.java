@@ -5,6 +5,7 @@ import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -69,6 +70,7 @@ class TempVoiceChannelManagerTest {
                 Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
                 Permission.VOICE_DEAF_OTHERS), null)).thenReturn(lastRestAction);
         when(guild.moveVoiceMember(member, voiceChannelJoined)).thenReturn(moveVoiceAction);
+        when(voiceChannelJoined.getType()).thenReturn(ChannelType.VOICE);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
 
