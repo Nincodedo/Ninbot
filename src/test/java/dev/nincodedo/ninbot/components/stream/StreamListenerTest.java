@@ -104,7 +104,7 @@ class StreamListenerTest {
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
-        when(activity.getType()).thenReturn(Activity.ActivityType.DEFAULT);
+        when(activity.getType()).thenReturn(Activity.ActivityType.PLAYING);
 
         streamListener.onGenericUserPresence(userActivityStartEvent);
 

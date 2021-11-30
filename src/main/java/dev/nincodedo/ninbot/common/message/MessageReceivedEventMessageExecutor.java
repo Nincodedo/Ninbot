@@ -32,11 +32,11 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
     }
 
     private void sendMessage(Message message) {
-        if (impersonation == null) {
+        if (impersonation == null || getChannel().getType().isThread()) {
             getChannel().sendMessage(message).queue();
         } else {
             Impersonator impersonator = new Impersonator(impersonation, getGuild(),
-                    messageReceivedEvent.getTextChannel());
+                    messageReceivedEvent.getChannel());
             try {
                 impersonator.sendMessage(message).get();
             } catch (InterruptedException | ExecutionException e) {

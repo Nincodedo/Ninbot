@@ -23,16 +23,16 @@ class WebhookHelper {
     /**
      * Returns Optional of the webhook if found.
      *
-     * @param guild       the guild to check for the webhook
-     * @param textChannel the text channel to set the webhook to
-     * @param name        name of the webhook
+     * @param guild          the guild to check for the webhook
+     * @param messageChannel the message channel to set the webhook to
+     * @param name           name of the webhook
      * @return Optional of the webhook if the bot has Permission.MANAGE_WEBHOOKS and its found
      */
-    public Optional<Webhook> getWebhookByName(Guild guild, TextChannel textChannel, String name) {
+    public Optional<Webhook> getWebhookByName(Guild guild, MessageChannel messageChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
             var webhooks = guild.retrieveWebhooks().complete();
             for (var webhook : webhooks) {
-                if (webhook.getName().equalsIgnoreCase(name)) {
+                if (webhook.getName().equalsIgnoreCase(name) && messageChannel instanceof TextChannel textChannel) {
                     webhook.getManager().setChannel(textChannel).complete();
                     this.webhook = webhook;
                     return Optional.of(webhook);

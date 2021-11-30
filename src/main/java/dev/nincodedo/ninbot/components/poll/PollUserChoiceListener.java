@@ -4,7 +4,10 @@ import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class PollUserChoiceListener extends StatAwareListenerAdapter {
 
@@ -21,22 +24,29 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        var refMessage = event.getMessage().getReferencedMessage();
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getChannelType().isGuild() && !event.getMessage().isWebhookMessage()) {
+            var channel = (GuildMessageChannel) event.getChannel();
+            onGuildMessageReceived(channel, event.getMessage());
+        }
+    }
+
+    public void onGuildMessageReceived(GuildMessageChannel channel, Message message) {
+        var refMessage = message.getReferencedMessage();
         var pollOptional = pollService.findByMessageIdAndPollOpen(pollMessageId, true);
         if (refMessage != null && refMessage.getId().equals(pollMessageId) && pollOptional.isPresent()
                 && pollOptional.get().isPollOpen() && pollOptional.get()
                 .isUserChoicesAllowed()) {
-            var message = event.getMessage().getContentStripped();
+            var strippedMessage = message.getContentStripped();
             var poll = pollOptional.get();
             var pollChoices = poll.getChoices();
-            if (!pollChoices.contains(message) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
-                poll.getChoices().add(message);
+            if (!pollChoices.contains(strippedMessage) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
+                poll.getChoices().add(strippedMessage);
                 pollService.save(poll);
                 refMessage.editMessage(poll.build()).queue();
-                pollAnnouncementSetup.setupAnnounce(poll, event.getJDA().getShardManager(), refMessage);
+                pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
             } else {
-                event.getMessage().addReaction(Emojis.CROSS_X).queue();
+                message.addReaction(Emojis.CROSS_X).queue();
             }
         }
     }

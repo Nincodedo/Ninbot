@@ -3,6 +3,8 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +39,13 @@ public class PollScheduler implements Schedulable {
         var resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
                 .getLocale());
         poll.setResourceBundle(resourceBundle);
-        var channel = shardManager.getTextChannelById(poll.getChannelId());
-        if (channel != null) {
+        var guildChannel = shardManager.getGuildChannelById(poll.getChannelId());
+        if (guildChannel != null) {
+            var channel = switch (guildChannel.getType()) {
+                case TEXT -> (TextChannel) guildChannel;
+                case GUILD_PUBLIC_THREAD, GUILD_PRIVATE_THREAD -> (ThreadChannel) guildChannel;
+                default -> throw new IllegalStateException("Unexpected value: " + guildChannel.getType());
+            };
             channel.retrieveMessageById(poll.getMessageId())
                     .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
         }
