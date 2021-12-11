@@ -218,11 +218,6 @@
     </dependencies>
     <repositories>
         <repository>
-            <id>jcenter</id>
-            <name>jcenter-bintray</name>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-        <repository>
             <id>jcenter-snapshot</id>
             <url>https://oss.jfrog.org/artifactory/libs-release/</url>
         </repository>
@@ -234,11 +229,6 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub Nincodedo Maven</name>
-          <url>https://maven.pkg.github.com/Nincodedo/sap-conversational-ai-java-api</url>
         </repository>
         <repository>
             <id>sonatype</id>
