@@ -52,7 +52,7 @@
         <pitest-maven.version>1.7.3</pitest-maven.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>
+        <sortpom-maven-plugin.version>3.0.1</sortpom-maven-plugin.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.16.2</testcontainers.version>
         <maven.compiler.source>17</maven.compiler.source>
