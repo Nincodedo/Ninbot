@@ -195,20 +195,14 @@ public class StreamListener extends StatAwareListenerAdapter {
                     streamTitle = richActivity.getDetails();
                     log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                 }
-                var announceMessage = streamMessageBuilder.buildStreamAnnounceMessage(member.getUser()
-                                .getEffectiveAvatarUrl(), username, streamingUrl,
-                        gameName, streamTitle, serverId, guild.getLocale());
-                if (!channel.retrieveMessageById(channel.getLatestMessageId())
-                        .complete()
-                        .getContentRaw()
-                        .equals(announceMessage.getContentRaw())) {
-                    channel.sendMessage(announceMessage)
-                            .queue(message -> {
-                                countOneStat(componentName, guild.getId());
-                                updateStreamMemberWithMessageId(streamingMember, message.getId());
-                            });
-                    log.trace("Queued stream message for {} to channel {}", username, channel.getId());
-                }
+                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member.getUser()
+                                        .getEffectiveAvatarUrl(), username, streamingUrl,
+                                gameName, streamTitle, serverId, guild.getLocale()))
+                        .queue(message -> {
+                            countOneStat(componentName, guild.getId());
+                            updateStreamMemberWithMessageId(streamingMember, message.getId());
+                        });
+                log.trace("Queued stream message for {} to channel {}", username, channel.getId());
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
                         , username, guild.getId());
