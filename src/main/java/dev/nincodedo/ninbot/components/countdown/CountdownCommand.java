@@ -60,11 +60,11 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         var optionalCountdown = countdownRepository.findByCreatorIdAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
             countdownRepository.delete(optionalCountdown.get());
-            return new MessageBuilder().append("Deleted countdown \"")
-                    .append(countdownName).append("\".").build();
+            return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
+                    .append(countdownName).build();
         }
-        return new MessageBuilder().append("Failed to find a countdown with the name \"")
-                .append(countdownName).append("\"").build();
+        return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.failure"))
+                .append(countdownName).build();
     }
 
     private MessageEmbed listCountdowns(SlashCommandEvent event) {
