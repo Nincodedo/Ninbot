@@ -49,8 +49,22 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         switch (getSubcommand(subcommandName)) {
             case LIST -> messageExecutor.addMessageEmbed(listCountdowns(slashCommandEvent));
             case CREATE -> messageExecutor.addMessageResponse(setupCountdown(slashCommandEvent));
+            case DELETE -> messageExecutor.addEphemeralMessage(deleteCountdown(slashCommandEvent));
         }
         return messageExecutor;
+    }
+
+    private Message deleteCountdown(SlashCommandEvent slashCommandEvent) {
+        var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get()).getAsString();
+        var userId = slashCommandEvent.getUser().getId();
+        var optionalCountdown = countdownRepository.findByCreatorIdAndName(userId, countdownName);
+        if (optionalCountdown.isPresent()) {
+            countdownRepository.delete(optionalCountdown.get());
+            return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
+                    .append(countdownName).build();
+        }
+        return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.failure"))
+                .append(countdownName).build();
     }
 
     private MessageEmbed listCountdowns(SlashCommandEvent event) {
@@ -61,7 +75,14 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.title"));
             for (var countdown : list) {
                 countdown.setResourceBundle(resourceBundle());
-                embedBuilder.addField(countdown.getName(), countdown.getDescription(), false);
+                var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
+                String countdownDescription = countdown.getDescription();
+                if (countdownCreator != null) {
+                    countdownDescription =
+                            countdownDescription + " - " + resourceBundle().getString("command.countdown.list.author")
+                                    + countdownCreator.getEffectiveName();
+                }
+                embedBuilder.addField(countdown.getName(), countdownDescription, false);
             }
         } else {
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.nocountdownsfound"));
@@ -148,7 +169,10 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                                 "The year for this countdown. Defaults to the upcoming "
                                         + "date this month and day fall."),
                 new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current "
-                        + "countdowns for this server.")
+                        + "countdowns for this server."),
+                new SubcommandData(CountdownCommandName.Subcommand.DELETE.get(), "Delete a countdown you created.")
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The name of the "
+                                + "countdown.", true)
         );
     }
 

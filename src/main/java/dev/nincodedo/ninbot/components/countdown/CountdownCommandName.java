@@ -6,7 +6,7 @@ enum CountdownCommandName implements CommandNameEnum {
     COUNTDOWN;
 
     enum Subcommand implements CommandNameEnum {
-        LIST, CREATE
+        LIST, CREATE, DELETE
     }
 
     enum Option implements CommandNameEnum {
