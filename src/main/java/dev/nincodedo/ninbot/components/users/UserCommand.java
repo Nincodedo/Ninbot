@@ -7,6 +7,7 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -68,9 +69,12 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
                 new SubcommandData(UserCommandName.Subcommand.BIRTHDAY.get(), "Set your birthday for announcements.")
-                        .addOption(OptionType.INTEGER, UserCommandName.Option.MONTH.get(), "Month of your birthday.",
-                                true)
-                        .addOption(OptionType.INTEGER, UserCommandName.Option.DAY.get(), "Day of your birthday.", true),
+                        .addOptions(new OptionData(OptionType.INTEGER, UserCommandName.Option.MONTH.get(), "Month of "
+                                + "your birthday.",
+                                true, true).setMinValue(1).setMaxValue(12))
+                        .addOptions(new OptionData(OptionType.INTEGER, UserCommandName.Option.DAY.get(), "Day of your"
+                                + " birthday.", true, true).setMinValue(1)
+                                .setMaxValue(31)),
                 new SubcommandData(UserCommandName.Subcommand.ANNOUNCEMENT.get(), "Toggles your birthday announcement"
                         + " on or off."));
     }
