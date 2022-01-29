@@ -11,9 +11,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -40,7 +41,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommandName == null) {
@@ -54,7 +56,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         return messageExecutor;
     }
 
-    private Message deleteCountdown(SlashCommandEvent slashCommandEvent) {
+    private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get()).getAsString();
         var userId = slashCommandEvent.getUser().getId();
         var optionalCountdown = countdownRepository.findByCreatorIdAndName(userId, countdownName);
@@ -67,13 +69,13 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 .append(countdownName).build();
     }
 
-    private MessageEmbed listCountdowns(SlashCommandEvent event) {
-        var list = countdownRepository.findByServerId(event.getGuild().getId());
-        list.sort(Comparator.comparing(Countdown::getEventDate));
+    private MessageEmbed listCountdowns(SlashCommandInteractionEvent event) {
+        var countdownList = countdownRepository.findByServerId(event.getGuild().getId());
+        countdownList.sort(Comparator.comparing(Countdown::getEventDate));
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        if (!list.isEmpty()) {
+        if (!countdownList.isEmpty()) {
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.title"));
-            for (var countdown : list) {
+            for (var countdown : countdownList) {
                 countdown.setResourceBundle(resourceBundle());
                 var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
                 String countdownDescription = countdown.getDescription();
@@ -90,7 +92,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         return embedBuilder.build();
     }
 
-    private Message setupCountdown(SlashCommandEvent slashCommandEvent) {
+    private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var stringDate = getCountdownDate(slashCommandEvent);
         var countdownName = slashCommandEvent.getOption("name").getAsString();
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
@@ -114,7 +116,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 .build();
     }
 
-    private String getCountdownDate(SlashCommandEvent slashCommandEvent) {
+    private String getCountdownDate(SlashCommandInteractionEvent slashCommandEvent) {
         String countdownDate;
         var year = slashCommandEvent.getOption("year");
         var month = String.format("%02d",

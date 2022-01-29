@@ -4,20 +4,21 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashCommandEventMessageExecutor> {
 
-    private SlashCommandEvent slashCommandEvent;
+    private SlashCommandInteractionEvent slashCommandEvent;
     private List<Message> ephemeralMessageResponses;
     private List<MessageEmbed> messageEmbeds;
     private List<MessageEmbed> ephemeralMessageEmbeds;
 
-    public SlashCommandEventMessageExecutor(SlashCommandEvent slashCommandEvent) {
+    public SlashCommandEventMessageExecutor(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         super();
         this.slashCommandEvent = slashCommandEvent;
         this.ephemeralMessageResponses = new ArrayList<>();
@@ -76,13 +77,13 @@ public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashComma
     }
 
     /**
-     * Returns the {@link ReplyAction} right away instead of queuing everything up for the end. Good if you need
-     * access to the {@link ReplyAction#queue()} result.
+     * Returns the {@link ReplyCallbackAction} right away instead of queuing everything up for the end. Good if you need
+     * access to the {@link ReplyCallbackAction#queue()} result.
      *
      * @param message the {@link Message} being sent
-     * @return the {@link ReplyAction}
+     * @return the {@link ReplyCallbackAction}
      */
-    public ReplyAction replyMessage(Message message) {
+    public ReplyCallbackAction replyMessage(Message message) {
         return slashCommandEvent.reply(message);
     }
 
