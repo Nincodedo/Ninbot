@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.common.message;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,8 +14,8 @@ class SlashCommandEventMessageExecutorTest {
 
     @Test
     void executeOneMessageAction() {
-        SlashCommandEvent slashCommandEvent = Mockito.mock(SlashCommandEvent.class);
-        ReplyAction replyAction = Mockito.mock(ReplyAction.class);
+        SlashCommandInteractionEvent slashCommandEvent = Mockito.mock(SlashCommandInteractionEvent.class);
+        ReplyCallbackAction replyAction = Mockito.mock(ReplyCallbackAction.class);
         when(slashCommandEvent.reply(any(Message.class))).thenReturn(replyAction);
         messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.addMessageResponse("wow");
@@ -27,8 +27,8 @@ class SlashCommandEventMessageExecutorTest {
 
     @Test
     void executeFiveMessageAction() {
-        SlashCommandEvent slashCommandEvent = Mockito.mock(SlashCommandEvent.class);
-        ReplyAction replyAction = Mockito.mock(ReplyAction.class);
+        SlashCommandInteractionEvent slashCommandEvent = Mockito.mock(SlashCommandInteractionEvent.class);
+        ReplyCallbackAction replyAction = Mockito.mock(ReplyCallbackAction.class);
         when(slashCommandEvent.reply(any(Message.class))).thenReturn(replyAction);
         messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.addMessageResponse("wow");

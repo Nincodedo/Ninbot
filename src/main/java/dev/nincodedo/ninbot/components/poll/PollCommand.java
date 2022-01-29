@@ -5,10 +5,11 @@ import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,8 @@ public class PollCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (slashCommandEvent.getMember() == null || slashCommandEvent.getGuild() == null) {
             return messageExecutor;
@@ -44,7 +46,7 @@ public class PollCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    Poll parsePollMessage(SlashCommandEvent slashCommandEvent, Member member) {
+    Poll parsePollMessage(SlashCommandInteractionEvent slashCommandEvent, Member member) {
         Poll poll = new Poll()
                 .setChannelId(slashCommandEvent.getChannel().getId())
                 .setServerId(slashCommandEvent.getGuild().getId())
@@ -62,7 +64,7 @@ public class PollCommand implements SlashCommand {
         return poll;
     }
 
-    private List<String> getPollChoices(SlashCommandEvent slashCommandEvent) {
+    private List<String> getPollChoices(SlashCommandInteractionEvent slashCommandEvent) {
         List<String> pollChoices = new ArrayList<>();
         pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get()))
                 .getAsString());

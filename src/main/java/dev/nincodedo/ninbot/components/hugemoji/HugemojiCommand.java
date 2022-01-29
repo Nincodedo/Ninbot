@@ -9,7 +9,7 @@ import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class HugemojiCommand implements SlashCommand {
 
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
-            @NotNull SlashCommandEvent slashCommandEvent) {
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
                 .getAsString();

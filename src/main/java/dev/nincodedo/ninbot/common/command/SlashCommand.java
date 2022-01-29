@@ -9,10 +9,11 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,8 @@ public interface SlashCommand extends ReleaseStage {
         return Collections.emptyList();
     }
 
-    default MessageExecutor<SlashCommandEventMessageExecutor> execute(SlashCommandEvent slashCommandEvent) {
+    default MessageExecutor<SlashCommandEventMessageExecutor> execute(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         if (shouldCheckPermissions() && executePreCommandActions(slashCommandEvent) || !shouldCheckPermissions()) {
             return executeCommandAction(slashCommandEvent);
         } else {
@@ -70,7 +72,8 @@ public interface SlashCommand extends ReleaseStage {
         }
     }
 
-    MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent);
+    MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent);
 
     default ConfigService configService() {
         return null;
@@ -83,7 +86,7 @@ public interface SlashCommand extends ReleaseStage {
      * @param slashCommandEvent the event being executed
      * @return true if the user has permission to run the command, otherwise false.
      */
-    default boolean executePreCommandActions(SlashCommandEvent slashCommandEvent) {
+    default boolean executePreCommandActions(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var guild = slashCommandEvent.getGuild();
         var member = slashCommandEvent.getMember();
         return userHasPermission(guild, member);

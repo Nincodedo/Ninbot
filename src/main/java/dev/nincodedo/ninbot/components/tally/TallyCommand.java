@@ -4,11 +4,12 @@ import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -46,7 +47,8 @@ public class TallyCommand implements SlashCommand, SlashSubcommand<TallyCommandN
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommand = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (subcommand == null) {

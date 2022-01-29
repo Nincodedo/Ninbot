@@ -6,7 +6,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -44,11 +45,11 @@ public class SlashCommandRegistration extends ListenerAdapter {
             try {
                 log.trace("Registering slash commands for guild {}", guild.getId());
                 guild.updateCommands().complete();
-                List<CommandData> commandDataList = slashCommands.stream()
+                List<SlashCommandData> slashCommandDataList = slashCommands.stream()
                         .filter(slashCommand -> DegreesOfNinbot.releaseAllowed(slashCommand.getReleaseType(), guild))
-                        .map(slashCommand -> convertToCommandData(slashCommand, guild.getLocale()))
+                        .map(slashCommand -> convertToSlashCommandData(slashCommand, guild.getLocale()))
                         .toList();
-                guild.updateCommands().addCommands(commandDataList).queue();
+                guild.updateCommands().addCommands(slashCommandDataList).queue();
             } catch (Exception e) {
                 log.error("Failed to register commands on server {}", guild.getId(), e);
             }
@@ -57,16 +58,15 @@ public class SlashCommandRegistration extends ListenerAdapter {
         }
     }
 
-    private CommandData convertToCommandData(SlashCommand slashCommand, Locale locale) {
-        CommandData commandData = new CommandData(slashCommand
-                .getName(), slashCommand.getDescription());
+    private SlashCommandData convertToSlashCommandData(SlashCommand slashCommand, Locale locale) {
+        SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(), slashCommand.getDescription());
         try {
-            slashCommand.getCommandOptions().forEach(commandData::addOptions);
-            slashCommand.getSubcommandDatas().forEach(commandData::addSubcommands);
-            return commandData;
+            slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
+            slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
+            return slashCommandData;
         } catch (Exception e) {
             log.error("Failed to add {}", slashCommand, e);
         }
-        return commandData;
+        return slashCommandData;
     }
 }

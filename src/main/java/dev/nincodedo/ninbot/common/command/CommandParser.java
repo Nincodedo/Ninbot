@@ -2,7 +2,8 @@ package dev.nincodedo.ninbot.common.command;
 
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class CommandParser {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
     }
 
-    public void parseEvent(SlashCommandEvent slashCommandEvent) {
+    public void parseEvent(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         SlashCommand slashCommand = slashCommandMap.get(slashCommandEvent.getName());
         if (slashCommand != null) {
             executorService.execute(() -> {

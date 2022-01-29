@@ -7,7 +7,8 @@ import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.pathogen.user.PathogenUserRepository;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,13 +21,14 @@ public class PathogenCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.addMessageResponse(getUserInfectionLevel(slashCommandEvent));
         return messageExecutor;
     }
 
-    private Message getUserInfectionLevel(SlashCommandEvent event) {
+    private Message getUserInfectionLevel(SlashCommandInteractionEvent event) {
         MessageBuilder messageBuilder = new MessageBuilder();
         var pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getUser()
                 .getId(), event.getGuild().getId());

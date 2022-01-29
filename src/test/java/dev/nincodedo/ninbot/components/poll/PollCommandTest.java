@@ -1,10 +1,13 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +30,7 @@ import static org.mockito.Mockito.when;
 class PollCommandTest {
 
     @Mock
-    SlashCommandEvent slashCommandEvent;
+    SlashCommandInteractionEvent slashCommandEvent;
 
     @InjectMocks
     PollCommand pollCommand;
@@ -37,7 +40,7 @@ class PollCommandTest {
         Member member = Mockito.mock(Member.class);
         TextChannel textChannel = Mockito.mock(TextChannel.class);
         Guild guild = Mockito.mock(Guild.class);
-        ReplyAction replyAction = Mockito.mock(ReplyAction.class);
+        ReplyCallbackAction replyAction = Mockito.mock(ReplyCallbackAction.class);
         OptionMapping choice1 = Mockito.mock(OptionMapping.class);
         OptionMapping choice2 = Mockito.mock(OptionMapping.class);
         OptionMapping questionOption = Mockito.mock(OptionMapping.class);

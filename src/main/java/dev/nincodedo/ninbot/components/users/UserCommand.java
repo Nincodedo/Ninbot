@@ -5,9 +5,10 @@ import dev.nincodedo.ninbot.common.command.SlashCommand;
 import dev.nincodedo.ninbot.common.command.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -23,7 +24,8 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(SlashCommandEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var subcommandName = slashCommandEvent.getSubcommandName();
         if (subcommandName == null) {
@@ -42,13 +44,13 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
         return messageExecutor;
     }
 
-    private void toggleAnnouncement(SlashCommandEvent slashCommandEvent) {
+    private void toggleAnnouncement(SlashCommandInteractionEvent slashCommandEvent) {
         var userId = slashCommandEvent.getUser().getId();
         userService.toggleBirthdayAnnouncement(userId);
 
     }
 
-    private void updateBirthday(SlashCommandEvent slashCommandEvent) {
+    private void updateBirthday(SlashCommandInteractionEvent slashCommandEvent) {
         var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get()).getAsString() + "-"
                 + slashCommandEvent.getOption(UserCommandName.Option.DAY.get())
                 .getAsString();
