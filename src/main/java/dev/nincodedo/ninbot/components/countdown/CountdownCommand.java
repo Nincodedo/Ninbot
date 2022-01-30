@@ -77,12 +77,15 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.title"));
             for (var countdown : countdownList) {
                 countdown.setResourceBundle(resourceBundle());
-                var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
                 String countdownDescription = countdown.getDescription();
-                if (countdownCreator != null) {
-                    countdownDescription =
-                            countdownDescription + " - " + resourceBundle().getString("command.countdown.list.author")
-                                    + countdownCreator.getEffectiveName();
+                if (countdown.getCreatorId() != null) {
+                    var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
+                    if (countdownCreator != null) {
+                        countdownDescription =
+                                countdownDescription + " - "
+                                        + resourceBundle().getString("command.countdown.list.author")
+                                        + countdownCreator.getEffectiveName();
+                    }
                 }
                 embedBuilder.addField(countdown.getName(), countdownDescription, false);
             }
