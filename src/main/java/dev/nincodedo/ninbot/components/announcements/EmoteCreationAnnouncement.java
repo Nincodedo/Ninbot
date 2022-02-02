@@ -50,7 +50,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             var emoteAddedChannelId = optionalChannelId.get();
             log.trace("Event Response {}: Emote announcement channel id {}", event.getResponseNumber(),
                     emoteAddedChannelId);
-            var channel = event.getJDA().getTextChannelById(emoteAddedChannelId);
+            var channel = event.getJDA().getShardManager().getTextChannelById(emoteAddedChannelId);
             if (channel != null) {
                 log.trace("Event Response {}: Found channel {}", event.getResponseNumber(), channel);
                 var emote = event.getEmote();
