@@ -1,7 +1,11 @@
 package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
+import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -17,6 +21,8 @@ import java.util.concurrent.Executors;
 public class CommandParser {
 
     private Map<String, SlashCommand> slashCommandMap = new HashMap<>();
+    private Map<String, MessageContextCommand> messageContextCommandMap = new HashMap<>();
+    private Map<String, UserContextCommand> userContextCommandMap = new HashMap<>();
     private ExecutorService executorService;
 
     CommandParser() {
@@ -41,11 +47,45 @@ public class CommandParser {
         }
     }
 
-    public void addSlashCommands(List<SlashCommand> slashCommands) {
-        slashCommands.forEach(this::addSlashCommand);
+    public void parseEvent(@NotNull MessageContextInteractionEvent messageContextInteractionEvent) {
+        MessageContextCommand messageContextCommand =
+                messageContextCommandMap.get(messageContextInteractionEvent.getName());
+        if (messageContextCommand != null) {
+            executorService.execute(() -> {
+                try {
+                    log.trace("Running message context command {} in server {} by user {}",
+                            messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
+                                    .getId(), messageContextInteractionEvent.getUser().getId());
+                    messageContextCommand.execute(messageContextInteractionEvent).executeActions();
+                } catch (Exception e) {
+                    log.trace("Message context command {} failed with an exception: Ran in server {} by {}",
+                            messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
+                                    .getId(), messageContextInteractionEvent.getUser().getId());
+                }
+            });
+        }
     }
 
     public void addSlashCommand(SlashCommand slashCommand) {
         slashCommandMap.put(slashCommand.getName(), slashCommand);
+    }
+
+    public void addMessageContextCommand(MessageContextCommand messageContextCommand) {
+        messageContextCommandMap.put(messageContextCommand.getName(), messageContextCommand);
+    }
+
+    public void addUserContextCommand(UserContextCommand userContextCommand) {
+        userContextCommandMap.put(userContextCommand.getName(), userContextCommand);
+    }
+
+    public void addCommands(List<Command> commands) {
+        commands.forEach(command -> {
+            switch (command) {
+                case SlashCommand slashCommand -> addSlashCommand(slashCommand);
+                case MessageContextCommand messageContextCommand -> addMessageContextCommand(messageContextCommand);
+                case UserContextCommand userContextCommand -> addUserContextCommand(userContextCommand);
+                default -> throw new IllegalStateException("Unexpected value: " + command);
+            }
+        });
     }
 }

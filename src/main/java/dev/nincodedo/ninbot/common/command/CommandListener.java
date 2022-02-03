@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -12,17 +13,22 @@ public class CommandListener extends ListenerAdapter {
 
     private CommandParser commandParser;
 
-    public CommandListener(CommandParser commandParser, List<SlashCommand> slashCommands) {
+    public CommandListener(CommandParser commandParser, List<Command> commands) {
         this.commandParser = commandParser;
-        addSlashCommands(slashCommands);
+        addCommands(commands);
     }
 
-    private void addSlashCommands(List<SlashCommand> slashCommands) {
-        commandParser.addSlashCommands(slashCommands);
+    private void addCommands(List<Command> commands) {
+        commandParser.addCommands(commands);
     }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         commandParser.parseEvent(slashCommandEvent);
+    }
+
+    @Override
+    public void onMessageContextInteraction(@NotNull MessageContextInteractionEvent messageContextInteractionEvent) {
+        commandParser.parseEvent(messageContextInteractionEvent);
     }
 }

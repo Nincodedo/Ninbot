@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.common.command.slash;
 
 import org.jetbrains.annotations.NotNull;
 

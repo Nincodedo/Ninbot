@@ -1,9 +1,9 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.common.command.slash;
 
 import dev.nincodedo.ninbot.common.RolePermission;
+import dev.nincodedo.ninbot.common.command.Command;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.common.release.ReleaseStage;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,11 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public interface SlashCommand extends ReleaseStage {
-
-    Locale defaultLocale = Locale.ENGLISH;
-
-    String getName();
+public interface SlashCommand extends Command {
 
     default boolean shouldCheckPermissions() {
         return false;

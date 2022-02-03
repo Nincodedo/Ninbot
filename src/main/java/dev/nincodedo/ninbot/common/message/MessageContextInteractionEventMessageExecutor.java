@@ -16,7 +16,9 @@ public class MessageContextInteractionEventMessageExecutor extends MessageExecut
 
     @Override
     public void executeMessageActions() {
-
+        if (!messageResponses.isEmpty()) {
+            messageResponses.forEach(message -> messageContextInteractionEvent.reply(message).queue());
+        }
     }
 
     @Override
