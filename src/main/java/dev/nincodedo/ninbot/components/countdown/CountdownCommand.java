@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -176,8 +177,9 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current "
                         + "countdowns for this server."),
                 new SubcommandData(CountdownCommandName.Subcommand.DELETE.get(), "Delete a countdown you created.")
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The name of the "
-                                + "countdown.", true)
+                        .addOptions(new OptionData(OptionType.STRING, CountdownCommandName.Option.NAME.get(),
+                                "The name of the "
+                                        + "countdown.", true, true))
         );
     }
 

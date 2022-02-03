@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
@@ -8,11 +7,9 @@ import dev.nincodedo.ninbot.common.release.ReleaseStage;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -122,20 +119,5 @@ public interface SlashCommand extends ReleaseStage {
             }
         }
         return false;
-    }
-
-
-    /**
-     * Returns true if the user is a Patreon supporter (specifically if they are in the Ninbot Patreon Discord).
-     *
-     * @param shardManager shardManager
-     * @param user         user to check
-     * @return true/false
-     */
-    default boolean isUserNinbotSupporter(ShardManager shardManager, User user) {
-        var guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
-        return guild != null && guild.getMembers()
-                .stream()
-                .anyMatch(member -> member.getId().equals(user.getId()));
     }
 }
