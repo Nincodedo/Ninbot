@@ -218,10 +218,6 @@
     </dependencies>
     <repositories>
         <repository>
-            <id>jcenter-snapshot</id>
-            <url>https://oss.jfrog.org/artifactory/libs-release/</url>
-        </repository>
-        <repository>
             <id>dv8tion</id>
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>

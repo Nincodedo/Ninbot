@@ -66,9 +66,10 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             countdownRepository.delete(optionalCountdown.get());
             return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
                     .append(countdownName).build();
+        } else {
+            return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.failure"))
+                    .append(countdownName).build();
         }
-        return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.failure"))
-                .append(countdownName).build();
     }
 
     private MessageEmbed listCountdowns(SlashCommandInteractionEvent event) {
