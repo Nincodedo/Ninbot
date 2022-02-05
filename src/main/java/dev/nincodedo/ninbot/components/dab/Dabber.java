@@ -1,14 +1,19 @@
 package dev.nincodedo.ninbot.components.dab;
 
 import dev.nincodedo.ninbot.common.CommonUtils;
+import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +35,6 @@ public class Dabber {
     public Dabber(GitProperties gitProperties) {
         isDabEdition = isDabEdition(gitProperties.getCommitId());
         random = new SecureRandom();
-
     }
 
     private boolean isDabEdition(String commitId) {
@@ -71,5 +75,15 @@ public class Dabber {
         messageExecutor.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .toList());
+    }
+
+    Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
+        return new MessageBuilder().append(jda
+                        .getGuildById(Constants.OCW_SERVER_ID)
+                        .getEmotesByName("ninbotdab", true)
+                        .get(0))
+                .append(" ")
+                .append(target)
+                .build();
     }
 }

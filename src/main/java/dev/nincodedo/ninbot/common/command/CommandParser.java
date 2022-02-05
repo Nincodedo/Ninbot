@@ -58,9 +58,9 @@ public class CommandParser {
                                     .getId(), messageContextInteractionEvent.getUser().getId());
                     messageContextCommand.execute(messageContextInteractionEvent).executeActions();
                 } catch (Exception e) {
-                    log.trace("Message context command {} failed with an exception: Ran in server {} by {}",
+                    log.error("Message context command {} failed with an exception: Ran in server {} by {}",
                             messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
-                                    .getId(), messageContextInteractionEvent.getUser().getId());
+                                    .getId(), messageContextInteractionEvent.getUser().getId(), e);
                 }
             });
         }

@@ -1,11 +1,9 @@
 package dev.nincodedo.ninbot.components.dab;
 
-import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -42,13 +40,9 @@ public class DabCommand implements SlashCommand {
                 messageExecutor,
                 slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser());
 
-        messageExecutor.addMessageResponse(new MessageBuilder().append(slashCommandEvent.getJDA()
-                        .getGuildById(Constants.OCW_SERVER_ID)
-                        .getEmotesByName("ninbotdab", true)
-                        .get(0))
-                .append(" ")
-                .append(slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser())
-                .build());
+        messageExecutor.addMessageResponse(dabber.buildDabMessage(slashCommandEvent.getJDA(),
+                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get())
+                        .getAsUser()));
         return messageExecutor;
     }
 
