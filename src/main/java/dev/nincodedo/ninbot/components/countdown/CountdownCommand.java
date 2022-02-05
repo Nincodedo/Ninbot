@@ -182,8 +182,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                         + "countdowns for this server."),
                 new SubcommandData(CountdownCommandName.Subcommand.DELETE.get(), "Delete a countdown you created.")
                         .addOptions(new OptionData(OptionType.STRING, CountdownCommandName.Option.NAME.get(),
-                                "The name of the "
-                                        + "countdown.", true, true))
+                                "The name of the countdown.", true, true))
         );
     }
 

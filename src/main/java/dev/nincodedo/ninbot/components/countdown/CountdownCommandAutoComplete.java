@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class CountdownCommandAutoComplete extends ListenerAdapter {
             var countdowns = countdownRepository.findCountdownByCreatorId(event.getMember().getId())
                     .stream()
                     .map(Countdown::getName)
+                    .limit(OptionData.MAX_CHOICES)
                     .toList();
             event.replyChoiceStrings(countdowns).queue();
         }
