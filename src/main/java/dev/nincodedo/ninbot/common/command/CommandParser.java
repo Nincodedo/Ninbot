@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -63,6 +64,24 @@ public class CommandParser {
                     log.error("Message context command {} failed with an exception: Ran in server {} by {}",
                             messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
                                     .getId(), messageContextInteractionEvent.getUser().getId(), e);
+                }
+            });
+        }
+    }
+
+    public void parseEvent(@NotNull UserContextInteractionEvent userContextInteractionEvent) {
+        UserContextCommand userContextCommand = userContextCommandMap.get(userContextInteractionEvent.getName());
+        if (userContextCommand != null) {
+            executorService.execute(() -> {
+                try {
+                    log.trace("Running user context command {} in server {} by user {}", userContextCommand.getName()
+                            , userContextInteractionEvent.getGuild()
+                                    .getId(), userContextInteractionEvent.getUser().getId());
+                    userContextCommand.execute(userContextInteractionEvent).executeActions();
+                } catch (Exception e) {
+                    log.error("User context command {} failed with an exception: Ran in server {} by {}",
+                            userContextCommand.getName(), userContextInteractionEvent.getGuild()
+                                    .getId(), userContextInteractionEvent.getUser().getId(), e);
                 }
             });
         }
