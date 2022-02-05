@@ -5,6 +5,7 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ public class CommandParser {
     private Map<String, SlashCommand> slashCommandMap = new HashMap<>();
     private Map<String, MessageContextCommand> messageContextCommandMap = new HashMap<>();
     private Map<String, UserContextCommand> userContextCommandMap = new HashMap<>();
+    private Map<String, AutoCompleteCommand> autoCompleteCommandMap = new HashMap<>();
     private ExecutorService executorService;
 
     CommandParser() {
@@ -66,8 +68,30 @@ public class CommandParser {
         }
     }
 
+    public void parseEvent(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+        AutoCompleteCommand autoCompleteCommand =
+                autoCompleteCommandMap.get(commandAutoCompleteInteractionEvent.getName());
+        if (autoCompleteCommand != null) {
+            executorService.execute(() -> {
+                try {
+                    log.trace("Running autocomplete {} in server {} by user {}", autoCompleteCommand.getName(),
+                            commandAutoCompleteInteractionEvent.getGuild()
+                                    .getId(), commandAutoCompleteInteractionEvent.getUser().getId());
+                    autoCompleteCommand.autoComplete(commandAutoCompleteInteractionEvent);
+                } catch (Exception e) {
+                    log.error("Command autocomplete {} failed with an exception: Ran in server {} by {}",
+                            autoCompleteCommand.getName(), commandAutoCompleteInteractionEvent.getGuild()
+                                    .getId(), commandAutoCompleteInteractionEvent.getUser().getId(), e);
+                }
+            });
+        }
+    }
+
     public void addSlashCommand(SlashCommand slashCommand) {
         slashCommandMap.put(slashCommand.getName(), slashCommand);
+        if (slashCommand instanceof AutoCompleteCommand autoCompleteCommand) {
+            autoCompleteCommandMap.put(autoCompleteCommand.getName(), autoCompleteCommand);
+        }
     }
 
     public void addMessageContextCommand(MessageContextCommand messageContextCommand) {
