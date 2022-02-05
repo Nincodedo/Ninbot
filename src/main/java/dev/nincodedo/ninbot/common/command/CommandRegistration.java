@@ -46,27 +46,27 @@ public class CommandRegistration extends ListenerAdapter {
     }
 
     private void registerCommands(Guild guild) {
-        if (guild != null) {
-            try {
-                log.trace("Registering commands for guild {}", guild.getId());
-                var currentCommandList = guild.retrieveCommands().complete();
-                List<CommandData> commandDataList = commands.stream()
-                        .filter(command -> DegreesOfNinbot.releaseAllowed(command.getReleaseType(), guild))
-                        .map(this::convertToCommandData)
-                        .toList();
-                if (guildHasAllCommands(commandDataList, currentCommandList)) {
-                    log.trace("Server {} already has all the current commands. Skipping update.", guild.getId());
-                } else {
-                    guild.updateCommands()
-                            .addCommands(commandDataList)
-                            .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
-                                    commandList.size(), guild.getId()));
-                }
-            } catch (Exception e) {
-                log.error("Failed to register commands on guild {}", guild.getId(), e);
-            }
-        } else {
+        if (guild == null) {
             log.trace("Null guild found?");
+            return;
+        }
+        try {
+            log.trace("Registering commands for guild {}", guild.getId());
+            var currentCommandList = guild.retrieveCommands().complete();
+            List<CommandData> commandDataList = commands.stream()
+                    .filter(command -> DegreesOfNinbot.releaseAllowed(command.getReleaseType(), guild))
+                    .map(this::convertToCommandData)
+                    .toList();
+            if (guildHasAllCommands(commandDataList, currentCommandList)) {
+                log.trace("Server {} already has all the current commands. Skipping update.", guild.getId());
+            } else {
+                guild.updateCommands()
+                        .addCommands(commandDataList)
+                        .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
+                                commandList.size(), guild.getId()));
+            }
+        } catch (Exception e) {
+            log.error("Failed to register commands on guild {}", guild.getId(), e);
         }
     }
 

@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.stats.StatManager;
@@ -14,6 +13,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     private PollService pollService;
     private PollAnnouncementSetup pollAnnouncementSetup;
     private String pollMessageId;
+
 
     public PollUserChoiceListener(StatManager statManager, PollService pollService, String pollMessageId,
             PollAnnouncementSetup pollAnnouncementSetup) {
@@ -42,7 +42,8 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
         var strippedMessage = message.getContentStripped();
         var poll = pollOptional.get();
         var pollChoices = poll.getChoices();
-        if (!pollChoices.contains(strippedMessage) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
+        int pollChoiceLimit = 9;
+        if (!pollChoices.contains(strippedMessage) && pollChoices.size() < pollChoiceLimit) {
             poll.getChoices().add(strippedMessage);
             pollService.save(poll);
             refMessage.editMessage(poll.build()).queue();

@@ -32,15 +32,13 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
         if (subcommandName == null) {
             return messageExecutor;
         }
-        switch (getSubcommand(subcommandName)) {
-            case BIRTHDAY -> {
-                updateBirthday(slashCommandEvent);
-                messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
-            }
-            case ANNOUNCEMENT -> {
-                toggleAnnouncement(slashCommandEvent);
-                messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
-            }
+        UserCommandName.Subcommand subcommand = getSubcommand(subcommandName);
+        if (subcommand == UserCommandName.Subcommand.BIRTHDAY) {
+            updateBirthday(slashCommandEvent);
+            messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
+        } else if (subcommand == UserCommandName.Subcommand.ANNOUNCEMENT) {
+            toggleAnnouncement(slashCommandEvent);
+            messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         }
         return messageExecutor;
     }

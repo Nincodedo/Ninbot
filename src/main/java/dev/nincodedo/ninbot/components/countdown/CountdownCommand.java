@@ -129,7 +129,15 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
     }
 
     private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
-        var stringDate = getCountdownDate(slashCommandEvent);
+        var year =
+                slashCommandEvent.getOption("year") == null ? null : slashCommandEvent.getOption("year").getAsString();
+        var month = String.format("%02d",
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get())
+                        .getAsString()));
+        var day = String.format("%02d",
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get())
+                        .getAsString()));
+        var stringDate = getCountdownDate(year, month, day);
         var countdownName = slashCommandEvent.getOption("name").getAsString();
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
         Countdown countdown = new Countdown()
@@ -152,15 +160,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 .build();
     }
 
-    private String getCountdownDate(SlashCommandInteractionEvent slashCommandEvent) {
+    private String getCountdownDate(String year, String month, String day) {
         String countdownDate;
-        var year = slashCommandEvent.getOption("year");
-        var month = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get())
-                        .getAsString()));
-        var day = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get())
-                        .getAsString()));
         //year is not supplied so we'll figure it out
         if (year == null) {
             var possibleCountdownDate = getDateFormatted(String.valueOf(LocalDate.now().getYear()), month, day);
@@ -174,7 +175,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         }
         //year is supplied to we'll just use it
         else {
-            countdownDate = getDateFormatted(year.getAsString(), month, day);
+            countdownDate = getDateFormatted(year, month, day);
         }
         return countdownDate;
     }

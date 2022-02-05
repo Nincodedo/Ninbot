@@ -20,7 +20,7 @@ public abstract class MessageExecutor<T> {
     Message overrideMessage;
     List<Message> messageResponses;
 
-    public MessageExecutor() {
+    protected MessageExecutor() {
         reactions = new ArrayList<>();
         reactionEmotes = new ArrayList<>();
         messageResponses = new ArrayList<>();

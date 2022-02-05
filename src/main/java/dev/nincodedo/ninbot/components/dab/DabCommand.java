@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -64,7 +63,7 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.USER, DabCommandName.Option.DABBED.get(), "the poor soul.",
+        return List.of(new OptionData(OptionType.USER, DabCommandName.Option.DABBED.get(), "the poor soul.",
                 true));
     }
 }

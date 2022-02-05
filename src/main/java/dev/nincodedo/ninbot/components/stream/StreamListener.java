@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceStreamEvent;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     @Override
-    public void onGuildVoiceStream(GuildVoiceStreamEvent event) {
+    public void onGuildVoiceStream(@NotNull GuildVoiceStreamEvent event) {
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 
@@ -149,16 +150,15 @@ public class StreamListener extends StatAwareListenerAdapter {
     public boolean hasStartedStreaming(GenericEvent event) {
         return switch (event) {
             case UserActivityStartEvent startEvent -> startEvent.getNewActivity()
-                    .getType()
-                    .equals(Activity.ActivityType.STREAMING);
-            case UserActivityEndEvent ignored -> false;
+                    .getType() == Activity.ActivityType.STREAMING;
             case GuildVoiceStreamEvent guildVoiceStreamEvent -> guildVoiceStreamEvent.isStream();
+            case UserActivityEndEvent ignored -> false;
             case null, default -> false;
         };
     }
 
     @Override
-    public void onGenericUserPresence(GenericUserPresenceEvent event) {
+    public void onGenericUserPresence(@NotNull GenericUserPresenceEvent event) {
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 

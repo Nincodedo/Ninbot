@@ -22,6 +22,7 @@ import java.util.Objects;
 @Component
 public class PollCommand implements SlashCommand {
 
+    private static final String EXTRA_POLL_CHOICE = "Extra poll choice.";
     private PollScheduler pollScheduler;
 
     public PollCommand(PollScheduler pollScheduler) {
@@ -97,13 +98,13 @@ public class PollCommand implements SlashCommand {
                 new OptionData(OptionType.BOOLEAN, PollCommandName.Option.USERCHOICES.get(),
                         "Allow other users to add their own choices. (Defaults to false. Must have less than 9 "
                                 + "choices.)"),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE3.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE4.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE5.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE6.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE7.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE8.get(), "Extra poll choice."),
-                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE9.get(), "Extra poll choice.")
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE3.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE4.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE5.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE6.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE7.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE8.get(), EXTRA_POLL_CHOICE),
+                new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE9.get(), EXTRA_POLL_CHOICE)
         );
     }
 }

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 @Component
@@ -23,7 +22,7 @@ public class HugeDabber extends Dabber {
     void sendDabs(MessageExecutor messageExecutor, List<Emote> emoteList) {
         try {
             var channel = messageExecutor.getChannel();
-            var emote = emoteList.get(new Random().nextInt(emoteList.size()));
+            var emote = emoteList.get(getRandom().nextInt(emoteList.size()));
             var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
             InputStream file = new URL(emote.getImageUrl()).openStream();
             channel.sendFile(file, emote.getName() + imageFileType).queue();

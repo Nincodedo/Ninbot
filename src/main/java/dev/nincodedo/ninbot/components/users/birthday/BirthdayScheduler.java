@@ -58,9 +58,15 @@ public class BirthdayScheduler implements Schedulable {
             if (isBirthdayTomorrow(birthdateThisYear)) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
-                var announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
-                        .getDefaultChannel()
-                        .getId();
+                var guild = shardManager.getGuildById(ninbotUser.getServerId());
+                if (guild == null) {
+                    return;
+                }
+                var defaultChannel = guild.getDefaultChannel();
+                if (defaultChannel == null) {
+                    return;
+                }
+                var announcementChannelId = defaultChannel.getId();
                 new Timer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
                         Date.from(LocalDate.now(ZoneId.systemDefault())
                                 .atStartOfDay(ZoneId.systemDefault())

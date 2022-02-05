@@ -19,7 +19,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -57,7 +57,7 @@ class StreamListenerTest {
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Message message = mock(Message.class);
 
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -98,7 +98,7 @@ class StreamListenerTest {
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
@@ -120,7 +120,7 @@ class StreamListenerTest {
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);

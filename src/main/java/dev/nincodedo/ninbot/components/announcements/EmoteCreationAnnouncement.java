@@ -56,12 +56,18 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             var emote = event.getEmote();
             countOneStat(componentName, event.getGuild().getId());
             Member member = getMemberFromAudit(event, channel);
+            log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(), emote.getName(),
+                    event.getGuild()
+                            .getId());
             channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
                     .queue(message -> {
-                        log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(),
+                        log.trace("Event Response {}: Sent message, adding reaction for {} in {}",
+                                event.getResponseNumber(),
                                 emote.getName(), event.getGuild().getId());
                         message.addReaction(emote).queue();
-                    });
+                    }, throwable -> log.trace("Event Response {}: Failed to send message for {} in {}",
+                            event.getResponseNumber(), emote.getName(), event.getGuild()
+                                    .getId()));
         });
     }
 

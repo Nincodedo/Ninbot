@@ -17,16 +17,11 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class AppConfiguration {
-    private String twitchClientId;
-    private String twitchClientSecret;
+
     private String ninbotToken;
 
-    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken,
-            @Value("${twitchClientId}") String twitchClientId,
-            @Value("${twitchClientSecret}") String twitchClientSecret) {
+    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken) {
         this.ninbotToken = ninbotToken;
-        this.twitchClientId = twitchClientId;
-        this.twitchClientSecret = twitchClientSecret;
     }
 
     @Autowired

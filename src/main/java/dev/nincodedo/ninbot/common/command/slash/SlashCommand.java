@@ -97,22 +97,20 @@ public interface SlashCommand extends Command {
                 .equals(guild.getOwner().getId())) {
             return true;
         }
-        switch (getRolePermission()) {
-            case EVERYONE -> {
-                return true;
+        RolePermission rolePermission = getRolePermission();
+        if (rolePermission == RolePermission.EVERYONE) {
+            return true;
+        } else if (rolePermission == RolePermission.ADMIN || rolePermission == RolePermission.MODS) {
+            if (guild == null) {
+                return false;
             }
-            case ADMIN, MODS -> {
-                if (guild == null) {
-                    return false;
-                }
-                var configuredRole = configService().getSingleValueByName(guild.getId(),
-                        "roleRank-" + getRolePermission().getRoleName());
-                var roles =
-                        configuredRole.map(configuredRoleId ->
-                                        Collections.singletonList(guild.getRoleById(configuredRoleId)))
-                                .orElseGet(() -> guild.getRolesByName(getRolePermission().getRoleName(), true));
-                return guild.getMembersWithRoles(roles).contains(member);
-            }
+            var configuredRole = configService().getSingleValueByName(guild.getId(),
+                    "roleRank-" + getRolePermission().getRoleName());
+            var roles =
+                    configuredRole.map(configuredRoleId ->
+                                    Collections.singletonList(guild.getRoleById(configuredRoleId)))
+                            .orElseGet(() -> guild.getRolesByName(getRolePermission().getRoleName(), true));
+            return guild.getMembersWithRoles(roles).contains(member);
         }
         return false;
     }
