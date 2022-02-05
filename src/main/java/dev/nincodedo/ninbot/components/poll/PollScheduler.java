@@ -40,14 +40,15 @@ public class PollScheduler implements Schedulable {
                 .getLocale());
         poll.setResourceBundle(resourceBundle);
         var guildChannel = shardManager.getGuildChannelById(poll.getChannelId());
-        if (guildChannel != null) {
-            var channel = switch (guildChannel.getType()) {
-                case TEXT -> (TextChannel) guildChannel;
-                case GUILD_PUBLIC_THREAD, GUILD_PRIVATE_THREAD -> (ThreadChannel) guildChannel;
-                default -> throw new IllegalStateException("Unexpected value: " + guildChannel.getType());
-            };
-            channel.retrieveMessageById(poll.getMessageId())
-                    .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
+        if (guildChannel == null) {
+            return;
         }
+        var channel = switch (guildChannel.getType()) {
+            case TEXT -> (TextChannel) guildChannel;
+            case GUILD_PUBLIC_THREAD, GUILD_PRIVATE_THREAD -> (ThreadChannel) guildChannel;
+            default -> throw new IllegalStateException("Unexpected value: " + guildChannel.getType());
+        };
+        channel.retrieveMessageById(poll.getMessageId())
+                .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
     }
 }

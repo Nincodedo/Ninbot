@@ -28,26 +28,27 @@ public class PollAnnouncementSetup {
         addPollChoiceEmotes(message, choices);
         var announceTime = poll.getEndDateTime();
         //Poll announce time is in the future, or has not been announced yet
-        if (announceTime.isAfter(LocalDateTime.now()) || poll.isPollOpen()) {
-            message.pin().queue();
-            PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollService);
-            Timer timer;
-            PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
-                    pollService, poll
-                    .getMessageId(), this);
-            if (pollListenersMap.containsKey(poll.getId())) {
-                PollListeners pollListeners = pollListenersMap.remove(poll.getId());
-                pollListeners.timer().cancel();
-                shardManager.removeEventListener(pollListeners.pollUserChoiceListener());
-            }
-            timer = new Timer();
-            pollListenersMap.put(poll.getId(), new PollListeners(timer, pollUserChoiceListener));
-            if (poll.isUserChoicesAllowed()) {
-                shardManager.addEventListener(pollUserChoiceListener);
-                pollResultsAnnouncer.setPollUserChoiceListener(pollUserChoiceListener);
-            }
-            timer.schedule(pollResultsAnnouncer, Date.from(announceTime.atZone(ZoneId.systemDefault()).toInstant()));
+        if (!announceTime.isAfter(LocalDateTime.now()) && !poll.isPollOpen()) {
+            return;
         }
+        message.pin().queue();
+        PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollService);
+        Timer timer;
+        PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
+                pollService, poll
+                .getMessageId(), this);
+        if (pollListenersMap.containsKey(poll.getId())) {
+            PollListeners pollListeners = pollListenersMap.remove(poll.getId());
+            pollListeners.timer().cancel();
+            shardManager.removeEventListener(pollListeners.pollUserChoiceListener());
+        }
+        timer = new Timer();
+        pollListenersMap.put(poll.getId(), new PollListeners(timer, pollUserChoiceListener));
+        if (poll.isUserChoicesAllowed()) {
+            shardManager.addEventListener(pollUserChoiceListener);
+            pollResultsAnnouncer.setPollUserChoiceListener(pollUserChoiceListener);
+        }
+        timer.schedule(pollResultsAnnouncer, Date.from(announceTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     private void addPollChoiceEmotes(Message message, List<String> choices) {

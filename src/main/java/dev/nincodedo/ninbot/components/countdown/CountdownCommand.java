@@ -1,18 +1,20 @@
 package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.command.SlashCommand;
-import dev.nincodedo.ninbot.common.command.SlashSubcommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -81,10 +83,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 if (countdown.getCreatorId() != null) {
                     var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
                     if (countdownCreator != null) {
-                        countdownDescription =
-                                countdownDescription + " - "
-                                        + resourceBundle().getString("command.countdown.list.author")
-                                        + countdownCreator.getEffectiveName();
+                        countdownDescription = addCreatorInfo(countdownCreator, countdownDescription);
                     }
                 }
                 embedBuilder.addField(countdown.getName(), countdownDescription, false);
@@ -93,6 +92,12 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.nocountdownsfound"));
         }
         return embedBuilder.build();
+    }
+
+    private String addCreatorInfo(@NotNull Member countdownCreator, String countdownDescription) {
+        return countdownDescription + " - "
+                + resourceBundle().getString("command.countdown.list.author")
+                + countdownCreator.getEffectiveName();
     }
 
     private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
@@ -176,8 +181,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current "
                         + "countdowns for this server."),
                 new SubcommandData(CountdownCommandName.Subcommand.DELETE.get(), "Delete a countdown you created.")
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The name of the "
-                                + "countdown.", true)
+                        .addOptions(new OptionData(OptionType.STRING, CountdownCommandName.Option.NAME.get(),
+                                "The name of the countdown.", true, true))
         );
     }
 

@@ -34,20 +34,21 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     public void onGuildMessageReceived(GuildMessageChannel channel, Message message) {
         var refMessage = message.getReferencedMessage();
         var pollOptional = pollService.findByMessageIdAndPollOpen(pollMessageId, true);
-        if (refMessage != null && refMessage.getId().equals(pollMessageId) && pollOptional.isPresent()
-                && pollOptional.get().isPollOpen() && pollOptional.get()
+        if (refMessage == null || !refMessage.getId().equals(pollMessageId) || pollOptional.isEmpty()
+                || !pollOptional.get().isPollOpen() || !pollOptional.get()
                 .isUserChoicesAllowed()) {
-            var strippedMessage = message.getContentStripped();
-            var poll = pollOptional.get();
-            var pollChoices = poll.getChoices();
-            if (!pollChoices.contains(strippedMessage) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
-                poll.getChoices().add(strippedMessage);
-                pollService.save(poll);
-                refMessage.editMessage(poll.build()).queue();
-                pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
-            } else {
-                message.addReaction(Emojis.CROSS_X).queue();
-            }
+            return;
+        }
+        var strippedMessage = message.getContentStripped();
+        var poll = pollOptional.get();
+        var pollChoices = poll.getChoices();
+        if (!pollChoices.contains(strippedMessage) && pollChoices.size() < Constants.POLL_CHOICE_LIMIT) {
+            poll.getChoices().add(strippedMessage);
+            pollService.save(poll);
+            refMessage.editMessage(poll.build()).queue();
+            pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
+        } else {
+            message.addReaction(Emojis.CROSS_X).queue();
         }
     }
 }

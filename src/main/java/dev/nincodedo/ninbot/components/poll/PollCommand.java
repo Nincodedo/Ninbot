@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.LocaleService;
-import dev.nincodedo.ninbot.common.command.SlashCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.entities.Member;
@@ -93,7 +93,7 @@ public class PollCommand implements SlashCommand {
                 new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE1.get(), "First poll choice.", true),
                 new OptionData(OptionType.STRING, PollCommandName.Option.CHOICE2.get(), "Second poll choice.", true),
                 new OptionData(OptionType.INTEGER, PollCommandName.Option.POLLLENGTH.get(), "Poll time length in "
-                        + "minutes. (Defaults to 5.)"),
+                        + "minutes. (Defaults to 5.)", false, true).setMinValue(0).setMaxValue(1440),
                 new OptionData(OptionType.BOOLEAN, PollCommandName.Option.USERCHOICES.get(),
                         "Allow other users to add their own choices. (Defaults to false. Must have less than 9 "
                                 + "choices.)"),
