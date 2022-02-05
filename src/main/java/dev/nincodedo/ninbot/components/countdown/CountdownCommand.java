@@ -9,6 +9,7 @@ import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -82,10 +83,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 if (countdown.getCreatorId() != null) {
                     var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
                     if (countdownCreator != null) {
-                        countdownDescription =
-                                countdownDescription + " - "
-                                        + resourceBundle().getString("command.countdown.list.author")
-                                        + countdownCreator.getEffectiveName();
+                        countdownDescription = addCreatorInfo(countdownCreator, countdownDescription);
                     }
                 }
                 embedBuilder.addField(countdown.getName(), countdownDescription, false);
@@ -94,6 +92,12 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             embedBuilder.setTitle(resourceBundle().getString("command.countdown.list.nocountdownsfound"));
         }
         return embedBuilder.build();
+    }
+
+    private String addCreatorInfo(@NotNull Member countdownCreator, String countdownDescription) {
+        return countdownDescription + " - "
+                + resourceBundle().getString("command.countdown.list.author")
+                + countdownCreator.getEffectiveName();
     }
 
     private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {

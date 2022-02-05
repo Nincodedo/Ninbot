@@ -1,15 +1,13 @@
 package dev.nincodedo.ninbot.common;
 
 import dev.nincodedo.ninbot.common.release.ReleaseType;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
+@UtilityClass
 public class DegreesOfNinbot {
-
-    private DegreesOfNinbot() {
-        //no-op
-    }
 
     public static boolean releaseAllowed(ReleaseType releaseType, Guild guild) {
         var allowedRelease = degreeCalculation(guild.getJDA().getShardManager(), guild.getOwner().getUser(), guild);
