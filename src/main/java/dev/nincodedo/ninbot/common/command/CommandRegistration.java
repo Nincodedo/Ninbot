@@ -49,21 +49,41 @@ public class CommandRegistration extends ListenerAdapter {
         if (guild != null) {
             try {
                 log.trace("Registering commands for guild {}", guild.getId());
-                guild.updateCommands().complete();
+                var currentCommandList = guild.retrieveCommands().complete();
                 List<CommandData> commandDataList = commands.stream()
                         .filter(command -> DegreesOfNinbot.releaseAllowed(command.getReleaseType(), guild))
                         .map(this::convertToCommandData)
                         .toList();
-                guild.updateCommands()
-                        .addCommands(commandDataList)
-                        .queue(commandList -> log.trace("Successfully registered {} commands on guild {}",
-                                commandList.size(), guild.getId()));
+                if (guildHasAllCommands(commandDataList, currentCommandList)) {
+                    log.trace("Server {} already has all the current commands. Skipping update.", guild.getId());
+                } else {
+                    guild.updateCommands()
+                            .addCommands(commandDataList)
+                            .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
+                                    commandList.size(), guild.getId()));
+                }
             } catch (Exception e) {
                 log.error("Failed to register commands on guild {}", guild.getId(), e);
             }
         } else {
             log.trace("Null guild found?");
         }
+    }
+
+    private boolean guildHasAllCommands(List<CommandData> commandDataList,
+            List<net.dv8tion.jda.api.interactions.commands.Command> currentCommandList) {
+        if (commandDataList.size() != currentCommandList.size()) {
+            return false;
+        }
+        for (var command : currentCommandList) {
+            if (commandDataList.stream().anyMatch(commandData -> commandData.getType().equals(command.getType()))
+                    && commandDataList.stream()
+                    .filter(commandData -> commandData.getType().equals(command.getType()))
+                    .noneMatch(commandData -> commandData.getName().equals(command.getName()))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private CommandData convertToCommandData(Command command) {
