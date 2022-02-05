@@ -164,7 +164,7 @@ public class StreamListener extends StatAwareListenerAdapter {
 
     private boolean hasNoStreamingActivity(List<Activity> activities) {
         return activities.stream()
-                .noneMatch(activity -> activity != null && Activity.ActivityType.STREAMING.equals(activity.getType()));
+                .noneMatch(activity -> activity != null && Activity.ActivityType.STREAMING == activity.getType());
     }
 
     private void removeRole(Guild guild, Member member) {

@@ -67,7 +67,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
         if (subcommandName == null) {
             return;
         }
-        if (getSubcommand(subcommandName).equals(CountdownCommandName.Subcommand.DELETE)) {
+        if (getSubcommand(subcommandName) == CountdownCommandName.Subcommand.DELETE) {
             replyWithDeletableCountdowns(commandAutoCompleteInteractionEvent);
         }
     }

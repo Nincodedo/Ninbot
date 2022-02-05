@@ -12,10 +12,10 @@ public class DegreesOfNinbot {
     public static boolean releaseAllowed(ReleaseType releaseType, Guild guild) {
         var allowedRelease = degreeCalculation(guild.getJDA().getShardManager(), guild.getOwner().getUser(), guild);
         //if the ReleaseType is PUBLIC or the allowedRelease and releaseType are the same, then this is allowed.
-        if (ReleaseType.PUBLIC.equals(releaseType) || releaseType.equals(allowedRelease)) {
+        if (ReleaseType.PUBLIC == releaseType || releaseType == allowedRelease) {
             return true;
         }
-        return ReleaseType.ALPHA.equals(allowedRelease) && ReleaseType.BETA.equals(releaseType);
+        return ReleaseType.ALPHA == allowedRelease && ReleaseType.BETA == releaseType;
     }
 
     public static ReleaseType degreeCalculation(ShardManager shardManager, User targetUser, Guild targetGuild) {

@@ -76,9 +76,9 @@ public class CommandRegistration extends ListenerAdapter {
             return false;
         }
         for (var command : currentCommandList) {
-            if (commandDataList.stream().anyMatch(commandData -> commandData.getType().equals(command.getType()))
+            if (commandDataList.stream().anyMatch(commandData -> commandData.getType() == command.getType())
                     && commandDataList.stream()
-                    .filter(commandData -> commandData.getType().equals(command.getType()))
+                    .filter(commandData -> commandData.getType() == command.getType())
                     .noneMatch(commandData -> commandData.getName().equals(command.getName()))) {
                 return false;
             }
