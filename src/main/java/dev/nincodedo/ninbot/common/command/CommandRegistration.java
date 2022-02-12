@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.common.DegreesOfNinbot;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -40,9 +41,9 @@ public class CommandRegistration extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@Nonnull GuildJoinEvent event) {
-        log.trace("Registering commands on joined guild {}", event.getGuild().getId());
+        log.trace("Registering commands on joined guild {}", UtilLogging.logGuildName(event.getGuild()));
         registerCommands(event.getGuild());
-        log.trace("Finished registering commands on joined guild {}", event.getGuild().getId());
+        log.trace("Finished registering commands on joined guild {}", UtilLogging.logGuildName(event.getGuild()));
     }
 
     private void registerCommands(Guild guild) {
@@ -51,22 +52,22 @@ public class CommandRegistration extends ListenerAdapter {
             return;
         }
         try {
-            log.trace("Registering commands for guild {}", guild.getId());
+            log.trace("Registering commands for server {}", UtilLogging.logGuildName(guild));
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> DegreesOfNinbot.releaseAllowed(command.getReleaseType(), guild))
                     .map(this::convertToCommandData)
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {
-                log.trace("Server {} already has all the current commands. Skipping update.", guild.getId());
+                log.trace("Server {} already has all the current commands. Skipping update.", UtilLogging.logGuildName(guild));
             } else {
                 guild.updateCommands()
                         .addCommands(commandDataList)
                         .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
-                                commandList.size(), guild.getId()));
+                                commandList.size(), UtilLogging.logGuildName(guild)));
             }
         } catch (Exception e) {
-            log.error("Failed to register commands on guild {}", guild.getId(), e);
+            log.error("Failed to register commands on guild {}", UtilLogging.logGuildName(guild), e);
         }
     }
 
@@ -86,6 +87,12 @@ public class CommandRegistration extends ListenerAdapter {
         return true;
     }
 
+    /**
+     * Convert from Ninbot {@link Command} to JDA {@link CommandData}.
+     *
+     * @param command Ninbot command to convert
+     * @return JDA CommandData
+     */
     private CommandData convertToCommandData(Command command) {
         switch (command) {
             case SlashCommand slashCommand:
