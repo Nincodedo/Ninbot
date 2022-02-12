@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -202,10 +203,10 @@ public class StreamListener extends StatAwareListenerAdapter {
                             countOneStat(componentName, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
                         });
-                log.trace("Queued stream message for {} to channel {}", username, channel.getId());
+                log.trace("Queued stream message for {} to channel {}", username, UtilLogging.logChannelInfo(channel));
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
-                        , username, guild.getId());
+                        , username, UtilLogging.logGuildName(guild));
             }
         });
     }
@@ -225,10 +226,10 @@ public class StreamListener extends StatAwareListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
-                log.trace("Adding role {} to {}", streamingRole.getName(), member.getId());
+                log.trace("Adding role {} to {}", streamingRole.getName(), UtilLogging.logMemberInfo(member));
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.trace("Could not add role ID {} for {}", roleId, member.getId());
+                log.trace("Could not add role ID {} for {}", roleId, UtilLogging.logMemberInfo(member));
             }
         });
     }

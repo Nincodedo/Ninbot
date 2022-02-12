@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -32,75 +33,72 @@ public class CommandParser {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
     }
 
-    public void parseEvent(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        SlashCommand slashCommand = slashCommandMap.get(slashCommandEvent.getName());
+    public void parseEvent(@NotNull SlashCommandInteractionEvent event) {
+        SlashCommand slashCommand = slashCommandMap.get(event.getName());
         if (slashCommand != null) {
             executorService.execute(() -> {
                 try {
                     log.trace("Running slash command {} in server {} by user {}", slashCommand.getName(),
-                            slashCommandEvent.getGuild()
-                                    .getId(), slashCommandEvent.getUser().getId());
-                    slashCommand.execute(slashCommandEvent).executeActions();
+                            UtilLogging.logGuildName(event.getGuild()), event.getUser().getId());
+                    slashCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Slash command {} failed with an exception: Ran in server {} by {}",
-                            slashCommand.getName(), slashCommandEvent.getGuild()
-                                    .getId(), slashCommandEvent.getUser().getId(), e);
+                            slashCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId(), e);
                 }
             });
         }
     }
 
-    public void parseEvent(@NotNull MessageContextInteractionEvent messageContextInteractionEvent) {
-        MessageContextCommand messageContextCommand =
-                messageContextCommandMap.get(messageContextInteractionEvent.getName());
+    public void parseEvent(@NotNull MessageContextInteractionEvent event) {
+        MessageContextCommand messageContextCommand = messageContextCommandMap.get(event.getName());
         if (messageContextCommand != null) {
             executorService.execute(() -> {
                 try {
                     log.trace("Running message context command {} in server {} by user {}",
-                            messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
-                                    .getId(), messageContextInteractionEvent.getUser().getId());
-                    messageContextCommand.execute(messageContextInteractionEvent).executeActions();
+                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId());
+                    messageContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Message context command {} failed with an exception: Ran in server {} by {}",
-                            messageContextCommand.getName(), messageContextInteractionEvent.getGuild()
-                                    .getId(), messageContextInteractionEvent.getUser().getId(), e);
+                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId(), e);
                 }
             });
         }
     }
 
-    public void parseEvent(@NotNull UserContextInteractionEvent userContextInteractionEvent) {
-        UserContextCommand userContextCommand = userContextCommandMap.get(userContextInteractionEvent.getName());
+    public void parseEvent(@NotNull UserContextInteractionEvent event) {
+        UserContextCommand userContextCommand = userContextCommandMap.get(event.getName());
         if (userContextCommand != null) {
             executorService.execute(() -> {
                 try {
                     log.trace("Running user context command {} in server {} by user {}", userContextCommand.getName()
-                            , userContextInteractionEvent.getGuild()
-                                    .getId(), userContextInteractionEvent.getUser().getId());
-                    userContextCommand.execute(userContextInteractionEvent).executeActions();
+                            , UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId());
+                    userContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("User context command {} failed with an exception: Ran in server {} by {}",
-                            userContextCommand.getName(), userContextInteractionEvent.getGuild()
-                                    .getId(), userContextInteractionEvent.getUser().getId(), e);
+                            userContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId(), e);
                 }
             });
         }
     }
 
-    public void parseEvent(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public void parseEvent(@NotNull CommandAutoCompleteInteractionEvent event) {
         AutoCompleteCommand autoCompleteCommand =
-                autoCompleteCommandMap.get(commandAutoCompleteInteractionEvent.getName());
+                autoCompleteCommandMap.get(event.getName());
         if (autoCompleteCommand != null) {
             executorService.execute(() -> {
                 try {
                     log.trace("Running autocomplete {} in server {} by user {}", autoCompleteCommand.getName(),
-                            commandAutoCompleteInteractionEvent.getGuild()
-                                    .getId(), commandAutoCompleteInteractionEvent.getUser().getId());
-                    autoCompleteCommand.autoComplete(commandAutoCompleteInteractionEvent);
+                            UtilLogging.logGuildName(event.getGuild()), event.getUser().getId());
+                    autoCompleteCommand.autoComplete(event);
                 } catch (Exception e) {
                     log.error("Command autocomplete {} failed with an exception: Ran in server {} by {}",
-                            autoCompleteCommand.getName(), commandAutoCompleteInteractionEvent.getGuild()
-                                    .getId(), commandAutoCompleteInteractionEvent.getUser().getId(), e);
+                            autoCompleteCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
+                                    .getId(), e);
                 }
             });
         }

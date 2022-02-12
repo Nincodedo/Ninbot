@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.announcements;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -41,7 +42,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             return;
         }
         log.trace("Event Response {}: Running EmoteCreationAnnouncement for server {}", event.getResponseNumber(),
-                event.getGuild().getId());
+                UtilLogging.logGuildName(event.getGuild()));
         var optionalChannelId = configService.getSingleValueByName(event.getGuild()
                 .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
         optionalChannelId.ifPresent(channelId -> {
@@ -52,22 +53,21 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
                 log.trace("Event Response {}: Channel id {} not found", event.getResponseNumber(), channelId);
                 return;
             }
-            log.trace("Event Response {}: Found channel {}", event.getResponseNumber(), channel);
+            log.trace("Event Response {}: Found channel {}", event.getResponseNumber(),
+                    UtilLogging.logChannelInfo(channel));
             var emote = event.getEmote();
             countOneStat(componentName, event.getGuild().getId());
             Member member = getMemberFromAudit(event, channel);
             log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(), emote.getName(),
-                    event.getGuild()
-                            .getId());
+                    UtilLogging.logGuildName(event.getGuild()));
             channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
                     .queue(message -> {
                         log.trace("Event Response {}: Sent message, adding reaction for {} in {}",
                                 event.getResponseNumber(),
-                                emote.getName(), event.getGuild().getId());
+                                emote.getName(), UtilLogging.logGuildName(event.getGuild()));
                         message.addReaction(emote).queue();
                     }, throwable -> log.trace("Event Response {}: Failed to send message for {} in {}",
-                            event.getResponseNumber(), emote.getName(), event.getGuild()
-                                    .getId()));
+                            event.getResponseNumber(), emote.getName(), UtilLogging.logGuildName(event.getGuild())));
         });
     }
 

@@ -56,7 +56,7 @@ public class RollCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return List.of(new OptionData(OptionType.STRING, RollCommandName.Option.NOTATION.get(), "Simple "
-                + "dice notation"));
+        return List.of(new OptionData(OptionType.STRING, RollCommandName.Option.NOTATION.get(), "Simple dice notation"
+                + ". Defaults to 1d20."));
     }
 }

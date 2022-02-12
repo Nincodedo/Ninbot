@@ -59,7 +59,8 @@ public class CommandRegistration extends ListenerAdapter {
                     .map(this::convertToCommandData)
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {
-                log.trace("Server {} already has all the current commands. Skipping update.", UtilLogging.logGuildName(guild));
+                log.trace("Server {} already has all the current commands. Skipping update.",
+                        UtilLogging.logGuildName(guild));
             } else {
                 guild.updateCommands()
                         .addCommands(commandDataList)
