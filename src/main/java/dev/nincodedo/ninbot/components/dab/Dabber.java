@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.dab;
 
-import dev.nincodedo.ninbot.common.CommonUtils;
+import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import dev.nincodedo.ninbot.common.Constants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
@@ -26,14 +26,16 @@ public class Dabber {
     @Getter
     private SecureRandom random;
     private boolean isDabEdition;
+    private SupporterCheck supporterCheck;
     @Getter
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     @Getter
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
 
 
-    public Dabber(GitProperties gitProperties) {
+    public Dabber(GitProperties gitProperties, SupporterCheck supporterCheck) {
         isDabEdition = isDabEdition(gitProperties.getCommitId());
+        this.supporterCheck = supporterCheck;
         random = new SecureRandom();
     }
 
@@ -46,9 +48,8 @@ public class Dabber {
             User commandUser) {
         int dabCritPercentChance = 5;
 
-        if (CommonUtils.isUserNinbotSupporter(shardManager, commandUser)) {
+        if (supporterCheck.isSupporter(shardManager, commandUser)) {
             dabCritPercentChance = dabCritPercentChance * 2;
-            log.trace("Made possible by Patreon");
         }
         if (isDabEdition) {
             dabCritPercentChance = dabCritPercentChance * 2;

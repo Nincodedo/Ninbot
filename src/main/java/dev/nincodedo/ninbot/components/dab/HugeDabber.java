@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.dab;
 
+import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Emote;
@@ -14,8 +15,8 @@ import java.util.List;
 @Slf4j
 @Component
 public class HugeDabber extends Dabber {
-    public HugeDabber(GitProperties gitProperties) {
-        super(gitProperties);
+    public HugeDabber(GitProperties gitProperties, SupporterCheck supporterCheck) {
+        super(gitProperties, supporterCheck);
     }
 
     @Override

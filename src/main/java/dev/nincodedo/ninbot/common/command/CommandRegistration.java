@@ -1,10 +1,10 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.common.DegreesOfNinbot;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
 import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -23,9 +23,11 @@ import java.util.List;
 public class CommandRegistration extends ListenerAdapter {
 
     private List<Command> commands;
+    private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command> commands) {
+    public CommandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
+        this.releaseFilter = releaseFilter;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class CommandRegistration extends ListenerAdapter {
             log.trace("Registering commands for server {}", UtilLogging.logGuildName(guild));
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
-                    .filter(command -> DegreesOfNinbot.releaseAllowed(command.getReleaseType(), guild))
+                    .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
                     .map(this::convertToCommandData)
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {

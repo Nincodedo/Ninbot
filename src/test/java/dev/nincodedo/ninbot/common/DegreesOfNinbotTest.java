@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common;
 
 import dev.nincodedo.ninbot.common.release.ReleaseType;
+import dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -14,6 +15,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class DegreesOfNinbotTest {
+
+    DegreesOfNinbot degreesOfNinbot = new DegreesOfNinbot();
 
     @Test
     void publicReleaseAllowed() {
@@ -31,7 +34,7 @@ class DegreesOfNinbotTest {
         when(shardManager.getGuildById("109466144993210368")).thenReturn(guild);
         when(guild.getMember(any())).thenReturn(null);
 
-        var actual = DegreesOfNinbot.releaseAllowed(ReleaseType.PUBLIC, guild);
+        var actual = degreesOfNinbot.filter(ReleaseType.PUBLIC, guild);
 
         assertThat(actual).isTrue();
     }
@@ -52,7 +55,7 @@ class DegreesOfNinbotTest {
         when(jda.getGuildById("109466144993210368")).thenReturn(guild);
         when(guild.getMember(any())).thenReturn(null);
 
-        var actual = DegreesOfNinbot.releaseAllowed(ReleaseType.ALPHA, guild);
+        var actual = degreesOfNinbot.filter(ReleaseType.ALPHA, guild);
 
         assertThat(actual).isTrue();
     }
@@ -73,7 +76,7 @@ class DegreesOfNinbotTest {
         when(shardManager.getGuildById("109466144993210368")).thenReturn(guild);
         when(guild.getMember(any())).thenReturn(null);
 
-        var actual = DegreesOfNinbot.releaseAllowed(ReleaseType.ALPHA, guild);
+        var actual = degreesOfNinbot.filter(ReleaseType.ALPHA, guild);
 
         assertThat(actual).isFalse();
     }
@@ -94,7 +97,7 @@ class DegreesOfNinbotTest {
         when(shardManager.getGuildById("109466144993210368")).thenReturn(guild);
         when(guild.getMember(user)).thenReturn(member);
 
-        var actual = DegreesOfNinbot.releaseAllowed(ReleaseType.BETA, guild);
+        var actual = degreesOfNinbot.filter(ReleaseType.BETA, guild);
 
         assertThat(actual).isTrue();
     }
@@ -115,7 +118,7 @@ class DegreesOfNinbotTest {
         when(shardManager.getGuildById("109466144993210368")).thenReturn(guild);
         when(guild.getMember(user)).thenReturn(null);
 
-        var actual = DegreesOfNinbot.releaseAllowed(ReleaseType.BETA, guild);
+        var actual = degreesOfNinbot.filter(ReleaseType.BETA, guild);
 
         assertThat(actual).isFalse();
     }
