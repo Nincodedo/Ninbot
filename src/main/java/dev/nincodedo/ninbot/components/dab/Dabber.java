@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.dab;
 
-import dev.nincodedo.ninbot.common.CommonUtils;
-import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.NinbotConstants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +26,16 @@ public class Dabber {
     @Getter
     private SecureRandom random;
     private boolean isDabEdition;
+    private SupporterCheck supporterCheck;
     @Getter
     private EmojiReactionResponse critResponse = new EmojiReactionResponse("crit");
     @Getter
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
 
 
-    public Dabber(GitProperties gitProperties) {
+    public Dabber(GitProperties gitProperties, SupporterCheck supporterCheck) {
         isDabEdition = isDabEdition(gitProperties.getCommitId());
+        this.supporterCheck = supporterCheck;
         random = new SecureRandom();
     }
 
@@ -46,9 +48,8 @@ public class Dabber {
             User commandUser) {
         int dabCritPercentChance = 5;
 
-        if (CommonUtils.isUserNinbotSupporter(shardManager, commandUser)) {
+        if (supporterCheck.isSupporter(shardManager, commandUser)) {
             dabCritPercentChance = dabCritPercentChance * 2;
-            log.trace("Made possible by Patreon");
         }
         if (isDabEdition) {
             dabCritPercentChance = dabCritPercentChance * 2;
@@ -79,7 +80,7 @@ public class Dabber {
 
     Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
         return new MessageBuilder().append(jda
-                        .getGuildById(Constants.OCW_SERVER_ID)
+                        .getGuildById(NinbotConstants.OCW_SERVER_ID)
                         .getEmotesByName("ninbotdab", true)
                         .get(0))
                 .append(" ")

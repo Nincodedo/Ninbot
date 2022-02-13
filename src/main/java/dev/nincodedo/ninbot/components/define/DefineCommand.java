@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +54,7 @@ public class DefineCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, DefineCommandName.Option.WORD.get(), "The word to "
+        return List.of(new OptionData(OptionType.STRING, DefineCommandName.Option.WORD.get(), "The word to "
                 + "lookup.", true));
     }
 }

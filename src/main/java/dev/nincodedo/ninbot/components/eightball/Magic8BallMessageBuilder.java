@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +26,7 @@ public class Magic8BallMessageBuilder {
     private String memberName;
 
     public Magic8BallMessageBuilder(@Value("classpath:magic8BallAnswers.txt") Resource answerFile) {
-        this.random = new Random();
+        this.random = new SecureRandom();
         this.eightBallAnswers = readMagic8BallList(answerFile);
     }
 

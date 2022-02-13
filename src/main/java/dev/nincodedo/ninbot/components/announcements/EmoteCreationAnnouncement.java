@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.announcements;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -14,8 +15,10 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
@@ -43,33 +46,46 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             return;
         }
         log.trace("Event Response {}: Running EmoteCreationAnnouncement for server {}", event.getResponseNumber(),
-                event.getGuild().getId());
+                UtilLogging.logGuildName(event.getGuild()));
         var optionalChannelId = configService.getSingleValueByName(event.getGuild()
                 .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
-        if (optionalChannelId.isPresent()) {
-            var emoteAddedChannelId = optionalChannelId.get();
+        optionalChannelId.ifPresent(channelId -> {
             log.trace("Event Response {}: Emote announcement channel id {}", event.getResponseNumber(),
-                    emoteAddedChannelId);
-            var channel = event.getGuild().getTextChannelById(emoteAddedChannelId);
-            if (channel != null) {
-                log.trace("Event Response {}: Found channel {}", event.getResponseNumber(), channel);
-                var emote = event.getEmote();
-                countOneStat(componentName, event.getGuild().getId());
-                Member member = null;
-                if (event.getGuild()
-                        .getMember(event.getJDA().getSelfUser())
-                        .getPermissions(channel)
-                        .contains(Permission.VIEW_AUDIT_LOGS)) {
-                    member = event.getGuild()
-                            .getMember(event.getGuild().retrieveAuditLogs().complete().get(0).getUser());
-                }
-                channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
-                        .queue(message -> {
-                            log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(),
-                                    emote.getName(), event.getGuild().getId());
-                            message.addReaction(emote).queue();
-                        });
+                    channelId);
+            var channel = event.getGuild().getTextChannelById(channelId);
+            if (channel == null) {
+                log.trace("Event Response {}: Channel id {} not found", event.getResponseNumber(), channelId);
+                return;
             }
+            log.trace("Event Response {}: Found channel {}", event.getResponseNumber(),
+                    UtilLogging.logChannelInfo(channel));
+            var emote = event.getEmote();
+            countOneStat(componentName, event.getGuild().getId());
+            Member member = getMemberFromAudit(event, channel);
+            log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(), emote.getName(),
+                    UtilLogging.logGuildName(event.getGuild()));
+            channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
+                    .queue(message -> {
+                        log.trace("Event Response {}: Sent message, adding reaction for {} in {}",
+                                event.getResponseNumber(),
+                                emote.getName(), UtilLogging.logGuildName(event.getGuild()));
+                        message.addReaction(emote).queue();
+                    }, throwable -> log.trace("Event Response {}: Failed to send message for {} in {}",
+                            event.getResponseNumber(), emote.getName(), UtilLogging.logGuildName(event.getGuild())));
+        });
+    }
+
+    @Nullable
+    private Member getMemberFromAudit(EmoteAddedEvent event, TextChannel channel) {
+        var selfMember = event.getGuild().getMember(event.getJDA().getSelfUser());
+        var recentAuditUser = event.getGuild().retrieveAuditLogs().complete().get(0).getUser();
+        if (selfMember == null || recentAuditUser == null) {
+            return null;
+        }
+        if (selfMember.getPermissions(channel).contains(Permission.VIEW_AUDIT_LOGS)) {
+            return event.getGuild().getMember(recentAuditUser);
+        } else {
+            return null;
         }
     }
 

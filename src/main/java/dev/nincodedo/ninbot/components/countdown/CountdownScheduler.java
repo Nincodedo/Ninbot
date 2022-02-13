@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -11,7 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Date;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -46,6 +51,7 @@ public class CountdownScheduler implements Schedulable {
             ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(countdown
                     .getServerId()));
             countdown.setResourceBundle(resourceBundle);
+            var guild = shardManager.getGuildById(countdown.getServerId());
             var countdownMessage = countdown.buildMessage();
             var announceChannelOptional = Optional.ofNullable(countdown.getChannelId());
             var configChannelOptional = configService.getSingleValueByName(countdown.getServerId(),
@@ -58,7 +64,7 @@ public class CountdownScheduler implements Schedulable {
             } else {
                 log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or "
                         + "this countdown", countdown
-                        .getId(), countdown.getServerId());
+                        .getId(), UtilLogging.logGuildName(guild));
                 return;
             }
             new Timer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),

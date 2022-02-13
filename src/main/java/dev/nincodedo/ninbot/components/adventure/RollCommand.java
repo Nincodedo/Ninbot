@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -57,7 +56,7 @@ public class RollCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, RollCommandName.Option.NOTATION.get(), "Simple "
-                + "dice notation"));
+        return List.of(new OptionData(OptionType.STRING, RollCommandName.Option.NOTATION.get(), "Simple dice notation"
+                + ". Defaults to 1d20."));
     }
 }

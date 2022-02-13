@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -27,7 +28,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
         super(statManager);
         this.componentService = componentService;
         this.syllableCounter = new SyllableCounter();
-        this.random = new Random();
+        this.random = new SecureRandom();
         this.componentName = "haiku";
         componentService.registerComponent(componentName, ComponentType.ACTION);
     }

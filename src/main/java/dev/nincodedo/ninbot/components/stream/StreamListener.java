@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceStreamEvent;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -44,7 +46,7 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     @Override
-    public void onGuildVoiceStream(GuildVoiceStreamEvent event) {
+    public void onGuildVoiceStream(@NotNull GuildVoiceStreamEvent event) {
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 
@@ -149,22 +151,21 @@ public class StreamListener extends StatAwareListenerAdapter {
     public boolean hasStartedStreaming(GenericEvent event) {
         return switch (event) {
             case UserActivityStartEvent startEvent -> startEvent.getNewActivity()
-                    .getType()
-                    .equals(Activity.ActivityType.STREAMING);
-            case UserActivityEndEvent ignored -> false;
+                    .getType() == Activity.ActivityType.STREAMING;
             case GuildVoiceStreamEvent guildVoiceStreamEvent -> guildVoiceStreamEvent.isStream();
+            case UserActivityEndEvent ignored -> false;
             case null, default -> false;
         };
     }
 
     @Override
-    public void onGenericUserPresence(GenericUserPresenceEvent event) {
+    public void onGenericUserPresence(@NotNull GenericUserPresenceEvent event) {
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 
     private boolean hasNoStreamingActivity(List<Activity> activities) {
         return activities.stream()
-                .noneMatch(activity -> activity != null && Activity.ActivityType.STREAMING.equals(activity.getType()));
+                .noneMatch(activity -> activity != null && Activity.ActivityType.STREAMING == activity.getType());
     }
 
     private void removeRole(Guild guild, Member member) {
@@ -202,10 +203,10 @@ public class StreamListener extends StatAwareListenerAdapter {
                             countOneStat(componentName, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
                         });
-                log.trace("Queued stream message for {} to channel {}", username, channel.getId());
+                log.trace("Queued stream message for {} to channel {}", username, UtilLogging.logChannelInfo(channel));
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
-                        , username, guild.getId());
+                        , username, UtilLogging.logGuildName(guild));
             }
         });
     }
@@ -225,10 +226,10 @@ public class StreamListener extends StatAwareListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
-                log.trace("Adding role {} to {}", streamingRole.getName(), member.getId());
+                log.trace("Adding role {} to {}", streamingRole.getName(), UtilLogging.logMemberInfo(member));
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.trace("Could not add role ID {} for {}", roleId, member.getId());
+                log.trace("Could not add role ID {} for {}", roleId, UtilLogging.logMemberInfo(member));
             }
         });
     }

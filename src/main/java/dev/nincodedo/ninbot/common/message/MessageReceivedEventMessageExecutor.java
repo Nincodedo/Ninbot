@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.common.message;
 
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.common.message.impersonation.Impersonation;
 import dev.nincodedo.ninbot.common.message.impersonation.Impersonator;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
             try {
                 impersonator.sendMessage(message).get();
             } catch (InterruptedException | ExecutionException e) {
-                log.error("Failed to send webhook message in guild {}", getGuild().getId(), e);
+                log.error("Failed to send webhook message in server {}", UtilLogging.logGuildName(getGuild()), e);
             }
         }
     }

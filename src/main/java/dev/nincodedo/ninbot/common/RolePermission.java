@@ -6,9 +6,9 @@ public enum RolePermission {
     ADMIN(2, "admin"), MODS(1, "mods"), EVERYONE(0, "@everyone");
 
     @Getter
-    int roleLevel;
+    final int roleLevel;
     @Getter
-    String roleName;
+    final String roleName;
 
     RolePermission(int roleLevel, String roleName) {
         this.roleLevel = roleLevel;

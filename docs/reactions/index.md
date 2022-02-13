@@ -1,14 +1,18 @@
 # Reactions
+
 Ninbot has some automation actions it will take based on various types of messages.
+
 * [Dadbot](#dadbot)
 * [Haiku](#haiku)
 * [Reaction Emojis](#reaction-emojis)
 
 ## Dadbot
-Hi, I'm Dad. Dadbot detects messages that start with a variation of "I'm" and responds with the appropriate dad joke.
-## Haiku
-If Ninbot detects that a message was a Haiku, it will respond with it in Haiku form.
 
+Hi, I'm Dad. Dadbot detects messages that start with a variation of "I'm" and responds with the appropriate dad joke.
+
+## Haiku
+
+If Ninbot detects that a message was a Haiku, it will respond with it in Haiku form.
 
 ## Reaction Emojis
 

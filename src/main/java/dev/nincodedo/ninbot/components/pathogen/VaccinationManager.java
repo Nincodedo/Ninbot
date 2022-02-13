@@ -27,7 +27,7 @@ public class VaccinationManager {
                         .stream()
                         .filter(member -> !member.getRoles().contains(vaccinatedRole))
                         .min(StreamUtils.shuffle())
-                        .ifPresent(member -> guild.addRoleToMember(member, vaccinatedRole)
+                        .ifPresent(member -> guild.addRoleToMember(member, vaccinatedRole).reason("Random vaccination")
                                 .queue(success -> {
                                     pathogenUserService.vaccinateUser(member.getId(), guild.getId());
                                     var infectedRoleList =

@@ -1,7 +1,6 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.components.info;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.common.Constants;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -24,13 +23,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
-class InfoCommandTest {
+class NinbotInfoCommandImplTest {
 
     @Mock
     ShardManager shardManager;
 
+    @Mock
+    NinbotBotInfo ninbotBotInfo;
+
     @InjectMocks
-    InfoCommand infoCommand;
+    NinbotInfoCommandImpl ninbotInfoCommandImpl;
 
     @Test
     void getPatronsList() {
@@ -46,7 +48,7 @@ class InfoCommandTest {
 
         List<Member> memberList = List.of(member, member2, bot, owner);
 
-        when(shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID)).thenReturn(guild);
+        when(shardManager.getGuildById(ninbotBotInfo.getSupporterServerId())).thenReturn(guild);
         when(guild.getMembersWithRoles(Collections.emptyList())).thenReturn(memberList);
         when(owner.isOwner()).thenReturn(true);
         when(member.getUser()).thenReturn(user);
@@ -56,7 +58,7 @@ class InfoCommandTest {
         when(user.getName()).thenReturn("User 1");
         when(user2.getName()).thenReturn("User 2");
 
-        var actualString = infoCommand.getPatronsList(shardManager);
+        var actualString = ninbotInfoCommandImpl.getPatronsList(shardManager);
 
         assertThat(actualString).isNotEmpty()
                 .contains(", ")

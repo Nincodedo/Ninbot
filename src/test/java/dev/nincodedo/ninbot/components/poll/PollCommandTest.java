@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,7 +78,7 @@ class PollCommandTest {
         when(slashCommandEvent.getGuild()).thenReturn(guild);
         when(slashCommandEvent.getOption("choice1")).thenReturn(choice1);
         when(slashCommandEvent.getOption("choice2")).thenReturn(choice2);
-        when(slashCommandEvent.getOptions()).thenReturn(Arrays.asList(choice3));
+        when(slashCommandEvent.getOptions()).thenReturn(List.of(choice3));
         when(choice3.getName()).thenReturn("choice3");
         when(choice3.getAsString()).thenReturn("3rd");
         when(slashCommandEvent.getOption("question")).thenReturn(questionOption);

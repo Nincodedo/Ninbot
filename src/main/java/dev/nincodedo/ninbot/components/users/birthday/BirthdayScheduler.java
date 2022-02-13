@@ -18,7 +18,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -58,9 +63,15 @@ public class BirthdayScheduler implements Schedulable {
             if (isBirthdayTomorrow(birthdateThisYear)) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
                 Message birthdayMessage = buildMessage(ninbotUser, shardManager);
-                var announcementChannelId = shardManager.getGuildById(ninbotUser.getServerId())
-                        .getDefaultChannel()
-                        .getId();
+                var guild = shardManager.getGuildById(ninbotUser.getServerId());
+                if (guild == null) {
+                    return;
+                }
+                var defaultChannel = guild.getDefaultChannel();
+                if (defaultChannel == null) {
+                    return;
+                }
+                var announcementChannelId = defaultChannel.getId();
                 new Timer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
                         Date.from(LocalDate.now(ZoneId.systemDefault())
                                 .atStartOfDay(ZoneId.systemDefault())

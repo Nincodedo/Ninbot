@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -67,7 +66,7 @@ public class HugemojiCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return Arrays.asList(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(), "The emote to "
+        return List.of(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(), "The emote to "
                 + "biggify.", true));
     }
 }

@@ -2,12 +2,17 @@ package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.UtilLogging;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.AudioChannel;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -58,9 +63,9 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private void createTemporaryChannel(AudioChannel channelJoined, Guild guild, Member member) {
         var channelNameType = channelJoined.getName().substring(2);
         var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
-        log.trace("Creating temporary channel named {} for member id {} in server id {}", channelName, member.getId(),
-                guild.getId());
-        if (channelJoined.getType().equals(ChannelType.VOICE)) {
+        log.trace("Creating temporary channel named {} for member id {} in server {}", channelName, member.getId(),
+                UtilLogging.logGuildName(guild));
+        if (channelJoined.getType() == ChannelType.VOICE) {
             var voiceChannel = (VoiceChannel) channelJoined;
             voiceChannel.createCopy()
                     .setName(channelName)

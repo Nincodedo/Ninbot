@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -37,7 +38,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     @Autowired
     public Dadbot(ConfigService configService, ComponentService componentService, StatManager statManager) {
         super(statManager);
-        random = new Random();
+        random = new SecureRandom();
         this.configService = configService;
         componentName = "dad";
         this.componentService = componentService;

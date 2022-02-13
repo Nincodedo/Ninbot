@@ -4,7 +4,14 @@ import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.RichPresence;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
@@ -19,11 +26,15 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {NinbotRunner.class})
@@ -57,7 +68,7 @@ class StreamListenerTest {
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Message message = mock(Message.class);
 
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ROLE)).thenReturn(Optional.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -98,7 +109,7 @@ class StreamListenerTest {
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
@@ -120,7 +131,7 @@ class StreamListenerTest {
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
-        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(Arrays.asList("123"));
+        when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
