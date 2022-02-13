@@ -4,8 +4,8 @@ import dev.nincodedo.ninbot.common.command.InfoCommand;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NinbotInfoCommand extends InfoCommand {
-    public NinbotInfoCommand(NinbotBotInfo ninbotBotInfo) {
+public class NinbotInfoCommandImpl extends InfoCommand {
+    public NinbotInfoCommandImpl(NinbotBotInfo ninbotBotInfo) {
         super(ninbotBotInfo);
     }
 }
