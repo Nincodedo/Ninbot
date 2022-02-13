@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "nincodedo.releaseFilterClass",
+      "type": "java.lang.Class",
+      "description": "Description for nincodedo.releaseFilterClass."
+    },
+    {
+      "name": "nincodedo.supporterCheckClass",
+      "type": "java.lang.Class",
+      "description": "Description for nincodedo.supporterCheckClass."
+    }
+  ] }

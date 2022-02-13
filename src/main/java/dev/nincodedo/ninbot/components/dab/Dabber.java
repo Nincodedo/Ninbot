@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.dab;
 
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
-import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.NinbotConstants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
@@ -80,7 +80,7 @@ public class Dabber {
 
     Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
         return new MessageBuilder().append(jda
-                        .getGuildById(Constants.OCW_SERVER_ID)
+                        .getGuildById(NinbotConstants.OCW_SERVER_ID)
                         .getEmotesByName("ninbotdab", true)
                         .get(0))
                 .append(" ")

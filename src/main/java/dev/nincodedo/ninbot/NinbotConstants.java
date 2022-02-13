@@ -1,9 +1,9 @@
-package dev.nincodedo.ninbot.common;
+package dev.nincodedo.ninbot;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class Constants {
+public class NinbotConstants {
     public static final String NINBOT_SUPPORTERS_SERVER_ID = "608765747728220161";
     public static final String OCW_SERVER_ID = "109466144993210368";
     public static final String NINBOT_DOCUMENTATION_URL = "https://ninbot.nincodedo.dev/";

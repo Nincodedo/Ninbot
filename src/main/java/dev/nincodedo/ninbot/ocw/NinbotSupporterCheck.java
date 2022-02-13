@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.ocw;
 
-import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.NinbotConstants;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.User;
@@ -23,7 +23,7 @@ public class NinbotSupporterCheck implements SupporterCheck {
      */
     @Override
     public boolean isPatreonSupporter(ShardManager shardManager, User user) {
-        var guild = shardManager.getGuildById(Constants.NINBOT_SUPPORTERS_SERVER_ID);
+        var guild = shardManager.getGuildById(NinbotConstants.NINBOT_SUPPORTERS_SERVER_ID);
         if (guild != null && guild.getMembers()
                 .stream()
                 .anyMatch(member -> member.getId().equals(user.getId()))) {

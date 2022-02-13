@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.ocw.release;
 
-import dev.nincodedo.ninbot.common.Constants;
+import dev.nincodedo.ninbot.NinbotConstants;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.release.ReleaseType;
 import net.dv8tion.jda.api.entities.Guild;
@@ -20,10 +20,10 @@ public class DegreesOfNinbot implements ReleaseFilter {
     }
 
     private ReleaseType degreeCalculation(ShardManager shardManager, User targetUser, Guild targetGuild) {
-        if (targetGuild.getId().equals(Constants.OCW_SERVER_ID)) {
+        if (targetGuild.getId().equals(NinbotConstants.OCW_SERVER_ID)) {
             return ReleaseType.ALPHA;
         }
-        var ocwGuild = shardManager.getGuildById(Constants.OCW_SERVER_ID);
+        var ocwGuild = shardManager.getGuildById(NinbotConstants.OCW_SERVER_ID);
         if (ocwGuild != null && ocwGuild.getMember(targetUser) != null) {
             return ReleaseType.BETA;
         }

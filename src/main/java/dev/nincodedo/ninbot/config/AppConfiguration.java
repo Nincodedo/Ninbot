@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.config;
 
+import dev.nincodedo.ninbot.common.config.NincodedoAutoConfig;
 import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.supporter.DefaultSupporterCheck;
@@ -9,7 +10,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,25 +25,24 @@ import java.util.List;
 public class AppConfiguration {
 
     private String ninbotToken;
-    @Value("${nincodedo.supporter-check.classname:}")
-    private String supporterCheckClassName;
-    @Value("${nincodedo.release-filter.classname:}")
-    private String releaseFilterClassName;
+    private NincodedoAutoConfig nincodedoAutoConfig;
 
-    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken) {
+    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken, NincodedoAutoConfig nincodedoAutoConfig) {
         this.ninbotToken = ninbotToken;
+        this.nincodedoAutoConfig = nincodedoAutoConfig;
     }
 
     @Autowired
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
-            return DefaultShardManagerBuilder.create(ninbotToken,
-                            EnumSet.of(GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_MEMBERS,
-                                    GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_PRESENCES,
-                                    GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS))
+            return DefaultShardManagerBuilder.create(ninbotToken, EnumSet.of(GatewayIntent.GUILD_EMOJIS,
+                            GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
+                            GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
+                            GatewayIntent.GUILD_MESSAGE_REACTIONS))
                     .addEventListeners(listenerAdapters.toArray())
-                    .setShardsTotal(-1).build();
+                    .setShardsTotal(-1)
+                    .build();
         } catch (LoginException e) {
             log.error("Failed to login", e);
         }
@@ -51,20 +50,18 @@ public class AppConfiguration {
     }
 
     @Bean
-    public ReleaseFilter releaseFilter() throws ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, InstantiationException, IllegalAccessException {
-        if (StringUtils.isBlank(releaseFilterClassName)) {
-            return new DefaultReleaseFilter();
-        }
-        return (ReleaseFilter) Class.forName(releaseFilterClassName).getDeclaredConstructor().newInstance();
+    public ReleaseFilter releaseFilter() throws NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        var releaseFilterClass = nincodedoAutoConfig.releaseFilterClass()
+                == null ? DefaultReleaseFilter.class : nincodedoAutoConfig.releaseFilterClass();
+        return releaseFilterClass.getDeclaredConstructor().newInstance();
     }
 
     @Bean
-    public SupporterCheck supporterCheck() throws ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, InstantiationException, IllegalAccessException {
-        if (StringUtils.isBlank(supporterCheckClassName)) {
-            return new DefaultSupporterCheck();
-        }
-        return (SupporterCheck) Class.forName(supporterCheckClassName).getDeclaredConstructor().newInstance();
+    public SupporterCheck supporterCheck() throws NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        var supporterCheckClass = nincodedoAutoConfig.supporterCheckClass()
+                == null ? DefaultSupporterCheck.class : nincodedoAutoConfig.supporterCheckClass();
+        return supporterCheckClass.getDeclaredConstructor().newInstance();
     }
 }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import java.util.List;
 @EnableCaching
 @EnableScheduling
 @EnableJpaAuditing
+@ConfigurationPropertiesScan("dev.nincodedo.ninbot")
 public class NinbotRunner {
 
     private final ShardManager shardManager;
