@@ -1,8 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
 import lombok.Data;
-import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;

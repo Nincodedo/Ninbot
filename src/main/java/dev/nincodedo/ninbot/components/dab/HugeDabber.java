@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.dab;
 
-import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Emote;
 import org.springframework.boot.info.GitProperties;

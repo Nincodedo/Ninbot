@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @UtilityClass
 public class Emojis {
@@ -21,8 +25,8 @@ public class Emojis {
     public static final String BALLOON = "\uD83C\uDF88";
     public static final String PARTY_POPPER = "\uD83C\uDF89";
     public static final String PILLS = "\uD83D\uDC8A";
-    private static final List<String> DOCTOR_LIST = Arrays.asList("\uD83D\uDC68\u200D⚕️", "\uD83D\uDC69\u200D⚕️");
     public static final String THUMBS_UP = "\uD83D\uDC4D";
+    private static final List<String> DOCTOR_LIST = Arrays.asList("\uD83D\uDC68\u200D⚕️", "\uD83D\uDC69\u200D⚕️");
     @Getter
     private static final Map<Integer, String> numberMap;
     private static Random random = new SecureRandom();
