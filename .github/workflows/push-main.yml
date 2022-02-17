@@ -38,7 +38,7 @@ jobs:
             ${{ github.sha }}
           containerRegistry: true
       - name: GKE Login
-        uses: google-github-actions/get-gke-credentials@v0.5.0
+        uses: google-github-actions/get-gke-credentials@v0.6.0
         with:
           cluster_name: ninbot-cluster
           location: us-central1-c
