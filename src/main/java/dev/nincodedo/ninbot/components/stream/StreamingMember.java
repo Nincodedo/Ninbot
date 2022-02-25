@@ -1,14 +1,12 @@
 package dev.nincodedo.ninbot.components.stream;
 
+import dev.nincodedo.ninbot.common.BaseEntity;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,12 +16,9 @@ import java.util.Optional;
 
 @Data
 @Entity
-class StreamingMember {
+class StreamingMember extends BaseEntity {
     @CreatedDate
     private LocalDateTime started;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String userId;
     private String guildId;
     private String twitchUsername;

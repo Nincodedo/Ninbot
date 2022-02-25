@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +74,6 @@ public class PathogenManager {
             PathogenAudit audit = new PathogenAudit();
             audit.setAction("setRandomSeed");
             audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
-            audit.setCreationDate(LocalDateTime.now());
             audit.setCreatedBy("ninbot");
             audit.setWeekId(healingWeekId());
             pathogenAuditRepository.save(audit);
@@ -143,7 +141,6 @@ public class PathogenManager {
         audit.setAction(action);
         audit.setDescription(String.format(description, targetUser.getId(),
                 channelId));
-        audit.setCreationDate(LocalDateTime.now());
         audit.setCreatedBy(spreadSource.getId());
         audit.setWeekId(healingWeekId());
         pathogenAuditRepository.save(audit);

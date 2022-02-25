@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
+import dev.nincodedo.ninbot.common.BaseEntity;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,13 +8,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OrderColumn;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
@@ -25,13 +22,9 @@ import java.util.ResourceBundle;
 @Entity
 @Data
 @Accessors(chain = true)
-class Poll {
+class Poll extends BaseEntity {
     @Transient
     ResourceBundle resourceBundle;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
     private String localeString;
     private String title;
     @ElementCollection(fetch = FetchType.EAGER)

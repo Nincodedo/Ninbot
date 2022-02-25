@@ -74,7 +74,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
 
     private void replyWithDeletableCountdowns(
             CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        var countdowns = countdownRepository.findCountdownByCreatorId(commandAutoCompleteInteractionEvent.getMember()
+        var countdowns = countdownRepository.findCountdownByCreatedBy(commandAutoCompleteInteractionEvent.getMember()
                         .getId())
                 .stream()
                 .map(Countdown::getName)
@@ -88,7 +88,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
     private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get()).getAsString();
         var userId = slashCommandEvent.getUser().getId();
-        var optionalCountdown = countdownRepository.findByCreatorIdAndName(userId, countdownName);
+        var optionalCountdown = countdownRepository.findByCreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
             countdownRepository.delete(optionalCountdown.get());
             return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
@@ -108,8 +108,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             for (var countdown : countdownList) {
                 countdown.setResourceBundle(resourceBundle());
                 String countdownDescription = countdown.getDescription();
-                if (countdown.getCreatorId() != null) {
-                    var countdownCreator = event.getGuild().getMemberById(countdown.getCreatorId());
+                if (countdown.getCreatedBy() != null) {
+                    var countdownCreator = event.getGuild().getMemberById(countdown.getCreatedBy());
                     if (countdownCreator != null) {
                         countdownDescription = addCreatorInfo(countdownCreator, countdownDescription);
                     }
@@ -145,8 +145,8 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
                 .setEventDate(LocalDate.parse(stringDate, ISO_LOCAL_DATE)
                         .atStartOfDay(serverTimezone))
                 .setName(countdownName)
-                .setServerId(slashCommandEvent.getGuild().getId())
-                .setCreatorId(slashCommandEvent.getUser().getId());
+                .setServerId(slashCommandEvent.getGuild().getId());
+        countdown.setCreatedBy(slashCommandEvent.getUser().getId());
         countdownRepository.save(countdown);
         countdownScheduler.scheduleOne(countdown, slashCommandEvent.getJDA().getShardManager());
         countdown.setResourceBundle(resourceBundle(slashCommandEvent.getGuild().getLocale()));

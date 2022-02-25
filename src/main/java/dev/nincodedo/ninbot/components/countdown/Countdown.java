@@ -1,20 +1,14 @@
 package dev.nincodedo.ninbot.components.countdown;
 
+import dev.nincodedo.ninbot.common.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.utils.TimeFormat;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
@@ -22,29 +16,17 @@ import java.util.ResourceBundle;
 @Data
 @Entity
 @Accessors(chain = true)
-class Countdown {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+class Countdown extends BaseEntity {
+
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private ZonedDateTime eventDate;
     @Column(nullable = false)
     private String serverId;
-    @CreatedBy
-    private String creatorId;
     private String channelId;
-    @CreatedDate
-    private LocalDateTime createdAt;
     @Transient
     private ResourceBundle resourceBundle;
-
-    @PrePersist
-    void prePersist() {
-        createdAt = LocalDateTime.now();
-    }
 
     String buildMessage() {
         var dayDifference = getDayDifference();

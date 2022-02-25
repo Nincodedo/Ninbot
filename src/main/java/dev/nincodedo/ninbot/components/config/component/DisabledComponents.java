@@ -1,21 +1,15 @@
 package dev.nincodedo.ninbot.components.config.component;
 
+import dev.nincodedo.ninbot.common.BaseEntity;
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
 @Data
-public class DisabledComponents {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private long id;
+public class DisabledComponents extends BaseEntity {
+
     private String serverId;
     @ManyToOne
     private Component component;

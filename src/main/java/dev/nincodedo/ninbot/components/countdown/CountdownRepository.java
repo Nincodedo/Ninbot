@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface CountdownRepository extends CrudRepository<Countdown, Long> {
     List<Countdown> findByServerId(String serverId);
 
-    List<Countdown> findCountdownByCreatorId(String creatorId);
+    List<Countdown> findCountdownByCreatedBy(String creatorId);
 
-    Optional<Countdown> findByCreatorIdAndName(String creatorId, String name);
+    Optional<Countdown> findByCreatedByAndName(String creatorId, String name);
 }

@@ -1,24 +1,16 @@
 package dev.nincodedo.ninbot.components.config.component;
 
+import dev.nincodedo.ninbot.common.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
 @Data
-public class Component {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private long id;
+public class Component extends BaseEntity {
+
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
