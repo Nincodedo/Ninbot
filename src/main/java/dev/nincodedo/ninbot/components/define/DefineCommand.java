@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -30,21 +32,22 @@ public class DefineCommand implements SlashCommand {
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get()).getAsString();
-        Map<String, String> definition = defineWordAPI.defineWord(word);
-        if (definition == null) {
+        Word wordDefinition = defineWordAPI.defineWord(word);
+        if (wordDefinition == null) {
             messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
         } else {
-            messageExecutor.addMessageResponse(buildMessage(definition, word));
+            messageExecutor.addMessageResponse(buildMessage(wordDefinition));
         }
         return messageExecutor;
     }
 
-    private Message buildMessage(Map<String, String> definition, String word) {
+    private Message buildMessage(Word wordDefinition) {
         return new MessageBuilder(
                 new EmbedBuilder()
-                        .setTitle("Definition of " + word)
-                        .addField(word, definition.get("definition").split("\n")[0], false)
-                        .addField("Find out more", definition.get("permalink"), false)).build();
+                        .setTitle("Definition of " + wordDefinition.word())
+                        .addField(wordDefinition.word(), wordDefinition.definition().split("\n")[0], false))
+                .setActionRows(ActionRow.of(Button.link(wordDefinition.link(), "Find Out More")))
+                .build();
     }
 
     @Override

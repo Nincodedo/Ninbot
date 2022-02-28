@@ -22,7 +22,7 @@ import java.util.Map;
 public class UDDefineWordAPI implements DefineWordAPI {
 
     @Override
-    public Map<String, String> defineWord(String word) {
+    public Word defineWord(String word) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             String baseUrl = "http://api.urbandictionary.com/v0/define?term=";
             HttpGet get = new HttpGet(baseUrl + URLEncoder.encode(word, StandardCharsets.UTF_8));
@@ -34,7 +34,8 @@ public class UDDefineWordAPI implements DefineWordAPI {
                     });
             List responseList = (ArrayList) responseMap.get("list");
             if (!responseList.isEmpty()) {
-                return (Map<String, String>) responseList.get(0);
+                var responseListMap = (Map<String, String>) responseList.get(0);
+                return new Word(word, responseListMap.get("definition"), responseListMap.get("permalink"));
             } else {
                 return null;
             }
