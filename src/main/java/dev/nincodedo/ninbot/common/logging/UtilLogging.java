@@ -13,8 +13,8 @@ public class UtilLogging {
     /**
      * Returns the guild name and id formatted for logging.
      *
-     * @param guild
-     * @return
+     * @param guild JDA guild
+     * @return String of guild name(guild id)
      */
     public static String logGuildName(Guild guild) {
         if (guild == null) {
@@ -23,6 +23,12 @@ public class UtilLogging {
         return String.format(NAME_ID_ENTITY_FORMAT, guild.getName(), guild.getId());
     }
 
+    /**
+     * Returns the guild name, id and owner name, id formatted for logging.
+     *
+     * @param guild JDA guild
+     * @return String of guild name(guild id), owner name(owner id)
+     */
     public static String logGuildInfo(Guild guild) {
         if (guild == null) {
             return "null guild";
@@ -31,10 +37,22 @@ public class UtilLogging {
                 .complete()));
     }
 
+    /**
+     * Returns the member name and id formatted for logging.
+     *
+     * @param member JDA member
+     * @return String of member name(member id)
+     */
     public static String logMemberInfo(Member member) {
         return String.format(NAME_ID_ENTITY_FORMAT, member.getEffectiveName(), member.getId());
     }
 
+    /**
+     * Returns the channel name and id formatted for logging.
+     *
+     * @param channel JDA channel
+     * @return String of channel name(channel id)
+     */
     public static String logChannelInfo(Channel channel) {
         if (channel == null) {
             return "null channel";
