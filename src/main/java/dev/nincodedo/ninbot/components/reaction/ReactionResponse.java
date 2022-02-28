@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.List;
 
 @Data
-class ReactionResponse {
+public class ReactionResponse {
 
     protected String response;
     protected String target;
@@ -31,13 +31,8 @@ class ReactionResponse {
 
     boolean canRespond(MessageReceivedEvent event) {
         return switch (reactionMatchType) {
-            case EXACT -> getTarget()
-                    .equalsIgnoreCase(event.getMessage().getContentStripped());
-            case CONTAINS -> event.getMessage()
-                    .getContentStripped()
-                    .toLowerCase()
-                    .contains(getTarget()
-                            .toLowerCase());
+            case EXACT -> getTarget().equalsIgnoreCase(event.getMessage().getContentStripped());
+            case CONTAINS -> event.getMessage().getContentStripped().toLowerCase().contains(getTarget().toLowerCase());
             case REGEX -> event.getMessage().getContentStripped().matches(getTarget());
         };
     }

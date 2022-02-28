@@ -1,10 +1,14 @@
 package dev.nincodedo.ninbot.components.reaction;
 
+import dev.nincodedo.ninbot.components.reaction.processor.PreviousAuthor;
+import dev.nincodedo.ninbot.components.reaction.processor.PreviousContent;
+import dev.nincodedo.ninbot.components.reaction.processor.ReactionContext;
+import dev.nincodedo.ninbot.components.reaction.processor.ReactionRule;
+import dev.nincodedo.ninbot.components.reaction.processor.ReactionRuleProcessor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Optional;
+import java.util.List;
 
 class SpecialReactionResponse extends ReactionResponse {
 
@@ -15,40 +19,18 @@ class SpecialReactionResponse extends ReactionResponse {
 
     @Override
     public void react(Message message, MessageChannel channel) {
-        boolean canReact = true;
-        String reactionResponse = response;
-        if (reactionResponse.contains("$message.previous")) {
-            var lastMessageOptional = getPreviousMessage(channel, message);
-            if (reactionResponse.contains("$message.previous.author") && lastMessageOptional.isPresent()) {
-                var lastMessage = lastMessageOptional.get();
-                var previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
-                        .getEffectiveName() : lastMessage.getAuthor().getName();
-                reactionResponse = reactionResponse.replace("$message.previous.author", previousAuthorName);
-            }
-            if (reactionResponse.contains("$message.previous.content") && lastMessageOptional.isPresent()) {
-                var lastMessage = lastMessageOptional.get();
-                String previousMessageContent = lastMessage.getContentRaw();
-                if (reactionResponse.contains("#toUpper")) {
-                    reactionResponse = reactionResponse.replace("#toUpper", "");
-                    previousMessageContent = previousMessageContent.toUpperCase();
-                }
-                if (StringUtils.isBlank(previousMessageContent)) {
-                    canReact = false;
-                }
-                reactionResponse = reactionResponse.replace("$message.previous.content", previousMessageContent);
-            }
-        }
-        if (canReact) {
-            channel.sendMessage(reactionResponse).queue();
-        }
-    }
-
-    private Optional<Message> getPreviousMessage(MessageChannel channel, Message message) {
-        var messageHistory = channel.getHistoryBefore(message, 1).complete().getRetrievedHistory();
-        if (!messageHistory.isEmpty() && !messageHistory.get(0).isWebhookMessage()) {
-            return Optional.of(messageHistory.get(0));
-        } else {
-            return Optional.empty();
+        List<ReactionRule> reactionRules = List.of(
+                new PreviousAuthor(),
+                new PreviousContent()
+        );
+        ReactionRuleProcessor reactionRuleProcessor = new ReactionRuleProcessor(reactionRules);
+        ReactionContext reactionContext = new ReactionContext();
+        reactionContext.setReactionMessage(response);
+        reactionContext.setMessage(message);
+        reactionContext.setChannel(channel);
+        var context = reactionRuleProcessor.process(reactionContext);
+        if (context.isCanReact()) {
+            channel.sendMessage(context.getReactionMessage()).queue();
         }
     }
 }
