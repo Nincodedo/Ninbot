@@ -57,7 +57,6 @@ public class NinbotRunner {
             log.info("Starting Ninbot with {} shard(s)", shards.size());
             shardManager.getShards().forEach(NinbotRunner::waitForShardStartup);
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
-            setNinbotActivity();
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 shardManager.setActivity(Activity.playing("Shutting down, be back in a few!"));
@@ -68,10 +67,5 @@ public class NinbotRunner {
                 }
             }));
         };
-    }
-
-    @Scheduled(fixedRate = 3600000)
-    private void setNinbotActivity() {
-        shardManager.setActivity(Activity.playing("Check out my fancy new slash commands!"));
     }
 }
