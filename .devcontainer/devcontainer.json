@@ -17,7 +17,7 @@
   },
   // Set *default* container specific settings.json values on container create.
   "settings": {
-    "java.home": "/docker-java-home"
+    "java.jdt.ls.java.home": "/docker-java-home"
   },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
@@ -25,7 +25,7 @@
   ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
-
+  
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "java -version",
 
