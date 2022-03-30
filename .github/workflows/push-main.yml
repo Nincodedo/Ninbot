@@ -6,7 +6,6 @@ name: Build and Deploy
 env:
   GCLOUD_PROJECT: ${{ secrets.GCLOUD_PROJECT }}
   GCLOUD_EMAIL: ${{ secrets.GCLOUD_EMAIL }}
-  GITHUB_SHA: ${{ github.sha }}
   IMAGE: ninbot
 jobs:
   build:
@@ -29,14 +28,25 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
-      - name: GitHub Docker Action
-        uses: matootie/github-docker@v3.1.0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
         with:
-          accessToken: ${{ secrets.PACKAGE_ACTIONS_TOKEN }}
-          tag: |
-            latest
-            ${{ github.sha }}
-          containerRegistry: true
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PACKAGE_ACTIONS_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/nincodedo/ninbot:latest
+            ghcr.io/nincodedo/ninbot:${{ github.sha }}
       - name: GKE Login
         uses: google-github-actions/get-gke-credentials@v0.7.0
         with:
@@ -44,4 +54,4 @@ jobs:
           location: us-central1-c
           credentials: ${{ secrets.GKE_JSON }}
       - name: GKE Deploy
-        run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:$GITHUB_SHA
+        run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
