@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot;
 
 import dev.nincodedo.ninbot.common.Schedulable;
 import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
@@ -30,19 +31,23 @@ public class NinbotRunner {
 
     private final List<Schedulable> schedulableList;
 
-    public NinbotRunner(ShardManager shardManager, List<Schedulable> schedulableList) {
+    private final StatManager statManager;
+
+    public NinbotRunner(ShardManager shardManager, List<Schedulable> schedulableList, StatManager statManager) {
         this.shardManager = shardManager;
         this.schedulableList = schedulableList;
+        this.statManager = statManager;
     }
 
     public static void main(String[] args) {
         SpringApplication.run(NinbotRunner.class, args);
     }
 
-    private static void waitForShardStartup(JDA jda) {
+    private void waitForShardStartup(JDA jda) {
         try {
             jda.awaitReady();
             log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo().getShardId(), jda.getGuilds().size());
+            statManager.upsertCount("Connected Servers", "server", null, jda.getGuilds().size());
             jda.getGuilds().forEach(guild -> log.info(UtilLogging.logGuildInfo(guild)));
         } catch (InterruptedException e) {
             log.error("Failed to wait for shard to start", e);
@@ -54,7 +59,7 @@ public class NinbotRunner {
         return args -> {
             var shards = shardManager.getShards();
             log.info("Starting Ninbot with {} shard(s)", shards.size());
-            shardManager.getShards().forEach(NinbotRunner::waitForShardStartup);
+            shardManager.getShards().forEach(this::waitForShardStartup);
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
