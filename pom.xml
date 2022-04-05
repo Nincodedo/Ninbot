@@ -42,7 +42,7 @@
         <dice.version>2.2.1</dice.version>
         <discord-webhooks.version>0.8.0</discord-webhooks.version>
         <emoji-java.version>5.1.1</emoji-java.version>
-        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <log4j.version>2.17.2</log4j.version>
         <lombok.version>1.18.22</lombok.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
