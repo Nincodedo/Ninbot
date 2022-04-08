@@ -1,4 +1,4 @@
-FROM maven:3.8.4-eclipse-temurin-17 AS build
+FROM maven:3.8.5-eclipse-temurin-17 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
