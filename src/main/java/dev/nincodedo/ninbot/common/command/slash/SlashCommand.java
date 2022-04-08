@@ -32,7 +32,7 @@ public interface SlashCommand extends Command {
     }
 
     default String getDescription(Locale locale) {
-        return resourceBundle(locale).getString("command." + getName() + ".description.text");
+        return resourceBundle(locale).getString("command." + getName() + ".description");
     }
 
     default ResourceBundle resourceBundle() {

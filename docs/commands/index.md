@@ -16,6 +16,7 @@ All commands are slash commands found in Discord's chat message menu.
     * [Stream](#stream)
     * [Subscribe/Unsubscribe](#subscribeunsubscribe)
     * [Tally](#tally)
+    * [Time](#time)
     * [User](#user)
 * [Mods Commands](#mod-commands)
     * [Topic Change Announcement](#topic-change-announcement)
@@ -73,6 +74,10 @@ Subscribes/unsubscribes you to a role for events.
 ### Tally
 
 Tally a count of something.
+
+### Time
+
+Create a Discord timestamp relative to the current time.
 
 ### User
 

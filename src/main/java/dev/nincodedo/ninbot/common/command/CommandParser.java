@@ -39,12 +39,13 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running slash command {} in server {} by user {}", slashCommand.getName(),
-                            UtilLogging.logGuildName(event.getGuild()), event.getUser().getId());
+                            UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
                     slashCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Slash command {} failed with an exception: Ran in server {} by {}",
-                            slashCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId(), e);
+                            slashCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
+                            UtilLogging.logUserInfo(event.getUser()), e);
+                    event.reply("Ninbot encountered an error. :(").setEphemeral(true).queue();
                 }
             });
         }
@@ -56,13 +57,13 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running message context command {} in server {} by user {}",
-                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId());
+                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
+                            UtilLogging.logUserInfo(event.getUser()));
                     messageContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Message context command {} failed with an exception: Ran in server {} by {}",
-                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId(), e);
+                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
+                            UtilLogging.logUserInfo(event.getUser()), e);
                 }
             });
         }
@@ -74,13 +75,12 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running user context command {} in server {} by user {}", userContextCommand.getName()
-                            , UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId());
+                            , UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
                     userContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("User context command {} failed with an exception: Ran in server {} by {}",
-                            userContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId(), e);
+                            userContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
+                            UtilLogging.logUserInfo(event.getUser()), e);
                 }
             });
         }
@@ -93,33 +93,33 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running autocomplete {} in server {} by user {}", autoCompleteCommand.getName(),
-                            UtilLogging.logGuildName(event.getGuild()), event.getUser().getId());
+                            UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
                     autoCompleteCommand.autoComplete(event);
                 } catch (Exception e) {
                     log.error("Command autocomplete {} failed with an exception: Ran in server {} by {}",
-                            autoCompleteCommand.getName(), UtilLogging.logGuildName(event.getGuild()), event.getUser()
-                                    .getId(), e);
+                            autoCompleteCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
+                            UtilLogging.logUserInfo(event.getUser()), e);
                 }
             });
         }
     }
 
-    public void addSlashCommand(SlashCommand slashCommand) {
+    private void addSlashCommand(SlashCommand slashCommand) {
         slashCommandMap.put(slashCommand.getName(), slashCommand);
         if (slashCommand instanceof AutoCompleteCommand autoCompleteCommand) {
             autoCompleteCommandMap.put(autoCompleteCommand.getName(), autoCompleteCommand);
         }
     }
 
-    public void addMessageContextCommand(MessageContextCommand messageContextCommand) {
+    private void addMessageContextCommand(MessageContextCommand messageContextCommand) {
         messageContextCommandMap.put(messageContextCommand.getName(), messageContextCommand);
     }
 
-    public void addUserContextCommand(UserContextCommand userContextCommand) {
+    private void addUserContextCommand(UserContextCommand userContextCommand) {
         userContextCommandMap.put(userContextCommand.getName(), userContextCommand);
     }
 
-    public void addCommands(List<Command> commands) {
+    void addCommands(List<Command> commands) {
         commands.forEach(command -> {
             switch (command) {
                 case SlashCommand slashCommand -> addSlashCommand(slashCommand);
