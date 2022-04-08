@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 
 @UtilityClass
 public class UtilLogging {
@@ -58,5 +59,18 @@ public class UtilLogging {
             return "null channel";
         }
         return String.format(NAME_ID_ENTITY_FORMAT, channel.getName(), channel.getId());
+    }
+
+    /**
+     * Returns the username and id formatted for logging.
+     *
+     * @param user JDA user
+     * @return String of username(user id)
+     */
+    public static String logUserInfo(User user) {
+        if (user == null) {
+            return "null user";
+        }
+        return String.format(NAME_ID_ENTITY_FORMAT, user.getName(), user.getId());
     }
 }
