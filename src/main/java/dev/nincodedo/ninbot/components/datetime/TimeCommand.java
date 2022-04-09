@@ -70,7 +70,11 @@ public class TimeCommand implements SlashCommand, AutoCompleteCommand {
     @NotNull
     protected Timestamp getTimestamp(Double amount, String unit, String display) {
         ChronoUnit chronoUnit = Enum.valueOf(ChronoUnit.class, unit.toUpperCase());
-        return timeFormatMap.get(display).now().plus(Duration.of(amount.longValue(), chronoUnit));
+        return now(timeFormatMap.get(display)).plus(Duration.of(amount.longValue(), chronoUnit));
+    }
+
+    protected Timestamp now(TimeFormat timeFormat) {
+        return timeFormat.now();
     }
 
     private TimeCommandName.Option getOptionFromName(String name) {
