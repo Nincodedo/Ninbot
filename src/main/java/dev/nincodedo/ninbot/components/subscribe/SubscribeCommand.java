@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,8 @@ public class SubscribeCommand implements SlashCommand {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.deferEphemeralReply();
         var server = slashCommandEvent.getGuild();
-        var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get()).getAsRole();
+        var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(),
+                OptionMapping::getAsRole);
         if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
             try {
                 addOrRemoveSubscription(slashCommandEvent.getInteraction()

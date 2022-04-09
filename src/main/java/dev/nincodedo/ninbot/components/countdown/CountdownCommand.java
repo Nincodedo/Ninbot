@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -86,7 +87,7 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
     }
 
     private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
-        var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get()).getAsString();
+        var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(), OptionMapping::getAsString);
         var userId = slashCommandEvent.getUser().getId();
         var optionalCountdown = countdownRepository.findByCreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
@@ -129,16 +130,13 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
     }
 
     private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
-        var year =
-                slashCommandEvent.getOption("year") == null ? null : slashCommandEvent.getOption("year").getAsString();
+        var year = slashCommandEvent.getOption("year", OptionMapping::getAsString);
         var month = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get())
-                        .getAsString()));
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get(), OptionMapping::getAsString)));
         var day = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get())
-                        .getAsString()));
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get(), OptionMapping::getAsString)));
         var stringDate = getCountdownDate(year, month, day);
-        var countdownName = slashCommandEvent.getOption("name").getAsString();
+        var countdownName = slashCommandEvent.getOption("name", OptionMapping::getAsString);
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
         Countdown countdown = new Countdown()
                 .setChannelId(slashCommandEvent.getChannel().getId())

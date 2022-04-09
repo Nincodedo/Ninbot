@@ -56,11 +56,9 @@ public class TallyCommand implements SlashCommand, SlashSubcommand<TallyCommandN
         }
         switch (getSubcommand(subcommand)) {
             case ADD -> addToTally(slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get()),
-                    slashCommandEvent.getOption(TallyCommandName.Option.NAME.get())
-                            .getAsString()
+                    slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
                             .toLowerCase(), messageExecutor);
-            case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get())
-                    .getAsString()
+            case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
                     .toLowerCase(), messageExecutor);
         }
         return messageExecutor;

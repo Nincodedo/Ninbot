@@ -54,23 +54,23 @@ public class PollCommand implements SlashCommand {
                 .setUserAvatarUrl(member.getEffectiveAvatarUrl())
                 .setUserName(member.getEffectiveName())
                 .setChoices(getPollChoices(slashCommandEvent))
-                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get()))
-                        .getAsString());
+                .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get(),
+                        OptionMapping::getAsString)));
         //If user choice is set to true, allowed for other users to add their own choices by replying
-        var userChoiceOption = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get());
-        poll.setUserChoicesAllowed(userChoiceOption != null && userChoiceOption.getAsBoolean());
-        var timeOption = slashCommandEvent.getOption(PollCommandName.Option.POLLLENGTH.get());
+        var userChoice = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get(), OptionMapping::getAsBoolean);
+        poll.setUserChoicesAllowed(Boolean.TRUE.equals(userChoice));
+        var time = slashCommandEvent.getOption(PollCommandName.Option.POLLLENGTH.get(), 5L, OptionMapping::getAsLong);
         poll.setEndDateTime(LocalDateTime.now()
-                .plus(timeOption != null ? timeOption.getAsLong() : 5, ChronoUnit.MINUTES));
+                .plus(time, ChronoUnit.MINUTES));
         return poll;
     }
 
     private List<String> getPollChoices(SlashCommandInteractionEvent slashCommandEvent) {
         List<String> pollChoices = new ArrayList<>();
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get()))
-                .getAsString());
-        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE2.get()))
-                .getAsString());
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE1.get(),
+                OptionMapping::getAsString)));
+        pollChoices.add(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.CHOICE2.get(),
+                OptionMapping::getAsString)));
         pollChoices.addAll(slashCommandEvent.getOptions()
                 .stream()
                 .filter(Objects::nonNull)
