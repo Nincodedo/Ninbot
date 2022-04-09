@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +25,8 @@ public class Magic8BallCommand implements SlashCommand {
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var questionOption = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get());
-        var question = questionOption != null ? questionOption.getAsString() : "";
+        var question = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get(), "",
+                OptionMapping::getAsString);
         var messageEmbed = magic8BallMessageBuilder
                 .question(question)
                 .memberName(slashCommandEvent.getMember().getEffectiveName())

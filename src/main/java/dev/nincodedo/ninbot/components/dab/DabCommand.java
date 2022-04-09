@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -37,11 +38,10 @@ public class DabCommand implements SlashCommand {
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
                 messageExecutor,
-                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get()).getAsUser());
+                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser));
 
         messageExecutor.addMessageResponse(dabber.buildDabMessage(slashCommandEvent.getJDA(),
-                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get())
-                        .getAsUser()));
+                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser)));
         return messageExecutor;
     }
 

@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.command.slash.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -50,9 +51,8 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
     }
 
     private void updateBirthday(SlashCommandInteractionEvent slashCommandEvent) {
-        var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get()).getAsString() + "-"
-                + slashCommandEvent.getOption(UserCommandName.Option.DAY.get())
-                .getAsString();
+        var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get(), OptionMapping::getAsString) + "-"
+                + slashCommandEvent.getOption(UserCommandName.Option.DAY.get(), OptionMapping::getAsString);
         var userId = slashCommandEvent.getMember().getId();
         var guildId = slashCommandEvent.getGuild().getId();
         userService.updateBirthday(userId, guildId, birthday);

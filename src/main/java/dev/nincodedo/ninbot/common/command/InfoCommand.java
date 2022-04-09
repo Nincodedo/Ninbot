@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -32,8 +33,8 @@ public class InfoCommand implements SlashCommand {
         var selfUser = slashCommandEvent.getJDA().getSelfUser();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(selfUser.getName(), botInfo.getGitHubUrl(), selfUser.getEffectiveAvatarUrl());
-        var extra = slashCommandEvent.getOption(InfoCommandName.Option.EXTRA.get());
-        if (extra != null && extra.getAsBoolean()) {
+        var extra = slashCommandEvent.getOption(InfoCommandName.Option.EXTRA.get(), OptionMapping::getAsBoolean);
+        if (Boolean.TRUE.equals(extra)) {
             embedBuilder.addField(resourceBundle().getString("command.info.git.hash"), botInfo.getCommitHash(), false)
                     .addField(resourceBundle().getString("command.info.uptime"), botInfo.getUptime(resourceBundle()),
                             false)

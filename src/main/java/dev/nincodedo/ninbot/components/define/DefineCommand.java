@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -30,7 +31,7 @@ public class DefineCommand implements SlashCommand {
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get()).getAsString();
+        String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get(), OptionMapping::getAsString);
         Word wordDefinition = defineWordAPI.defineWord(word);
         if (wordDefinition == null) {
             messageExecutor.addEphemeralMessage(Emojis.CROSS_X);

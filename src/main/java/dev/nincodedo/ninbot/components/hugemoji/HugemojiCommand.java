@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,8 @@ public class HugemojiCommand implements SlashCommand {
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get())
-                .getAsString();
+        var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),
+                OptionMapping::getAsString);
         List<Emote> emoteList = new ArrayList<>();
         List<String> emojiList = new ArrayList<>();
         if (EmojiManager.isEmoji(possibleEmoteString)) {
