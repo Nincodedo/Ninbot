@@ -9,19 +9,19 @@ public abstract class BaseListenerAdapter extends ListenerAdapter {
 
     Locale defaultLocale = Locale.ENGLISH;
 
-    ResourceBundle resourceBundle() {
+    protected ResourceBundle resourceBundle() {
         return resourceBundle(defaultLocale);
     }
 
-    ResourceBundle resourceBundle(Locale locale) {
+    protected ResourceBundle resourceBundle(Locale locale) {
         return ResourceBundle.getBundle("lang", locale);
     }
 
-    String resource(String resourceBundleKey) {
+    protected String resource(String resourceBundleKey) {
         return resourceBundle().getString(resourceBundleKey);
     }
 
-    String resource(String resourceBundleKey, Locale locale) {
+    protected String resource(String resourceBundleKey, Locale locale) {
         return resourceBundle(locale).getString(resourceBundleKey);
     }
 }

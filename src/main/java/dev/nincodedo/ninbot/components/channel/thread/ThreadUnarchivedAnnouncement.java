@@ -80,6 +80,7 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
     private void announceThreadRevival(ThreadChannel threadChannel) {
         var parentChannel = threadChannel.getParentMessageChannel();
         var threadChannelMention = threadChannel.getAsMention();
-        parentChannel.sendMessageFormat("Thread %s has been revived from a long death.", threadChannelMention).queue();
+        parentChannel.sendMessageFormat(resource("threadunarchiveannouncement.threadrevived"), threadChannelMention)
+                .queue();
     }
 }
