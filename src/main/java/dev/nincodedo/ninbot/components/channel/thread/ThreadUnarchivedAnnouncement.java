@@ -1,7 +1,9 @@
 package dev.nincodedo.ninbot.components.channel.thread;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchiveTimestampEvent;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchivedEvent;
@@ -12,32 +14,38 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Slf4j
 @Component
-public class ThreadListener extends BaseListenerAdapter {
+public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
 
+    @Getter
     private final List<String> threadChannelIdList = new ArrayList<>();
 
     @Override
     public void onChannelUpdateArchived(@NotNull ChannelUpdateArchivedEvent event) {
-        if (Boolean.TRUE.equals(event.getOldValue()) && Boolean.FALSE.equals(event.getNewValue())) {
-            var threadChannel = (ThreadChannel) event.getChannel();
-            if (!threadChannel.isPublic()) {
-                return;
-            }
-            threadChannel.retrieveMessageById(threadChannel.getLatestMessageId()).queue(message -> {
-                var amount = 10;
-                var unit = ChronoUnit.SECONDS;
-                if (message.getTimeCreated().isAfter(OffsetDateTime.now().minus(amount, unit))) {
-                    var threadId = threadChannel.getId();
-                    log.trace("Thread {} unarchived with a recent message", threadId);
-                    synchronized (threadChannelIdList) {
-                        determineThreadAnnouncement(threadChannel, threadId);
-                    }
-                }
-            });
+        var threadChannel = (ThreadChannel) event.getChannel();
+        if (!threadChannel.isPublic()) {
+            return;
         }
+        if (Boolean.TRUE.equals(event.getOldValue()) && Boolean.FALSE.equals(event.getNewValue())) {
+            threadChannel.retrieveMessageById(threadChannel.getLatestMessageId()).queue(checkMessage(threadChannel));
+        }
+    }
+
+    Consumer<Message> checkMessage(ThreadChannel threadChannel) {
+        return message -> {
+            var amount = 10;
+            var unit = ChronoUnit.SECONDS;
+            if (message.getTimeCreated().isAfter(OffsetDateTime.now().minus(amount, unit))) {
+                var threadId = threadChannel.getId();
+                log.trace("Thread {} unarchived with a recent message", threadId);
+                synchronized (threadChannelIdList) {
+                    determineThreadAnnouncement(threadChannel, threadId);
+                }
+            }
+        };
     }
 
     @Override
