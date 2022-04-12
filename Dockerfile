@@ -15,9 +15,9 @@ RUN mkdir /app
 RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
 WORKDIR /app
 COPY --chown=ninbot:ninbot --from=build target/ninbot*.jar /app/ninbot.jar
-RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY DockerHealthCheck.java /app
 USER ninbot
-HEALTHCHECK --start-period=20s CMD curl --fail --silent http://localhost:8080/actuator/health 2>&1 | grep UP || exit 1
+HEALTHCHECK --start-period=20s CMD java /app/DockerHealthCheck.java 2>&1 || exit 1
 EXPOSE 8080
 ENTRYPOINT ["java"]
 CMD ["-Xss512k", "-Xmx256M", "--enable-preview", "-jar", "/app/ninbot.jar"]
