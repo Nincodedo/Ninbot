@@ -38,16 +38,14 @@ public class UserCommand implements SlashCommand, SlashSubcommand<UserCommandNam
             updateBirthday(slashCommandEvent);
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         } else if (subcommand == UserCommandName.Subcommand.ANNOUNCEMENT) {
-            toggleAnnouncement(slashCommandEvent);
+            toggleAnnouncement(slashCommandEvent.getUser().getId());
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         }
         return messageExecutor;
     }
 
-    private void toggleAnnouncement(SlashCommandInteractionEvent slashCommandEvent) {
-        var userId = slashCommandEvent.getUser().getId();
+    private void toggleAnnouncement(String userId) {
         userService.toggleBirthdayAnnouncement(userId);
-
     }
 
     private void updateBirthday(SlashCommandInteractionEvent slashCommandEvent) {

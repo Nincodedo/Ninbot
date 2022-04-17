@@ -130,6 +130,12 @@ public class StreamListener extends StatAwareListenerAdapter {
         }
     }
 
+    /**
+     * If the event is a UserActivityEndEvent, and the user has no streaming activity, then return true.
+     *
+     * @param event The event that was received.
+     * @return boolean that represents if the event indicates a stream has ended
+     */
     public boolean hasStoppedStreaming(GenericEvent event) {
         if (event instanceof UserActivityEndEvent userActivityEndEvent) {
             return hasNoStreamingActivity(userActivityEndEvent.getMember().getActivities());
@@ -148,6 +154,14 @@ public class StreamListener extends StatAwareListenerAdapter {
         }
     }
 
+    /**
+     * If the event is a UserActivityStartEvent, check if the new activity is streaming. If the event is a
+     * GuildVoiceStreamEvent, check if the event is a stream. If the event is a UserActivityEndEvent, return false.
+     * If the event is null or any other event, return false.
+     *
+     * @param event The event that was received.
+     * @return boolean that represents if the event indicates a stream has started
+     */
     public boolean hasStartedStreaming(GenericEvent event) {
         return switch (event) {
             case UserActivityStartEvent startEvent -> startEvent.getNewActivity()
@@ -186,7 +200,6 @@ public class StreamListener extends StatAwareListenerAdapter {
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
             var channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            var username = member.getEffectiveName();
             if (streamingUrl != null && channel != null) {
                 String gameName = null;
                 String streamTitle = null;
@@ -196,17 +209,17 @@ public class StreamListener extends StatAwareListenerAdapter {
                     streamTitle = richActivity.getDetails();
                     log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
                 }
-                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member.getUser()
-                                        .getEffectiveAvatarUrl(), username, streamingUrl,
-                                gameName, streamTitle, serverId, guild.getLocale()))
+                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl,
+                                gameName, streamTitle, guild))
                         .queue(message -> {
                             countOneStat(componentName, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
                         });
-                log.trace("Queued stream message for {} to channel {}", username, UtilLogging.logChannelInfo(channel));
+                log.trace("Queued stream message for {} to channel {}", UtilLogging.logMemberInfo(member),
+                        UtilLogging.logChannelInfo(channel));
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
-                        , username, UtilLogging.logGuildName(guild));
+                        , UtilLogging.logMemberInfo(member), UtilLogging.logGuildName(guild));
             }
         });
     }
@@ -226,10 +239,11 @@ public class StreamListener extends StatAwareListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
-                log.trace("Adding role {} to {}", streamingRole.getName(), UtilLogging.logMemberInfo(member));
+                log.trace("Adding role {} to {}", UtilLogging.logRoleInfo(streamingRole),
+                        UtilLogging.logMemberInfo(member));
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.trace("Could not add role ID {} for {}", roleId, UtilLogging.logMemberInfo(member));
+                log.trace("Could not add role ID {} for {}", streamingRoleId, UtilLogging.logMemberInfo(member));
             }
         });
     }

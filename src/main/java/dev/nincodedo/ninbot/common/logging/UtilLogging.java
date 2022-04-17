@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
 @UtilityClass
@@ -72,5 +73,12 @@ public class UtilLogging {
             return "null user";
         }
         return String.format(NAME_ID_ENTITY_FORMAT, user.getName(), user.getId());
+    }
+
+    public static String logRoleInfo(Role role) {
+        if (role == null) {
+            return "null role";
+        }
+        return String.format(NAME_ID_ENTITY_FORMAT, role.getName(), role.getId());
     }
 }
