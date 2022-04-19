@@ -14,6 +14,9 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -22,6 +25,7 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
 
     @Getter
     private final List<String> threadChannelIdList = new ArrayList<>();
+    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void onChannelUpdateArchived(@NotNull ChannelUpdateArchivedEvent event) {
@@ -41,9 +45,7 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
             if (message.getTimeCreated().isAfter(OffsetDateTime.now().minus(amount, unit))) {
                 var threadId = threadChannel.getId();
                 log.trace("Thread {} unarchived with a recent message", threadId);
-                synchronized (threadChannelIdList) {
-                    determineThreadAnnouncement(threadChannel, threadId);
-                }
+                determineThreadAnnouncement(threadChannel, threadId);
             }
         };
     }
@@ -60,20 +62,25 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
             var threadId = threadChannel.getId();
             log.trace("Thread {} archive timestamp updated from {} to {}", threadId, event.getOldValue(),
                     event.getNewValue());
-            synchronized (threadChannelIdList) {
-                determineThreadAnnouncement(threadChannel, threadId);
-            }
+            determineThreadAnnouncement(threadChannel, threadId);
         }
     }
 
     private void determineThreadAnnouncement(ThreadChannel threadChannel, String threadId) {
-        if (threadChannelIdList.contains(threadId)) {
-            log.trace("Thread {} meets both criteria, announcing revival", threadId);
-            announceThreadRevival(threadChannel);
-            threadChannelIdList.remove(threadId);
-        } else {
-            log.trace("Thread {} meets one criteria, adding to monitoring list", threadId);
-            threadChannelIdList.add(threadId);
+        boolean isDelayedRemove = false;
+        synchronized (threadChannelIdList) {
+            if (threadChannelIdList.contains(threadId)) {
+                log.trace("Thread {} meets both criteria, announcing revival", threadId);
+                announceThreadRevival(threadChannel);
+                threadChannelIdList.remove(threadId);
+            } else {
+                log.trace("Thread {} meets one criteria, adding to monitoring list", threadId);
+                threadChannelIdList.add(threadId);
+                isDelayedRemove = true;
+            }
+        }
+        if (isDelayedRemove) {
+            executorService.schedule(() -> threadChannelIdList.remove(threadId), 10, TimeUnit.SECONDS);
         }
     }
 
