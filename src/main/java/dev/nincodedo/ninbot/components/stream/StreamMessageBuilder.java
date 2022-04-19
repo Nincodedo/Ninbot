@@ -24,16 +24,16 @@ public class StreamMessageBuilder {
         if (!streamingUrl.contains("https://")) {
             embedBuilder = new EmbedBuilder()
                     .setAuthor(String.format(resourceBundle.getString("listener.stream.announce.voicechannel"),
-                            member.getEffectiveName(), streamingUrl), null, member.getAvatarUrl())
+                            member.getEffectiveName(), streamingUrl), null, member.getEffectiveAvatarUrl())
                     .setTitle(streamTitle);
         } else {
             embedBuilder = new EmbedBuilder()
                     .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"),
                             member.getEffectiveName(), gameName,
-                            streamingUrl), streamingUrl, member.getAvatarUrl())
+                            streamingUrl), streamingUrl, member.getEffectiveAvatarUrl())
                     .setTitle(streamTitle);
         }
-        embedBuilder.setColor(MessageUtils.getColor(member.getAvatarUrl()));
+        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()));
         return new MessageBuilder(embedBuilder).build();
     }
 }
