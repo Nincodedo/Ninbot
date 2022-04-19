@@ -33,7 +33,7 @@ public class VaccinationManager {
                                     var infectedRoleList =
                                             guild.getRolesByName(PathogenConfig.getINFECTED_ROLE_NAME(), false);
                                     if (!infectedRoleList.isEmpty()) {
-                                        guild.removeRoleFromMember(member.getId(), infectedRoleList.get(0)).queue();
+                                        guild.removeRoleFromMember(member, infectedRoleList.get(0)).queue();
                                     }
                                 }));
             }
