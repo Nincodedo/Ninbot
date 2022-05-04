@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.0</version>
     <name>Ninbot</name>
     <description>Discord bot for OCW Discord using JDA</description>
     <url>https://github.com/Nincodedo/Ninbot</url>
@@ -49,7 +49,7 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
-        <pitest-maven.version>1.7.5</pitest-maven.version>
+        <pitest-maven.version>1.7.6</pitest-maven.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>3.0.1</sortpom-maven-plugin.version>
