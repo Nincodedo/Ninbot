@@ -13,9 +13,10 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +53,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
         optionalChannelId.ifPresent(channelId -> {
             log.trace("Event Response {}: Emote announcement channel id {}", event.getResponseNumber(),
                     channelId);
-            var channel = event.getGuild().getTextChannelById(channelId);
+            var channel = (GuildMessageChannel) event.getGuild().getGuildChannelById(channelId);
             if (channel == null) {
                 log.trace("Event Response {}: Channel id {} not found", event.getResponseNumber(), channelId);
                 return;
@@ -76,7 +77,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
     }
 
     @Nullable
-    private Member getMemberFromAudit(EmoteAddedEvent event, TextChannel channel) {
+    private Member getMemberFromAudit(EmoteAddedEvent event, GuildChannel channel) {
         var selfMember = event.getGuild().getMember(event.getJDA().getSelfUser());
         var recentAuditUser = event.getGuild().retrieveAuditLogs().complete().get(0).getUser();
         if (selfMember == null || recentAuditUser == null) {
