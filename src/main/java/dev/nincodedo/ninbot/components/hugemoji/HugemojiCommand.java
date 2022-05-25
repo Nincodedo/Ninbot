@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -45,10 +44,7 @@ public class HugemojiCommand implements SlashCommand {
                 var emote = emoteList.get(0);
                 var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
                 InputStream file = new URL(emote.getImageUrl()).openStream();
-                slashCommandEvent.replyEmbeds(new EmbedBuilder().setImage(
-                                "attachment://" + emote.getName() + imageFileType).build())
-                        .addFile(file, emote.getName() + imageFileType)
-                        .queue();
+                slashCommandEvent.replyFile(file, emote.getName() + imageFileType).queue();
             } catch (IOException e) {
                 messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
             }
