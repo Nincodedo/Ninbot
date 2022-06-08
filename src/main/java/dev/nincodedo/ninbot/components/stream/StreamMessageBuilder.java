@@ -19,7 +19,7 @@ public class StreamMessageBuilder {
             String streamingUrl, String gameName, String streamTitle, Guild guild) {
         log.trace("Building stream announce message for {} server {}", UtilLogging.logMemberInfo(member),
                 UtilLogging.logGuildName(guild));
-        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild.getLocale());
+        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder;
         if (!streamingUrl.contains("https://")) {
             embedBuilder = new EmbedBuilder()

@@ -36,8 +36,7 @@ public class PollScheduler implements Schedulable {
     }
 
     private void scheduleOne(Poll poll, ShardManager shardManager) {
-        var resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId())
-                .getLocale());
+        var resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId()));
         poll.setResourceBundle(resourceBundle);
         var guildChannel = shardManager.getGuildChannelById(poll.getChannelId());
         if (guildChannel == null) {
