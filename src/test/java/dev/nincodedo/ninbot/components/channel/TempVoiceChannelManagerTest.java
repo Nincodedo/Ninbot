@@ -7,9 +7,11 @@ import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.IPermissionContainer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.managers.channel.attribute.IPermissionContainerManager;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
@@ -61,6 +64,8 @@ class TempVoiceChannelManagerTest {
         var restAction = Mockito.mock(ChannelAction.class);
         var lastRestAction = Mockito.mock(ChannelAction.class);
         var moveVoiceAction = Mockito.mock(RestAction.class);
+        var permissionContainer = Mockito.mock(IPermissionContainer.class);
+        var permissionContainerManager = Mockito.mock(IPermissionContainerManager.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
@@ -71,13 +76,16 @@ class TempVoiceChannelManagerTest {
         when(selfMember.hasPermission(any(Permission.class))).thenReturn(true);
         when(member.getEffectiveName()).thenReturn("Nincodedo");
         when(member.getId()).thenReturn("1");
+        when(member.getIdLong()).thenReturn(1L);
         when(voiceChannelJoined.createCopy()).thenReturn(restAction);
-        when(restAction.setName(anyString())).thenReturn(restAction);
-        when(restAction.addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
-                Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                Permission.VOICE_DEAF_OTHERS), null)).thenReturn(lastRestAction);
+        when(restAction.setName(anyString())).thenReturn(lastRestAction);
         when(guild.moveVoiceMember(member, voiceChannelJoined)).thenReturn(moveVoiceAction);
         when(voiceChannelJoined.getType()).thenReturn(ChannelType.VOICE);
+        when(voiceChannelJoined.getPermissionContainer()).thenReturn(permissionContainer);
+        when(permissionContainer.getManager()).thenReturn(permissionContainerManager);
+        when(permissionContainerManager.putMemberPermissionOverride(member.getIdLong(), Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                Permission.VOICE_DEAF_OTHERS), null)).thenReturn(permissionContainerManager);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
 
@@ -85,7 +93,6 @@ class TempVoiceChannelManagerTest {
 
         Consumer<VoiceChannel> consumer = lambdaCaptor.getValue();
         consumer.accept(voiceChannelJoined);
-
 
         verify(tempVoiceChannelRepository).save(new TempVoiceChannel(member.getId(), voiceChannelJoined.getId()));
     }
