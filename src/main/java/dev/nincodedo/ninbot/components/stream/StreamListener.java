@@ -58,7 +58,7 @@ public class StreamListener extends StatAwareListenerAdapter {
         if (hasStartedStreaming(event)) {
             Optional<String> userIdOptional = getUserIdFromEvent(event);
             if (userIdOptional.isPresent()) {
-                var user = guild.getMemberById(userIdOptional.get()).getUser();
+                var user = member.getUser();
                 log.trace("User {} has started streaming in server {}",
                         UtilLogging.logUserInfo(user), UtilLogging.logGuildName(guild));
                 StreamingMember streamingMember =
