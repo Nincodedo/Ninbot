@@ -69,9 +69,6 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
             var voiceChannel = (VoiceChannel) channelJoined;
             voiceChannel.createCopy()
                     .setName(channelName)
-                    .addPermissionOverride(member, Arrays.asList(Permission.VOICE_MOVE_OTHERS,
-                            Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                            Permission.VOICE_DEAF_OTHERS), null)
                     .queue(saveAndMove(guild, member));
         }
     }
@@ -80,6 +77,12 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         return voiceChannel -> {
             repository.save(new TempVoiceChannel(member.getId(), voiceChannel.getId()));
             guild.moveVoiceMember(member, voiceChannel).queue();
+            voiceChannel.getPermissionContainer()
+                    .getManager()
+                    .putMemberPermissionOverride(member.getIdLong(), Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                            Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                            Permission.VOICE_DEAF_OTHERS), null)
+                    .queue();
         };
     }
 
