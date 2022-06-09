@@ -58,6 +58,9 @@ public class StreamListener extends StatAwareListenerAdapter {
         if (hasStartedStreaming(event)) {
             Optional<String> userIdOptional = getUserIdFromEvent(event);
             if (userIdOptional.isPresent()) {
+                var user = guild.getMemberById(userIdOptional.get()).getUser();
+                log.trace("User {} has started streaming in server {}",
+                        UtilLogging.logUserInfo(user), UtilLogging.logGuildName(guild));
                 StreamingMember streamingMember =
                         streamingMemberRepository.findByUserIdAndGuildId(userIdOptional.get(), guildId)
                                 .orElseGet(() -> new StreamingMember(userIdOptional.get(), guildId));
@@ -65,6 +68,7 @@ public class StreamListener extends StatAwareListenerAdapter {
                 var streamingAnnounceUser = configService.getValuesByName(guildId,
                         ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
+                    log.trace("User {} started streaming and is configured to announce", UtilLogging.logUserInfo(user));
                     var optionalCurrentStream = streamingMember.currentStream();
                     //if the streaming member does not have a current stream running, add a new one
                     if (optionalCurrentStream.isEmpty()) {
@@ -83,13 +87,23 @@ public class StreamListener extends StatAwareListenerAdapter {
                     if (currentStreamOptional.isPresent()) {
                         var currentStream = currentStreamOptional.get();
                         if (currentStream.getAnnounceMessageId() == null) {
+                            log.trace("No current announcement for user {} stream. Announcing",
+                                    UtilLogging.logUserInfo(user));
                             announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
+                        } else {
+                            log.trace("Stream of user {} already has an announcement.", UtilLogging.logUserInfo(user));
                         }
                         addRole(guild, member);
+                    } else {
+                        log.trace("User {} has no current stream?", UtilLogging.logUserInfo(user));
                     }
+                } else {
+                    log.trace("User {} started streaming, but was not configured to announce",
+                            UtilLogging.logUserInfo(user));
                 }
             }
         } else if (hasStoppedStreaming(event)) {
+            log.trace("User {} has stopped streaming", UtilLogging.logUserInfo(member.getUser()));
             streamingMemberRepository.findByUserIdAndGuildId(member.getUser().getId(), guildId)
                     .ifPresent(streamingMember -> streamingMember.currentStream().ifPresent(streamInstance -> {
                         streamInstance.setEndTimestamp(LocalDateTime.now());
@@ -139,6 +153,8 @@ public class StreamListener extends StatAwareListenerAdapter {
     public boolean hasStoppedStreaming(GenericEvent event) {
         if (event instanceof UserActivityEndEvent userActivityEndEvent) {
             return hasNoStreamingActivity(userActivityEndEvent.getMember().getActivities());
+        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent) {
+            return hasNoStreamingActivity(guildVoiceStreamEvent.getMember().getActivities());
         } else {
             return false;
         }
