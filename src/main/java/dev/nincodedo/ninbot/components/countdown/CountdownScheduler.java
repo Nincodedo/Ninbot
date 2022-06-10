@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
@@ -64,7 +64,7 @@ public class CountdownScheduler implements Schedulable {
             } else {
                 log.warn("Could not schedule countdown {}. No announcement channel was configured for server {} or "
                         + "this countdown", countdown
-                        .getId(), UtilLogging.logGuildName(guild));
+                        .getId(), FormatLogObject.guildName(guild));
                 return;
             }
             new Timer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),

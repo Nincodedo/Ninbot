@@ -25,7 +25,7 @@ public class BaseEntity {
     @EqualsAndHashCode.Exclude
     private Long id;
     @CreatedBy
-    private String createdBy;
+    private String createdBy = "Ninbot";
     @CreatedDate
     private LocalDateTime createdDateTime;
     @LastModifiedBy

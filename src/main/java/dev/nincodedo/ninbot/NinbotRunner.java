@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot;
 
 import dev.nincodedo.ninbot.common.Schedulable;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -48,7 +48,7 @@ public class NinbotRunner {
             jda.awaitReady();
             log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo().getShardId(), jda.getGuilds().size());
             statManager.upsertCount("Connected Servers", "server", null, jda.getGuilds().size());
-            jda.getGuilds().forEach(guild -> log.info(UtilLogging.logGuildInfo(guild)));
+            jda.getGuilds().forEach(guild -> log.info(FormatLogObject.guildInfo(guild)));
         } catch (InterruptedException e) {
             log.error("Failed to wait for shard to start", e);
         }

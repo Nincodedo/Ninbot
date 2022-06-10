@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
@@ -43,9 +43,9 @@ public class CommandRegistration extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@Nonnull GuildJoinEvent event) {
-        log.trace("Registering commands on joined guild {}", UtilLogging.logGuildName(event.getGuild()));
+        log.trace("Registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
         registerCommands(event.getGuild());
-        log.trace("Finished registering commands on joined guild {}", UtilLogging.logGuildName(event.getGuild()));
+        log.trace("Finished registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
     }
 
     private void registerCommands(Guild guild) {
@@ -54,7 +54,7 @@ public class CommandRegistration extends ListenerAdapter {
             return;
         }
         try {
-            log.trace("Registering commands for server {}", UtilLogging.logGuildName(guild));
+            log.trace("Registering commands for server {}", FormatLogObject.guildName(guild));
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
@@ -62,15 +62,15 @@ public class CommandRegistration extends ListenerAdapter {
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {
                 log.trace("Server {} already has all the current commands. Skipping update.",
-                        UtilLogging.logGuildName(guild));
+                        FormatLogObject.guildName(guild));
             } else {
                 guild.updateCommands()
                         .addCommands(commandDataList)
                         .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
-                                commandList.size(), UtilLogging.logGuildName(guild)));
+                                commandList.size(), FormatLogObject.guildName(guild)));
             }
         } catch (Exception e) {
-            log.error("Failed to register commands on guild {}", UtilLogging.logGuildName(guild), e);
+            log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);
         }
     }
 
