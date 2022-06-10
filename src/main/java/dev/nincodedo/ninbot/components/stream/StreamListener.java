@@ -103,9 +103,9 @@ public class StreamListener extends StatAwareListenerAdapter {
                 }
             }
         } else if (hasStoppedStreaming(event)) {
-            log.trace("User {} has stopped streaming", UtilLogging.logUserInfo(member.getUser()));
             streamingMemberRepository.findByUserIdAndGuildId(member.getUser().getId(), guildId)
                     .ifPresent(streamingMember -> streamingMember.currentStream().ifPresent(streamInstance -> {
+                        log.trace("User {} has stopped streaming", UtilLogging.logUserInfo(member.getUser()));
                         streamInstance.setEndTimestamp(LocalDateTime.now());
                         streamingMemberRepository.save(streamingMember);
                     }));
@@ -202,7 +202,7 @@ public class StreamListener extends StatAwareListenerAdapter {
         var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
         streamingRoleId.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
-            if (streamingRole != null) {
+            if (streamingRole != null && member.getRoles().contains(streamingRole)) {
                 guild.removeRoleFromMember(member, streamingRole).queue();
             }
         });
