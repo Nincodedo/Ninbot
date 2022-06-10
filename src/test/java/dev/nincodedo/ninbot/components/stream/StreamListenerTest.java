@@ -163,6 +163,7 @@ class StreamListenerTest {
         when(guild.getId()).thenReturn("123");
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
+        when(member.getRoles()).thenReturn(List.of(streamingRole));
 
         streamListener.onGenericUserPresence(userActivityEndEvent);
 
