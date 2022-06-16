@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.haiku;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
@@ -24,8 +25,8 @@ public class HaikuListener extends StatAwareListenerAdapter {
     private Random random;
     private String componentName;
 
-    public HaikuListener(ComponentService componentService, StatManager statManager) {
-        super(statManager);
+    public HaikuListener(ComponentService componentService, StatManager statManager, ServerLogger serverLogger) {
+        super(serverLogger, statManager);
         this.componentService = componentService;
         this.syllableCounter = new SyllableCounter();
         this.random = new SecureRandom();

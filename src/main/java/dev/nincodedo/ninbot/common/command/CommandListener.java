@@ -1,11 +1,11 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,8 @@ public class CommandListener extends BaseListenerAdapter {
 
     private CommandParser commandParser;
 
-    public CommandListener(CommandParser commandParser, List<Command> commands) {
+    public CommandListener(CommandParser commandParser, List<Command> commands, ServerLogger serverLogger) {
+        super(serverLogger);
         this.commandParser = commandParser;
         addCommands(commands);
     }

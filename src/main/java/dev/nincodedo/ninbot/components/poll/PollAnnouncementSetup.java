@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -19,11 +20,13 @@ public class PollAnnouncementSetup {
 
     private StatManager statManager;
     private PollService pollService;
+    private ServerLogger serverLogger;
     private Map<Long, PollListeners> pollListenersMap;
 
-    PollAnnouncementSetup(PollService pollService, StatManager statManager) {
+    PollAnnouncementSetup(PollService pollService, StatManager statManager, ServerLogger serverLogger) {
         this.pollService = pollService;
         this.statManager = statManager;
+        this.serverLogger = serverLogger;
         pollListenersMap = new HashMap<>();
     }
 
@@ -40,7 +43,7 @@ public class PollAnnouncementSetup {
         Timer timer;
         PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
                 pollService, poll
-                .getMessageId(), this);
+                .getMessageId(), this, serverLogger);
         if (pollListenersMap.containsKey(poll.getId())) {
             PollListeners pollListeners = pollListenersMap.remove(poll.getId());
             pollListeners.timer().cancel();

@@ -1,11 +1,18 @@
 package dev.nincodedo.ninbot.common;
 
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public abstract class BaseListenerAdapter extends ListenerAdapter {
+public class BaseListenerAdapter extends ListenerAdapter {
+
+    protected ServerLogger log;
+
+    public BaseListenerAdapter(ServerLogger serverLogger) {
+        this.log = serverLogger;
+    }
 
     Locale defaultLocale = Locale.ENGLISH;
 

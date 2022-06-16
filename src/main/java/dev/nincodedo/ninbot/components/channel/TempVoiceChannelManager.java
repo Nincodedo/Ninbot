@@ -3,10 +3,10 @@ package dev.nincodedo.ninbot.components.channel;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Component
-@Slf4j
 public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     private TempVoiceChannelRepository repository;
@@ -31,8 +30,8 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private String componentName;
 
     public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository,
-            ComponentService componentService, StatManager statManager) {
-        super(statManager);
+            ComponentService componentService, StatManager statManager, ServerLogger serverLogger) {
+        super(serverLogger, statManager);
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
         this.componentName = "voice-channel-manager";
@@ -48,10 +47,9 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
-        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild
-        ), channelJoined
-                .getName(), channelJoined.getName()
-                .startsWith(Emojis.PLUS));
+        log.trace(guild.getId(), "hasPermission: {}, channel join {} is temp creator: {}",
+                hasManageChannelPermission(guild), channelJoined.getName(), channelJoined.getName()
+                        .startsWith(Emojis.PLUS));
         if (hasManageChannelPermission(guild) && channelJoined
                 .getName()
                 .startsWith(Emojis.PLUS)) {

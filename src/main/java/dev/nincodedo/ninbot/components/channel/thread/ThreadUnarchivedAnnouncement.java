@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.channel.thread;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,6 +27,10 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
     @Getter
     private final List<String> threadChannelIdList = new ArrayList<>();
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+    public ThreadUnarchivedAnnouncement(ServerLogger serverLogger) {
+        super(serverLogger);
+    }
 
     @Override
     public void onChannelUpdateArchived(@NotNull ChannelUpdateArchivedEvent event) {
