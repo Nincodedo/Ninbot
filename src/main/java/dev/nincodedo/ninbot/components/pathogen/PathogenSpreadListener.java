@@ -1,19 +1,19 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
+import dev.nincodedo.ninbot.common.BaseListenerAdapter;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class PathogenSpreadListener extends ListenerAdapter {
+public class PathogenSpreadListener extends BaseListenerAdapter {
 
     private PathogenManager pathogenManager;
     private ComponentService componentService;
