@@ -6,8 +6,6 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface MessageContextCommand extends Command {
+public interface MessageContextCommand extends Command<MessageContextInteractionEventMessageExecutor, MessageContextInteractionEvent> {
 
-    MessageExecutor<MessageContextInteractionEventMessageExecutor> execute(
-            @NotNull MessageContextInteractionEvent messageContextInteractionEvent);
 }
