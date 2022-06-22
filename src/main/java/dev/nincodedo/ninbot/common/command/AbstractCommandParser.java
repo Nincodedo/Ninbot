@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 @Slf4j
 public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericCommandInteractionEvent,
         G extends AbstractCommandParser<T, F, G>> {
+
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;
 
@@ -42,15 +43,17 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
         commandMap.put(command.getName(), command);
     }
 
-    public boolean isCommandMatchParser(Command command) {
-        return command.getClass().isInstance(getCommandClass());
-    }
-
     public boolean isEventMatchParser(GenericCommandInteractionEvent event) {
         return getEventClass().isInstance(event);
     }
 
-    abstract Class<T> getCommandClass();
+    public boolean isCommandMatchParser(Command command) {
+        return getCommandClass().isInstance(command);
+    }
 
-    abstract Class<F> getEventClass();
+    public abstract Class<T> getCommandClass();
+
+    public abstract Class<F> getEventClass();
+
+    public abstract Class<G> getParserClass();
 }

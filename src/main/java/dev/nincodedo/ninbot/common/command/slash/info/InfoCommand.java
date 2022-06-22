@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.common.command.slash.info;
 
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;

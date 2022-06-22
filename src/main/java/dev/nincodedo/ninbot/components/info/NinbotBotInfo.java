@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.info;
 
 import dev.nincodedo.ninbot.NinbotConstants;
-import dev.nincodedo.ninbot.common.command.BotInfo;
+import dev.nincodedo.ninbot.common.command.slash.info.BotInfo;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;

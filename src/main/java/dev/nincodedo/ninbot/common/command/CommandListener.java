@@ -28,17 +28,16 @@ public class CommandListener extends BaseListenerAdapter {
 
     private void addCommand(Command command) {
         commandParsers.stream()
-                .filter(commandParser -> commandParser.getCommandClass().isInstance(command))
+                .filter(commandParser -> commandParser.isCommandMatchParser(command))
                 .forEach(commandParser -> commandParser.addCommand(command));
     }
 
     private AbstractCommandParser getCommandParserForEvent(GenericCommandInteractionEvent event) {
         return commandParsers.stream()
-                .filter(abstractCommandParser -> abstractCommandParser.isEventMatchParser(event))
+                .filter(commandParser -> commandParser.isEventMatchParser(event))
                 .findFirst()
                 .get();
     }
-
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -58,6 +57,13 @@ public class CommandListener extends BaseListenerAdapter {
     @Override
     public void onCommandAutoCompleteInteraction(
             @NotNull CommandAutoCompleteInteractionEvent event) {
-        //getCommandParserForEvent(event).parseEvent(event);
+        getAutoCompleteParser().parseEvent(event);
+    }
+
+    private AutoCompleteCommandParser getAutoCompleteParser() {
+        return commandParsers.stream()
+                .filter(AutoCompleteCommandParser.class::isInstance)
+                .map(AutoCompleteCommandParser.class::cast)
+                .findFirst().get();
     }
 }
