@@ -17,8 +17,4 @@ public class UserContextCommandParser extends AbstractCommandParser<UserContextC
         return UserContextInteractionEvent.class;
     }
 
-    @Override
-    public Class<UserContextCommandParser> getParserClass() {
-        return UserContextCommandParser.class;
-    }
 }

@@ -1,9 +1,8 @@
 package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.command.AutoCompleteCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
-import dev.nincodedo.ninbot.common.command.slash.SlashSubcommand;
+import dev.nincodedo.ninbot.common.command.Subcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
@@ -13,7 +12,6 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -32,8 +30,7 @@ import java.util.List;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Component
-public class CountdownCommand implements SlashCommand, SlashSubcommand<CountdownCommandName.Subcommand>,
-        AutoCompleteCommand {
+public class CountdownCommand implements SlashCommand, Subcommand<CountdownCommandName.Subcommand> {
 
     private final CountdownRepository countdownRepository;
     private final CountdownScheduler countdownScheduler;
@@ -60,30 +57,6 @@ public class CountdownCommand implements SlashCommand, SlashSubcommand<Countdown
             case DELETE -> messageExecutor.addEphemeralMessage(deleteCountdown(slashCommandEvent));
         }
         return messageExecutor;
-    }
-
-    @Override
-    public void autoComplete(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        var subcommandName = commandAutoCompleteInteractionEvent.getSubcommandName();
-        if (subcommandName == null) {
-            return;
-        }
-        if (getSubcommand(subcommandName) == CountdownCommandName.Subcommand.DELETE) {
-            replyWithDeletableCountdowns(commandAutoCompleteInteractionEvent);
-        }
-    }
-
-    private void replyWithDeletableCountdowns(
-            CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        var countdowns = countdownRepository.findCountdownByCreatedBy(commandAutoCompleteInteractionEvent.getMember()
-                        .getId())
-                .stream()
-                .map(Countdown::getName)
-                .limit(OptionData.MAX_CHOICES)
-                .toList();
-        if (!countdowns.isEmpty()) {
-            commandAutoCompleteInteractionEvent.replyChoiceStrings(countdowns).queue();
-        }
     }
 
     private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {

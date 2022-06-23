@@ -3,6 +3,8 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericCommandInteractionEvent,
+public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent,
         G extends AbstractCommandParser<T, F, G>> {
 
     private Map<String, T> commandMap = new HashMap<>();
@@ -23,7 +25,7 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     }
 
     public void parseEvent(@NotNull F event) {
-        T command = commandMap.get(event.getName());
+        T command = getCommand(event);
         if (command != null) {
             executorService.execute(() -> {
                 try {
@@ -36,6 +38,16 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
                             FormatLogObject.userInfo(event.getUser()), e);
                 }
             });
+        }
+    }
+
+    private T getCommand(F event) {
+        if (event instanceof CommandAutoCompleteInteractionEvent autoCompleteEvent) {
+            return commandMap.get(autoCompleteEvent.getName());
+        } else if (event instanceof GenericCommandInteractionEvent commandInteractionEvent) {
+            return commandMap.get(commandInteractionEvent.getName());
+        } else {
+            return null;
         }
     }
 
@@ -54,6 +66,4 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     public abstract Class<T> getCommandClass();
 
     public abstract Class<F> getEventClass();
-
-    public abstract Class<G> getParserClass();
 }

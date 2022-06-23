@@ -17,8 +17,4 @@ public class SlashCommandParser extends AbstractCommandParser<SlashCommand, Slas
         return SlashCommandInteractionEvent.class;
     }
 
-    @Override
-    public Class<SlashCommandParser> getParserClass() {
-        return SlashCommandParser.class;
-    }
 }

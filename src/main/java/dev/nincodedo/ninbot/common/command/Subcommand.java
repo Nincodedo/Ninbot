@@ -1,8 +1,8 @@
-package dev.nincodedo.ninbot.common.command.slash;
+package dev.nincodedo.ninbot.common.command;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface SlashSubcommand<T extends Enum<T>> {
+public interface Subcommand<T extends Enum<T>> {
     Class<T> enumSubcommandClass();
 
     /**
