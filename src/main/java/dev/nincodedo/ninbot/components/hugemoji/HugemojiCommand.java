@@ -7,7 +7,7 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -31,13 +31,13 @@ public class HugemojiCommand implements SlashCommand {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),
                 OptionMapping::getAsString);
-        List<Emote> emoteList = new ArrayList<>();
+        List<RichCustomEmoji> emoteList = new ArrayList<>();
         List<String> emojiList = new ArrayList<>();
         if (EmojiManager.isEmoji(possibleEmoteString)) {
             emojiList = new ArrayList<>(EmojiParser.extractEmojis(possibleEmoteString));
         } else if (possibleEmoteString.contains(":")) {
             var stringEmote = possibleEmoteString.split(":")[1];
-            emoteList = slashCommandEvent.getGuild().getEmotesByName(stringEmote, true);
+            emoteList = slashCommandEvent.getGuild().getEmojisByName(stringEmote, true);
         }
         if (!emoteList.isEmpty()) {
             try {
