@@ -35,7 +35,7 @@
     <properties>
         <JDA.version>v5.0.0-alpha.13</JDA.version>
         <archunit.version>0.23.1</archunit.version>
-        <assertj-core.version>3.22.0</assertj-core.version>
+        <assertj-core.version>3.23.1</assertj-core.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.9</commons-text.version>
