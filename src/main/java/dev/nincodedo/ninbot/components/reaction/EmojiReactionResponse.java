@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.reaction;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +51,6 @@ public class EmojiReactionResponse extends ReactionResponse {
 
     @Override
     public void react(Message message, MessageChannel channel) {
-        emojiList.forEach(emoji -> message.addReaction(emoji).queue());
+        emojiList.forEach(emoji -> message.addReaction(Emoji.fromFormatted(emoji)).queue());
     }
 }
