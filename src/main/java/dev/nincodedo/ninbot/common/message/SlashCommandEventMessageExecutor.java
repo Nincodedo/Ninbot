@@ -11,54 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashCommandEventMessageExecutor> {
+public class SlashCommandEventMessageExecutor extends EphemeralMessageExecutor<SlashCommandEventMessageExecutor> {
 
     private SlashCommandInteractionEvent slashCommandEvent;
-    private List<Message> ephemeralMessageResponses;
-    private List<MessageEmbed> messageEmbeds;
-    private List<MessageEmbed> ephemeralMessageEmbeds;
 
     public SlashCommandEventMessageExecutor(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         super();
         this.slashCommandEvent = slashCommandEvent;
-        this.ephemeralMessageResponses = new ArrayList<>();
-        this.messageEmbeds = new ArrayList<>();
-        this.ephemeralMessageEmbeds = new ArrayList<>();
-    }
-
-    public void executeMessageActions() {
-        if (!messageResponses.isEmpty()) {
-            messageResponses.forEach(message -> slashCommandEvent.reply(message).queue());
-        }
-        if (!ephemeralMessageResponses.isEmpty()) {
-            ephemeralMessageResponses.forEach(message -> slashCommandEvent.reply(message).setEphemeral(true).queue());
-        }
-        if (!messageEmbeds.isEmpty()) {
-            slashCommandEvent.replyEmbeds(messageEmbeds).queue();
-        }
-        if (!ephemeralMessageEmbeds.isEmpty()) {
-            slashCommandEvent.replyEmbeds(ephemeralMessageEmbeds).setEphemeral(true).queue();
-        }
-    }
-
-    public SlashCommandEventMessageExecutor addMessageEmbed(MessageEmbed messageEmbed) {
-        messageEmbeds.add(messageEmbed);
-        return returnThis();
-    }
-
-    public SlashCommandEventMessageExecutor addEphemeralMessage(String message) {
-        ephemeralMessageResponses.add(new MessageBuilder().append(message).build());
-        return returnThis();
-    }
-
-    public SlashCommandEventMessageExecutor addEphemeralMessage(Message message) {
-        ephemeralMessageResponses.add(message);
-        return returnThis();
-    }
-
-    public SlashCommandEventMessageExecutor addEphemeralMessage(MessageEmbed messageEmbed) {
-        ephemeralMessageEmbeds.add(messageEmbed);
-        return returnThis();
     }
 
     @Override
@@ -85,6 +44,11 @@ public class SlashCommandEventMessageExecutor extends MessageExecutor<SlashComma
      */
     public ReplyCallbackAction replyMessage(Message message) {
         return slashCommandEvent.reply(message);
+    }
+
+    @Override
+    protected ReplyCallbackAction replyEmbeds(List<MessageEmbed> messageEmbeds) {
+        return slashCommandEvent.replyEmbeds(messageEmbeds);
     }
 
     public void deferEphemeralReply() {

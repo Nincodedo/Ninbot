@@ -2,8 +2,8 @@ package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.command.AutoCompleteCommand;
 import dev.nincodedo.ninbot.common.command.Subcommand;
+import dev.nincodedo.ninbot.common.message.AutoCompleteCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
-import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.stereotype.Component;
@@ -23,15 +23,16 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         var subcommandName = commandAutoCompleteInteractionEvent.getSubcommandName();
+        var messageExecutor = new AutoCompleteCommandMessageExecutor(commandAutoCompleteInteractionEvent);
         if (subcommandName == null) {
-            return null;
+            return messageExecutor;
         }
         if (getSubcommand(subcommandName) == CountdownCommandName.Subcommand.DELETE) {
             replyWithDeletableCountdowns(commandAutoCompleteInteractionEvent);
         }
-        return null;
+        return messageExecutor;
     }
 
     private void replyWithDeletableCountdowns(

@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.datetime;
 
 import dev.nincodedo.ninbot.common.command.AutoCompleteCommand;
+import dev.nincodedo.ninbot.common.message.AutoCompleteCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
-import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class TimeAutoComplete implements AutoCompleteCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         TimeCommandName.Option option = getOptionFromName(commandAutoCompleteInteractionEvent.getFocusedOption()
                 .getName());
         List<String> choices = switch (option) {
@@ -29,7 +29,7 @@ public class TimeAutoComplete implements AutoCompleteCommand {
                     + "cannot be handled.", option));
         };
         commandAutoCompleteInteractionEvent.replyChoiceStrings(choices).queue();
-        return null;
+        return new AutoCompleteCommandMessageExecutor(commandAutoCompleteInteractionEvent);
     }
 
     private TimeCommandName.Option getOptionFromName(String name) {
