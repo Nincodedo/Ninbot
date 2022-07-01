@@ -9,6 +9,7 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -215,8 +216,8 @@ public class StreamListener extends StatAwareListenerAdapter {
         var streamingAnnounceChannel = configService.getSingleValueByName(serverId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
-            var channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            if (streamingUrl != null && channel != null) {
+            var guildChannel = guild.getGuildChannelById(streamingAnnounceChannelString);
+            if (streamingUrl != null && guildChannel instanceof BaseGuildMessageChannel channel) {
                 String gameName = null;
                 String streamTitle = null;
                 if (activity != null && activity.isRich() && activity.asRichPresence().getState() != null) {
