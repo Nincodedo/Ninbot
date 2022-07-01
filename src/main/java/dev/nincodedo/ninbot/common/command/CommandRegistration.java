@@ -22,10 +22,10 @@ import java.util.List;
 @Component
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command> commands;
+    private List<Command<?,?>> commands;
     private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command<?,?>> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
         this.releaseFilter = releaseFilter;
     }
@@ -58,6 +58,7 @@ public class CommandRegistration extends ListenerAdapter {
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
+                    .filter(Command::isAbleToRegisterOnServer)
                     .map(this::convertToCommandData)
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {
@@ -96,7 +97,7 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToCommandData(Command command) {
+    private CommandData convertToCommandData(Command<?,?> command) {
         switch (command) {
             case SlashCommand slashCommand:
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
@@ -113,7 +114,6 @@ public class CommandRegistration extends ListenerAdapter {
                 return Commands.user(userContextCommand.getName());
             case MessageContextCommand messageContextCommand:
                 return Commands.message(messageContextCommand.getName());
-            case null:
             default:
                 return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         }
