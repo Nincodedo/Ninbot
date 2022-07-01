@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.common.message;
 
+import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
@@ -26,8 +27,8 @@ public class GenericAnnounce extends TimerTask {
 
     @Override
     public void run() {
-        var channel = shardManager.getTextChannelById(announcementChannelId);
-        if (channel == null) {
+        var guildChannel = shardManager.getGuildChannelById(announcementChannelId);
+        if (!(guildChannel instanceof BaseGuildMessageChannel channel)) {
             return;
         }
         if (announceString != null) {

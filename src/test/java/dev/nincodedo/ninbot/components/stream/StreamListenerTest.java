@@ -86,7 +86,7 @@ class StreamListenerTest {
         when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
         when(guild.getLocale()).thenReturn(Locale.ENGLISH);
         when(guild.getMember(user)).thenReturn(member);
-        when(guild.getTextChannelById("123")).thenReturn(textChannel);
+        when(guild.getGuildChannelById("123")).thenReturn(textChannel);
         when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
