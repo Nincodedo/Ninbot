@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +51,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
             refMessage.editMessage(poll.build()).queue();
             pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
         } else {
-            message.addReaction(Emojis.CROSS_X).queue();
+            message.addReaction(Emoji.fromFormatted(Emojis.CROSS_X)).queue();
         }
     }
 }

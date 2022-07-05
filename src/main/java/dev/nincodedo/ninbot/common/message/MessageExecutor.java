@@ -3,9 +3,9 @@ package dev.nincodedo.ninbot.common.message;
 import dev.nincodedo.ninbot.common.Emojis;
 import lombok.Getter;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class MessageExecutor<T> {
 
     List<String> reactions;
-    List<Emote> reactionEmotes;
+    List<Emoji> reactionEmotes;
     Message overrideMessage;
     List<Message> messageResponses;
 
@@ -38,7 +38,7 @@ public abstract class MessageExecutor<T> {
             }
             //map all the emoji reactions to RestActions
             var reactionList = reactions.stream()
-                    .map(stringEmote -> getMessage().addReaction(stringEmote))
+                    .map(stringEmote -> getMessage().addReaction(Emoji.fromFormatted(stringEmote)))
                     .toList();
             if (reactionList != null) {
                 reactionRestActionList.addAll(reactionList);
@@ -105,7 +105,7 @@ public abstract class MessageExecutor<T> {
         return returnThis();
     }
 
-    public T addReactionEmotes(List<Emote> emotes) {
+    public T addReactionEmotes(List<Emoji> emotes) {
         reactionEmotes.addAll(emotes);
         return returnThis();
     }

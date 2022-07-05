@@ -11,13 +11,13 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.emoji.EmojiAddedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
@@ -25,13 +25,13 @@ import org.springframework.stereotype.Component;
 import java.util.ResourceBundle;
 
 @Component
-public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
+public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
 
     private ComponentService componentService;
     private ConfigService configService;
     private String componentName;
 
-    public EmoteCreationAnnouncement(StatManager statManager, ConfigService configService,
+    public EmojiCreationAnnouncement(StatManager statManager, ConfigService configService,
             ComponentService componentService, ServerLogger serverLogger) {
         super(serverLogger, statManager);
         this.componentService = componentService;
@@ -41,7 +41,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
     }
 
     @Override
-    public void onEmoteAdded(EmoteAddedEvent event) {
+    public void onEmojiAdded(@NotNull EmojiAddedEvent event) {
         if (componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
@@ -61,22 +61,22 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             }
             log.trace(guildId, "Event Response {}: Found channel {}", event.getResponseNumber(),
                     FormatLogObject.channelInfo(channel));
-            var emote = event.getEmote();
+            var emoji = event.getEmoji();
             countOneStat(componentName, event.getGuild().getId());
             Member member = getMemberFromAudit(event, channel);
-            log.trace(guildId, "Event Response {}: Sending message for {}", event.getResponseNumber(), emote.getName());
-            channel.sendMessage(buildAnnouncementMessage(emote, event.getGuild(), member))
+            log.trace(guildId, "Event Response {}: Sending message for {}", event.getResponseNumber(), emoji.getName());
+            channel.sendMessage(buildAnnouncementMessage(emoji, event.getGuild(), member))
                     .queue(message -> {
                         log.trace(guildId, "Event Response {}: Sent message, adding reaction for {}",
-                                event.getResponseNumber(), emote.getName());
-                        message.addReaction(emote).queue();
+                                event.getResponseNumber(), emoji.getName());
+                        message.addReaction(emoji).queue();
                     }, throwable -> log.trace(guildId, "Event Response {}: Failed to send message for {}",
-                            event.getResponseNumber(), emote.getName()));
+                            event.getResponseNumber(), emoji.getName()));
         });
     }
 
     @Nullable
-    private Member getMemberFromAudit(EmoteAddedEvent event, GuildChannel channel) {
+    private Member getMemberFromAudit(EmojiAddedEvent event, GuildChannel channel) {
         var selfMember = event.getGuild().getMember(event.getJDA().getSelfUser());
         var recentAuditUser = event.getGuild().retrieveAuditLogs().complete().get(0).getUser();
         if (selfMember == null || recentAuditUser == null) {
@@ -90,7 +90,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
     }
 
     @NotNull
-    private Message buildAnnouncementMessage(Emote emote, Guild guild, Member member) {
+    private Message buildAnnouncementMessage(Emoji emoji, Guild guild, Member member) {
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append(resourceBundle.getString("listener.emote.announce.message"));
@@ -100,7 +100,7 @@ public class EmoteCreationAnnouncement extends StatAwareListenerAdapter {
             messageBuilder.append(member);
         }
         messageBuilder.append("\n");
-        messageBuilder.append(emote);
+        messageBuilder.append(emoji);
         return messageBuilder.build();
     }
 }

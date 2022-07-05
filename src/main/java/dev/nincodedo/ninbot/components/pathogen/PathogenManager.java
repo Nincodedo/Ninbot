@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -110,7 +111,7 @@ public class PathogenManager {
                         if (vaccinatedRoleList.isEmpty() || !member.getRoles().contains(vaccinatedRoleList.get(0))) {
                             //Successfully removed role and add healing reaction, then do audit
                             guild.removeRoleFromMember(member, infectedRole)
-                                    .and(pathogenTargetMessage.addReaction(Emojis.PILLS))
+                                    .and(pathogenTargetMessage.addReaction(Emoji.fromFormatted(Emojis.PILLS)))
                                     .queue(success -> {
                                         auditAction(spreadSource, channelId, user, "healing",
                                                 "Healed user %s in channel %s");
@@ -120,15 +121,15 @@ public class PathogenManager {
                     } else if (vaccinatedRoleList.isEmpty() || !member.getRoles().contains(vaccinatedRoleList.get(0))) {
                         //Successfully added role and add infected reaction, then do audit
                         guild.addRoleToMember(member, infectedRole)
-                                .and(pathogenTargetMessage.addReaction(Emojis.SICK_FACE))
+                                .and(pathogenTargetMessage.addReaction(Emoji.fromFormatted(Emojis.SICK_FACE)))
                                 .queue(success -> {
                                     auditAction(spreadSource, channelId, user, "infecting", "Infected user %s "
                                             + "in channel %s");
                                     pathogenUserService.infectedUser(pathogenUser, user.getId(), guild.getId());
                                 });
                     } else if (member.getRoles().contains(vaccinatedRoleList.get(0))) {
-                        pathogenTargetMessage.addReaction(Emojis.getRandomDoctorEmoji()).queue();
-                        pathogenTargetMessage.addReaction(Emojis.THUMBS_UP).queue();
+                        pathogenTargetMessage.addReaction(Emoji.fromFormatted(Emojis.getRandomDoctorEmoji())).queue();
+                        pathogenTargetMessage.addReaction(Emoji.fromFormatted(Emojis.THUMBS_UP)).queue();
                         auditAction(spreadSource, channelId, user, "vaccine-block", "Vaccine blocked user %s "
                                 + "in channel %s");
                     }

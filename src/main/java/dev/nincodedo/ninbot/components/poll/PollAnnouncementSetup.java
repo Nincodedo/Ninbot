@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,7 @@ public class PollAnnouncementSetup {
     private void addPollChoiceEmotes(Message message, List<String> choices) {
         char digitalOneEmoji = '\u0031';
         for (int i = 0; i < choices.size(); i++) {
-            message.addReaction(digitalOneEmoji + "\u20E3").queue();
+            message.addReaction(Emoji.fromFormatted(digitalOneEmoji + "\u20E3")).queue();
             digitalOneEmoji++;
         }
     }
