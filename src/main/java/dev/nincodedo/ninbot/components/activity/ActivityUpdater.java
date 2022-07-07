@@ -14,21 +14,31 @@ import java.util.concurrent.TimeUnit;
 public class ActivityUpdater {
 
     private final ShardManager shardManager;
-    private final List<String> activityStatusList = List.of(
-            "Check out my fancy new slash commands!",
-            "New status, who this?"
-    );
+    private List<String> activityStatusList;
+    private ActivityStatusRepository activityStatusRepository;
     private final Random random;
 
-    public ActivityUpdater(ShardManager shardManager) {
+    public ActivityUpdater(ShardManager shardManager, ActivityStatusRepository activityStatusRepository) {
         this.shardManager = shardManager;
         this.random = new SecureRandom();
+        this.activityStatusRepository = activityStatusRepository;
+        updateStatusList();
         setNinbotActivity();
+    }
+
+    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
+    private void updateStatusList() {
+        activityStatusList = activityStatusRepository.findAll()
+                .stream()
+                .map(ActivityStatus::getStatus)
+                .toList();
     }
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     private void setNinbotActivity() {
-        var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
-        shardManager.setActivity(Activity.playing(status));
+        if (!activityStatusList.isEmpty()) {
+            var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
+            shardManager.setActivity(Activity.playing(status));
+        }
     }
 }
