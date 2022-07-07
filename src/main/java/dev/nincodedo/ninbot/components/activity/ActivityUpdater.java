@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ActivityUpdater {
@@ -25,7 +26,7 @@ public class ActivityUpdater {
         setNinbotActivity();
     }
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     private void setNinbotActivity() {
         var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
         shardManager.setActivity(Activity.playing(status));

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class PollAnnouncementSetup {
@@ -67,7 +68,7 @@ public class PollAnnouncementSetup {
     /**
      * Twice a day remove closed polls from the map, just in case.
      */
-    @Scheduled(fixedRate = 43200000L)
+    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
     void removeClosedPolls() {
         pollService.findAllClosedPolls().forEach(poll -> pollListenersMap.remove(poll.getId()));
     }
