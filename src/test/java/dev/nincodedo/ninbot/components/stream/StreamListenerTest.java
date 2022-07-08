@@ -74,6 +74,7 @@ class StreamListenerTest {
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getUser()).thenReturn(user);
         when(member.getId()).thenReturn("123");
+        when(user.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
@@ -127,6 +128,7 @@ class StreamListenerTest {
     void userStartsStreamingNotAlreadyStreamingOnCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
         Member member = mock(Member.class);
+        User user = mock(User.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
@@ -134,6 +136,8 @@ class StreamListenerTest {
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
+        when(member.getUser()).thenReturn(user);
+        when(user.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
