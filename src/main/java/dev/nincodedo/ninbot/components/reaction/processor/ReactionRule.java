@@ -6,11 +6,18 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import java.util.Optional;
 
 public interface ReactionRule {
-    void process(ReactionContext reactionContext);
+
+    default void process(ReactionContext reactionContext) {
+        if(canProcess(reactionContext)){
+            execute(reactionContext);
+        }
+    }
 
     default boolean canProcess(ReactionContext reactionContext) {
         return reactionContext.getReactionMessage().contains(getReplaceTarget());
     }
+
+    void execute(ReactionContext reactionContext);
 
     String getReplaceTarget();
 
