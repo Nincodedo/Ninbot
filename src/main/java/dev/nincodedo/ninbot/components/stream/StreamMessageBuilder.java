@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.LocaleService;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -17,9 +17,9 @@ public class StreamMessageBuilder {
 
     Message buildStreamAnnounceMessage(Member member,
             String streamingUrl, String gameName, String streamTitle, Guild guild) {
-        log.trace("Building stream announce message for {} server {}", UtilLogging.logMemberInfo(member),
-                UtilLogging.logGuildName(guild));
-        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild.getLocale());
+        log.trace("Building stream announce message for {} server {}", FormatLogObject.memberInfo(member),
+                FormatLogObject.guildName(guild));
+        ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder;
         if (!streamingUrl.contains("https://")) {
             embedBuilder = new EmbedBuilder()

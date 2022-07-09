@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
 @UtilityClass
-public class UtilLogging {
+public class FormatLogObject {
 
     public static final String NAME_ID_ENTITY_FORMAT = "%s(%s)";
 
@@ -18,7 +18,7 @@ public class UtilLogging {
      * @param guild JDA guild
      * @return String of guild name(guild id)
      */
-    public static String logGuildName(Guild guild) {
+    public static String guildName(Guild guild) {
         if (guild == null) {
             return "null guild";
         }
@@ -31,11 +31,11 @@ public class UtilLogging {
      * @param guild JDA guild
      * @return String of guild name(guild id), owner name(owner id)
      */
-    public static String logGuildInfo(Guild guild) {
+    public static String guildInfo(Guild guild) {
         if (guild == null) {
             return "null guild";
         }
-        return String.format("Server %s, Owner %s", logGuildName(guild), logMemberInfo(guild.retrieveOwner()
+        return String.format("Server %s, Owner %s", guildName(guild), memberInfo(guild.retrieveOwner()
                 .complete()));
     }
 
@@ -45,7 +45,7 @@ public class UtilLogging {
      * @param member JDA member
      * @return String of member name(member id)
      */
-    public static String logMemberInfo(Member member) {
+    public static String memberInfo(Member member) {
         return String.format(NAME_ID_ENTITY_FORMAT, member.getEffectiveName(), member.getId());
     }
 
@@ -55,7 +55,7 @@ public class UtilLogging {
      * @param channel JDA channel
      * @return String of channel name(channel id)
      */
-    public static String logChannelInfo(Channel channel) {
+    public static String channelInfo(Channel channel) {
         if (channel == null) {
             return "null channel";
         }
@@ -68,14 +68,14 @@ public class UtilLogging {
      * @param user JDA user
      * @return String of username(user id)
      */
-    public static String logUserInfo(User user) {
+    public static String userInfo(User user) {
         if (user == null) {
             return "null user";
         }
         return String.format(NAME_ID_ENTITY_FORMAT, user.getName(), user.getId());
     }
 
-    public static String logRoleInfo(Role role) {
+    public static String roleInfo(Role role) {
         if (role == null) {
             return "null role";
         }

@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -9,6 +9,7 @@ import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -24,8 +25,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-@Component
 @Slf4j
+@Component
 public class StreamListener extends StatAwareListenerAdapter {
 
     private StreamMessageBuilder streamMessageBuilder;
@@ -50,7 +51,7 @@ public class StreamListener extends StatAwareListenerAdapter {
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 
-    public void onStreamEvent(GenericEvent event, Guild guild, Member member) {
+    private void onStreamEvent(GenericEvent event, Guild guild, Member member) {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
@@ -60,7 +61,7 @@ public class StreamListener extends StatAwareListenerAdapter {
             if (userIdOptional.isPresent()) {
                 var user = member.getUser();
                 log.trace("User {} has started streaming in server {}",
-                        UtilLogging.logUserInfo(user), UtilLogging.logGuildName(guild));
+                        FormatLogObject.userInfo(user), FormatLogObject.guildName(guild));
                 StreamingMember streamingMember =
                         streamingMemberRepository.findByUserIdAndGuildId(userIdOptional.get(), guildId)
                                 .orElseGet(() -> new StreamingMember(userIdOptional.get(), guildId));
@@ -68,7 +69,7 @@ public class StreamListener extends StatAwareListenerAdapter {
                 var streamingAnnounceUser = configService.getValuesByName(guildId,
                         ConfigConstants.STREAMING_ANNOUNCE_USERS);
                 if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
-                    log.trace("User {} started streaming and is configured to announce", UtilLogging.logUserInfo(user));
+                    log.trace("User {} started streaming and is configured to announce", FormatLogObject.userInfo(user));
                     var optionalCurrentStream = streamingMember.currentStream();
                     //if the streaming member does not have a current stream running, add a new one
                     if (optionalCurrentStream.isEmpty()) {
@@ -88,24 +89,24 @@ public class StreamListener extends StatAwareListenerAdapter {
                         var currentStream = currentStreamOptional.get();
                         if (currentStream.getAnnounceMessageId() == null) {
                             log.trace("No current announcement for user {} stream. Announcing",
-                                    UtilLogging.logUserInfo(user));
+                                    FormatLogObject.userInfo(user));
                             announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
                         } else {
-                            log.trace("Stream of user {} already has an announcement.", UtilLogging.logUserInfo(user));
+                            log.trace("Stream of user {} already has an announcement.", FormatLogObject.userInfo(user));
                         }
                         addRole(guild, member);
                     } else {
-                        log.trace("User {} has no current stream?", UtilLogging.logUserInfo(user));
+                        log.trace("User {} has no current stream?", FormatLogObject.userInfo(user));
                     }
                 } else {
                     log.trace("User {} started streaming, but was not configured to announce",
-                            UtilLogging.logUserInfo(user));
+                            FormatLogObject.userInfo(user));
                 }
             }
         } else if (hasStoppedStreaming(event)) {
             streamingMemberRepository.findByUserIdAndGuildId(member.getUser().getId(), guildId)
                     .ifPresent(streamingMember -> streamingMember.currentStream().ifPresent(streamInstance -> {
-                        log.trace("User {} has stopped streaming", UtilLogging.logUserInfo(member.getUser()));
+                        log.trace("User {} has stopped streaming", FormatLogObject.userInfo(member.getUser()));
                         streamInstance.setEndTimestamp(LocalDateTime.now());
                         streamingMemberRepository.save(streamingMember);
                     }));
@@ -215,8 +216,8 @@ public class StreamListener extends StatAwareListenerAdapter {
         var streamingAnnounceChannel = configService.getSingleValueByName(serverId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
-            var channel = guild.getTextChannelById(streamingAnnounceChannelString);
-            if (streamingUrl != null && channel != null) {
+            var guildChannel = guild.getGuildChannelById(streamingAnnounceChannelString);
+            if (streamingUrl != null && guildChannel instanceof BaseGuildMessageChannel channel) {
                 String gameName = null;
                 String streamTitle = null;
                 if (activity != null && activity.isRich() && activity.asRichPresence().getState() != null) {
@@ -231,11 +232,11 @@ public class StreamListener extends StatAwareListenerAdapter {
                             countOneStat(componentName, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
                         });
-                log.trace("Queued stream message for {} to channel {}", UtilLogging.logMemberInfo(member),
-                        UtilLogging.logChannelInfo(channel));
+                log.trace("Queued stream message for {} to channel {}", FormatLogObject.memberInfo(member),
+                        FormatLogObject.channelInfo(channel));
             } else {
                 log.trace("Announcement channel or streaming URL was null, not announcing stream for {} on server {}"
-                        , UtilLogging.logMemberInfo(member), UtilLogging.logGuildName(guild));
+                        , FormatLogObject.memberInfo(member), FormatLogObject.guildName(guild));
             }
         });
     }
@@ -255,11 +256,11 @@ public class StreamListener extends StatAwareListenerAdapter {
         streamingRoleId.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
-                log.trace("Adding role {} to {}", UtilLogging.logRoleInfo(streamingRole),
-                        UtilLogging.logMemberInfo(member));
+                log.trace("Adding role {} to {}", FormatLogObject.roleInfo(streamingRole),
+                        FormatLogObject.memberInfo(member));
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.trace("Could not add role ID {} for {}", streamingRoleId, UtilLogging.logMemberInfo(member));
+                log.trace("Could not add role ID {} for {}", streamingRoleId, FormatLogObject.memberInfo(member));
             }
         });
     }

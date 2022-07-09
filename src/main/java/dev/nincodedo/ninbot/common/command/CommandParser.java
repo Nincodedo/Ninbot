@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
-import dev.nincodedo.ninbot.common.logging.UtilLogging;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -39,12 +39,12 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running slash command {} in server {} by user {}", slashCommand.getName(),
-                            UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
+                            FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                     slashCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Slash command {} failed with an exception: Ran in server {} by {}",
-                            slashCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
-                            UtilLogging.logUserInfo(event.getUser()), e);
+                            slashCommand.getName(), FormatLogObject.guildName(event.getGuild()),
+                            FormatLogObject.userInfo(event.getUser()), e);
                     event.reply("Ninbot encountered an error. :(").setEphemeral(true).queue();
                 }
             });
@@ -57,13 +57,13 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running message context command {} in server {} by user {}",
-                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
-                            UtilLogging.logUserInfo(event.getUser()));
+                            messageContextCommand.getName(), FormatLogObject.guildName(event.getGuild()),
+                            FormatLogObject.userInfo(event.getUser()));
                     messageContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("Message context command {} failed with an exception: Ran in server {} by {}",
-                            messageContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
-                            UtilLogging.logUserInfo(event.getUser()), e);
+                            messageContextCommand.getName(), FormatLogObject.guildName(event.getGuild()),
+                            FormatLogObject.userInfo(event.getUser()), e);
                 }
             });
         }
@@ -75,12 +75,12 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running user context command {} in server {} by user {}", userContextCommand.getName()
-                            , UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
+                            , FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                     userContextCommand.execute(event).executeActions();
                 } catch (Exception e) {
                     log.error("User context command {} failed with an exception: Ran in server {} by {}",
-                            userContextCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
-                            UtilLogging.logUserInfo(event.getUser()), e);
+                            userContextCommand.getName(), FormatLogObject.guildName(event.getGuild()),
+                            FormatLogObject.userInfo(event.getUser()), e);
                 }
             });
         }
@@ -93,12 +93,12 @@ public class CommandParser {
             executorService.execute(() -> {
                 try {
                     log.trace("Running autocomplete {} in server {} by user {}", autoCompleteCommand.getName(),
-                            UtilLogging.logGuildName(event.getGuild()), UtilLogging.logUserInfo(event.getUser()));
+                            FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                     autoCompleteCommand.autoComplete(event);
                 } catch (Exception e) {
                     log.error("Command autocomplete {} failed with an exception: Ran in server {} by {}",
-                            autoCompleteCommand.getName(), UtilLogging.logGuildName(event.getGuild()),
-                            UtilLogging.logUserInfo(event.getUser()), e);
+                            autoCompleteCommand.getName(), FormatLogObject.guildName(event.getGuild()),
+                            FormatLogObject.userInfo(event.getUser()), e);
                 }
             });
         }

@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.info.GitProperties;
@@ -62,8 +62,8 @@ public class Dabber {
             messageExecutor.addReaction(getDabResponse().getEmojiList());
         }
 
-        var emoteList = shardManager.getEmotes().stream()
-                .filter(emote -> emote.getName().contains("dab"))
+        var emoteList = shardManager.getEmojis().stream()
+                .filter(emoji -> emoji.getName().contains("dab"))
                 .sorted(StreamUtils.shuffle())
                 .distinct()
                 .toList();
@@ -72,7 +72,7 @@ public class Dabber {
         sendDabs(messageExecutor, emoteList);
     }
 
-    void sendDabs(MessageExecutor messageExecutor, List<Emote> emoteList) {
+    void sendDabs(MessageExecutor messageExecutor, List<RichCustomEmoji> emoteList) {
         messageExecutor.addReactionEmotes(emoteList.stream()
                 .limit(20)
                 .toList());
@@ -81,7 +81,7 @@ public class Dabber {
     Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
         return new MessageBuilder().append(jda
                         .getGuildById(NinbotConstants.OCW_SERVER_ID)
-                        .getEmotesByName("ninbotdab", true)
+                        .getEmojisByName("ninbotdab", true)
                         .get(0))
                 .append(" ")
                 .append(target)

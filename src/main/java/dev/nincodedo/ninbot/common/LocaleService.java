@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 @Slf4j
 public class LocaleService {
 
+    public static final String BUNDLE_BASE_NAME = "lang";
     private static Locale defaultLocale = Locale.ENGLISH;
 
     public static Locale getLocale(Guild guild) {
@@ -19,17 +20,20 @@ public class LocaleService {
     }
 
     public static ResourceBundle getResourceBundleOrDefault(Guild guild) {
-        return getResourceBundleOrDefault(guild.getLocale());
+        if (guild == null) {
+            log.trace("Guild was null, using default locale");
+            return ResourceBundle.getBundle(BUNDLE_BASE_NAME, defaultLocale);
+        } else {
+            return getResourceBundleOrDefault(guild.getLocale());
+        }
     }
 
-    public static ResourceBundle getResourceBundleOrDefault(Locale serverLocale) {
-        ResourceBundle resourceBundle;
+    private ResourceBundle getResourceBundleOrDefault(Locale serverLocale) {
         try {
-            resourceBundle = ResourceBundle.getBundle("lang", serverLocale);
+            return ResourceBundle.getBundle(BUNDLE_BASE_NAME, serverLocale);
         } catch (MissingResourceException e) {
-            log.trace("Could not find resource bundle for locale {}, using default", serverLocale);
-            resourceBundle = ResourceBundle.getBundle("lang", defaultLocale);
+            log.trace("Could not find resource bundle for locale {}, using default locale", serverLocale);
+            return ResourceBundle.getBundle(BUNDLE_BASE_NAME, defaultLocale);
         }
-        return resourceBundle;
     }
 }
