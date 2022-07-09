@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot</artifactId>
-    <version>3.5.0</version>
+    <version>3.6.0-SNAPSHOT</version>
     <name>Ninbot</name>
     <description>Discord bot for OCW Discord using JDA</description>
     <url>https://github.com/Nincodedo/Ninbot</url>
