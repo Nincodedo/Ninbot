@@ -12,30 +12,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public class PollScheduler implements Schedulable {
+public class PollScheduler implements Schedulable<Poll, PollService> {
 
     private PollService pollService;
-    private ExecutorService executorService;
     private PollAnnouncementSetup pollAnnouncementSetup;
 
     public PollScheduler(PollService pollService, PollAnnouncementSetup pollAnnouncementSetup) {
         this.pollService = pollService;
-        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("poll-scheduler"));
         this.pollAnnouncementSetup = pollAnnouncementSetup;
     }
 
     @Override
-    public void scheduleAll(ShardManager shardManager) {
-        //Only find open polls (ones that have not been announced)
-        pollService.findAllOpenPolls().forEach(poll -> executorService.execute(() -> scheduleOne(poll, shardManager)));
-    }
-
-    void addPoll(Poll poll, ShardManager shardManager) {
-        pollService.save(poll);
-        scheduleOne(poll, shardManager);
-    }
-
-    private void scheduleOne(Poll poll, ShardManager shardManager) {
+    public void scheduleOne(Poll poll, ShardManager shardManager) {
         var resourceBundle = LocaleService.getResourceBundleOrDefault(shardManager.getGuildById(poll.getServerId()));
         poll.setResourceBundle(resourceBundle);
         var guildChannel = shardManager.getGuildChannelById(poll.getChannelId());
@@ -49,5 +37,10 @@ public class PollScheduler implements Schedulable {
         };
         channel.retrieveMessageById(poll.getMessageId())
                 .queue(message -> pollAnnouncementSetup.setupAnnounce(poll, shardManager, message));
+    }
+
+    @Override
+    public PollService getScheduler() {
+        return pollService;
     }
 }

@@ -42,7 +42,7 @@ public class PollCommand implements SlashCommand {
         slashCommandEvent.reply(poll.build())
                 .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
                     poll.setMessageId(message.getId());
-                    pollScheduler.addPoll(poll, slashCommandEvent.getJDA().getShardManager());
+                    pollScheduler.addOne(poll, slashCommandEvent.getJDA().getShardManager());
                 }));
         return messageExecutor;
     }
