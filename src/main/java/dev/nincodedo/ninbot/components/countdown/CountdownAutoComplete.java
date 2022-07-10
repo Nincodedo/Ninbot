@@ -13,7 +13,7 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
 
     private CountdownRepository countdownRepository;
 
-    public CountdownAutoComplete(CountdownRepository countdownRepository){
+    public CountdownAutoComplete(CountdownRepository countdownRepository) {
         this.countdownRepository = countdownRepository;
     }
 

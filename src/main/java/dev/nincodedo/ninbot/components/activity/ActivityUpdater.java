@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
 public class ActivityUpdater {
 
     private final ShardManager shardManager;
+    private final Random random;
     private List<String> activityStatusList;
     private ActivityStatusRepository activityStatusRepository;
-    private final Random random;
 
     public ActivityUpdater(ShardManager shardManager, ActivityStatusRepository activityStatusRepository) {
         this.shardManager = shardManager;

@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.Subcommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
@@ -60,7 +60,8 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
-        var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(), OptionMapping::getAsString);
+        var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(),
+                OptionMapping::getAsString);
         var userId = slashCommandEvent.getUser().getId();
         var optionalCountdown = countdownRepository.findByCreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
@@ -105,9 +106,11 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var year = slashCommandEvent.getOption("year", OptionMapping::getAsString);
         var month = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get(), OptionMapping::getAsString)));
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get(),
+                        OptionMapping::getAsString)));
         var day = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get(), OptionMapping::getAsString)));
+                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get(),
+                        OptionMapping::getAsString)));
         var stringDate = getCountdownDate(year, month, day);
         var countdownName = slashCommandEvent.getOption("name", OptionMapping::getAsString);
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));

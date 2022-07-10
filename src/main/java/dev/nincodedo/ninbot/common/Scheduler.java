@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface Scheduler<T, R extends CrudRepository<T, Long>> {
     List<T> findAllOpenItems();
-    default void save(T item){
+
+    default void save(T item) {
         getRepository().save(item);
     }
 

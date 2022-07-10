@@ -57,7 +57,8 @@ public class PollCommand implements SlashCommand {
                 .setTitle(Objects.requireNonNull(slashCommandEvent.getOption(PollCommandName.Option.QUESTION.get(),
                         OptionMapping::getAsString)));
         //If user choice is set to true, allowed for other users to add their own choices by replying
-        var userChoice = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get(), OptionMapping::getAsBoolean);
+        var userChoice = slashCommandEvent.getOption(PollCommandName.Option.USERCHOICES.get(),
+                OptionMapping::getAsBoolean);
         poll.setUserChoicesAllowed(Boolean.TRUE.equals(userChoice));
         var time = slashCommandEvent.getOption(PollCommandName.Option.POLLLENGTH.get(), 5L, OptionMapping::getAsLong);
         poll.setEndDateTime(LocalDateTime.now()

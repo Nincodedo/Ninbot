@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<NinbotUser, Long> {
     @NotNull List<NinbotUser> findAll();
+
     Optional<NinbotUser> getFirstByUserId(String userId);
 }

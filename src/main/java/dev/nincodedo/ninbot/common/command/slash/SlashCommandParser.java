@@ -5,7 +5,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 @Component
-public class SlashCommandParser extends AbstractCommandParser<SlashCommand, SlashCommandInteractionEvent, SlashCommandParser> {
+public class SlashCommandParser extends AbstractCommandParser<SlashCommand, SlashCommandInteractionEvent,
+        SlashCommandParser> {
 
     @Override
     public Class<SlashCommand> getCommandClass() {

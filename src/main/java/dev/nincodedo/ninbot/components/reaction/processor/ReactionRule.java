@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ReactionRule {
 
     default void process(ReactionContext reactionContext) {
-        if(canProcess(reactionContext)){
+        if (canProcess(reactionContext)) {
             execute(reactionContext);
         }
     }

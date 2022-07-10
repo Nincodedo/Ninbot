@@ -42,7 +42,8 @@ class ReactionListener extends StatAwareListenerAdapter {
                 respond(event);
             } catch (Exception e) {
                 log.error("Reaction listener error in server {} in channel {}",
-                        FormatLogObject.guildInfo(event.getGuild()), FormatLogObject.channelInfo(event.getChannel()), e);
+                        FormatLogObject.guildInfo(event.getGuild()), FormatLogObject.channelInfo(event.getChannel()),
+                        e);
             }
         }
     }

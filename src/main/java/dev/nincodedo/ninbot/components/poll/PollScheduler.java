@@ -2,14 +2,10 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
-import io.micrometer.core.instrument.util.NamedThreadFactory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Component
 public class PollScheduler implements Schedulable<Poll, PollService> {
