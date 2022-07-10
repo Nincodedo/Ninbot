@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.message.AutoCompleteCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +24,7 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
     }
 
     @Override
-    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         var subcommandName = commandAutoCompleteInteractionEvent.getSubcommandName();
         var messageExecutor = new AutoCompleteCommandMessageExecutor(commandAutoCompleteInteractionEvent);
         if (subcommandName == null) {

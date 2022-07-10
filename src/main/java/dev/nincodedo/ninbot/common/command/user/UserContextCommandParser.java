@@ -5,8 +5,7 @@ import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEven
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserContextCommandParser extends AbstractCommandParser<UserContextCommand, UserContextInteractionEvent,
-        UserContextCommandParser> {
+public class UserContextCommandParser extends AbstractCommandParser<UserContextCommand, UserContextInteractionEvent> {
     @Override
     public Class<UserContextCommand> getCommandClass() {
         return UserContextCommand.class;
@@ -16,5 +15,4 @@ public class UserContextCommandParser extends AbstractCommandParser<UserContextC
     public Class<UserContextInteractionEvent> getEventClass() {
         return UserContextInteractionEvent.class;
     }
-
 }

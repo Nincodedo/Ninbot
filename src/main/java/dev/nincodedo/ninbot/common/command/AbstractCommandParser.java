@@ -14,8 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent,
-        G extends AbstractCommandParser<T, F, G>> {
+public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent> {
 
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageContextCommandParser extends AbstractCommandParser<MessageContextCommand,
-        MessageContextInteractionEvent, MessageContextCommandParser> {
+        MessageContextInteractionEvent> {
     @Override
     public Class<MessageContextCommand> getCommandClass() {
         return MessageContextCommand.class;

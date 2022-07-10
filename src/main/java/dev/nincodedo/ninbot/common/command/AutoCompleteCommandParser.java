@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.common.command;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 
 public class AutoCompleteCommandParser extends AbstractCommandParser<AutoCompleteCommand,
-        CommandAutoCompleteInteractionEvent, AutoCompleteCommandParser> {
+        CommandAutoCompleteInteractionEvent> {
     @Override
     public Class<AutoCompleteCommand> getCommandClass() {
         return AutoCompleteCommand.class;

@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.common.command.AutoCompleteCommand;
 import dev.nincodedo.ninbot.common.message.AutoCompleteCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class TimeAutoComplete implements AutoCompleteCommand {
     }
 
     @Override
-    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         TimeCommandName.Option option = getOptionFromName(commandAutoCompleteInteractionEvent.getFocusedOption()
                 .getName());
         List<String> choices = switch (option) {
