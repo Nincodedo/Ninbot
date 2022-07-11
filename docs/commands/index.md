@@ -1,27 +1,28 @@
 # Commands
 
-All commands are slash commands found in Discord's chat message menu.
+* [Slash Commands](#slash-commands)
+* [Message Commands](#message-commands)
 
-* [User Commands](#user-commands)
-    * [8-ball](#8-ball)
-    * [Countdown](#countdown)
-    * [Dab](#dab)
-        * [Huge Dab](#Huge Dab)
-    * [Define](#define)
-    * [Hugemoji](#hugemoji)
-    * [Info](#info)
-    * [Pathogen](#pathogen)
-    * [Poll](#poll)
-    * [Roll](#roll)
-    * [Stream](#stream)
-    * [Subscribe/Unsubscribe](#subscribeunsubscribe)
-    * [Tally](#tally)
-    * [Time](#time)
-    * [User](#user)
-* [Mods Commands](#mod-commands)
-    * [Topic Change Announcement](#topic-change-announcement)
+## Slash Commands
 
-## User Commands
+All slash commands can be found in Discord's chat message menu.
+
+* [8-ball](#8-ball)
+* [Countdown](#countdown)
+* [Dab](#dab)
+    * [Huge Dab](#huge-dab)
+* [Define](#define)
+* [Hugemoji](#hugemoji)
+* [Info](#info)
+* [Pathogen](#pathogen)
+* [Poll](#poll)
+* [Roll](#roll)
+* [Stream](#stream)
+* [Subscribe/Unsubscribe](#subscribeunsubscribe)
+* [Tally](#tally)
+* [Time](#time)
+* [Topic Change Announcement](#topic-change-announcement)
+* [User](#user)
 
 ### 8-Ball
 
@@ -79,12 +80,18 @@ Tally a count of something.
 
 Create a Discord timestamp relative to the current time.
 
+### Topic Change Announcement
+
+Toggles topic change announcements in the current channel. Only usable by moderators.
+
 ### User
 
 Set your birthdate and if you want Ninbot to announce your birthday to the server. Announcements are off by default.
 
-## Mod Commands
+## Message Commands
 
-### Topic Change Announcement
+Message commands can be found on the context menu of a message under "Apps".
 
-Toggles topic change announcements in the current channel.
+### Dab
+
+Like the Dab slash command, dabs on that specific message.
