@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
+import net.dv8tion.jda.api.entities.NewsChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -28,7 +29,8 @@ public class PollScheduler implements Schedulable<Poll, PollService> {
         }
         var channel = switch (guildChannel.getType()) {
             case TEXT -> (TextChannel) guildChannel;
-            case GUILD_PUBLIC_THREAD, GUILD_PRIVATE_THREAD -> (ThreadChannel) guildChannel;
+            case NEWS -> (NewsChannel) guildChannel;
+            case GUILD_PUBLIC_THREAD, GUILD_PRIVATE_THREAD, GUILD_NEWS_THREAD -> (ThreadChannel) guildChannel;
             default -> throw new IllegalStateException("Unexpected value: " + guildChannel.getType());
         };
         channel.retrieveMessageById(poll.getMessageId())
