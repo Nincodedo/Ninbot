@@ -58,7 +58,7 @@ public class CommandRegistration extends ListenerAdapter {
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
-                    .filter(Command::isAbleToRegisterOnServer)
+                    .filter(Command::isAbleToRegisterOnGuild)
                     .map(this::convertToCommandData)
                     .toList();
             if (guildHasAllCommands(commandDataList, currentCommandList)) {

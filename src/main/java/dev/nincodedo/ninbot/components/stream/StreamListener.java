@@ -196,8 +196,8 @@ public class StreamListener extends StatAwareListenerAdapter {
 
     private void announceStream(Guild guild, Member member, String streamingUrl, Activity activity,
             StreamingMember streamingMember) {
-        var serverId = guild.getId();
-        var streamingAnnounceChannel = configService.getSingleValueByName(serverId,
+        var guildId = guild.getId();
+        var streamingAnnounceChannel = configService.getSingleValueByName(guildId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
             var guildChannel = guild.getGuildChannelById(streamingAnnounceChannelString);

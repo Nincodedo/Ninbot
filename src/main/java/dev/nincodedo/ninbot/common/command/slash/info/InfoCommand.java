@@ -60,7 +60,7 @@ public class InfoCommand implements SlashCommand {
         if (shardManager == null) {
             return null;
         }
-        var supporterServer = shardManager.getGuildById(botInfo.getSupporterServerId());
+        var supporterServer = shardManager.getGuildById(botInfo.getSupporterGuildId());
         if (supporterServer != null) {
             return supporterServer.getMembersWithRoles(Collections.emptyList())
                     .stream()

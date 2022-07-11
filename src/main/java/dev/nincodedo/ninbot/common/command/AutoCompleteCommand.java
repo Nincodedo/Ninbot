@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 public interface AutoCompleteCommand extends Command<AutoCompleteCommandMessageExecutor,
         CommandAutoCompleteInteractionEvent> {
     @Override
-    default boolean isAbleToRegisterOnServer() {
+    default boolean isAbleToRegisterOnGuild() {
         return false;
     }
 }

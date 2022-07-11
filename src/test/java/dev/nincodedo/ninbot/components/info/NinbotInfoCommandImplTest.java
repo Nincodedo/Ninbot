@@ -48,7 +48,7 @@ class NinbotInfoCommandImplTest {
 
         List<Member> memberList = List.of(member, member2, bot, owner);
 
-        when(shardManager.getGuildById(ninbotBotInfo.getSupporterServerId())).thenReturn(guild);
+        when(shardManager.getGuildById(ninbotBotInfo.getSupporterGuildId())).thenReturn(guild);
         when(guild.getMembersWithRoles(Collections.emptyList())).thenReturn(memberList);
         when(owner.isOwner()).thenReturn(true);
         when(member.getUser()).thenReturn(user);

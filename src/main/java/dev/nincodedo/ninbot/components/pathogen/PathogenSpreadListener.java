@@ -36,11 +36,11 @@ public class PathogenSpreadListener extends BaseListenerAdapter {
                 || !pathogenManager.isSpreadableEvent(event)) {
             return;
         }
-        var serverId = event.getGuild().getId();
+        var guildId = event.getGuild().getId();
         int messageSearchLimit = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_SEARCH_LIMIT,
-                serverId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
+                guildId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
         int messageAffectChance = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE
-                , serverId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
+                , guildId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
 
         event.getChannel().getHistoryAround(event.getMessage(), messageSearchLimit).queue(messageHistory -> {
             Map<User, Message> surroundingUsers = new HashMap<>();

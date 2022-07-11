@@ -18,8 +18,8 @@ public class NinbotBotInfo extends BotInfo {
     }
 
     @Override
-    public String getSupporterServerId() {
-        return NinbotConstants.NINBOT_SUPPORTERS_SERVER_ID;
+    public String getSupporterGuildId() {
+        return NinbotConstants.NINBOT_SUPPORTERS_GUILD_ID;
     }
 
     @Override

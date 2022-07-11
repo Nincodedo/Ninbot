@@ -159,7 +159,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     private String getServerTimeZone(String serverId) {
-        return configService.getSingleValueByName(serverId, ConfigConstants.SERVER_TIMEZONE)
+        return configService.getSingleValueByName(serverId, ConfigConstants.GUILD_TIMEZONE)
                 .orElse(ConfigConstants.DEFAULT_TIMEZONE);
     }
 

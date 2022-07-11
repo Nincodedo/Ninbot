@@ -51,7 +51,7 @@ public abstract class BotInfo {
 
     public abstract String getGitHubUrl();
 
-    public abstract String getSupporterServerId();
+    public abstract String getSupporterGuildId();
 
     public abstract String getDocumentationUrl();
 }

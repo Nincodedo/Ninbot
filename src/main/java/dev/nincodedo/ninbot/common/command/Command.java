@@ -18,7 +18,7 @@ public interface Command<T, F> extends ReleaseStage {
 
     MessageExecutor<T> execute(@NotNull F event);
 
-    default boolean isAbleToRegisterOnServer() {
+    default boolean isAbleToRegisterOnGuild() {
         return true;
     }
 }
