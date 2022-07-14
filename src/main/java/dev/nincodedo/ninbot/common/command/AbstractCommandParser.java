@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
+import dev.nincodedo.ninbot.common.logging.ServerLogger;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
@@ -13,14 +13,15 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Slf4j
 public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent> {
 
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;
+    private ServerLogger log;
 
-    protected AbstractCommandParser() {
+    protected AbstractCommandParser(ServerLogger serverLogger) {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
+        this.log = serverLogger;
     }
 
     public void parseEvent(@NotNull F event) {
@@ -28,13 +29,14 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
         if (command != null) {
             executorService.execute(() -> {
                 try {
-                    log.trace("Running command {} in server {} by user {}", command.getName(),
-                            FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
+                    log.trace(event.getGuild()
+                            .getId(), "Running command {} by user {}", command.getName(),
+                            FormatLogObject.userInfo(event.getUser()));
                     command.execute(event).executeActions();
                 } catch (Exception e) {
-                    log.error("Command {} failed with an exception: Ran in server {} by {}",
-                            command.getName(), FormatLogObject.guildName(event.getGuild()),
-                            FormatLogObject.userInfo(event.getUser()), e);
+                    log.error(event.getGuild()
+                                    .getId(), e, "Command {} failed with an exception: Ran by {}", command.getName(),
+                            FormatLogObject.userInfo(event.getUser()));
                 }
             });
         }
