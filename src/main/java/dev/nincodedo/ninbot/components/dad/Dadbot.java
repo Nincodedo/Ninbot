@@ -71,8 +71,8 @@ public class Dadbot extends StatAwareListenerAdapter {
         return messageExecutor;
     }
 
-    private boolean channelIsOnDenyList(String serverId, String channelId) {
-        var channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+    private boolean channelIsOnDenyList(String guildId, String channelId) {
+        var channelConfigList = configService.getConfigByName(guildId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 

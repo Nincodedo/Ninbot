@@ -1,10 +1,8 @@
 package dev.nincodedo.ninbot.components.datetime;
 
-import dev.nincodedo.ninbot.common.command.AutoCompleteCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -16,37 +14,15 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Component
-public class TimeCommand implements SlashCommand, AutoCompleteCommand {
-
-    private Map<String, TimeFormat> timeFormatMap = Map.of(
-            "relative", TimeFormat.RELATIVE,
-            "time", TimeFormat.TIME_SHORT,
-            "date", TimeFormat.DATE_SHORT,
-            "datetime", TimeFormat.DATE_TIME_SHORT
-    );
+public class TimeCommand implements SlashCommand {
 
     @Override
     public String getName() {
         return TimeCommandName.TIME.get();
-    }
-
-    @Override
-    public void autoComplete(CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        TimeCommandName.Option option = getOptionFromName(commandAutoCompleteInteractionEvent.getFocusedOption()
-                .getName());
-        List<String> choices = switch (option) {
-            case UNIT -> Arrays.asList("minutes", "hours", "seconds", "days");
-            case DISPLAY -> new ArrayList<>(timeFormatMap.keySet());
-            default -> throw new IllegalStateException(String.format("TimeCommand autoComplete found option %s, which "
-                    + "cannot be handled.", option));
-        };
-        commandAutoCompleteInteractionEvent.replyChoiceStrings(choices).queue();
     }
 
     @Override
@@ -70,15 +46,11 @@ public class TimeCommand implements SlashCommand, AutoCompleteCommand {
     @NotNull
     protected Timestamp getTimestamp(Double amount, String unit, String display) {
         ChronoUnit chronoUnit = Enum.valueOf(ChronoUnit.class, unit.toUpperCase());
-        return now(timeFormatMap.get(display)).plus(Duration.of(amount.longValue(), chronoUnit));
+        return now(TimeCommon.timeFormatMap.get(display)).plus(Duration.of(amount.longValue(), chronoUnit));
     }
 
     protected Timestamp now(TimeFormat timeFormat) {
         return timeFormat.now();
-    }
-
-    private TimeCommandName.Option getOptionFromName(String name) {
-        return TimeCommandName.Option.valueOf(name.toUpperCase());
     }
 
     @Override

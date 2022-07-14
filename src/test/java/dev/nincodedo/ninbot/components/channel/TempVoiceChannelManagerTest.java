@@ -29,7 +29,6 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
@@ -87,9 +86,10 @@ class TempVoiceChannelManagerTest {
         when(voiceChannelJoined.getType()).thenReturn(ChannelType.VOICE);
         when(voiceChannelJoined.getPermissionContainer()).thenReturn(permissionContainer);
         when(permissionContainer.getManager()).thenReturn(permissionContainerManager);
-        when(permissionContainerManager.putMemberPermissionOverride(member.getIdLong(), Arrays.asList(Permission.VOICE_MOVE_OTHERS,
-                Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
-                Permission.VOICE_DEAF_OTHERS), null)).thenReturn(permissionContainerManager);
+        when(permissionContainerManager.putMemberPermissionOverride(member.getIdLong(),
+                Arrays.asList(Permission.VOICE_MOVE_OTHERS,
+                        Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
+                        Permission.VOICE_DEAF_OTHERS), null)).thenReturn(permissionContainerManager);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
 

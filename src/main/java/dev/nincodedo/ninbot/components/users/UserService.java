@@ -1,11 +1,14 @@
 package dev.nincodedo.ninbot.components.users;
 
+import dev.nincodedo.ninbot.common.Scheduler;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
-class UserService {
+public
+class UserService implements Scheduler<NinbotUser, UserRepository> {
     private UserRepository userRepository;
 
     UserService(UserRepository userRepository) {
@@ -30,5 +33,15 @@ class UserService {
     public void toggleBirthdayAnnouncement(String userId) {
         userRepository.getFirstByUserId(userId)
                 .ifPresent(ninbotUser -> ninbotUser.setAnnounceBirthday(!ninbotUser.getAnnounceBirthday()));
+    }
+
+    @Override
+    public List<NinbotUser> findAllOpenItems() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserRepository getRepository() {
+        return userRepository;
     }
 }

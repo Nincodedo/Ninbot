@@ -8,16 +8,14 @@ public class PreviousAuthor implements ReactionRule {
     }
 
     @Override
-    public void process(ReactionContext reactionContext) {
+    public void execute(ReactionContext reactionContext) {
         String reactionMessage = reactionContext.getReactionMessage();
-        if (canProcess(reactionContext)) {
-            var lastMessageOptional = getPreviousMessage(reactionContext.getChannel(), reactionContext.getMessage());
-            if (reactionMessage.contains(getReplaceTarget()) && lastMessageOptional.isPresent()) {
-                var lastMessage = lastMessageOptional.get();
-                var previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
-                        .getEffectiveName() : lastMessage.getAuthor().getName();
-                reactionMessage = reactionMessage.replace(getReplaceTarget(), previousAuthorName);
-            }
+        var lastMessageOptional = getPreviousMessage(reactionContext.getChannel(), reactionContext.getMessage());
+        if (reactionMessage.contains(getReplaceTarget()) && lastMessageOptional.isPresent()) {
+            var lastMessage = lastMessageOptional.get();
+            var previousAuthorName = lastMessage.getMember() != null ? lastMessage.getMember()
+                    .getEffectiveName() : lastMessage.getAuthor().getName();
+            reactionMessage = reactionMessage.replace(getReplaceTarget(), previousAuthorName);
         }
         reactionContext.setReactionMessage(reactionMessage);
     }

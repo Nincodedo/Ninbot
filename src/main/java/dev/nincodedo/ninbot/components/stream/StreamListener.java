@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class StreamListener extends StatAwareListenerAdapter {
@@ -56,53 +55,48 @@ public class StreamListener extends StatAwareListenerAdapter {
         }
         var guildId = guild.getId();
         if (hasStartedStreaming(event)) {
-            Optional<String> userIdOptional = getUserIdFromEvent(event);
-            if (userIdOptional.isPresent()) {
-                var user = member.getUser();
-                log.trace(guildId, "User {} has started streaming in server {}",
-                        FormatLogObject.userInfo(user), FormatLogObject.guildName(guild));
-                StreamingMember streamingMember =
-                        streamingMemberRepository.findByUserIdAndGuildId(userIdOptional.get(), guildId)
-                                .orElseGet(() -> new StreamingMember(userIdOptional.get(), guildId));
-                //Grab all the values because this query will get cached easier rather than looking for individual IDs
-                var streamingAnnounceUser = configService.getValuesByName(guildId,
-                        ConfigConstants.STREAMING_ANNOUNCE_USERS);
-                if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
-                    log.trace(guildId, "User {} started streaming and is configured to announce",
-                            FormatLogObject.userInfo(user));
-                    var optionalCurrentStream = streamingMember.currentStream();
-                    //if the streaming member does not have a current stream running, add a new one
-                    if (optionalCurrentStream.isEmpty()) {
-                        streamingMember.startNewStream();
-                    }
-                    /*if the stream is recent (stream bounced), then keep using this one as the stream has not really
-                    ended and set the end time to null. if its already null, well its just null again now*/
-                    else if (isStreamRecent(optionalCurrentStream.get())) {
-                        var currentStream = optionalCurrentStream.get();
-                        currentStream.setEndTimestamp(null);
-                    }
-                    String streamingUrl = getStreamingUrlFromEvent(event);
-                    setTwitchUserName(streamingMember, streamingUrl);
-                    streamingMemberRepository.save(streamingMember);
-                    var currentStreamOptional = streamingMember.currentStream();
-                    if (currentStreamOptional.isPresent()) {
-                        var currentStream = currentStreamOptional.get();
-                        if (currentStream.getAnnounceMessageId() == null) {
-                            log.trace(guildId, "No current announcement for user {} stream. Announcing",
-                                    FormatLogObject.userInfo(user));
-                            announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
-                        } else {
-                            log.trace(guildId, "Stream of user {} already has an announcement.",
-                                    FormatLogObject.userInfo(user));
-                        }
-                        addRole(guild, member);
-                    } else {
-                        log.trace(guildId, "User {} has no current stream?", FormatLogObject.userInfo(user));
-                    }
-                } else {
-                    log.trace(guildId, "User {} started streaming, but was not configured to announce",
-                            FormatLogObject.userInfo(user));
+            var user = member.getUser();
+            log.trace(guildId, "User {} has started streaming in server {}",
+                    FormatLogObject.userInfo(user), FormatLogObject.guildName(guild));
+            StreamingMember streamingMember =
+                    streamingMemberRepository.findByUserIdAndGuildId(user.getId(), guildId)
+                            .orElseGet(() -> new StreamingMember(user.getId(), guildId));
+            //Grab all the values because this query will get cached easier rather than looking for individual IDs
+            var streamingAnnounceUser = configService.getValuesByName(guildId,
+                    ConfigConstants.STREAMING_ANNOUNCE_USERS);
+            if (streamingAnnounceUser.contains(streamingMember.getUserId())) {
+                log.trace(guildId, "User {} started streaming and is configured to announce", FormatLogObject.userInfo(user));
+                var optionalCurrentStream = streamingMember.currentStream();
+                //if the streaming member does not have a current stream running, add a new one
+                if (optionalCurrentStream.isEmpty()) {
+                    streamingMember.startNewStream();
                 }
+                /*if the stream is recent (stream bounced), then keep using this one as the stream has not really
+                ended and set the end time to null. if its already null, well its just null again now*/
+                else if (isStreamRecent(optionalCurrentStream.get())) {
+                    var currentStream = optionalCurrentStream.get();
+                    currentStream.setEndTimestamp(null);
+                }
+                String streamingUrl = getStreamingUrlFromEvent(event);
+                setTwitchUserName(streamingMember, streamingUrl);
+                streamingMemberRepository.save(streamingMember);
+                var currentStreamOptional = streamingMember.currentStream();
+                if (currentStreamOptional.isPresent()) {
+                    var currentStream = currentStreamOptional.get();
+                    if (currentStream.getAnnounceMessageId() == null) {
+                        log.trace(guildId, "No current announcement for user {} stream. Announcing",
+                                FormatLogObject.userInfo(user));
+                        announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
+                    } else {
+                        log.trace(guildId, "Stream of user {} already has an announcement.", FormatLogObject.userInfo(user));
+                    }
+                    addRole(guild, member);
+                } else {
+                    log.trace(guildId, "User {} has no current stream?", FormatLogObject.userInfo(user));
+                }
+            } else {
+                log.trace(guildId, "User {} started streaming, but was not configured to announce",
+                        FormatLogObject.userInfo(user));
             }
         } else if (hasStoppedStreaming(event)) {
             streamingMemberRepository.findByUserIdAndGuildId(member.getUser().getId(), guildId)
@@ -162,16 +156,6 @@ public class StreamListener extends StatAwareListenerAdapter {
         }
     }
 
-    private Optional<String> getUserIdFromEvent(GenericEvent event) {
-        if (event instanceof UserActivityStartEvent startEvent) {
-            return Optional.of(startEvent.getMember().getId());
-        } else if (event instanceof GuildVoiceStreamEvent guildVoiceStreamEvent) {
-            return Optional.of(guildVoiceStreamEvent.getMember().getId());
-        } else {
-            return Optional.empty();
-        }
-    }
-
     /**
      * If the event is a UserActivityStartEvent, check if the new activity is streaming. If the event is a
      * GuildVoiceStreamEvent, check if the event is a stream. If the event is a UserActivityEndEvent, return false.
@@ -201,15 +185,13 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     private void removeRole(Guild guild, Member member) {
-        var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
-        streamingRoleId.ifPresent(roleId -> {
+        configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE).ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null && member.getRoles().contains(streamingRole)) {
                 guild.removeRoleFromMember(member, streamingRole).queue();
             }
         });
     }
-
 
     private void announceStream(Guild guild, Member member, String streamingUrl, Activity activity,
             StreamingMember streamingMember) {

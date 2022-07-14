@@ -23,7 +23,7 @@ public class NinbotSupporterCheck implements SupporterCheck {
      */
     @Override
     public boolean isPatreonSupporter(ShardManager shardManager, User user) {
-        var guild = shardManager.getGuildById(NinbotConstants.NINBOT_SUPPORTERS_SERVER_ID);
+        var guild = shardManager.getGuildById(NinbotConstants.NINBOT_SUPPORTERS_GUILD_ID);
         if (guild != null && guild.getMembers()
                 .stream()
                 .anyMatch(member -> member.getId().equals(user.getId()))) {

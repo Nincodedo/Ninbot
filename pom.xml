@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot</artifactId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.6.0-SNAPSHOT</version>
     <name>Ninbot</name>
     <description>Discord bot for OCW Discord using JDA</description>
     <url>https://github.com/Nincodedo/Ninbot</url>
@@ -33,7 +33,7 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
-        <JDA.version>v5.0.0-alpha.13</JDA.version>
+        <JDA.version>5.0.0-alpha.13</JDA.version>
         <archunit.version>0.23.1</archunit.version>
         <assertj-core.version>3.23.1</assertj-core.version>
         <commons-io.version>2.11.0</commons-io.version>
@@ -49,7 +49,7 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
-        <pitest-maven.version>1.9.0</pitest-maven.version>
+        <pitest-maven.version>1.9.2</pitest-maven.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>3.1.3</sortpom-maven-plugin.version>
@@ -114,7 +114,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.DV8FromtheWorld</groupId>
+            <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>${JDA.version}</version>
             <exclusions>

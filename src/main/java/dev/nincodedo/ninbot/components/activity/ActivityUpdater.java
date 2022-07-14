@@ -8,26 +8,37 @@ import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ActivityUpdater {
 
     private final ShardManager shardManager;
-    private final List<String> activityStatusList = List.of(
-            "Check out my fancy new slash commands!",
-            "New status, who this?"
-    );
     private final Random random;
+    private List<String> activityStatusList;
+    private ActivityStatusRepository activityStatusRepository;
 
-    public ActivityUpdater(ShardManager shardManager) {
+    public ActivityUpdater(ShardManager shardManager, ActivityStatusRepository activityStatusRepository) {
         this.shardManager = shardManager;
         this.random = new SecureRandom();
+        this.activityStatusRepository = activityStatusRepository;
+        updateStatusList();
         setNinbotActivity();
     }
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
+    private void updateStatusList() {
+        activityStatusList = activityStatusRepository.findAll()
+                .stream()
+                .map(ActivityStatus::getStatus)
+                .toList();
+    }
+
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     private void setNinbotActivity() {
-        var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
-        shardManager.setActivity(Activity.playing(status));
+        if (!activityStatusList.isEmpty()) {
+            var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
+            shardManager.setActivity(Activity.playing(status));
+        }
     }
 }

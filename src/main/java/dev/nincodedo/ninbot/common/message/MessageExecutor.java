@@ -29,20 +29,15 @@ public abstract class MessageExecutor<T> {
     public void executeActions() {
         //map all the emote reactions to RestActions
         if (getMessage() != null) {
-            List<RestAction<Void>> reactionRestActionList = new ArrayList<>();
             var reactionEmoteList = reactionEmotes
                     .stream()
                     .map(emote -> getMessage().addReaction(emote)).toList();
-            if (reactionEmoteList != null) {
-                reactionRestActionList.addAll(reactionEmoteList);
-            }
+            List<RestAction<Void>> reactionRestActionList = new ArrayList<>(reactionEmoteList);
             //map all the emoji reactions to RestActions
             var reactionList = reactions.stream()
                     .map(stringEmote -> getMessage().addReaction(Emoji.fromFormatted(stringEmote)))
                     .toList();
-            if (reactionList != null) {
-                reactionRestActionList.addAll(reactionList);
-            }
+            reactionRestActionList.addAll(reactionList);
             //Combine them into one large RestAction and queue it
             if (!reactionRestActionList.isEmpty()) {
                 RestAction.allOf(reactionRestActionList).queue();
