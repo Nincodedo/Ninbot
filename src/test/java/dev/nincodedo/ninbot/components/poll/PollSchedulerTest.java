@@ -48,6 +48,12 @@ class PollSchedulerTest {
     @InjectMocks
     PollScheduler pollScheduler;
 
+    static List<TestParameter> channelTypes() {
+        return List.of(new TestParameter(ChannelType.TEXT, TextChannel.class),
+                new TestParameter(ChannelType.GUILD_PUBLIC_THREAD, ThreadChannel.class),
+                new TestParameter(ChannelType.NEWS, NewsChannel.class));
+    }
+
     @ParameterizedTest
     @MethodSource("channelTypes")
     void scheduleOne(TestParameter testParameter) {
@@ -66,14 +72,8 @@ class PollSchedulerTest {
         verify(channel, times(1)).retrieveMessageById("1");
     }
 
-    static List<TestParameter> channelTypes() {
-        return List.of(new TestParameter(ChannelType.TEXT, TextChannel.class),
-                new TestParameter(ChannelType.GUILD_PUBLIC_THREAD, ThreadChannel.class),
-                new TestParameter(ChannelType.NEWS, NewsChannel.class));
-    }
-
     @Test
-    void scheduleOneError(){
+    void scheduleOneError() {
         Poll poll = new Poll();
         poll.setChannelId("1");
         poll.setMessageId("1");
