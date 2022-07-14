@@ -80,7 +80,7 @@ public class Dabber {
 
     Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
         return new MessageBuilder().append(jda
-                        .getGuildById(NinbotConstants.OCW_SERVER_ID)
+                        .getGuildById(NinbotConstants.OCW_GUILD_ID)
                         .getEmojisByName("ninbotdab", true)
                         .get(0))
                 .append(" ")

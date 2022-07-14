@@ -36,13 +36,13 @@ public class SubscribeCommand implements SlashCommand {
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.deferEphemeralReply();
-        var server = slashCommandEvent.getGuild();
+        var guild = slashCommandEvent.getGuild();
         var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(),
                 OptionMapping::getAsRole);
-        if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
+        if (guild != null && isValidSubscribeRole(role, guild.getId())) {
             try {
                 addOrRemoveSubscription(slashCommandEvent.getInteraction()
-                        .getHook(), slashCommandEvent.getMember(), server, role);
+                        .getHook(), slashCommandEvent.getMember(), guild, role);
             } catch (PermissionException e) {
                 slashCommandEvent.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
             }

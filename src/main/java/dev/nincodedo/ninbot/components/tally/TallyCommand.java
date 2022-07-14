@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.tally;
 
+import dev.nincodedo.ninbot.common.command.Subcommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
-import dev.nincodedo.ninbot.common.command.slash.SlashSubcommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class TallyCommand implements SlashCommand, SlashSubcommand<TallyCommandName.Subcommand> {
+public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.Subcommand> {
 
     private static HashMap<String, Integer> tallyCount = new HashMap<>();
 
@@ -58,8 +58,10 @@ public class TallyCommand implements SlashCommand, SlashSubcommand<TallyCommandN
             case ADD -> addToTally(slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get()),
                     slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
                             .toLowerCase(), messageExecutor);
-            case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
-                    .toLowerCase(), messageExecutor);
+            case GET ->
+                    getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(),
+                                    OptionMapping::getAsString)
+                            .toLowerCase(), messageExecutor);
         }
         return messageExecutor;
     }

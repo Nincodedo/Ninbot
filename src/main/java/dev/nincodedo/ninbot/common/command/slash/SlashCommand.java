@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public interface SlashCommand extends Command {
+public interface SlashCommand extends Command<SlashCommandEventMessageExecutor, SlashCommandInteractionEvent> {
 
     default boolean shouldCheckPermissions() {
         return false;

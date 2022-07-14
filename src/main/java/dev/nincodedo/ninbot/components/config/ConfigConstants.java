@@ -11,7 +11,7 @@ public class ConfigConstants {
     public static final String ROLE_DENY_LIST = "roleDenyList";
     public static final String STREAMING_ROLE = "streamingRole";
     public static final String TOPIC_CHANGE_CHANNEL = "topicChangeChannel";
-    public static final String SERVER_TIMEZONE = "serverTimezone";
+    public static final String GUILD_TIMEZONE = "serverTimezone";
     public static final String DEFAULT_TIMEZONE = "GMT-6";
     public static final String PATHOGEN_MESSAGE_SEARCH_LIMIT = "pathogenMessageSearchLimit";
     public static final String PATHOGEN_MESSAGE_AFFECT_CHANCE = "pathogenMessageAffectChance";

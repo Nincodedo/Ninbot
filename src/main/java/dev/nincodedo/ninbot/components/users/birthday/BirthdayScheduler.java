@@ -4,7 +4,7 @@ import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.Schedulable;
 import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.users.NinbotUser;
-import dev.nincodedo.ninbot.components.users.UserRepository;
+import dev.nincodedo.ninbot.components.users.UserService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -28,19 +28,26 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class BirthdayScheduler implements Schedulable {
+public class BirthdayScheduler implements Schedulable<NinbotUser, UserService> {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public BirthdayScheduler(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public BirthdayScheduler(UserService userService) {
+        this.userService = userService;
     }
 
+    @Override
     public void scheduleAll(ShardManager shardManager) {
         new Timer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
     }
 
-    void scheduleBirthdayAnnouncement(NinbotUser ninbotUser, ShardManager shardManager) {
+    @Override
+    public UserService getScheduler() {
+        return userService;
+    }
+
+    @Override
+    public void scheduleOne(NinbotUser ninbotUser, ShardManager shardManager) {
         log.trace("Checking if {} birthday should be scheduled", ninbotUser.getUserId());
         var birthdayString = ninbotUser.getBirthday();
         var birthdayOptional = getDateWithFormat(birthdayString);
@@ -133,7 +140,7 @@ public class BirthdayScheduler implements Schedulable {
 
         @Override
         public void run() {
-            userRepository.findAll().forEach(ninbotUser -> scheduleBirthdayAnnouncement(ninbotUser, shardManager));
+            userService.findAllOpenItems().forEach(ninbotUser -> scheduleOne(ninbotUser, shardManager));
         }
     }
 }

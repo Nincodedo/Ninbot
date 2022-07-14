@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.common.command.slash.info;
 
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
@@ -60,7 +60,7 @@ public class InfoCommand implements SlashCommand {
         if (shardManager == null) {
             return null;
         }
-        var supporterServer = shardManager.getGuildById(botInfo.getSupporterServerId());
+        var supporterServer = shardManager.getGuildById(botInfo.getSupporterGuildId());
         if (supporterServer != null) {
             return supporterServer.getMembersWithRoles(Collections.emptyList())
                     .stream()
