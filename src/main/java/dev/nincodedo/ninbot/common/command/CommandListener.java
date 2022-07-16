@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
@@ -18,8 +18,8 @@ public class CommandListener extends BaseListenerAdapter {
     private List<AbstractCommandParser> commandParsers;
 
     public CommandListener(List<AbstractCommandParser> commandParsers,
-            List<Command> commands, ServerLogger serverLogger) {
-        super(serverLogger);
+            List<Command> commands, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory);
         this.commandParsers = commandParsers;
         addCommands(commands);
     }

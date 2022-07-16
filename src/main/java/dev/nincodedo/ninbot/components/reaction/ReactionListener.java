@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatCategory;
@@ -23,8 +23,8 @@ class ReactionListener extends StatAwareListenerAdapter {
 
     @Autowired
     public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService,
-            StatManager statManager, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            StatManager statManager, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.reactionResponseList = reactionResponseList;
         this.componentService = componentService;
         this.statManager = statManager;

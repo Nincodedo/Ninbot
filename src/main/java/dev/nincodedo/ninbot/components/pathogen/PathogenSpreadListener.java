@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -22,8 +22,8 @@ public class PathogenSpreadListener extends BaseListenerAdapter {
     private String componentName;
 
     public PathogenSpreadListener(PathogenManager pathogenManager, ComponentService componentService,
-            ConfigService configService, ServerLogger serverLogger) {
-        super(serverLogger);
+            ConfigService configService, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory);
         this.pathogenManager = pathogenManager;
         this.componentService = componentService;
         this.configService = configService;

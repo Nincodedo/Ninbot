@@ -1,18 +1,17 @@
 package dev.nincodedo.ninbot.common.logging;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.stereotype.Component;
 
-@Slf4j
-@Component
 public class ServerLogger {
-    private ServerLogLevelService serverLogLevelService;
 
-    public ServerLogger(ServerLogLevelService serverLogLevelService) {
+    private ServerLogLevelService serverLogLevelService;
+    private org.slf4j.Logger log;
+
+    public ServerLogger(ServerLogLevelService serverLogLevelService, Class<?> clazz) {
         this.serverLogLevelService = serverLogLevelService;
+        this.log = org.slf4j.LoggerFactory.getLogger(clazz);
     }
 
     public void trace(String serverId, String message) {

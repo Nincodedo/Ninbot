@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.channel;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.config.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
@@ -30,8 +30,8 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private String componentName;
 
     public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository,
-            ComponentService componentService, StatManager statManager, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            ComponentService componentService, StatManager statManager, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
         this.componentName = "voice-channel-manager";

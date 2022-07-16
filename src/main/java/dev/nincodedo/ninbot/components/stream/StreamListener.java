@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -34,8 +34,9 @@ public class StreamListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, ComponentService componentService,
-            StreamingMemberRepository streamingMemberRepository, StatManager statManager, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            StreamingMemberRepository streamingMemberRepository, StatManager statManager,
+            ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;

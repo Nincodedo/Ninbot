@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,8 +18,8 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
 
 
     public PollUserChoiceListener(StatManager statManager, PollService pollService, String pollMessageId,
-            PollAnnouncementSetup pollAnnouncementSetup, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            PollAnnouncementSetup pollAnnouncementSetup, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.pollService = pollService;
         this.pollMessageId = pollMessageId;
         this.pollAnnouncementSetup = pollAnnouncementSetup;

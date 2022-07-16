@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.common;
 
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
@@ -13,8 +13,8 @@ public class StatAwareListenerAdapter extends BaseListenerAdapter {
     private StatManager statManager;
     private ExecutorService executorService;
 
-    public StatAwareListenerAdapter(ServerLogger serverLogger, StatManager statManager) {
-        super(serverLogger);
+    public StatAwareListenerAdapter(ServerLoggerFactory serverLoggerFactory, StatManager statManager) {
+        super(serverLoggerFactory);
         this.statManager = statManager;
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
     }

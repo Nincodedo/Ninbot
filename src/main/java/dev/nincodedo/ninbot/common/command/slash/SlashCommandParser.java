@@ -1,15 +1,17 @@
 package dev.nincodedo.ninbot.common.command.slash;
 
 import dev.nincodedo.ninbot.common.command.AbstractCommandParser;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutorService;
 
 @Component
 public class SlashCommandParser extends AbstractCommandParser<SlashCommand, SlashCommandInteractionEvent> {
 
-    protected SlashCommandParser(ServerLogger serverLogger){
-        super(serverLogger);
+    protected SlashCommandParser(ServerLoggerFactory serverLoggerFactory, ExecutorService executorService){
+        super(serverLoggerFactory, executorService);
     }
 
     @Override

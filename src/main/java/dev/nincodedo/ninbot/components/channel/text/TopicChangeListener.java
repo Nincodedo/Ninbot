@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.channel.text;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -24,8 +24,8 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public TopicChangeListener(ConfigService configService,
-            ComponentService componentService, StatManager statManager, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            ComponentService componentService, StatManager statManager, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.componentName = "topic-change";

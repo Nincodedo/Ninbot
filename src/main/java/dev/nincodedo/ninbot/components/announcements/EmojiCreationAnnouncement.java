@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.announcements;
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.ConfigConstants;
 import dev.nincodedo.ninbot.components.config.ConfigService;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
@@ -32,8 +32,8 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
     private String componentName;
 
     public EmojiCreationAnnouncement(StatManager statManager, ConfigService configService,
-            ComponentService componentService, ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            ComponentService componentService, ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         this.componentService = componentService;
         this.configService = configService;
         componentName = "emote-added-announcement";

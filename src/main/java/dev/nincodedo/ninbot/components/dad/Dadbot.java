@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.dad;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
@@ -38,8 +38,8 @@ public class Dadbot extends StatAwareListenerAdapter {
 
     @Autowired
     public Dadbot(ConfigService configService, ComponentService componentService, StatManager statManager,
-            ServerLogger serverLogger) {
-        super(serverLogger, statManager);
+            ServerLoggerFactory serverLoggerFactory) {
+        super(serverLoggerFactory, statManager);
         random = new SecureRandom();
         this.configService = configService;
         componentName = "dad";
