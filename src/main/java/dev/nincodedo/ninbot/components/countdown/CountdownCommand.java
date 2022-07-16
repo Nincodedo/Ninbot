@@ -63,7 +63,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
         var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(),
                 OptionMapping::getAsString);
         var userId = slashCommandEvent.getUser().getId();
-        var optionalCountdown = countdownRepository.findByCreatedByAndName(userId, countdownName);
+        var optionalCountdown = countdownRepository.findByAudit_CreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
             countdownRepository.delete(optionalCountdown.get());
             return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
@@ -83,8 +83,8 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
             for (var countdown : countdownList) {
                 countdown.setResourceBundle(resourceBundle());
                 String countdownDescription = countdown.getDescription();
-                if (countdown.getCreatedBy() != null) {
-                    var countdownCreator = event.getGuild().getMemberById(countdown.getCreatedBy());
+                if (countdown.getAudit().getCreatedBy() != null) {
+                    var countdownCreator = event.getGuild().getMemberById(countdown.getAudit().getCreatedBy());
                     if (countdownCreator != null) {
                         countdownDescription = addCreatorInfo(countdownCreator, countdownDescription);
                     }
@@ -120,7 +120,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
                         .atStartOfDay(serverTimezone))
                 .setName(countdownName)
                 .setServerId(slashCommandEvent.getGuild().getId());
-        countdown.setCreatedBy(slashCommandEvent.getUser().getId());
+        countdown.getAudit().setCreatedBy(slashCommandEvent.getUser().getId());
         countdownRepository.save(countdown);
         countdownScheduler.scheduleOne(countdown, slashCommandEvent.getJDA().getShardManager());
         countdown.setResourceBundle(resourceBundle(slashCommandEvent.getGuild().getLocale()));

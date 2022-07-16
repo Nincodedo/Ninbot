@@ -5,13 +5,13 @@ import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.supporter.DefaultSupporterCheck;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
+import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,16 +19,16 @@ import javax.security.auth.login.LoginException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Configuration
 public class AppConfiguration {
 
-    private String ninbotToken;
     private NincodedoAutoConfig nincodedoAutoConfig;
 
-    public AppConfiguration(@Value("${ninbotToken}") String ninbotToken, NincodedoAutoConfig nincodedoAutoConfig) {
-        this.ninbotToken = ninbotToken;
+    public AppConfiguration(NincodedoAutoConfig nincodedoAutoConfig) {
         this.nincodedoAutoConfig = nincodedoAutoConfig;
     }
 
@@ -36,7 +36,8 @@ public class AppConfiguration {
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         try {
-            return DefaultShardManagerBuilder.create(ninbotToken, EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+            return DefaultShardManagerBuilder.create(nincodedoAutoConfig.ninbotToken(),
+                            EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                             GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
                             GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
                             GatewayIntent.GUILD_MESSAGE_REACTIONS))
@@ -63,5 +64,10 @@ public class AppConfiguration {
         var supporterCheckClass = nincodedoAutoConfig.supporterCheckClass()
                 == null ? DefaultSupporterCheck.class : nincodedoAutoConfig.supporterCheckClass();
         return supporterCheckClass.getDeclaredConstructor().newInstance();
+    }
+
+    @Bean
+    public ExecutorService commandParserThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
     }
 }

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.countdown;
 
-import dev.nincodedo.ninbot.common.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.utils.TimeFormat;

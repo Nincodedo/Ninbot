@@ -38,7 +38,7 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
 
     private void replyWithDeletableCountdowns(
             CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        var countdowns = countdownRepository.findCountdownByCreatedBy(commandAutoCompleteInteractionEvent.getMember()
+        var countdowns = countdownRepository.findCountdownByAudit_CreatedBy(commandAutoCompleteInteractionEvent.getMember()
                         .getId())
                 .stream()
                 .map(Countdown::getName)
