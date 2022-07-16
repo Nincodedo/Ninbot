@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.channel.thread;
 
 import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +33,9 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class ThreadUnarchivedAnnouncementTest {
+
+    @Mock
+    ServerLoggerFactory serverLoggerFactory;
 
     @InjectMocks
     ThreadUnarchivedAnnouncement threadUnarchivedAnnouncement;

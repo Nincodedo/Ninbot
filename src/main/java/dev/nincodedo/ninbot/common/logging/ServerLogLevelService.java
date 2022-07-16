@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class ServerLogLevelService {
+public class ServerLogLevelService {
     private ServerLogLevelRepository serverLogLevelRepository;
 
     ServerLogLevelService(ServerLogLevelRepository serverLogLevelRepository) {

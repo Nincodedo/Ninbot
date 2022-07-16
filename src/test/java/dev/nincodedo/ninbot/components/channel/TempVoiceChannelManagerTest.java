@@ -2,7 +2,9 @@ package dev.nincodedo.ninbot.components.channel;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.common.Emojis;
+import dev.nincodedo.ninbot.common.logging.ServerLogLevelService;
 import dev.nincodedo.ninbot.common.logging.ServerLogger;
+import dev.nincodedo.ninbot.common.logging.ServerLoggerFactory;
 import dev.nincodedo.ninbot.components.config.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
@@ -49,13 +51,16 @@ class TempVoiceChannelManagerTest {
     StatManager statManager;
 
     @Mock
-    ServerLogger serverLogger;
+    ServerLoggerFactory serverLoggerFactory;
+
+    @Mock
+    ServerLogLevelService serverLogLevelService;
 
     @InjectMocks
     TempVoiceChannelManager tempVoiceChannelManager;
 
     @Captor
-    private ArgumentCaptor<Consumer> lambdaCaptor;
+    ArgumentCaptor<Consumer> lambdaCaptor;
 
     @Test
     void onGuildVoiceJoin() {
@@ -69,6 +74,7 @@ class TempVoiceChannelManagerTest {
         var moveVoiceAction = Mockito.mock(RestAction.class);
         var permissionContainer = Mockito.mock(IPermissionContainer.class);
         var permissionContainerManager = Mockito.mock(IPermissionContainerManager.class);
+        var serverLogger = Mockito.mock(ServerLogger.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
@@ -90,6 +96,7 @@ class TempVoiceChannelManagerTest {
                 Arrays.asList(Permission.VOICE_MOVE_OTHERS,
                         Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
                         Permission.VOICE_DEAF_OTHERS), null)).thenReturn(permissionContainerManager);
+        when(serverLoggerFactory.getLogger(any())).thenReturn(serverLogger);
 
         tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
 
