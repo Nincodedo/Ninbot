@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.ChannelUnion;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.Test;
@@ -92,7 +94,7 @@ class HaikuListenerTest {
     void messageHaikuable() {
         String bestHaiku = "the the the the the the the the the the the the the the the the the";
         Guild guild = Mockito.mock(Guild.class);
-        TextChannel channel = Mockito.mock(TextChannel.class);
+        MessageChannelUnion channel = Mockito.mock(MessageChannelUnion.class);
         User user = Mockito.mock(User.class);
         Member member = Mockito.mock(Member.class);
         MessageAction action = Mockito.mock(MessageAction.class);
