@@ -100,7 +100,7 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
             messageBuilder.append(member);
         }
         messageBuilder.append("\n");
-        messageBuilder.append(emoji);
+        messageBuilder.append(emoji.getFormatted());
         return messageBuilder.build();
     }
 }
