@@ -33,7 +33,7 @@
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
-        <JDA.version>v5.0.0-alpha.13</JDA.version>
+        <JDA.version>5.0.0-alpha.13</JDA.version>
         <archunit.version>0.23.1</archunit.version>
         <assertj-core.version>3.23.1</assertj-core.version>
         <commons-io.version>2.11.0</commons-io.version>
@@ -114,7 +114,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.DV8FromtheWorld</groupId>
+            <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>${JDA.version}</version>
             <exclusions>
