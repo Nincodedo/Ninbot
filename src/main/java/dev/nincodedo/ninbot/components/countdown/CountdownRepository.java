@@ -12,7 +12,7 @@ public interface CountdownRepository extends CrudRepository<Countdown, Long> {
 
     List<Countdown> findByServerId(String serverId);
 
-    List<Countdown> findCountdownByCreatedBy(String creatorId);
+    List<Countdown> findCountdownByAudit_CreatedBy(String creatorId);
 
-    Optional<Countdown> findByCreatedByAndName(String creatorId, String name);
+    Optional<Countdown> findByAudit_CreatedByAndName(String creatorId, String name);
 }
