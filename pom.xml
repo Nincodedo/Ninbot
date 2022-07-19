@@ -49,10 +49,10 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
-        <pitest-maven.version>1.9.2</pitest-maven.version>
+        <pitest-maven.version>1.9.3</pitest-maven.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sortpom-maven-plugin.version>3.1.3</sortpom-maven-plugin.version>
+        <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.2</testcontainers.version>
         <maven.compiler.source>18</maven.compiler.source>
