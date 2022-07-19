@@ -54,7 +54,7 @@
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
-        <testcontainers.version>1.17.2</testcontainers.version>
+        <testcontainers.version>1.17.3</testcontainers.version>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
     </properties>
