@@ -6,6 +6,7 @@ the [Component command](../commands/index.md#component).
 * [Temporary Voice Channels](#temporary-voice-channels)
 * [Pathogen Game](#pathogen-game)
 * [New Emote Announcements](#new-emote-announcements)
+* [New Sticker Announcements](#new-sticker-announcements)
 
 ## Temporary Voice Channels
 
@@ -31,4 +32,10 @@ Component name: `emote-added-announcement`
 
 New emotes added to the server can be automatically announced in a specific channel if configured. Add the configuration
 `emoteAnnouncementChannelId` with the channel id as the value to have Ninbot automatically announce.
-The component can also be disabled with the following name.
+
+## New Sticker Announcements
+
+Component name: `sticker-added-announcement`
+
+New stickers added to the server can be automatically announced in a specific channel if configured. It uses the same
+configurations as the [emote announcements](#new-emote-announcements).
