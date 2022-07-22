@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -30,7 +29,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.mockito.Mockito.any;

@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

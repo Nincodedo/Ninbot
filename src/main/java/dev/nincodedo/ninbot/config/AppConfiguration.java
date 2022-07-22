@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.config;
 
-import dev.nincodedo.ninbot.common.config.NincodedoAutoConfig;
+import dev.nincodedo.ninbot.common.config.app.NincodedoAutoConfig;
 import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.supporter.DefaultSupporterCheck;

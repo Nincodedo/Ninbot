@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.config;
+package dev.nincodedo.ninbot.common.config.db;
 
 import lombok.experimental.UtilityClass;
 

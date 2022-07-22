@@ -61,14 +61,14 @@ public class CommandRegistration extends ListenerAdapter {
                     .filter(Command::isAbleToRegisterOnGuild)
                     .map(this::convertToCommandData)
                     .toList();
-            if (guildHasAllCommands(commandDataList, currentCommandList)) {
-                log.trace("Server {} already has all the current commands. Skipping update.",
-                        FormatLogObject.guildName(guild));
-            } else {
+            if (!guildHasAllCommands(commandDataList, currentCommandList)) {
                 guild.updateCommands()
                         .addCommands(commandDataList)
                         .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
                                 commandList.size(), FormatLogObject.guildName(guild)));
+            } else {
+                log.trace("Server {} already has all the current commands. Skipping update.",
+                        FormatLogObject.guildName(guild));
             }
         } catch (Exception e) {
             log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);

@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.config.component;
+package dev.nincodedo.ninbot.common.config.db.component;
 
 import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;

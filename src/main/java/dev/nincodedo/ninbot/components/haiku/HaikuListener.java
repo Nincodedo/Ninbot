@@ -2,8 +2,8 @@ package dev.nincodedo.ninbot.components.haiku;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
 import net.dv8tion.jda.api.EmbedBuilder;

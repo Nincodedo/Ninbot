@@ -4,7 +4,7 @@ import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.command.Command;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

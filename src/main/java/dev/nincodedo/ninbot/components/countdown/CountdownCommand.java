@@ -5,8 +5,8 @@ import dev.nincodedo.ninbot.common.command.Subcommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 

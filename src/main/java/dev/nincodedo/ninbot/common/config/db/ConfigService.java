@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.config;
+package dev.nincodedo.ninbot.common.config.db;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

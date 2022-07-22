@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.common.config;
+package dev.nincodedo.ninbot.common.config.app;
 
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;

@@ -2,9 +2,9 @@ package dev.nincodedo.ninbot.components.channel.text;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
