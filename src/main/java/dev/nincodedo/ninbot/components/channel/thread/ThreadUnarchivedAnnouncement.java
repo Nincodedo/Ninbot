@@ -34,7 +34,7 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
 
     @Override
     public void onChannelUpdateArchived(@NotNull ChannelUpdateArchivedEvent event) {
-        var threadChannel = (ThreadChannel) event.getChannel();
+        var threadChannel = event.getChannel().asThreadChannel();
         if (!threadChannel.isPublic()) {
             return;
         }
@@ -57,7 +57,7 @@ public class ThreadUnarchivedAnnouncement extends BaseListenerAdapter {
 
     @Override
     public void onChannelUpdateArchiveTimestamp(@NotNull ChannelUpdateArchiveTimestampEvent event) {
-        var threadChannel = (ThreadChannel) event.getChannel();
+        var threadChannel = event.getChannel().asThreadChannel();
         if (!threadChannel.isPublic()) {
             return;
         }

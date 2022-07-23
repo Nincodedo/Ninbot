@@ -7,7 +7,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 import com.tngtech.archunit.library.GeneralCodingRules;
-import dev.nincodedo.ninbot.common.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
 import dev.nincodedo.ninbot.common.command.CommandNameEnum;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;

@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.common.BaseEntity;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.EmbedBuilder;
