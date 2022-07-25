@@ -2,9 +2,13 @@ package dev.nincodedo.ninbot.common.message;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
-public class MessageContextInteractionEventMessageExecutor extends MessageExecutor<MessageContextInteractionEventMessageExecutor> {
+import java.util.List;
+
+public class MessageContextInteractionEventMessageExecutor extends EphemeralMessageExecutor<MessageContextInteractionEventMessageExecutor> {
 
     private MessageContextInteractionEvent messageContextInteractionEvent;
 
@@ -19,6 +23,16 @@ public class MessageContextInteractionEventMessageExecutor extends MessageExecut
         if (!messageResponses.isEmpty()) {
             messageResponses.forEach(message -> messageContextInteractionEvent.reply(message).queue());
         }
+    }
+
+    @Override
+    protected ReplyCallbackAction replyMessage(Message message) {
+        return messageContextInteractionEvent.reply(message);
+    }
+
+    @Override
+    protected ReplyCallbackAction replyEmbeds(List<MessageEmbed> messageEmbeds) {
+        return messageContextInteractionEvent.replyEmbeds(messageEmbeds);
     }
 
     @Override

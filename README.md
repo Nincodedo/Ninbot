@@ -9,11 +9,13 @@ using [JDA.](https://github.com/DV8FromTheWorld/JDA)
 
 Dab on your friends.
 
-![Dab command example](docs/images/dab-slash-command-example1.png)
+![Dab command example light](docs/images/dab-slash-command-example1-light.png#gh-light-mode-only)
+![Dab command example dark](docs/images/dab-slash-command-example1-dark.png#gh-dark-mode-only)
 
 Experience the father you never had but wish you did.
 
-![Dadbot reaction example](docs/images/dadbot-example1.png)
+![Dadbot reaction example light](docs/images/dadbot-example1-light.png#gh-light-mode-only)
+![Dadbot reaction example dark](docs/images/dadbot-example1-dark.png#gh-dark-mode-only)
 
 ## Want to use Ninbot on your Discord server?
 

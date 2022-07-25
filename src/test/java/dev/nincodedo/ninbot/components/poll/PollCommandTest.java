@@ -5,7 +5,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.Test;
@@ -42,10 +44,10 @@ class PollCommandTest {
     @Test
     void executePollCommand() {
         Member member = Mockito.mock(Member.class);
-        TextChannel textChannel = Mockito.mock(TextChannel.class);
+        MessageChannelUnion channelUnion = Mockito.mock(MessageChannelUnion.class);
         Guild guild = Mockito.mock(Guild.class);
         ReplyCallbackAction replyAction = Mockito.mock(ReplyCallbackAction.class);
-        when(slashCommandEvent.getChannel()).thenReturn(textChannel);
+        when(slashCommandEvent.getChannel()).thenReturn(channelUnion);
         when(slashCommandEvent.getGuild()).thenReturn(guild);
         when(slashCommandEvent.getMember()).thenReturn(member);
         when(slashCommandEvent.getOption(eq("choice1"), any())).thenReturn("1st");
@@ -54,9 +56,9 @@ class PollCommandTest {
         when(slashCommandEvent.getOption(eq("polllength"), eq(5L), any())).thenReturn(5L);
         when(slashCommandEvent.reply(any(Message.class))).thenReturn(replyAction);
         when(guild.getId()).thenReturn("1");
-        when(textChannel.getId()).thenReturn("1");
+        when(channelUnion.getId()).thenReturn("1");
         when(member.getEffectiveAvatarUrl()).thenReturn("http://google.com/a-url");
-        when(guild.getLocale()).thenReturn(Locale.ENGLISH);
+        when(guild.getLocale()).thenReturn(DiscordLocale.ENGLISH_US);
 
         var actualMessageAction = pollCommand.execute(slashCommandEvent);
 
@@ -67,10 +69,10 @@ class PollCommandTest {
     @Test
     void parsePollMessage() {
         Member member = Mockito.mock(Member.class);
-        TextChannel textChannel = Mockito.mock(TextChannel.class);
+        MessageChannelUnion channelUnion = Mockito.mock(MessageChannelUnion.class);
         Guild guild = Mockito.mock(Guild.class);
         OptionMapping choice3 = Mockito.mock(OptionMapping.class);
-        when(slashCommandEvent.getChannel()).thenReturn(textChannel);
+        when(slashCommandEvent.getChannel()).thenReturn(channelUnion);
         when(slashCommandEvent.getGuild()).thenReturn(guild);
         when(slashCommandEvent.getOption(eq("choice1"), any())).thenReturn("1st");
         when(slashCommandEvent.getOption(eq("choice2"), any())).thenReturn("2nd");
@@ -81,7 +83,7 @@ class PollCommandTest {
         when(slashCommandEvent.getOption("userchoices")).thenReturn(null);
         when(slashCommandEvent.getOption(eq("polllength"), eq(5L), any())).thenReturn(5L);
         when(guild.getId()).thenReturn("1");
-        when(textChannel.getId()).thenReturn("1");
+        when(channelUnion.getId()).thenReturn("1");
         when(member.getEffectiveAvatarUrl()).thenReturn("http://avatarturl.com/avatar.png");
         when(member.getEffectiveName()).thenReturn("Nincodedo");
 

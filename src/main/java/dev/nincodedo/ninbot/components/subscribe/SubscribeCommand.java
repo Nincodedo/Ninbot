@@ -4,8 +4,8 @@ import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.components.pathogen.PathogenConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -36,13 +36,13 @@ public class SubscribeCommand implements SlashCommand {
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         messageExecutor.deferEphemeralReply();
-        var server = slashCommandEvent.getGuild();
+        var guild = slashCommandEvent.getGuild();
         var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(),
                 OptionMapping::getAsRole);
-        if (isValidSubscribeRole(role, slashCommandEvent.getGuild().getId())) {
+        if (guild != null && isValidSubscribeRole(role, guild.getId())) {
             try {
                 addOrRemoveSubscription(slashCommandEvent.getInteraction()
-                        .getHook(), slashCommandEvent.getMember(), server, role);
+                        .getHook(), slashCommandEvent.getMember(), guild, role);
             } catch (PermissionException e) {
                 slashCommandEvent.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
             }

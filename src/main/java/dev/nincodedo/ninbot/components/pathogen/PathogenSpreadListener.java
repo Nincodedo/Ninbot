@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -36,11 +36,11 @@ public class PathogenSpreadListener extends BaseListenerAdapter {
                 || !pathogenManager.isSpreadableEvent(event)) {
             return;
         }
-        var serverId = event.getGuild().getId();
+        var guildId = event.getGuild().getId();
         int messageSearchLimit = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_SEARCH_LIMIT,
-                serverId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
+                guildId).map(config -> Integer.parseInt(config.getValue())).orElse(3);
         int messageAffectChance = configService.getGlobalConfigByName(ConfigConstants.PATHOGEN_MESSAGE_AFFECT_CHANCE
-                , serverId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
+                , guildId).map(config -> Integer.parseInt(config.getValue())).orElse(40);
 
         event.getChannel().getHistoryAround(event.getMessage(), messageSearchLimit).queue(messageHistory -> {
             Map<User, Message> surroundingUsers = new HashMap<>();

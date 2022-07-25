@@ -6,9 +6,9 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.common.message.impersonation.Impersonation;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -69,8 +69,8 @@ public class Dadbot extends StatAwareListenerAdapter {
         return messageExecutor;
     }
 
-    private boolean channelIsOnDenyList(String serverId, String channelId) {
-        var channelConfigList = configService.getConfigByName(serverId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
+    private boolean channelIsOnDenyList(String guildId, String channelId) {
+        var channelConfigList = configService.getConfigByName(guildId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 

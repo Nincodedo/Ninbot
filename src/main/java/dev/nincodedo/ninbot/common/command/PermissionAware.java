@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 
 public abstract class PermissionAware {
 

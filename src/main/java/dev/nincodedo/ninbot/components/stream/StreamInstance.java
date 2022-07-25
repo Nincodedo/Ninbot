@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.common.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;

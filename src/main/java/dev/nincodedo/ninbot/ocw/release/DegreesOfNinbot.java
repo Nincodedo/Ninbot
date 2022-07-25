@@ -20,10 +20,10 @@ public class DegreesOfNinbot implements ReleaseFilter {
     }
 
     private ReleaseType degreeCalculation(ShardManager shardManager, User targetUser, Guild targetGuild) {
-        if (targetGuild.getId().equals(NinbotConstants.OCW_SERVER_ID)) {
+        if (targetGuild.getId().equals(NinbotConstants.OCW_GUILD_ID)) {
             return ReleaseType.ALPHA;
         }
-        var ocwGuild = shardManager.getGuildById(NinbotConstants.OCW_SERVER_ID);
+        var ocwGuild = shardManager.getGuildById(NinbotConstants.OCW_GUILD_ID);
         if (ocwGuild != null && ocwGuild.getMember(targetUser) != null) {
             return ReleaseType.BETA;
         }

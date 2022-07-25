@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.common;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -16,7 +17,7 @@ public class LocaleService {
     private static Locale defaultLocale = Locale.ENGLISH;
 
     public static Locale getLocale(Guild guild) {
-        return guild.getLocale();
+        return Locale.forLanguageTag(guild.getLocale().getLocale());
     }
 
     public static ResourceBundle getResourceBundleOrDefault(Guild guild) {
@@ -24,15 +25,15 @@ public class LocaleService {
             log.trace("Guild was null, using default locale");
             return ResourceBundle.getBundle(BUNDLE_BASE_NAME, defaultLocale);
         } else {
-            return getResourceBundleOrDefault(guild.getLocale());
+            return getResourceBundleOrDefault(getLocale(guild));
         }
     }
 
-    private ResourceBundle getResourceBundleOrDefault(Locale serverLocale) {
+    private ResourceBundle getResourceBundleOrDefault(Locale guildLocale) {
         try {
-            return ResourceBundle.getBundle(BUNDLE_BASE_NAME, serverLocale);
+            return ResourceBundle.getBundle(BUNDLE_BASE_NAME, guildLocale);
         } catch (MissingResourceException e) {
-            log.trace("Could not find resource bundle for locale {}, using default locale", serverLocale);
+            log.trace("Could not find resource bundle for locale {}, using default locale", guildLocale);
             return ResourceBundle.getBundle(BUNDLE_BASE_NAME, defaultLocale);
         }
     }

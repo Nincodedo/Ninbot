@@ -22,10 +22,10 @@ import java.util.List;
 @Component
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command> commands;
+    private List<Command<?, ?>> commands;
     private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command<?, ?>> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
         this.releaseFilter = releaseFilter;
     }
@@ -58,16 +58,17 @@ public class CommandRegistration extends ListenerAdapter {
             var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
+                    .filter(Command::isAbleToRegisterOnGuild)
                     .map(this::convertToCommandData)
                     .toList();
-            if (guildHasAllCommands(commandDataList, currentCommandList)) {
-                log.trace("Server {} already has all the current commands. Skipping update.",
-                        FormatLogObject.guildName(guild));
-            } else {
+            if (!guildHasAllCommands(commandDataList, currentCommandList)) {
                 guild.updateCommands()
                         .addCommands(commandDataList)
                         .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
                                 commandList.size(), FormatLogObject.guildName(guild)));
+            } else {
+                log.trace("Server {} already has all the current commands. Skipping update.",
+                        FormatLogObject.guildName(guild));
             }
         } catch (Exception e) {
             log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);
@@ -96,7 +97,7 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToCommandData(Command command) {
+    private CommandData convertToCommandData(Command<?, ?> command) {
         switch (command) {
             case SlashCommand slashCommand:
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
@@ -113,7 +114,6 @@ public class CommandRegistration extends ListenerAdapter {
                 return Commands.user(userContextCommand.getName());
             case MessageContextCommand messageContextCommand:
                 return Commands.message(messageContextCommand.getName());
-            case null:
             default:
                 return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         }

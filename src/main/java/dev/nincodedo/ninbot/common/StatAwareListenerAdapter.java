@@ -17,7 +17,7 @@ public class StatAwareListenerAdapter extends BaseListenerAdapter {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
     }
 
-    public void countOneStat(String name, String serverId) {
-        executorService.execute(() -> statManager.addOneCount(name, StatCategory.LISTENER, serverId));
+    public void countOneStat(String name, String guildId) {
+        executorService.execute(() -> statManager.addOneCount(name, StatCategory.LISTENER, guildId));
     }
 }

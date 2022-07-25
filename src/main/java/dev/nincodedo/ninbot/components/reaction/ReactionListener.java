@@ -2,8 +2,8 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import dev.nincodedo.ninbot.components.config.component.ComponentService;
-import dev.nincodedo.ninbot.components.config.component.ComponentType;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,8 @@ class ReactionListener extends StatAwareListenerAdapter {
                 respond(event);
             } catch (Exception e) {
                 log.error("Reaction listener error in server {} in channel {}",
-                        FormatLogObject.guildInfo(event.getGuild()), FormatLogObject.channelInfo(event.getChannel()), e);
+                        FormatLogObject.guildInfo(event.getGuild()), FormatLogObject.channelInfo(event.getChannel()),
+                        e);
             }
         }
     }

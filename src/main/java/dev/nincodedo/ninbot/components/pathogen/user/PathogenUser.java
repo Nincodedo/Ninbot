@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.pathogen.user;
 
-import dev.nincodedo.ninbot.common.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;

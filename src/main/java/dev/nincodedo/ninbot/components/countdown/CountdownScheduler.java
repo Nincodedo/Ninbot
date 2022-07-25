@@ -4,8 +4,8 @@ import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.message.GenericAnnounce;
-import dev.nincodedo.ninbot.components.config.ConfigConstants;
-import dev.nincodedo.ninbot.components.config.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
@@ -16,26 +16,20 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
-public class CountdownScheduler implements Schedulable {
+public class CountdownScheduler implements Schedulable<Countdown, CountdownService> {
 
-    private CountdownRepository countdownRepository;
+    private CountdownService countdownService;
     private ConfigService configService;
 
-    public CountdownScheduler(CountdownRepository countdownRepository, ConfigService configService) {
-        this.countdownRepository = countdownRepository;
+    public CountdownScheduler(CountdownService countdownService, ConfigService configService) {
+        this.countdownService = countdownService;
         this.configService = configService;
     }
 
-    public void scheduleAll(ShardManager shardManager) {
-        new Timer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
-    }
-
-    void scheduleOne(Countdown countdown, ShardManager shardManager) {
+    public void scheduleOne(Countdown countdown, ShardManager shardManager) {
         var countdownDate = countdown.getEventDate();
         var tomorrowDate = LocalDate.now(countdownDate.getZone())
                 .plus(1, ChronoUnit.DAYS)
@@ -74,25 +68,16 @@ public class CountdownScheduler implements Schedulable {
                             .toInstant()));
         } else {
             log.debug("Countdown {} is past, removing", countdown.getId());
-            countdownRepository.delete(countdown);
+            countdownService.delete(countdown);
         }
+    }
+
+    @Override
+    public CountdownService getScheduler() {
+        return countdownService;
     }
 
     private boolean isAnnounceable(long dayDifference) {
         return dayDifference > 100 && dayDifference % 100 != 0 || dayDifference > 7 && dayDifference % 7 != 0;
-    }
-
-    class Scheduler extends TimerTask {
-
-        private ShardManager shardManager;
-
-        Scheduler(ShardManager shardManager) {
-            this.shardManager = shardManager;
-        }
-
-        @Override
-        public void run() {
-            countdownRepository.findAll().forEach(countdown -> scheduleOne(countdown, shardManager));
-        }
     }
 }
