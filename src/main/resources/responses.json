@@ -88,6 +88,10 @@
       {
         "response": "hello my child",
         "target": "hi dad"
+      },
+      {
+        "response": "meow",
+        "target": "B"
       }
     ],
     "contains": [
