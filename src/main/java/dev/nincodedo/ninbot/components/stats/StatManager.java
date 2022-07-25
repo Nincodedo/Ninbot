@@ -39,10 +39,10 @@ public class StatManager {
     /**
      * If the stat exists, update it. If it doesn't exist, create it.
      *
-     * @param name The name of the stat.
+     * @param name     The name of the stat.
      * @param category The category of the stat.
      * @param serverId The server ID of the server that the stat is being updated for.
-     * @param count The count of the stat.
+     * @param count    The count of the stat.
      */
     public void upsertCount(String name, String category, String serverId, int count) {
         executorService.execute(() -> statRepository.findByNameAndCategoryAndServerId(name, category, serverId)

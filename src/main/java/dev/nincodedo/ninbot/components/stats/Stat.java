@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stats;
 
 
-import dev.nincodedo.ninbot.common.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;

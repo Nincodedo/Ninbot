@@ -12,14 +12,17 @@ import net.dv8tion.jda.api.entities.RichPresence;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -62,6 +65,7 @@ class StreamListenerTest {
         Activity activity = mock(Activity.class);
         User user = mock(User.class);
         TextChannel textChannel = mock(TextChannel.class);
+        GuildMessageChannelUnion channelUnion = mock(GuildMessageChannelUnion.class);
         MessageAction messageAction = mock(MessageAction.class);
         Role streamingRole = mock(Role.class);
         RichPresence richPresence = mock(RichPresence.class);
@@ -74,6 +78,7 @@ class StreamListenerTest {
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getUser()).thenReturn(user);
         when(member.getId()).thenReturn("123");
+        when(user.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
@@ -84,9 +89,10 @@ class StreamListenerTest {
         when(activity.asRichPresence()).thenReturn(richPresence);
         when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
         when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
-        when(guild.getLocale()).thenReturn(Locale.ENGLISH);
+        when(guild.getLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(guild.getMember(user)).thenReturn(member);
-        when(guild.getGuildChannelById("123")).thenReturn(textChannel);
+        when(guild.getGuildChannelById("123")).thenReturn(channelUnion);
+        when(channelUnion.asStandardGuildMessageChannel()).thenReturn(textChannel);
         when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
@@ -127,6 +133,7 @@ class StreamListenerTest {
     void userStartsStreamingNotAlreadyStreamingOnCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
         Member member = mock(Member.class);
+        User user = mock(User.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
         MessageAction messageAction = mock(MessageAction.class);
@@ -134,6 +141,8 @@ class StreamListenerTest {
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
         when(member.getId()).thenReturn("123");
+        when(member.getUser()).thenReturn(user);
+        when(user.getId()).thenReturn("123");
         when(userActivityStartEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("123");
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);

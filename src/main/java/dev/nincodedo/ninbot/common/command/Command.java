@@ -1,10 +1,12 @@
 package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.release.ReleaseStage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public interface Command extends ReleaseStage {
+public interface Command<T, F> extends ReleaseStage {
     Locale defaultLocale = Locale.ENGLISH;
 
     /**
@@ -13,4 +15,10 @@ public interface Command extends ReleaseStage {
      * @return String name
      */
     String getName();
+
+    MessageExecutor<T> execute(@NotNull F event);
+
+    default boolean isAbleToRegisterOnGuild() {
+        return true;
+    }
 }

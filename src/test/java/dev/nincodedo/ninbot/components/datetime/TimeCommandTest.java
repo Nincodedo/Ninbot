@@ -11,12 +11,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TimeCommandTest {
 
-    TimeCommand timeCommand = new TimeCommand(){
+    TimeCommand timeCommand = new TimeCommand() {
         @Override
         protected Timestamp now(TimeFormat timeFormat) {
             return timeFormat.atTimestamp(1641016800000L);
         }
     };
+
+    static List<TimestampTest> timestamps() {
+        return List.of(
+                new TimestampTest(100.0, "hours", "relative", TimeFormat.RELATIVE, 1641376800000L),
+                new TimestampTest(5.0, "days", "date", TimeFormat.DATE_SHORT, 1641448800000L)
+        );
+    }
 
     @ParameterizedTest
     @MethodSource("timestamps")
@@ -25,13 +32,6 @@ class TimeCommandTest {
                 timestampTest.display());
         assertThat(timestamp.getFormat()).isEqualTo(timestampTest.format());
         assertThat(timestamp.getTimestamp()).isEqualTo(timestampTest.timestamp());
-    }
-
-    static List<TimestampTest> timestamps() {
-        return List.of(
-                new TimestampTest(100.0, "hours", "relative", TimeFormat.RELATIVE, 1641376800000L),
-                new TimestampTest(5.0, "days", "date", TimeFormat.DATE_SHORT, 1641448800000L)
-        );
     }
 }
 

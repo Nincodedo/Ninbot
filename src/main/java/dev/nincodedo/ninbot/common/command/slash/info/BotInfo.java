@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.common.command;
+package dev.nincodedo.ninbot.common.command.slash.info;
 
 import lombok.Data;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -51,7 +51,7 @@ public abstract class BotInfo {
 
     public abstract String getGitHubUrl();
 
-    public abstract String getSupporterServerId();
+    public abstract String getSupporterGuildId();
 
     public abstract String getDocumentationUrl();
 }

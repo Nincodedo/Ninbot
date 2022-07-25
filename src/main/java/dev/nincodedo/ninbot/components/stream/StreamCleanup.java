@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -19,8 +20,7 @@ public class StreamCleanup {
         this.shardManager = shardManager;
     }
 
-    //twice a day
-    @Scheduled(fixedRate = 43200000L)
+    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
     private void endOldStreams() {
         log.trace("Running scheduled end of old streams");
         streamingMemberRepository.findAll().forEach(streamingMember -> {

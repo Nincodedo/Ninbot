@@ -8,6 +8,7 @@ import dev.nincodedo.ninbot.components.config.ConfigService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public interface SlashCommand extends Command {
+public interface SlashCommand extends Command<SlashCommandEventMessageExecutor, SlashCommandInteractionEvent> {
 
     default boolean shouldCheckPermissions() {
         return false;
@@ -41,6 +42,10 @@ public interface SlashCommand extends Command {
 
     default ResourceBundle resourceBundle(Locale locale) {
         return ResourceBundle.getBundle("lang", locale);
+    }
+
+    default ResourceBundle resourceBundle(DiscordLocale discordLocale) {
+        return ResourceBundle.getBundle("lang", Locale.forLanguageTag(discordLocale.getLocale()));
     }
 
     default String resource(String resourceBundleKey) {
