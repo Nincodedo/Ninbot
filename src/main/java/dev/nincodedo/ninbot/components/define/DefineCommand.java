@@ -21,9 +21,9 @@ import java.util.List;
 @Component
 public class DefineCommand implements SlashCommand {
 
-    private DefineWordAPI defineWordAPI;
+    private FeignUrbanDictionary defineWordAPI;
 
-    public DefineCommand(DefineWordAPI defineWordAPI) {
+    public DefineCommand(FeignUrbanDictionary defineWordAPI) {
         this.defineWordAPI = defineWordAPI;
     }
 
@@ -32,11 +32,11 @@ public class DefineCommand implements SlashCommand {
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get(), OptionMapping::getAsString);
-        Word wordDefinition = defineWordAPI.defineWord(word);
-        if (wordDefinition == null) {
+        List<Word> wordList = defineWordAPI.defineWord(word).list();
+        if (wordList.isEmpty() || wordList.get(0) == null) {
             messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
         } else {
-            messageExecutor.addMessageResponse(buildMessage(wordDefinition));
+            messageExecutor.addMessageResponse(buildMessage(wordList.get(0)));
         }
         return messageExecutor;
     }
@@ -46,7 +46,7 @@ public class DefineCommand implements SlashCommand {
                 new EmbedBuilder()
                         .setTitle("Definition of " + wordDefinition.word())
                         .addField(wordDefinition.word(), wordDefinition.definition().split("\n")[0], false))
-                .setActionRows(ActionRow.of(Button.link(wordDefinition.link(), "Find Out More")))
+                .setActionRows(ActionRow.of(Button.link(wordDefinition.permalink(), "Find Out More")))
                 .build();
     }
 
