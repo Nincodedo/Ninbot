@@ -7,7 +7,7 @@ on:
     branches:
       - main
       - dev
-name: Build and Deploy
+name: Build
 jobs:
   buildMaven:
     name: Build Maven
@@ -53,21 +53,4 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          push: ${{ github.ref == 'refs/heads/main' }}
-          tags: |
-            ghcr.io/nincodedo/ninbot:latest
-            ghcr.io/nincodedo/ninbot:${{ github.sha }}
-  deployGKE:
-    if: github.ref == 'refs/heads/main'
-    needs: [buildMaven, buildDocker]
-    name: Deploy GKE
-    runs-on: ubuntu-latest
-    steps:
-      - name: GKE Login
-        uses: google-github-actions/get-gke-credentials@v0.8.0
-        with:
-          cluster_name: ninbot-cluster
-          location: us-central1-c
-          credentials: ${{ secrets.GKE_JSON }}
-      - name: GKE Deploy
-        run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
+          push: false
