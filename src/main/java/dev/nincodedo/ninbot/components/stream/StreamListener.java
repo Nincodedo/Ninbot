@@ -35,12 +35,13 @@ public class StreamListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, ComponentService componentService,
-            StreamingMemberRepository streamingMemberRepository, StatManager statManager) {
+            StreamingMemberRepository streamingMemberRepository, StatManager statManager,
+            StreamMessageBuilder streamMessageBuilder) {
         super(statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
-        this.streamMessageBuilder = new StreamMessageBuilder();
+        this.streamMessageBuilder = streamMessageBuilder;
         this.componentName = "stream-announce";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
     }

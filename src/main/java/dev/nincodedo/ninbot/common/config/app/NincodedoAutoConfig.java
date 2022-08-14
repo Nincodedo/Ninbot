@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("nincodedo")
 public record NincodedoAutoConfig(String ninbotToken,
+                                  String steamGridDbApiKey,
                                   Class<? extends SupporterCheck> supporterCheckClass,
                                   Class<? extends ReleaseFilter> releaseFilterClass) {
 }

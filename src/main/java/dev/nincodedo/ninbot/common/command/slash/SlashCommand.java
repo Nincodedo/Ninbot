@@ -1,6 +1,8 @@
 package dev.nincodedo.ninbot.common.command.slash;
 
 import dev.nincodedo.ninbot.common.command.Command;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.command.CommandType;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
