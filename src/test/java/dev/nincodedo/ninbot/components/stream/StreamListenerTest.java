@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -64,7 +65,7 @@ class StreamListenerTest {
         User user = mock(User.class);
         TextChannel textChannel = mock(TextChannel.class);
         GuildMessageChannelUnion channelUnion = mock(GuildMessageChannelUnion.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         Role streamingRole = mock(Role.class);
         RichPresence richPresence = mock(RichPresence.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
@@ -91,7 +92,7 @@ class StreamListenerTest {
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getGuildChannelById("123")).thenReturn(channelUnion);
         when(channelUnion.asStandardGuildMessageChannel()).thenReturn(textChannel);
-        when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
+        when(textChannel.sendMessage(any(MessageCreateData.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
         when(textChannel.getLatestMessageId()).thenReturn("123");
@@ -111,7 +112,7 @@ class StreamListenerTest {
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -134,7 +135,7 @@ class StreamListenerTest {
         User user = mock(User.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -157,7 +158,7 @@ class StreamListenerTest {
         UserActivityEndEvent userActivityEndEvent = mock(UserActivityEndEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Role streamingRole = mock(Role.class);
         User user = mock(User.class);

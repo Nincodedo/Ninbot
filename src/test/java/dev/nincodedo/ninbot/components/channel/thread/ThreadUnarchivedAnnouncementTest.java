@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchiveTimestampEvent;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -70,7 +70,7 @@ class ThreadUnarchivedAnnouncementTest {
                 Mockito.mock(ChannelUpdateArchiveTimestampEvent.class);
         ThreadChannel.AutoArchiveDuration autoArchiveDuration = ThreadChannel.AutoArchiveDuration.TIME_1_HOUR;
         GuildMessageChannelUnion guildMessageChannel = Mockito.mock(GuildMessageChannelUnion.class);
-        MessageAction messageAction = Mockito.mock(MessageAction.class);
+        MessageCreateAction messageAction = Mockito.mock(MessageCreateAction.class);
 
         when(updateArchiveTimestampEvent.getChannel()).thenReturn(channelUnion);
         when(threadChannel.getAutoArchiveDuration()).thenReturn(autoArchiveDuration);

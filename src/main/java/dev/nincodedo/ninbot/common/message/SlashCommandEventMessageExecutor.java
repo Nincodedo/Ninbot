@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class SlashCommandEventMessageExecutor extends EphemeralMessageExecutor<S
      * @param message the {@link Message} being sent
      * @return the {@link ReplyCallbackAction}
      */
-    public ReplyCallbackAction replyMessage(Message message) {
+    public ReplyCallbackAction replyMessage(MessageCreateData message) {
         return slashCommandEvent.reply(message);
     }
 

@@ -11,7 +11,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -73,7 +74,7 @@ class HaikuListenerTest {
         TextChannel channel = Mockito.mock(TextChannel.class);
         User user = Mockito.mock(User.class);
         Member member = Mockito.mock(Member.class);
-        MessageAction action = Mockito.mock(MessageAction.class);
+        MessageCreateAction action = Mockito.mock(MessageCreateAction.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped())
                 .thenReturn(bestHaiku);
@@ -96,7 +97,7 @@ class HaikuListenerTest {
         MessageChannelUnion channel = Mockito.mock(MessageChannelUnion.class);
         User user = Mockito.mock(User.class);
         Member member = Mockito.mock(Member.class);
-        MessageAction action = Mockito.mock(MessageAction.class);
+        MessageCreateAction action = Mockito.mock(MessageCreateAction.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped())
                 .thenReturn(bestHaiku);
@@ -109,7 +110,7 @@ class HaikuListenerTest {
         when(user.isBot()).thenReturn(false);
         when(messageEvent.getMember()).thenReturn(member);
         when(messageEvent.getChannel()).thenReturn(channel);
-        when(channel.sendMessage(any(Message.class))).thenReturn(action);
+        when(channel.sendMessage(any(MessageCreateData.class))).thenReturn(action);
 
         haikuListener.onMessageReceived(messageEvent);
 

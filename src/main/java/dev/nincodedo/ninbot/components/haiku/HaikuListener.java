@@ -7,8 +7,8 @@ import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -47,7 +47,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
                     "_" + haikuLines + "_", event.getMessage().getContentRaw()));
             embedBuilder.setFooter("A haiku inspired by " + event.getMember().getEffectiveName());
             event.getChannel()
-                    .sendMessage(new MessageBuilder(embedBuilder).build())
+                    .sendMessage(new MessageCreateBuilder().addEmbeds(embedBuilder.build()).build())
                     .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
         });
     }

@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.receive.ReadonlyMessage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,7 +23,7 @@ public class Impersonator {
         this.webhookHelper = new WebhookHelper();
     }
 
-    public CompletableFuture<ReadonlyMessage> sendMessage(Message message) {
+    public CompletableFuture<ReadonlyMessage> sendMessage(MessageCreateData message) {
         setupWebhook();
         var future = webhookHelper.sendMessage(message);
         tearDown();

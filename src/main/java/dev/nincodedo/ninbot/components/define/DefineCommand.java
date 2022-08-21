@@ -5,14 +5,13 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -41,12 +40,12 @@ public class DefineCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private Message buildMessage(Word wordDefinition) {
-        return new MessageBuilder(
-                new EmbedBuilder()
+    private MessageCreateData buildMessage(Word wordDefinition) {
+        return new MessageCreateBuilder()
+                .addEmbeds(new EmbedBuilder()
                         .setTitle("Definition of " + wordDefinition.word())
-                        .addField(wordDefinition.word(), wordDefinition.definition().split("\n")[0], false))
-                .setActionRows(ActionRow.of(Button.link(wordDefinition.permalink(), "Find Out More")))
+                        .addField(wordDefinition.word(), wordDefinition.definition().split("\n")[0], false).build())
+                .addActionRow(Button.link(wordDefinition.permalink(), "Find Out More"))
                 .build();
     }
 

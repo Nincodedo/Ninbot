@@ -8,12 +8,12 @@ import com.bernardomg.tabletop.dice.parser.DiceParser;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -40,13 +40,12 @@ public class RollCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private Message rollDice(String diceArgs, String memberEffectiveName) {
+    private MessageCreateData rollDice(String diceArgs, String memberEffectiveName) {
         var parsed = parser.parse(diceArgs, roller);
         var diceCommand = diceArgs.split("d");
-        MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.appendFormat(resourceBundle().getString("command.roll.result"), memberEffectiveName,
-                diceCommand[0], diceCommand[1], String
-                        .valueOf(parsed.getTotalRoll()), parsed.toString());
+        MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
+        messageBuilder.addContent(String.format(resourceBundle().getString("command.roll.result"), memberEffectiveName,
+                diceCommand[0], diceCommand[1], parsed.getTotalRoll(), parsed));
         return messageBuilder.build();
     }
 

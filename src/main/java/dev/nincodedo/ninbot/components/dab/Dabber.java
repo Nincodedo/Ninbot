@@ -8,11 +8,11 @@ import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
@@ -78,13 +78,13 @@ public class Dabber {
                 .toList());
     }
 
-    Message buildDabMessage(@NotNull JDA jda, @NotNull User target) {
-        return new MessageBuilder().append(jda
+    MessageCreateData buildDabMessage(@NotNull JDA jda, @NotNull User target) {
+        return new MessageCreateBuilder().addContent(String.valueOf(jda
                         .getGuildById(NinbotConstants.OCW_GUILD_ID)
                         .getEmojisByName("ninbotdab", true)
-                        .get(0))
-                .append(" ")
-                .append(target)
+                        .get(0)))
+                .addContent(" ")
+                .addContent(target.getName())
                 .build();
     }
 }

@@ -5,8 +5,12 @@ import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -44,29 +48,44 @@ class Poll extends BaseEntity {
         pollOpen = true;
     }
 
-    Message build() {
+    MessageCreateData build() {
         pollOpen = true;
         setupResourceBundle();
-        return buildPollMessage(resourceBundle.getString("poll.announce.willclose"));
+        return newPollMessage(resourceBundle.getString("poll.announce.willclose"));
     }
 
-    Message buildClosed() {
+    MessageEditData editOpen() {
+        pollOpen = true;
+        setupResourceBundle();
+        return editPollMessage(resourceBundle.getString("poll.announce.willclose"));
+    }
+
+    MessageEditData buildClosed() {
         pollOpen = false;
         setupResourceBundle();
-        return buildPollMessage(result);
+        return editPollMessage(result);
     }
 
     private void setupResourceBundle() {
         resourceBundle = ResourceBundle.getBundle("lang", new Locale(localeString));
     }
 
-    private Message buildPollMessage(String footer) {
-        return new MessageBuilder(new EmbedBuilder().setTitle(title)
+    private MessageCreateData newPollMessage(String footer) {
+        return new MessageCreateBuilder().addEmbeds(buildEmbedMessage(footer)).build();
+    }
+
+    private MessageEditData editPollMessage(String footer) {
+        return new MessageEditBuilder().setEmbeds(buildEmbedMessage(footer)).build();
+    }
+
+    @NotNull
+    private MessageEmbed buildEmbedMessage(String footer) {
+        return new EmbedBuilder().setTitle(title)
                 .setColor(MessageUtils.getColor(userAvatarUrl))
                 .setTimestamp(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
                 .setAuthor(resourceBundle.getString("poll.announce.authortext") + userName, null, userAvatarUrl)
                 .addField(resourceBundle.getString("poll.announce.choices"), buildPollChoices(), false)
-                .setFooter(buildFooter(footer), null)).build();
+                .setFooter(buildFooter(footer), null).build();
     }
 
     private String buildFooter(String footer) {

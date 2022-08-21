@@ -6,9 +6,9 @@ import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import dev.nincodedo.ninbot.components.users.NinbotUser;
 import dev.nincodedo.ninbot.components.users.UserService;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +69,7 @@ public class BirthdayScheduler implements Schedulable<NinbotUser, UserService> {
             }
             if (isBirthdayTomorrow(birthdateThisYear)) {
                 log.trace("Scheduling birthday announcement for {}", ninbotUser.getUserId());
-                Message birthdayMessage = buildMessage(ninbotUser, shardManager);
+                MessageCreateData birthdayMessage = buildMessage(ninbotUser, shardManager);
                 var guild = shardManager.getGuildById(ninbotUser.getServerId());
                 if (guild == null) {
                     return;
@@ -102,13 +102,13 @@ public class BirthdayScheduler implements Schedulable<NinbotUser, UserService> {
         return date;
     }
 
-    private Message buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
-        MessageBuilder messageBuilder = new MessageBuilder();
+    private MessageCreateData buildMessage(NinbotUser ninbotUser, ShardManager shardManager) {
+        MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
         var user = shardManager.getUserById(ninbotUser.getId());
-        messageBuilder.append("It's ");
-        messageBuilder.append(user.getName());
-        messageBuilder.append(" birthday today! ");
-        messageBuilder.append(
+        messageBuilder.addContent("It's ");
+        messageBuilder.addContent(user.getName());
+        messageBuilder.addContent(" birthday today! ");
+        messageBuilder.addContent(
                 Emojis.BIRTHDAY_CAKE + " " + Emojis.PARTY_FACE + " " + Emojis.BALLOON + " " + Emojis.PARTY_POPPER);
         return messageBuilder.build();
     }
