@@ -47,7 +47,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
         if (!pollChoices.contains(strippedMessage) && pollChoices.size() < pollChoiceLimit) {
             poll.getChoices().add(strippedMessage);
             pollService.save(poll);
-            refMessage.editMessage(poll.build()).queue();
+            refMessage.editMessage(poll.editOpen()).queue();
             pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
         } else {
             message.addReaction(Emoji.fromFormatted(Emojis.CROSS_X)).queue();

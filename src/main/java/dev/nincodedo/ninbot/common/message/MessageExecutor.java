@@ -2,11 +2,12 @@ package dev.nincodedo.ninbot.common.message;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import lombok.Getter;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public abstract class MessageExecutor<T> {
     List<String> reactions;
     List<Emoji> reactionEmotes;
     Message overrideMessage;
-    List<Message> messageResponses;
+    List<MessageCreateData> messageResponses;
 
     protected MessageExecutor() {
         reactions = new ArrayList<>();
@@ -50,13 +51,13 @@ public abstract class MessageExecutor<T> {
 
     public abstract T returnThis();
 
-    public T addMessageResponse(Message message) {
+    public T addMessageResponse(MessageCreateData message) {
         messageResponses.add(message);
         return returnThis();
     }
 
     public T addMessageResponse(String message) {
-        messageResponses.add(new MessageBuilder().append(message).build());
+        messageResponses.add(new MessageCreateBuilder().addContent(message).build());
         return returnThis();
     }
 

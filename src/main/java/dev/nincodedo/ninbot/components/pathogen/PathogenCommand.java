@@ -5,9 +5,9 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.components.pathogen.user.PathogenUserRepository;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -28,21 +28,21 @@ public class PathogenCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private Message getUserInfectionLevel(SlashCommandInteractionEvent event) {
-        MessageBuilder messageBuilder = new MessageBuilder();
+    private MessageCreateData getUserInfectionLevel(SlashCommandInteractionEvent event) {
+        MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
         var pathogenUser = pathogenUserRepository.getByUserIdAndServerId(event.getUser()
                 .getId(), event.getGuild().getId());
         if (pathogenUser != null) {
             if (Boolean.TRUE.equals(pathogenUser.getVaccinated())) {
-                messageBuilder.append(Emojis.getRandomDoctorEmoji());
-                messageBuilder.append(Emojis.getNumberMap().get(0));
-                messageBuilder.append(Emojis.THUMBS_UP);
+                messageBuilder.addContent(Emojis.getRandomDoctorEmoji());
+                messageBuilder.addContent(Emojis.getNumberMap().get(0));
+                messageBuilder.addContent(Emojis.THUMBS_UP);
             } else if (pathogenUser.getInfectionLevel() == 0) {
-                messageBuilder.append(Emojis.HAPPY_FACE);
-                messageBuilder.append(Emojis.getNumberMap().get(0));
+                messageBuilder.addContent(Emojis.HAPPY_FACE);
+                messageBuilder.addContent(Emojis.getNumberMap().get(0));
             } else if (pathogenUser.getInfectionLevel() > 0) {
-                messageBuilder.append(Emojis.SICK_FACE);
-                messageBuilder.append(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
+                messageBuilder.addContent(Emojis.SICK_FACE);
+                messageBuilder.addContent(Emojis.getNumberMap().get(pathogenUser.getInfectionLevel()));
             }
         }
         return messageBuilder.build();

@@ -8,15 +8,15 @@ import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.sticker.GuildSticker;
 import net.dv8tion.jda.api.events.sticker.GuildStickerAddedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -58,16 +58,16 @@ public class StickerCreationAnnouncement extends StatAwareListenerAdapter {
         });
     }
 
-    private Message buildAnnouncementMessage(GuildSticker sticker, Guild guild, Member member) {
+    private MessageCreateData buildAnnouncementMessage(GuildSticker sticker, Guild guild, Member member) {
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
-        MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.append(resourceBundle.getString("listener.sticker.announce.message"));
+        MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
+        messageBuilder.addContent(resourceBundle.getString("listener.sticker.announce.message"));
         if (member != null) {
-            messageBuilder.append(" ")
-                    .append(resourceBundle.getString("listener.sticker.announce.message.member"))
-                    .append(member);
+            messageBuilder.addContent(" ")
+                    .addContent(resourceBundle.getString("listener.sticker.announce.message.member"))
+                    .addContent(member.getEffectiveName());
         }
-        messageBuilder.setStickers(sticker);
+        messageBuilder.addContent(String.valueOf(sticker));
         return messageBuilder.build();
     }
 

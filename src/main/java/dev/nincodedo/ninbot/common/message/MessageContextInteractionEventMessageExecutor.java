@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MessageContextInteractionEventMessageExecutor extends EphemeralMess
     }
 
     @Override
-    protected ReplyCallbackAction replyMessage(Message message) {
+    protected ReplyCallbackAction replyMessage(MessageCreateData message) {
         return messageContextInteractionEvent.reply(message);
     }
 

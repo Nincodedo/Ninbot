@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public class HugemojiCommand implements SlashCommand {
                 var emote = emoteList.get(0);
                 var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
                 InputStream file = new URL(emote.getImageUrl()).openStream();
-                slashCommandEvent.replyFile(file, emote.getName() + imageFileType).queue();
+                slashCommandEvent.replyFiles(FileUpload.fromData(file, emote.getName() + imageFileType)).queue();
             } catch (IOException e) {
                 messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
             }

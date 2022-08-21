@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class HugeDabber extends Dabber {
             var emote = emoteList.get(getRandom().nextInt(emoteList.size()));
             var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
             InputStream file = new URL(emote.getImageUrl()).openStream();
-            channel.sendFile(file, emote.getName() + imageFileType).queue();
+            channel.sendFiles(FileUpload.fromData(file, emote.getName() + imageFileType)).queue();
         } catch (IOException e) {
             log.error("Failed to upload emote image", e);
         }
