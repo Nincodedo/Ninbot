@@ -22,15 +22,15 @@ public class StreamCommand implements SlashCommand {
     private boolean toggleConfig(String userId, String serverId) {
         var configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
         var streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
-        boolean foundUser = true;
+        boolean foundUser = false;
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {
                 configService.removeConfig(config);
-                foundUser = false;
+                foundUser = true;
                 break;
             }
         }
-        if (foundUser) {
+        if (!foundUser) {
             configService.addConfig(serverId, configName, userId);
         }
         return foundUser;
@@ -47,7 +47,7 @@ public class StreamCommand implements SlashCommand {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
         String response = "Stream announcements have been turned ";
-        messageExecutor.addEphemeralMessage(isToggled ? response + "on." : response + "off.");
+        messageExecutor.addEphemeralMessage(isToggled ? response + "off." : response + "on.");
         return messageExecutor;
     }
 }
