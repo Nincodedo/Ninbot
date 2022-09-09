@@ -104,6 +104,11 @@
         "target": "sad_violin"
       }
     ],
-    "regex": []
+    "regex": [
+      {
+        "response": "F",
+        "target": "^Wordle \\d* X/\\d.*"
+      }
+    ]
   }
 }
