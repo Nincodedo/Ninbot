@@ -41,7 +41,6 @@
         <commons-text.version>1.9</commons-text.version>
         <dice.version>2.2.1</dice.version>
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
-        <emoji-java.version>5.1.1</emoji-java.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <log4j.version>2.18.0</log4j.version>
         <lombok.version>1.18.24</lombok.version>
@@ -90,11 +89,6 @@
             <artifactId>archunit</artifactId>
             <version>${archunit.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vdurmont</groupId>
-            <artifactId>emoji-java</artifactId>
-            <version>${emoji-java.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
