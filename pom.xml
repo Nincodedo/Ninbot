@@ -41,6 +41,7 @@
         <commons-text.version>1.9</commons-text.version>
         <dice.version>2.2.1</dice.version>
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
+        <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <log4j.version>2.18.0</log4j.version>
         <lombok.version>1.18.24</lombok.version>
@@ -57,7 +58,6 @@
         <spring-cloud-starter-openfeign.version>3.1.4</spring-cloud-starter-openfeign.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.3</testcontainers.version>
-        <imgscalr-lib.version>4.2</imgscalr-lib.version>
     </properties>
     <dependencies>
         <dependency>
@@ -144,15 +144,15 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.imgscalr</groupId>
-            <artifactId>imgscalr-lib</artifactId>
-            <version>${imgscalr-lib.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>${imgscalr-lib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
