@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji.Type;
@@ -31,9 +32,11 @@ import java.util.List;
 public class HugemojiCommand implements SlashCommand {
 
     private SecureRandom random;
+    private SupporterCheck supporterCheck;
 
-    public HugemojiCommand() {
+    public HugemojiCommand(SupporterCheck supporterCheck) {
         random = new SecureRandom();
+        this.supporterCheck = supporterCheck;
     }
 
     @Override
@@ -61,11 +64,14 @@ public class HugemojiCommand implements SlashCommand {
                 return messageExecutor;
             }
             var imageFileType = customEmoji.getImageUrl().substring(customEmoji.getImageUrl().lastIndexOf('.'));
+            var isSupporter = supporterCheck.isSupporter(slashCommandEvent.getJDA()
+                    .getShardManager(), slashCommandEvent.getUser());
             InputStream beegImage;
             try {
-                beegImage = biggifyImage(image, imageFileType);
+                beegImage = biggifyImage(image, imageFileType, isSupporter);
             } catch (IOException e) {
                 log.error("Failed to enlarge image for custom emoji {}", customEmoji.getFormatted(), e);
+                image.flush();
                 messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
                 return messageExecutor;
             }
@@ -77,8 +83,19 @@ public class HugemojiCommand implements SlashCommand {
         return messageExecutor;
     }
 
-    private InputStream biggifyImage(BufferedImage image, String imageFileType) throws IOException {
-        var beegImage = Scalr.resize(image, random.nextInt(100, 300));
+    private InputStream biggifyImage(BufferedImage image, String imageFileType, boolean isSupporter) throws IOException {
+        var lowerMultiplier = 1.2;
+        var upperMultiplier = 2;
+        if (isSupporter) {
+            lowerMultiplier = lowerMultiplier * 2;
+            upperMultiplier = upperMultiplier * 2;
+        }
+        var lowerBound = (int) (Math.max(image.getHeight(), image.getWidth()) * lowerMultiplier);
+        var upperBound = Math.max(image.getHeight(), image.getWidth()) * upperMultiplier;
+        var randomNewSize = random.nextInt(lowerBound, upperBound);
+        log.trace("image original {}x{}, lower {} upper {} actual {}", image.getWidth(), image.getHeight(),
+                lowerBound, upperBound, randomNewSize);
+        var beegImage = Scalr.resize(image, randomNewSize);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(beegImage, imageFileType.substring(1), os);
         image.flush();
