@@ -58,6 +58,7 @@
         <spring-cloud-starter-openfeign.version>3.1.4</spring-cloud-starter-openfeign.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.3</testcontainers.version>
+        <imgscalr-lib.version>4.2</imgscalr-lib.version>
     </properties>
     <dependencies>
         <dependency>
@@ -147,6 +148,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>${imgscalr-lib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>

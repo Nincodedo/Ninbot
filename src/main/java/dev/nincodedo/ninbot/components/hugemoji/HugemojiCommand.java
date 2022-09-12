@@ -1,60 +1,88 @@
 package dev.nincodedo.ninbot.components.hugemoji;
 
-import com.vdurmont.emoji.EmojiManager;
-import com.vdurmont.emoji.EmojiParser;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.Emoji.Type;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.FileUpload;
+import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
+import java.security.SecureRandom;
 import java.util.List;
 
 @Slf4j
 @Component
 public class HugemojiCommand implements SlashCommand {
 
+    private SecureRandom random;
+
+    public HugemojiCommand() {
+        random = new SecureRandom();
+    }
+
     @Override
     public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var possibleEmoteString = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),
+        var emojiOption = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),
                 OptionMapping::getAsString);
-        List<RichCustomEmoji> emoteList = new ArrayList<>();
-        List<String> emojiList = new ArrayList<>();
-        if (EmojiManager.isEmoji(possibleEmoteString)) {
-            emojiList = new ArrayList<>(EmojiParser.extractEmojis(possibleEmoteString));
-        } else if (possibleEmoteString.contains(":")) {
-            var stringEmote = possibleEmoteString.split(":")[1];
-            emoteList = slashCommandEvent.getGuild().getEmojisByName(stringEmote, true);
+        if (emojiOption == null) {
+            return messageExecutor;
         }
-        if (!emoteList.isEmpty()) {
+        var emojiUnion = Emoji.fromFormatted(emojiOption);
+        var emojiType = emojiUnion.getType();
+        if (emojiType == Type.UNICODE) {
+            messageExecutor.addMessageResponse(emojiUnion.asUnicode().getName());
+        } else if (emojiType == Type.CUSTOM) {
+            var customEmoji = emojiUnion.asCustom();
+            BufferedImage image;
             try {
-                var emote = emoteList.get(0);
-                var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
-                InputStream file = new URL(emote.getImageUrl()).openStream();
-                slashCommandEvent.replyFiles(FileUpload.fromData(file, emote.getName() + imageFileType)).queue();
+                image = ImageIO.read(new URL(customEmoji.getImageUrl()).openStream());
             } catch (IOException e) {
+                log.error("Failed to open custom emoji url {} for custom emoji {}", customEmoji.getImageUrl(),
+                        customEmoji.getFormatted(), e);
                 messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
+                return messageExecutor;
             }
-        } else if (!emojiList.isEmpty()) {
-            emojiList.forEach(messageExecutor::addMessageResponse);
-        } else {
-            messageExecutor.addEphemeralMessage("This ain't an emote I know about.");
+            var imageFileType = customEmoji.getImageUrl().substring(customEmoji.getImageUrl().lastIndexOf('.'));
+            InputStream beegImage;
+            try {
+                beegImage = biggifyImage(image, imageFileType);
+            } catch (IOException e) {
+                log.error("Failed to enlarge image for custom emoji {}", customEmoji.getFormatted(), e);
+                messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
+                return messageExecutor;
+            }
+            slashCommandEvent.deferReply().queue();
+            slashCommandEvent.getHook()
+                    .editOriginalAttachments(FileUpload.fromData(beegImage, customEmoji.getName() + imageFileType))
+                    .queue();
         }
         return messageExecutor;
+    }
+
+    private InputStream biggifyImage(BufferedImage image, String imageFileType) throws IOException {
+        var beegImage = Scalr.resize(image, random.nextInt(100, 300));
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(beegImage, imageFileType.substring(1), os);
+        image.flush();
+        return new ByteArrayInputStream(os.toByteArray());
     }
 
     @Override
