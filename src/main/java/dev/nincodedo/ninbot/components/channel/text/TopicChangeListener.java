@@ -8,7 +8,7 @@ import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateTopicEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

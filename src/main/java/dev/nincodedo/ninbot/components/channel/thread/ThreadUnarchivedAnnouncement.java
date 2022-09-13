@@ -4,7 +4,7 @@ import dev.nincodedo.ninbot.common.BaseListenerAdapter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchiveTimestampEvent;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchivedEvent;
 import org.jetbrains.annotations.NotNull;

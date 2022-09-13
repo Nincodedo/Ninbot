@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.security.auth.login.LoginException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 import java.util.List;
@@ -35,19 +34,14 @@ public class AppConfiguration {
     @Autowired
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
-        try {
-            return DefaultShardManagerBuilder.create(nincodedoAutoConfig.ninbotToken(),
-                            EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-                                    GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
-                                    GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
-                                    GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT))
-                    .addEventListeners(listenerAdapters.toArray())
-                    .setShardsTotal(-1)
-                    .build();
-        } catch (LoginException e) {
-            log.error("Failed to login", e);
-        }
-        return null;
+        return DefaultShardManagerBuilder.create(nincodedoAutoConfig.ninbotToken(),
+                        EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+                                GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
+                                GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
+                                GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT))
+                .addEventListeners(listenerAdapters.toArray())
+                .setShardsTotal(-1)
+                .build();
     }
 
     @Bean
