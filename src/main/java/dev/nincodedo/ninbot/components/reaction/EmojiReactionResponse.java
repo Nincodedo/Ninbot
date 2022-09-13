@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.util.ArrayList;

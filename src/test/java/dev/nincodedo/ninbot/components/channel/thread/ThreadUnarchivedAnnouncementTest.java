@@ -1,9 +1,8 @@
 package dev.nincodedo.ninbot.components.channel.thread;
 
 import dev.nincodedo.ninbot.NinbotRunner;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.unions.ChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchiveTimestampEvent;

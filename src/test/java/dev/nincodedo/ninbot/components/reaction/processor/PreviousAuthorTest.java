@@ -2,7 +2,7 @@ package dev.nincodedo.ninbot.components.reaction.processor;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
