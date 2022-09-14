@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.common.message;
 
+import dev.nincodedo.ninbot.common.Emojis;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -65,5 +66,9 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
     public T addEphemeralMessage(MessageEmbed messageEmbed) {
         ephemeralMessageEmbeds.add(messageEmbed);
         return returnThis();
+    }
+
+    public T addEphemeralUnsuccessfulReaction() {
+        return addEphemeralMessage(Emojis.CROSS_X);
     }
 }

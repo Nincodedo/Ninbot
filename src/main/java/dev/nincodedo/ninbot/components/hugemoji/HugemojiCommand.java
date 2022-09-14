@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji.Type;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -54,44 +56,56 @@ public class HugemojiCommand implements SlashCommand {
             messageExecutor.addMessageResponse(emojiUnion.asUnicode().getName());
         } else if (emojiType == Type.CUSTOM) {
             var customEmoji = emojiUnion.asCustom();
-            BufferedImage image;
-            try {
-                image = ImageIO.read(new URL(customEmoji.getImageUrl()).openStream());
-            } catch (IOException e) {
-                log.error("Failed to open custom emoji url {} for custom emoji {}", customEmoji.getImageUrl(),
-                        customEmoji.getFormatted(), e);
-                messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
-                return messageExecutor;
-            }
             var imageFileType = customEmoji.getImageUrl().substring(customEmoji.getImageUrl().lastIndexOf('.'));
-            var isSupporter = supporterCheck.isSupporter(slashCommandEvent.getJDA()
-                    .getShardManager(), slashCommandEvent.getUser());
-            InputStream beegImage;
-            try {
-                beegImage = biggifyImage(image, imageFileType, isSupporter);
-            } catch (IOException e) {
-                log.error("Failed to enlarge image for custom emoji {}", customEmoji.getFormatted(), e);
-                image.flush();
-                messageExecutor.addEphemeralMessage(Emojis.CROSS_X);
-                return messageExecutor;
+            var optionalInputStream = getImageInputStream(slashCommandEvent, messageExecutor, customEmoji,
+                    imageFileType);
+            if (optionalInputStream.isPresent()) {
+                slashCommandEvent.deferReply().queue();
+                slashCommandEvent.getHook()
+                        .editOriginalAttachments(FileUpload.fromData(optionalInputStream.get(),
+                                customEmoji.getName() + imageFileType))
+                        .queue();
+            } else {
+                messageExecutor.addEphemeralUnsuccessfulReaction();
             }
-            slashCommandEvent.deferReply().queue();
-            slashCommandEvent.getHook()
-                    .editOriginalAttachments(FileUpload.fromData(beegImage, customEmoji.getName() + imageFileType))
-                    .queue();
         }
         return messageExecutor;
     }
 
-    private InputStream biggifyImage(BufferedImage image, String imageFileType, boolean isSupporter) throws IOException {
-        var lowerMultiplier = 1.2;
-        var upperMultiplier = 2;
-        if (isSupporter) {
-            lowerMultiplier = lowerMultiplier * 2;
-            upperMultiplier = upperMultiplier * 2;
+    private Optional<InputStream> getImageInputStream(@NotNull SlashCommandInteractionEvent slashCommandEvent,
+            SlashCommandEventMessageExecutor messageExecutor, CustomEmoji customEmoji, String imageFileType) {
+        InputStream inputStream;
+        try {
+            inputStream = new URL(customEmoji.getImageUrl()).openStream();
+        } catch (IOException e) {
+            log.error("Failed to open custom emoji url {} for custom emoji {}", customEmoji.getImageUrl(),
+                    customEmoji.getFormatted(), e);
+            messageExecutor.addEphemeralUnsuccessfulReaction();
+            return Optional.empty();
         }
-        var lowerBound = (int) (Math.max(image.getHeight(), image.getWidth()) * lowerMultiplier);
-        var upperBound = Math.max(image.getHeight(), image.getWidth()) * upperMultiplier;
+        if (customEmoji.isAnimated()) {
+            return Optional.of(inputStream);
+        }
+        var isSupporter = supporterCheck.isSupporter(slashCommandEvent.getJDA()
+                .getShardManager(), slashCommandEvent.getUser());
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(inputStream);
+            inputStream = biggifyImage(image, imageFileType, isSupporter);
+        } catch (IOException e) {
+            log.error("Failed to enlarge image for custom emoji {}, falling back to use original image",
+                    customEmoji.getFormatted(), e);
+            if (image != null) {
+                image.flush();
+            }
+        }
+        return Optional.of(inputStream);
+    }
+
+    private InputStream biggifyImage(BufferedImage image, String imageFileType, boolean isSupporter)
+            throws IOException {
+        var lowerBound = (int) (Math.max(image.getHeight(), image.getWidth()) * getLowerMultiplier(isSupporter));
+        var upperBound = Math.max(image.getHeight(), image.getWidth()) * getUpperMultiplier(isSupporter);
         var randomNewSize = random.nextInt(lowerBound, upperBound);
         log.trace("image original {}x{}, lower {} upper {} actual {}", image.getWidth(), image.getHeight(),
                 lowerBound, upperBound, randomNewSize);
@@ -100,6 +114,14 @@ public class HugemojiCommand implements SlashCommand {
         ImageIO.write(beegImage, imageFileType.substring(1), os);
         image.flush();
         return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    private double getLowerMultiplier(boolean isSupporter) {
+        return isSupporter ? 2.4 : 1.2;
+    }
+
+    private int getUpperMultiplier(boolean isSupporter) {
+        return isSupporter ? 4 : 2;
     }
 
     @Override
