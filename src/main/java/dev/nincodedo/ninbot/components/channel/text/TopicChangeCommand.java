@@ -1,8 +1,6 @@
 package dev.nincodedo.ninbot.components.channel.text;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.RolePermission;
-import dev.nincodedo.ninbot.common.command.PermissionAware;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
@@ -14,10 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TopicChangeCommand extends PermissionAware implements SlashCommand {
+public class TopicChangeCommand implements SlashCommand {
+
+    private ConfigService configService;
 
     public TopicChangeCommand(ConfigService configService) {
-        super(configService);
+        this.configService = configService;
     }
 
     @Override
@@ -26,8 +26,8 @@ public class TopicChangeCommand extends PermissionAware implements SlashCommand 
     }
 
     @Override
-    public RolePermission getRolePermission() {
-        return RolePermission.MODS;
+    public boolean isCommandEnabledByDefault() {
+        return false;
     }
 
     @Override

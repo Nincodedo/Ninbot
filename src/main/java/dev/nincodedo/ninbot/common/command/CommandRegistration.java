@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.common.command;
 
-import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
@@ -113,16 +112,18 @@ public class CommandRegistration extends ListenerAdapter {
                 }
                 return slashCommandData;
             case UserContextCommand userContextCommand:
-                return Commands.user(userContextCommand.getName());
+                return Commands.user(userContextCommand.getName())
+                        .setDefaultPermissions(getDefaultPermissions(userContextCommand));
             case MessageContextCommand messageContextCommand:
-                return Commands.message(messageContextCommand.getName());
+                return Commands.message(messageContextCommand.getName())
+                        .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
             default:
                 return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         }
     }
 
-    private DefaultMemberPermissions getDefaultPermissions(SlashCommand slashCommand) {
-        return slashCommand.getRolePermission()
-                == RolePermission.EVERYONE ? DefaultMemberPermissions.ENABLED : DefaultMemberPermissions.DISABLED;
+    private DefaultMemberPermissions getDefaultPermissions(Command<?, ?> command) {
+        return command.isCommandEnabledByDefault() ? DefaultMemberPermissions.ENABLED :
+                DefaultMemberPermissions.DISABLED;
     }
 }
