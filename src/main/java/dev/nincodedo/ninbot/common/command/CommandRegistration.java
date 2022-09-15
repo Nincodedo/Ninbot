@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
+import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.command.message.MessageContextCommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.command.user.UserContextCommand;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -101,7 +103,7 @@ public class CommandRegistration extends ListenerAdapter {
         switch (command) {
             case SlashCommand slashCommand:
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
-                        slashCommand.getDescription());
+                        slashCommand.getDescription()).setDefaultPermissions(getDefaultPermissions(slashCommand));
                 try {
                     slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
                     slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
@@ -117,5 +119,10 @@ public class CommandRegistration extends ListenerAdapter {
             default:
                 return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         }
+    }
+
+    private DefaultMemberPermissions getDefaultPermissions(SlashCommand slashCommand) {
+        return slashCommand.getRolePermission()
+                == RolePermission.EVERYONE ? DefaultMemberPermissions.ENABLED : DefaultMemberPermissions.DISABLED;
     }
 }

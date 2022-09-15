@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.hugemoji;
 
-import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
