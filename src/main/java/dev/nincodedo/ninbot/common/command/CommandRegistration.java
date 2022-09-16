@@ -56,40 +56,18 @@ public class CommandRegistration extends ListenerAdapter {
         }
         try {
             log.trace("Registering commands for server {}", FormatLogObject.guildName(guild));
-            var currentCommandList = guild.retrieveCommands().complete();
             List<CommandData> commandDataList = commands.stream()
                     .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
                     .filter(Command::isAbleToRegisterOnGuild)
                     .map(this::convertToCommandData)
                     .toList();
-            if (!guildHasAllCommands(commandDataList, currentCommandList)) {
-                guild.updateCommands()
-                        .addCommands(commandDataList)
-                        .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
-                                commandList.size(), FormatLogObject.guildName(guild)));
-            } else {
-                log.trace("Server {} already has all the current commands. Skipping update.",
-                        FormatLogObject.guildName(guild));
-            }
+            guild.updateCommands()
+                    .addCommands(commandDataList)
+                    .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
+                            commandList.size(), FormatLogObject.guildName(guild)));
         } catch (Exception e) {
             log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);
         }
-    }
-
-    private boolean guildHasAllCommands(List<CommandData> commandDataList,
-            List<net.dv8tion.jda.api.interactions.commands.Command> currentCommandList) {
-        if (commandDataList.size() != currentCommandList.size()) {
-            return false;
-        }
-        for (var command : currentCommandList) {
-            if (commandDataList.stream().anyMatch(commandData -> commandData.getType() == command.getType())
-                    && commandDataList.stream()
-                    .filter(commandData -> commandData.getType() == command.getType())
-                    .noneMatch(commandData -> commandData.getName().equals(command.getName()))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
