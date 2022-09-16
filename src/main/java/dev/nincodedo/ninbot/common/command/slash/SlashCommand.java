@@ -1,12 +1,8 @@
 package dev.nincodedo.ninbot.common.command.slash;
 
-import dev.nincodedo.ninbot.common.RolePermission;
 import dev.nincodedo.ninbot.common.command.Command;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -19,14 +15,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public interface SlashCommand extends Command<SlashCommandEventMessageExecutor, SlashCommandInteractionEvent> {
-
-    default boolean shouldCheckPermissions() {
-        return false;
-    }
-
-    default RolePermission getRolePermission() {
-        return RolePermission.EVERYONE;
-    }
 
     default String getDescription() {
         return getDescription(defaultLocale);
@@ -60,63 +48,9 @@ public interface SlashCommand extends Command<SlashCommandEventMessageExecutor, 
         return Collections.emptyList();
     }
 
-    default MessageExecutor<SlashCommandEventMessageExecutor> execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        if (shouldCheckPermissions() && executePreCommandActions(slashCommandEvent) || !shouldCheckPermissions()) {
-            return executeCommandAction(slashCommandEvent);
-        } else {
-            return new SlashCommandEventMessageExecutor(slashCommandEvent).addEphemeralMessage("You do not have "
-                    + "permission to execute this command.");
-        }
+    default MessageExecutor<SlashCommandEventMessageExecutor> execute(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
+        return executeCommandAction(slashCommandEvent);
     }
 
-    MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent);
-
-    default ConfigService configService() {
-        return null;
-    }
-
-
-    /**
-     * Runs pre command actions, such as permission checks.
-     *
-     * @param slashCommandEvent the event being executed
-     * @return true if the user has permission to run the command, otherwise false.
-     */
-    default boolean executePreCommandActions(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var guild = slashCommandEvent.getGuild();
-        var member = slashCommandEvent.getMember();
-        return userHasPermission(guild, member);
-    }
-
-    /**
-     * Returns true if the user has the correct permission to run the command.
-     *
-     * @param guild  the guild the command is run in
-     * @param member the member running the command
-     * @return true if the user has permission to run the command, otherwise false.
-     */
-    default boolean userHasPermission(Guild guild, Member member) {
-        if (member != null && guild != null && guild.getOwner() != null && member.getId()
-                .equals(guild.getOwner().getId())) {
-            return true;
-        }
-        RolePermission rolePermission = getRolePermission();
-        if (rolePermission == RolePermission.EVERYONE) {
-            return true;
-        } else if (rolePermission == RolePermission.ADMIN || rolePermission == RolePermission.MODS) {
-            if (guild == null) {
-                return false;
-            }
-            var configuredRole = configService().getSingleValueByName(guild.getId(),
-                    "roleRank-" + getRolePermission().getRoleName());
-            var roles =
-                    configuredRole.map(configuredRoleId ->
-                                    Collections.singletonList(guild.getRoleById(configuredRoleId)))
-                            .orElseGet(() -> guild.getRolesByName(getRolePermission().getRoleName(), true));
-            return guild.getMembersWithRoles(roles).contains(member);
-        }
-        return false;
-    }
+    MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(@NotNull SlashCommandInteractionEvent slashCommandEvent);
 }

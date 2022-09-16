@@ -16,6 +16,10 @@ public interface Command<T, F> extends ReleaseStage {
      */
     String getName();
 
+    default boolean isCommandEnabledByDefault() {
+        return true;
+    }
+
     MessageExecutor<T> execute(@NotNull F event);
 
     default boolean isAbleToRegisterOnGuild() {
