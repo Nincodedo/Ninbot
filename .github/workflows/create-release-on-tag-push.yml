@@ -63,11 +63,14 @@ jobs:
     name: Deploy GKE
     runs-on: ubuntu-latest
     steps:
-      - name: GKE Login
+      - name: GKE Auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_JSON }}
+      - name: GKE Get Credentials
         uses: google-github-actions/get-gke-credentials@v0.8.0
         with:
           cluster_name: ninbot-cluster
           location: us-central1-c
-          credentials: ${{ secrets.GKE_JSON }}
       - name: GKE Deploy
         run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
