@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
-import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Slf4j
 public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent> {
@@ -19,8 +17,8 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;
 
-    protected AbstractCommandParser() {
-        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
+    protected AbstractCommandParser(ExecutorService commandExecutorService) {
+        this.executorService = commandExecutorService;
     }
 
     public void parseEvent(@NotNull F event) {

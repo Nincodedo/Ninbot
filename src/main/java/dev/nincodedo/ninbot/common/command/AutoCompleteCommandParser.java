@@ -1,9 +1,18 @@
 package dev.nincodedo.ninbot.common.command;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutorService;
+
+@Component
 public class AutoCompleteCommandParser extends AbstractCommandParser<AutoCompleteCommand,
         CommandAutoCompleteInteractionEvent> {
+
+    protected AutoCompleteCommandParser(ExecutorService commandExecutorService) {
+        super(commandExecutorService);
+    }
+
     @Override
     public Class<AutoCompleteCommand> getCommandClass() {
         return AutoCompleteCommand.class;

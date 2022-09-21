@@ -46,7 +46,6 @@ public class DabCommand implements SlashCommand {
         return messageExecutor;
     }
 
-
     private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
             User eventMessageAuthor, MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, User dabbedOn) {
         var eventMessageOptional = messageChannel.getIterableHistory()
