@@ -34,7 +34,7 @@ public class ReactionResponse {
         return switch (reactionMatchType) {
             case EXACT -> getTarget().equalsIgnoreCase(event.getMessage().getContentStripped());
             case CONTAINS -> event.getMessage().getContentStripped().toLowerCase().contains(getTarget().toLowerCase());
-            case REGEX -> Pattern.matches(getTarget(), event.getMessage().getContentStripped().replace("\n",""));
+            case REGEX -> Pattern.matches(getTarget(), event.getMessage().getContentStripped().replace("\n", ""));
         };
     }
 }

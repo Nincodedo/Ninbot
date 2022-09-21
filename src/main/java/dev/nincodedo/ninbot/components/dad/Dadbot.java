@@ -2,13 +2,13 @@ package dev.nincodedo.ninbot.components.dad;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
+import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.common.message.impersonation.Impersonation;
-import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
-import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;

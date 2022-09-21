@@ -1,11 +1,11 @@
 package dev.nincodedo.ninbot.common.logging;
 
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.Channel;
 
 @UtilityClass
 public class FormatLogObject {
