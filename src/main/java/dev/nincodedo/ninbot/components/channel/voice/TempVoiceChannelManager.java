@@ -1,18 +1,18 @@
-package dev.nincodedo.ninbot.components.channel;
+package dev.nincodedo.ninbot.components.channel.voice;
 
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -44,7 +44,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
     }
 
-    private void checkIfShouldCreateTempChannel(Guild guild, Member member, AudioChannel channelJoined) {
+    private void checkIfShouldCreateTempChannel(Guild guild, Member member, AudioChannelUnion channelJoined) {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
@@ -60,10 +60,11 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         }
     }
 
-    private void createTemporaryChannel(AudioChannel channelJoined, Guild guild, Member member) {
+    private void createTemporaryChannel(AudioChannelUnion channelJoined, Guild guild, Member member) {
         var channelNameType = channelJoined.getName().substring(2);
         var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
-        log.trace("Creating temporary channel named {} for member id {} in server {}", channelName, member.getId(),
+        log.trace("Creating temporary channel named {} for member {} in server {}", channelName,
+                FormatLogObject.memberInfo(member),
                 FormatLogObject.guildName(guild));
         if (channelJoined.getType() == ChannelType.VOICE) {
             var voiceChannel = (VoiceChannel) channelJoined;
@@ -97,7 +98,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
     }
 
-    private void checkIfShouldDeleteTempChannel(Guild guild, AudioChannel audioChannel) {
+    private void checkIfShouldDeleteTempChannel(Guild guild, AudioChannelUnion audioChannel) {
         if (componentService.isDisabled(componentName, guild.getId())) {
             return;
         }
@@ -111,7 +112,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         return repository.findByVoiceChannelId(voiceChannelId).isPresent();
     }
 
-    private void deleteTemporaryChannel(AudioChannel audioChannel) {
+    private void deleteTemporaryChannel(AudioChannelUnion audioChannel) {
         audioChannel.delete()
                 .queueAfter(10, TimeUnit.SECONDS, success ->
                         repository.findByVoiceChannelId(audioChannel.getId())

@@ -3,13 +3,16 @@ package dev.nincodedo.ninbot.components.channel;
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
+import dev.nincodedo.ninbot.components.channel.voice.TempVoiceChannel;
+import dev.nincodedo.ninbot.components.channel.voice.TempVoiceChannelManager;
+import dev.nincodedo.ninbot.components.channel.voice.TempVoiceChannelRepository;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.managers.channel.attribute.IPermissionContainerManager;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -59,7 +62,7 @@ class TempVoiceChannelManagerTest {
         var joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
         var selfMember = Mockito.mock(Member.class);
         var member = Mockito.mock(Member.class);
-        var voiceChannelJoined = Mockito.mock(VoiceChannel.class);
+        var voiceChannelJoined = Mockito.mock(AudioChannelUnion.class);
         var restAction = Mockito.mock(ChannelAction.class);
         var lastRestAction = Mockito.mock(ChannelAction.class);
         var moveVoiceAction = Mockito.mock(RestAction.class);
@@ -91,7 +94,7 @@ class TempVoiceChannelManagerTest {
 
         verify(lastRestAction).queue(lambdaCaptor.capture());
 
-        Consumer<VoiceChannel> consumer = lambdaCaptor.getValue();
+        Consumer<AudioChannelUnion> consumer = lambdaCaptor.getValue();
         consumer.accept(voiceChannelJoined);
 
         verify(tempVoiceChannelRepository).save(new TempVoiceChannel(member.getId(), voiceChannelJoined.getId()));
