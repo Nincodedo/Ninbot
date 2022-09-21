@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.channel;
+package dev.nincodedo.ninbot.components.channel.voice;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.common.Emojis;
