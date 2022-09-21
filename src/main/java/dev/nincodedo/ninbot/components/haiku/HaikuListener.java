@@ -105,7 +105,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
     }
 
     private boolean isMessageOnlyCharacters(String message) {
-        return Pattern.compile("^[\\w\\sé.,!?]+$").matcher(message).matches();
+        return Pattern.compile("^[a-zA-Z\\sé.,!?]+$").matcher(message).matches();
     }
 
     boolean checkChance() {
