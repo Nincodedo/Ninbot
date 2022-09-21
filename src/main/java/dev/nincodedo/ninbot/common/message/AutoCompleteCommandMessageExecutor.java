@@ -16,7 +16,7 @@ public class AutoCompleteCommandMessageExecutor extends MessageExecutor<AutoComp
 
     @Override
     public void executeMessageActions() {
-
+        // no message actions occur for auto complete
     }
 
     @Override

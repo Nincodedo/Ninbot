@@ -1,14 +1,13 @@
 package dev.nincodedo.ninbot.components.dab;
 
-import dev.nincodedo.ninbot.NinbotConstants;
 import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -32,7 +31,6 @@ public class Dabber {
     @Getter
     private EmojiReactionResponse dabResponse = new EmojiReactionResponse("dab");
 
-
     public Dabber(GitProperties gitProperties, SupporterCheck supporterCheck) {
         isDabEdition = isDabEdition(gitProperties.getCommitId());
         this.supporterCheck = supporterCheck;
@@ -43,9 +41,7 @@ public class Dabber {
         return commitId != null && commitId.toLowerCase().contains("dab");
     }
 
-    void dabOnMessage(MessageExecutor messageExecutor,
-            ShardManager shardManager,
-            User commandUser) {
+    void dabOnMessage(MessageExecutor messageExecutor, ShardManager shardManager, User commandUser) {
         int dabCritPercentChance = 5;
 
         if (supporterCheck.isSupporter(shardManager, commandUser)) {
@@ -74,15 +70,12 @@ public class Dabber {
 
     void sendDabs(MessageExecutor messageExecutor, List<RichCustomEmoji> emoteList) {
         messageExecutor.addReactionEmotes(emoteList.stream()
-                .limit(20)
+                .limit(20L - messageExecutor.getMessage().getReactions().size())
                 .toList());
     }
 
-    MessageCreateData buildDabMessage(@NotNull JDA jda, @NotNull User target) {
-        return new MessageCreateBuilder().addContent(String.valueOf(jda
-                        .getGuildById(NinbotConstants.OCW_GUILD_ID)
-                        .getEmojisByName("ninbotdab", true)
-                        .get(0)))
+    MessageCreateData buildDabMessage(@NotNull User target) {
+        return new MessageCreateBuilder().addContent("<:ninbotdab:786750382771535902>")
                 .addContent(" ")
                 .addContent(target.getName())
                 .build();

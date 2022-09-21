@@ -80,7 +80,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
                 haikuLines = Optional.of(lines.get(0) + "\n" + lines.get(1) + "\n" + lines.get(2));
             }
         }
-        if (checkChance()) {
+        if (haikuLines.isPresent() && checkChance()) {
             return haikuLines;
         } else {
             return Optional.empty();
