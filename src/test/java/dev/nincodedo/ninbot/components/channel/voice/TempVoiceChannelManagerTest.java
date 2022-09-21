@@ -1,15 +1,16 @@
-package dev.nincodedo.ninbot.components.channel;
+package dev.nincodedo.ninbot.components.channel.voice;
 
 import dev.nincodedo.ninbot.NinbotRunner;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.managers.channel.attribute.IPermissionContainerManager;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -59,28 +60,30 @@ class TempVoiceChannelManagerTest {
         var joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
         var selfMember = Mockito.mock(Member.class);
         var member = Mockito.mock(Member.class);
-        var voiceChannelJoined = Mockito.mock(VoiceChannel.class);
+        var voiceChannelJoined = Mockito.mock(AudioChannelUnion.class);
         var restAction = Mockito.mock(ChannelAction.class);
         var lastRestAction = Mockito.mock(ChannelAction.class);
         var moveVoiceAction = Mockito.mock(RestAction.class);
         var permissionContainer = Mockito.mock(IPermissionContainer.class);
         var permissionContainerManager = Mockito.mock(IPermissionContainerManager.class);
+        var voiceChannel = Mockito.mock(VoiceChannel.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(guild.getSelfMember()).thenReturn(selfMember);
         when(joinEvent.getChannelJoined()).thenReturn(voiceChannelJoined);
+        when(voiceChannelJoined.asVoiceChannel()).thenReturn(voiceChannel);
         when(joinEvent.getMember()).thenReturn(member);
         when(voiceChannelJoined.getName()).thenReturn(Emojis.PLUS + " wot");
         when(selfMember.hasPermission(any(Permission.class))).thenReturn(true);
         when(member.getEffectiveName()).thenReturn("Nincodedo");
         when(member.getId()).thenReturn("1");
         when(member.getIdLong()).thenReturn(1L);
-        when(voiceChannelJoined.createCopy()).thenReturn(restAction);
+        when(voiceChannel.createCopy()).thenReturn(restAction);
         when(restAction.setName(anyString())).thenReturn(lastRestAction);
-        when(guild.moveVoiceMember(member, voiceChannelJoined)).thenReturn(moveVoiceAction);
+        when(guild.moveVoiceMember(member, voiceChannel)).thenReturn(moveVoiceAction);
         when(voiceChannelJoined.getType()).thenReturn(ChannelType.VOICE);
-        when(voiceChannelJoined.getPermissionContainer()).thenReturn(permissionContainer);
+        when(voiceChannel.getPermissionContainer()).thenReturn(permissionContainer);
         when(permissionContainer.getManager()).thenReturn(permissionContainerManager);
         when(permissionContainerManager.putMemberPermissionOverride(member.getIdLong(),
                 Arrays.asList(Permission.VOICE_MOVE_OTHERS,
@@ -92,7 +95,7 @@ class TempVoiceChannelManagerTest {
         verify(lastRestAction).queue(lambdaCaptor.capture());
 
         Consumer<VoiceChannel> consumer = lambdaCaptor.getValue();
-        consumer.accept(voiceChannelJoined);
+        consumer.accept(voiceChannel);
 
         verify(tempVoiceChannelRepository).save(new TempVoiceChannel(member.getId(), voiceChannelJoined.getId()));
     }
