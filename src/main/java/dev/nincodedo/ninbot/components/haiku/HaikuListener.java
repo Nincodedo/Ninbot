@@ -76,7 +76,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
             } else {
                 lines.add(results.line());
             }
-            if (results.counter() + 1 == splitMessage.length) {
+            if (results.counter() == splitMessage.length) {
                 haikuLines = Optional.of(lines.get(0) + "\n" + lines.get(1) + "\n" + lines.get(2));
             }
         }
