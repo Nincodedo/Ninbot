@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.haiku;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
+import dev.nincodedo.ninbot.common.message.MessageUtils;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -32,7 +34,6 @@ public class HaikuListener extends StatAwareListenerAdapter {
         this.componentName = "haiku";
         componentService.registerComponent(componentName, ComponentType.ACTION);
     }
-
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -55,47 +56,28 @@ public class HaikuListener extends StatAwareListenerAdapter {
     Optional<String> isHaikuable(String message) {
         Optional<String> haikuLines = Optional.empty();
         if (isMessageOnlyCharacters(message) && getSyllableCount(message) == 17) {
-            StringBuilder firstLine = new StringBuilder();
-            String[] split = message.split("\\s+");
-            int counter;
-            for (counter = 0; counter < split.length; counter++) {
-                String word = split[counter];
-                firstLine.append(word);
-                firstLine.append(" ");
-                int syllableCount = getSyllableCount(firstLine.toString());
-                if (syllableCount > 5) {
-                    return Optional.empty();
-                } else if (syllableCount == 5) {
-                    counter++;
-                    break;
-                }
+            String[] splitMessage = message.split("\\s+");
+            List<String> lines = new ArrayList<>();
+            var results = checkLine(0, 5, splitMessage);
+            if (results.counter() == -1) {
+                return Optional.empty();
+            } else {
+                lines.add(results.line());
             }
-            StringBuilder secondLine = new StringBuilder();
-            for (; counter < split.length; counter++) {
-                String word = split[counter];
-                secondLine.append(word);
-                secondLine.append(" ");
-                int syllableCount = getSyllableCount(secondLine.toString());
-                if (syllableCount > 7) {
-                    return Optional.empty();
-                } else if (syllableCount == 7) {
-                    counter++;
-                    break;
-                }
+            results = checkLine(results.counter(), 7, splitMessage);
+            if (results.counter() == -1) {
+                return Optional.empty();
+            } else {
+                lines.add(results.line());
             }
-            StringBuilder thirdLine = new StringBuilder();
-            for (; counter < split.length; counter++) {
-                String word = split[counter];
-                thirdLine.append(word);
-                thirdLine.append(" ");
-                int syllableCount = getSyllableCount(thirdLine.toString());
-                if (syllableCount > 5) {
-                    return Optional.empty();
-                } else if (syllableCount == 5 && counter + 1 == split.length) {
-                    haikuLines = Optional.of(
-                            firstLine + "\n" + secondLine + "\n" + thirdLine);
-                    break;
-                }
+            results = checkLine(results.counter(), 5, splitMessage);
+            if (results.counter() == -1) {
+                return Optional.empty();
+            } else {
+                lines.add(results.line());
+            }
+            if (results.counter() + 1 == splitMessage.length) {
+                haikuLines = Optional.of(lines.get(0) + "\n" + lines.get(1) + "\n" + lines.get(2));
             }
         }
         if (checkChance()) {
@@ -105,8 +87,25 @@ public class HaikuListener extends StatAwareListenerAdapter {
         }
     }
 
+    private HaikuParsingResults checkLine(int counter, int syllables, String[] splitMessage) {
+        StringBuilder line = new StringBuilder();
+        for (; counter < splitMessage.length; counter++) {
+            String word = splitMessage[counter];
+            line.append(word);
+            line.append(" ");
+            int syllableCount = getSyllableCount(line.toString());
+            if (syllableCount > syllables) {
+                return new HaikuParsingResults(-1, line.toString());
+            } else if (syllableCount == syllables) {
+                counter++;
+                return new HaikuParsingResults(counter, line.toString());
+            }
+        }
+        return new HaikuParsingResults(-1, line.toString());
+    }
+
     private boolean isMessageOnlyCharacters(String message) {
-        return Pattern.compile("^[a-zA-Z\s.,!?]+$").matcher(message).matches();
+        return Pattern.compile("^[\\w\\sé.,!?]+$").matcher(message).matches();
     }
 
     boolean checkChance() {
@@ -120,4 +119,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
         }
         return count;
     }
+}
+
+record HaikuParsingResults(int counter, String line) {
 }
