@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -67,7 +69,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
                 FormatLogObject.memberInfo(member),
                 FormatLogObject.guildName(guild));
         if (channelJoined.getType() == ChannelType.VOICE) {
-            var voiceChannel = (VoiceChannel) channelJoined;
+            var voiceChannel = channelJoined.asVoiceChannel();
             voiceChannel.createCopy()
                     .setName(channelName)
                     .queue(saveAndMove(guild, member));
