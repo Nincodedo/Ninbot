@@ -1,4 +1,4 @@
-FROM maven:3.8.5-eclipse-temurin-18 AS build
+FROM maven:3.8.5-eclipse-temurin-19 AS build
 COPY pom.xml .
 COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
@@ -6,7 +6,7 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM openjdk:18-jdk-slim-buster
+FROM openjdk:19-jdk-slim-buster
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
