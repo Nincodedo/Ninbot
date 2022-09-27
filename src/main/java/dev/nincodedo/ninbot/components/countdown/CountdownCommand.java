@@ -44,7 +44,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
@@ -62,6 +62,10 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     private MessageCreateData deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(),
                 OptionMapping::getAsString);
+        if (countdownName == null) {
+            return new MessageCreateBuilder().addContent(resourceBundle().getString("command.countdown.delete.failure"))
+                    .build();
+        }
         var userId = slashCommandEvent.getUser().getId();
         var optionalCountdown = countdownRepository.findByAudit_CreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {

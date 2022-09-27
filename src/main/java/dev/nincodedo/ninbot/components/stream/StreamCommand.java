@@ -7,6 +7,9 @@ import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -19,21 +22,14 @@ public class StreamCommand implements SlashCommand {
         this.configService = configService;
     }
 
-    private boolean toggleConfig(String userId, String serverId) {
-        var configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
-        var streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
-        boolean foundUser = false;
+    private boolean isAnnouncementsEnabledForUser(String userId, String serverId) {
+        var streamingAnnounceUsers = configService.getConfigByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
         for (Config config : streamingAnnounceUsers) {
             if (config.getValue().equals(userId)) {
-                configService.removeConfig(config);
-                foundUser = true;
-                break;
+                return true;
             }
         }
-        if (!foundUser) {
-            configService.addConfig(serverId, configName, userId);
-        }
-        return foundUser;
+        return false;
     }
 
     @Override
@@ -42,12 +38,29 @@ public class StreamCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        boolean isToggled = toggleConfig(slashCommandEvent.getUser().getId(), slashCommandEvent.getGuild().getId());
-        String response = "Stream announcements have been turned ";
-        messageExecutor.addEphemeralMessage(isToggled ? response + "off." : response + "on.");
+        var userId = slashCommandEvent.getUser().getId();
+        var announcementsEnabled = isAnnouncementsEnabledForUser(userId, slashCommandEvent.getGuild().getId());
+        var onOff = announcementsEnabled ? "on" : "off";
+        var opposite = announcementsEnabled ? "off" : "on";
+        var createBuilder = new MessageCreateBuilder();
+        messageExecutor.addEphemeralMessage(createBuilder.addContent(
+                        "Stream announcements are currently " + onOff +
+                                ". Would you like to turn them " + opposite + "?")
+                .addComponents(ActionRow.of(getPrimaryButton(userId, opposite), getSecondaryButton(userId, onOff)))
+                .build());
         return messageExecutor;
+    }
+
+    @NotNull
+    private Button getSecondaryButton(String userId, String onOff) {
+        return Button.secondary("stream-nothing-"+userId, "No, keep them " + onOff);
+    }
+
+    @NotNull
+    private Button getPrimaryButton(String userId, String opposite) {
+        return Button.primary("stream-toggle-"+userId, "Yes, turn them " + opposite);
     }
 }

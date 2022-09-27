@@ -27,7 +27,7 @@ public class DefineCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get(), OptionMapping::getAsString);

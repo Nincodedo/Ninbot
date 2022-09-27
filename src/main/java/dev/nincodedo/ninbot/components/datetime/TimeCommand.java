@@ -26,7 +26,7 @@ public class TimeCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         SlashCommandEventMessageExecutor messageExecutor =
                 new SlashCommandEventMessageExecutor(slashCommandEvent);
         Double amount = slashCommandEvent.getOption(TimeCommandName.Option.AMOUNT.get(), OptionMapping::getAsDouble);
