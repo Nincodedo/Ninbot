@@ -54,7 +54,6 @@ public class HaikuListener extends StatAwareListenerAdapter {
     }
 
     Optional<String> isHaikuable(String message) {
-        Optional<String> haikuLines = Optional.empty();
         if (isMessageOnlyCharacters(message) && getSyllableCount(message) == 17) {
             String[] splitMessage = message.split("\\s+");
             List<String> lines = new ArrayList<>();
@@ -76,15 +75,11 @@ public class HaikuListener extends StatAwareListenerAdapter {
             } else {
                 lines.add(results.line());
             }
-            if (results.counter() == splitMessage.length) {
-                haikuLines = Optional.of(lines.get(0) + "\n" + lines.get(1) + "\n" + lines.get(2));
+            if (results.counter() == splitMessage.length && checkChance()) {
+                return Optional.of(lines.get(0) + "\n" + lines.get(1) + "\n" + lines.get(2));
             }
         }
-        if (haikuLines.isPresent() && checkChance()) {
-            return haikuLines;
-        } else {
-            return Optional.empty();
-        }
+        return Optional.empty();
     }
 
     private HaikuParsingResults checkLine(int counter, int syllables, String[] splitMessage) {
