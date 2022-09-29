@@ -7,7 +7,7 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface ButtonInteractionCommand extends Command<ButtonInteractionCommandMessageExecutor,
+public interface ButtonInteraction extends Command<ButtonInteractionCommandMessageExecutor,
         ButtonInteractionEvent> {
 
     @Override

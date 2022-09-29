@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutorService;
 
 @Component
-public class ButtonInteractionCommandParser extends AbstractCommandParser<ButtonInteractionCommand,
+public class ButtonInteractionCommandParser extends AbstractCommandParser<ButtonInteraction,
         ButtonInteractionEvent> {
 
     protected ButtonInteractionCommandParser(ExecutorService commandExecutorService) {
@@ -15,8 +15,8 @@ public class ButtonInteractionCommandParser extends AbstractCommandParser<Button
     }
 
     @Override
-    public Class<ButtonInteractionCommand> getCommandClass() {
-        return ButtonInteractionCommand.class;
+    public Class<ButtonInteraction> getCommandClass() {
+        return ButtonInteraction.class;
     }
 
     @Override

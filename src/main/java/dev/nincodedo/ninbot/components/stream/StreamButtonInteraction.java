@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.command.component.Button;
-import dev.nincodedo.ninbot.common.command.component.ButtonInteractionCommand;
+import dev.nincodedo.ninbot.common.command.component.ButtonInteraction;
 import dev.nincodedo.ninbot.common.config.db.Config;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StreamButtonInteractionCommand implements ButtonInteractionCommand {
+public class StreamButtonInteraction implements ButtonInteraction {
 
     private ConfigService configService;
 
-    public StreamButtonInteractionCommand(ConfigService configService) {
+    public StreamButtonInteraction(ConfigService configService) {
         this.configService = configService;
     }
 
