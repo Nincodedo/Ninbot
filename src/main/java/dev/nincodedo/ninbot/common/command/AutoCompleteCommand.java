@@ -9,4 +9,9 @@ public interface AutoCompleteCommand extends Command<AutoCompleteCommandMessageE
     default boolean isAbleToRegisterOnGuild() {
         return false;
     }
+
+    @Override
+    default CommandType getType() {
+        return CommandType.AUTO_COMPLETE;
+    }
 }

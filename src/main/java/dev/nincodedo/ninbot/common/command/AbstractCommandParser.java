@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -26,11 +27,11 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
         if (command != null) {
             executorService.execute(() -> {
                 try {
-                    log.trace("Running command {} in server {} by user {}", command.getName(),
+                    log.trace("Running {} command {} in server {} by user {}", command.getType(), command.getName(),
                             FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                     command.execute(event).executeActions();
                 } catch (Exception e) {
-                    log.error("Command {} failed with an exception: Ran in server {} by {}",
+                    log.error("{} Command {} failed with an exception: Ran in server {} by {}", command.getType(),
                             command.getName(), FormatLogObject.guildName(event.getGuild()),
                             FormatLogObject.userInfo(event.getUser()), e);
                 }
@@ -39,13 +40,32 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     }
 
     private T getCommand(F event) {
-        if (event instanceof CommandAutoCompleteInteractionEvent autoCompleteEvent) {
-            return commandMap.get(autoCompleteEvent.getName());
-        } else if (event instanceof GenericCommandInteractionEvent commandInteractionEvent) {
-            return commandMap.get(commandInteractionEvent.getName());
-        } else {
-            return null;
+        switch (event) {
+            case CommandAutoCompleteInteractionEvent autoCompleteEvent -> {
+                return commandMap.get(autoCompleteEvent.getName());
+            }
+            case GenericCommandInteractionEvent commandInteractionEvent -> {
+                return commandMap.get(commandInteractionEvent.getName());
+            }
+            case ButtonInteractionEvent buttonInteractionEvent -> {
+                return commandMap.get(getButtonName(buttonInteractionEvent));
+            }
+            default -> {
+                return null;
+            }
         }
+    }
+
+    @NotNull
+    private String getButtonName(ButtonInteractionEvent buttonInteractionEvent) {
+        var buttonId = buttonInteractionEvent.getButton().getId();
+        if (buttonId != null && buttonId.contains("-")) {
+            var split = buttonId.split("-");
+            if (split.length > 0) {
+                return split[0];
+            }
+        }
+        return "";
     }
 
     void addCommand(T command) {
