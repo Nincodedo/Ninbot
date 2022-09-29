@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common.command.component;
 
 import dev.nincodedo.ninbot.common.command.Command;
+import dev.nincodedo.ninbot.common.command.CommandType;
 import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -8,6 +9,12 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ButtonInteractionCommand extends Command<ButtonInteractionCommandMessageExecutor,
         ButtonInteractionEvent> {
+
+    @Override
+    default CommandType getType() {
+        return CommandType.BUTTON;
+    }
+
     @Override
     default boolean isAbleToRegisterOnGuild() {
         return false;

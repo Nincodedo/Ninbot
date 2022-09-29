@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common.command.slash;
 
 import dev.nincodedo.ninbot.common.command.Command;
+import dev.nincodedo.ninbot.common.command.CommandType;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -11,6 +12,11 @@ import java.util.List;
 import java.util.Locale;
 
 public interface SlashCommand extends Command<SlashCommandEventMessageExecutor, SlashCommandInteractionEvent> {
+
+    @Override
+    default CommandType getType() {
+        return CommandType.SLASH;
+    }
 
     default String getDescription() {
         return getDescription(defaultLocale);

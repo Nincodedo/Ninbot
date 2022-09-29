@@ -27,11 +27,11 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
         if (command != null) {
             executorService.execute(() -> {
                 try {
-                    log.trace("Running command {} in server {} by user {}", command.getName(),
+                    log.trace("Running {} command {} in server {} by user {}", command.getType(), command.getName(),
                             FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                     command.execute(event).executeActions();
                 } catch (Exception e) {
-                    log.error("Command {} failed with an exception: Ran in server {} by {}",
+                    log.error("{} Command {} failed with an exception: Ran in server {} by {}", command.getType(),
                             command.getName(), FormatLogObject.guildName(event.getGuild()),
                             FormatLogObject.userInfo(event.getUser()), e);
                 }

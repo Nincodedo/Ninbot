@@ -18,6 +18,8 @@ public interface Command<T, F> extends ReleaseStage {
      */
     String getName();
 
+    CommandType getType();
+
     default boolean isCommandEnabledByDefault() {
         return true;
     }
