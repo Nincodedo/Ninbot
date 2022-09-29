@@ -36,11 +36,11 @@ class WebhookHelper {
     public Optional<Webhook> getWebhookByName(Guild guild, MessageChannel messageChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
             var webhooks = guild.retrieveWebhooks().complete();
-            for (var webhook : webhooks) {
-                if (webhook.getName().equalsIgnoreCase(name) && messageChannel instanceof TextChannel textChannel) {
-                    webhook.getManager().setChannel(textChannel).complete();
-                    this.webhook = webhook;
-                    return Optional.of(webhook);
+            for (var hook : webhooks) {
+                if (hook.getName().equalsIgnoreCase(name) && messageChannel instanceof TextChannel textChannel) {
+                    hook.getManager().setChannel(textChannel).complete();
+                    webhook = hook;
+                    return Optional.of(hook);
                 }
             }
         }

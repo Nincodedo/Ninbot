@@ -206,11 +206,13 @@ public class StreamListener extends StatAwareListenerAdapter {
                 var channel = channelUnion.asStandardGuildMessageChannel();
                 String gameName = null;
                 String streamTitle = null;
-                if (activity != null && activity.isRich() && activity.asRichPresence().getState() != null) {
+                if (activity != null && activity.isRich()) {
                     var richActivity = activity.asRichPresence();
-                    gameName = richActivity.getState();
-                    streamTitle = richActivity.getDetails();
-                    log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
+                    if (richActivity != null) {
+                        gameName = richActivity.getState();
+                        streamTitle = richActivity.getDetails();
+                        log.trace("Rich activity found, using game name {}", gameName);
+                    }
                 }
                 channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl,
                                 gameName, streamTitle, guild))

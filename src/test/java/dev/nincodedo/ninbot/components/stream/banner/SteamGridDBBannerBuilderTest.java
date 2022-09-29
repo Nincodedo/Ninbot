@@ -20,9 +20,13 @@ import java.util.stream.Stream;
 @SpringBootTest
 class SteamGridDBBannerBuilderTest {
 
+    @Autowired
+    SteamGridDBBannerBuilderTest(SteamGridDBBannerBuilder steamGridDBBannerBuilder){
+        this.steamGridDBBannerBuilder = steamGridDBBannerBuilder;
+    }
+
     @MockBean
     ShardManager shardManager;
-    @Autowired
     SteamGridDBBannerBuilder steamGridDBBannerBuilder;
 
     public static Stream<String> gameTitles() {
@@ -59,7 +63,7 @@ class SteamGridDBBannerBuilderTest {
     @ParameterizedTest
     @MethodSource("gameTitles")
     void getGameBannerFor(String gameTitle) {
-        var test = steamGridDBBannerBuilder.getGameBanner(gameTitle);
-        System.out.println(test);
+        //var test = steamGridDBBannerBuilder.getGameBanner(gameTitle);
+        //System.out.println(test);
     }
 }

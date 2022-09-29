@@ -67,7 +67,7 @@ class Poll extends BaseEntity {
     }
 
     private void setupResourceBundle() {
-        resourceBundle = ResourceBundle.getBundle("lang", new Locale(localeString));
+        resourceBundle = ResourceBundle.getBundle("lang", Locale.forLanguageTag(localeString));
     }
 
     private MessageCreateData newPollMessage(String footer) {

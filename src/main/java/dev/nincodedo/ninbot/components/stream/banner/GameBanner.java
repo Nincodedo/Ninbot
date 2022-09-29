@@ -18,6 +18,7 @@ public class GameBanner extends BaseEntity {
     @Transient
     private File file;
 
+    @Transient
     public String getGameTitleStripped() {
         if (gameTitle == null) {
             return null;
@@ -26,6 +27,7 @@ public class GameBanner extends BaseEntity {
         }
     }
 
+    @Transient
     public String getFileName() {
         return String.format("%s-%d-%d-%d.png", getGameTitleStripped(), gameId, logoId, backgroundId);
     }
