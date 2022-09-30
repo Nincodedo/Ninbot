@@ -5,30 +5,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public interface GameBannerBuilder {
 
     GameBannerRepository getGameBannerRepository();
 
-    default Optional<GameBanner> getGameBanner(String gameTitle) {
-        var cachedBanner = getGameBannerFilesFromCache(gameTitle);
-        if (!cachedBanner.isEmpty()) {
-            for (var cachedBannerFile : cachedBanner) {
-                int logoId = Integer.parseInt(cachedBannerFile.getName().split("-")[1]);
-                int backgroundId = Integer.parseInt(cachedBannerFile.getName().split("-")[2]);
-                var gameBannerOptional = getGameBannerRepository().findGameBannerByLogoIdAndBackgroundId(logoId,
-                        backgroundId);
-                if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() >= 0) {
-                    var gameBanner = gameBannerOptional.get();
-                    gameBanner.setFile(cachedBannerFile);
-                    return Optional.of(gameBanner);
+    default CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
+        CompletableFuture<GameBanner> futureGameBanner = new CompletableFuture<GameBanner>().completeOnTimeout(null,
+                10, TimeUnit.SECONDS);
+        Executors.newCachedThreadPool().submit(() -> {
+            var cachedBanner = getGameBannerFilesFromCache(gameTitle);
+            if (!cachedBanner.isEmpty()) {
+                for (var cachedBannerFile : cachedBanner) {
+                    int logoId = Integer.parseInt(cachedBannerFile.getName().split("-")[1]);
+                    int backgroundId = Integer.parseInt(cachedBannerFile.getName().split("-")[2]);
+                    var gameBannerOptional = getGameBannerRepository().findGameBannerByLogoIdAndBackgroundId(logoId,
+                            backgroundId);
+                    if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() >= 0) {
+                        var gameBanner = gameBannerOptional.get();
+                        gameBanner.setFile(cachedBannerFile);
+                        futureGameBanner.complete(gameBanner);
+                    }
                 }
+
+            } else {
+                futureGameBanner.complete(generateGameBannerFromTitle(gameTitle));
             }
-            return Optional.empty();
-        } else {
-            return generateGameBannerFromTitle(gameTitle);
-        }
+            return null;
+        });
+        return futureGameBanner;
     }
 
     default List<GameBanner> getBadBanners(String gameTitle) {
@@ -38,7 +46,7 @@ public interface GameBannerBuilder {
                 .toList();
     }
 
-    Optional<GameBanner> generateGameBannerFromTitle(String gameTitle);
+    GameBanner generateGameBannerFromTitle(String gameTitle);
 
     default List<File> getGameBannerFilesFromCache(String gameTitle) {
         var cachedFileName = getCachedFileName(gameTitle);

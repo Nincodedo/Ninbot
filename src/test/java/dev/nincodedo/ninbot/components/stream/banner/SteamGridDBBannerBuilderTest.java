@@ -62,8 +62,8 @@ class SteamGridDBBannerBuilderTest {
 
     @ParameterizedTest
     @MethodSource("gameTitles")
-    void getGameBannerFor(String gameTitle) {
-        //var test = steamGridDBBannerBuilder.getGameBanner(gameTitle);
+    void generateGameBannerFromTitle(String gameTitle) {
+        //var test = steamGridDBBannerBuilder.generateGameBannerFromTitle(gameTitle);
         //System.out.println(test);
     }
 }

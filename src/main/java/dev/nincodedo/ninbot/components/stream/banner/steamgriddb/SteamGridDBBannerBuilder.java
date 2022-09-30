@@ -39,7 +39,7 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
     }
 
     @Override
-    public Optional<GameBanner> generateGameBannerFromTitle(String gameTitle) {
+    public GameBanner generateGameBannerFromTitle(String gameTitle) {
         var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
         if (searchResponse.isSuccess()) {
             var gameId = searchResponse.firstData().id();
@@ -49,10 +49,10 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
                     && !heroResponse.getData().isEmpty()) {
                 var gameBanners = generateGameBanners(gameTitle, gameId, logoResponse.getData(),
                         heroResponse.getData());
-                return randomBanner(gameBanners);
+                return randomBanner(gameBanners).orElse(null);
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     private Optional<GameBanner> randomBanner(List<GameBanner> gameBanners) {
@@ -77,6 +77,7 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
                 var outputFileName = gameBanner.getFileName();
                 var image = combineImages(hero.url(), logo.url(), outputFileName);
                 gameBanner.setFile(image);
+                gameBannerRepository.save(gameBanner);
                 gameBanners.add(gameBanner);
             }
         }
