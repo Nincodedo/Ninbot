@@ -34,7 +34,7 @@
     </scm>
     <properties>
         <JDA.version>5.0.0-alpha.20</JDA.version>
-        <archunit.version>1.0.0-rc1</archunit.version>
+        <archunit.version>1.0.0</archunit.version>
         <assertj-core.version>3.23.1</assertj-core.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
