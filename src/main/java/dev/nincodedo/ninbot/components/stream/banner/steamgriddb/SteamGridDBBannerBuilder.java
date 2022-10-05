@@ -4,7 +4,9 @@ import dev.nincodedo.ninbot.common.StreamUtils;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
+import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Component
@@ -25,17 +29,24 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
 
     private SteamGridDBFeign steamGridDBFeign;
     private GameBannerRepository gameBannerRepository;
+    private ExecutorService executorService;
     private Random random;
 
     public SteamGridDBBannerBuilder(SteamGridDBFeign steamGridDBFeign, GameBannerRepository gameBannerRepository) {
         this.steamGridDBFeign = steamGridDBFeign;
         this.gameBannerRepository = gameBannerRepository;
+        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder"));
         this.random = new SecureRandom();
     }
 
     @Override
     public GameBannerRepository getGameBannerRepository() {
         return gameBannerRepository;
+    }
+
+    @Override
+    public ExecutorService getExecutorService() {
+        return executorService;
     }
 
     @Override
@@ -63,38 +74,33 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
             List<GameImage> heroes) {
         var allBanners = gameBannerRepository.findAllByGameTitle(gameTitle);
         List<GameBanner> gameBanners = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        log.trace("Generating banners for {}", gameTitle);
+        for (int i = 0; i < 3; i++) {
             var logo = logos.get(random.nextInt(logos.size()));
             var hero = heroes.get(random.nextInt(heroes.size()));
-            if (isLogoHeroComboNotBad(gameTitle, logo, hero)) {
-                var gameBanner = allBanners.stream()
-                        .filter(gameBanner1 -> gameBanner1.getLogoId() == logo.id()
-                                && gameBanner1.getBackgroundId() == hero.id()).findFirst().orElse(new GameBanner());
-                gameBanner.setGameTitle(gameTitle);
-                gameBanner.setGameId(gameId);
-                gameBanner.setLogoId(logo.id());
-                gameBanner.setBackgroundId(hero.id());
-                var outputFileName = gameBanner.getFileName();
-                var image = combineImages(hero.url(), logo.url(), outputFileName);
-                gameBanner.setFile(image);
-                gameBannerRepository.save(gameBanner);
-                gameBanners.add(gameBanner);
-            }
+            var gameBanner = allBanners.stream()
+                    .filter(gameBanner1 -> gameBanner1.getLogoId() == logo.id()
+                            && gameBanner1.getBackgroundId() == hero.id())
+                    .findFirst()
+                    .orElse(new GameBanner());
+            gameBanner.setGameTitle(gameTitle);
+            gameBanner.setGameId(gameId);
+            gameBanner.setLogoId(logo.id());
+            gameBanner.setBackgroundId(hero.id());
+            var outputFileName = gameBanner.getFileName();
+            var image = combineImages(hero.url(), logo.url(), outputFileName);
+            gameBanner.setFile(image);
+            gameBannerRepository.save(gameBanner);
+            gameBanners.add(gameBanner);
         }
         log.debug("Finished with {} game banners generated", gameBanners.size());
         return gameBanners;
     }
 
-    private boolean isLogoHeroComboNotBad(String gameTitle, GameImage logo, GameImage hero) {
-        return getBadBanners(gameTitle).stream()
-                .noneMatch(gameBanner -> gameBanner.getLogoId() == logo.id()
-                        && gameBanner.getBackgroundId() == hero.id());
-    }
-
     private File combineImages(String backgroundUrl, String logoUrl, String outputFileName) {
         int maxWidth = 750;
-        BufferedImage background = getImageScaled(backgroundUrl, maxWidth);
-        BufferedImage logo = getImageScaled(logoUrl, maxWidth / 2);
+        BufferedImage background = readScaledImage(backgroundUrl, maxWidth);
+        BufferedImage logo = readScaledImage(logoUrl, maxWidth / 2);
 
         if (background == null || logo == null) {
             return null;
@@ -116,10 +122,9 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
         }
 
         if (logoHeight != logo.getHeight() || logoWidth != logo.getWidth()) {
-            var scaled = logo.getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH);
-            var output = new BufferedImage(logoWidth, logoHeight, BufferedImage.TYPE_INT_ARGB);
-            output.getGraphics().drawImage(scaled, 0, 0, null);
-            logo = output;
+            var scaled = Scalr.resize(logo, logoWidth, logoHeight);
+            logo.flush();
+            logo = scaled;
         }
 
         BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -133,26 +138,24 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
         try {
             ImageIO.write(combined, "PNG", combinedFile);
         } catch (IOException e) {
-            log.error("Ooppsie poopsie");
+            log.error("Failed to write image", e);
         }
 
         g.dispose();
         return combinedFile;
     }
 
-    private BufferedImage getImageScaled(String url, int maxWidth) {
+    private BufferedImage readScaledImage(String url, int maxWidth) {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new URL(url));
             if (image.getWidth() > maxWidth) {
-                int newHeight = (int) (image.getHeight() * ((double) maxWidth / image.getWidth()));
-                var scaled = image.getScaledInstance(maxWidth, newHeight, Image.SCALE_SMOOTH);
-                var output = new BufferedImage(maxWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-                output.getGraphics().drawImage(scaled, 0, 0, null);
-                image = output;
+                var scaled = Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, maxWidth);
+                image.flush();
+                return scaled;
             }
         } catch (IOException e) {
-            log.error("Ooppsie poopsie");
+            log.error("Failed to read image", e);
         }
         return image;
     }
