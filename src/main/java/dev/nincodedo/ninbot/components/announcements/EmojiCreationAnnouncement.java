@@ -2,22 +2,22 @@ package dev.nincodedo.ninbot.components.announcements;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.emoji.EmojiAddedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
@@ -90,18 +90,17 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
         }
     }
 
-    @NotNull
-    private Message buildAnnouncementMessage(Emoji emoji, Guild guild, Member member) {
+    private MessageCreateData buildAnnouncementMessage(Emoji emoji, Guild guild, Member member) {
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
-        MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.append(resourceBundle.getString("listener.emote.announce.message"));
+        MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
+        messageBuilder.addContent(resourceBundle.getString("listener.emote.announce.message"));
         if (member != null) {
-            messageBuilder.append(" ");
-            messageBuilder.append(resourceBundle.getString("listener.emote.announce.message.member"));
-            messageBuilder.append(member);
+            messageBuilder.addContent(" ");
+            messageBuilder.addContent(resourceBundle.getString("listener.emote.announce.message.member"));
+            messageBuilder.addContent(member.getEffectiveName());
         }
-        messageBuilder.append("\n");
-        messageBuilder.append(emoji.getFormatted());
+        messageBuilder.addContent("\n");
+        messageBuilder.addContent(emoji.getFormatted());
         return messageBuilder.build();
     }
 }

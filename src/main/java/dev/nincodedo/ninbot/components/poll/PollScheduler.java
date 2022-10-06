@@ -2,9 +2,9 @@ package dev.nincodedo.ninbot.components.poll;
 
 import dev.nincodedo.ninbot.common.LocaleService;
 import dev.nincodedo.ninbot.common.Schedulable;
-import net.dv8tion.jda.api.entities.NewsChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.stereotype.Component;
 

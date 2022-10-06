@@ -8,11 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.managers.WebhookManager;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,11 +36,11 @@ class WebhookHelper {
     public Optional<Webhook> getWebhookByName(Guild guild, MessageChannel messageChannel, String name) {
         if (guild.getSelfMember().getPermissions().contains(Permission.MANAGE_WEBHOOKS)) {
             var webhooks = guild.retrieveWebhooks().complete();
-            for (var webhook : webhooks) {
-                if (webhook.getName().equalsIgnoreCase(name) && messageChannel instanceof TextChannel textChannel) {
-                    webhook.getManager().setChannel(textChannel).complete();
-                    this.webhook = webhook;
-                    return Optional.of(webhook);
+            for (var hook : webhooks) {
+                if (hook.getName().equalsIgnoreCase(name) && messageChannel instanceof TextChannel textChannel) {
+                    hook.getManager().setChannel(textChannel).complete();
+                    webhook = hook;
+                    return Optional.of(hook);
                 }
             }
         }
@@ -57,9 +57,9 @@ class WebhookHelper {
         return webhook.getManager();
     }
 
-    public @NotNull CompletableFuture<ReadonlyMessage> sendMessage(Message message) {
+    public @NotNull CompletableFuture<ReadonlyMessage> sendMessage(MessageCreateData message) {
         WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
-        messageBuilder.append(message.getContentRaw());
+        messageBuilder.append(message.getContent());
         try (WebhookClient client = new WebhookClientBuilder(webhook.getUrl()).build()) {
             return client.send(messageBuilder.build());
         }

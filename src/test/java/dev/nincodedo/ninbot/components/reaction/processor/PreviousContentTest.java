@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.components.reaction.processor;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -20,7 +20,8 @@ class PreviousContentTest {
     void process() {
         Message message = Mockito.mock(Message.class);
         MessageChannel channel = Mockito.mock(MessageChannel.class);
-        MessageHistory.MessageRetrieveAction messageRetrieveAction = Mockito.mock(MessageHistory.MessageRetrieveAction.class);
+        MessageHistory.MessageRetrieveAction messageRetrieveAction =
+                Mockito.mock(MessageHistory.MessageRetrieveAction.class);
         MessageHistory messageHistory = Mockito.mock(MessageHistory.class);
         List<Message> messages = new ArrayList<>();
         messages.add(message);
@@ -43,7 +44,8 @@ class PreviousContentTest {
     void processUppercase() {
         Message message = Mockito.mock(Message.class);
         MessageChannel channel = Mockito.mock(MessageChannel.class);
-        MessageHistory.MessageRetrieveAction messageRetrieveAction = Mockito.mock(MessageHistory.MessageRetrieveAction.class);
+        MessageHistory.MessageRetrieveAction messageRetrieveAction =
+                Mockito.mock(MessageHistory.MessageRetrieveAction.class);
         MessageHistory messageHistory = Mockito.mock(MessageHistory.class);
         List<Message> messages = new ArrayList<>();
         messages.add(message);
@@ -66,7 +68,8 @@ class PreviousContentTest {
     void processBlank() {
         Message message = Mockito.mock(Message.class);
         MessageChannel channel = Mockito.mock(MessageChannel.class);
-        MessageHistory.MessageRetrieveAction messageRetrieveAction = Mockito.mock(MessageHistory.MessageRetrieveAction.class);
+        MessageHistory.MessageRetrieveAction messageRetrieveAction =
+                Mockito.mock(MessageHistory.MessageRetrieveAction.class);
         MessageHistory messageHistory = Mockito.mock(MessageHistory.class);
         List<Message> messages = new ArrayList<>();
         messages.add(message);

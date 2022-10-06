@@ -47,7 +47,7 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommand = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
@@ -61,6 +61,8 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
             case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(),
                             OptionMapping::getAsString)
                     .toLowerCase(), messageExecutor);
+            case SUBTRACT -> {
+            }
         }
         return messageExecutor;
     }

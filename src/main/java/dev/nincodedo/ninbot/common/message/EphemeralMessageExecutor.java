@@ -1,15 +1,16 @@
 package dev.nincodedo.ninbot.common.message;
 
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import dev.nincodedo.ninbot.common.Emojis;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> extends MessageExecutor<T> {
-    List<Message> ephemeralMessageResponses;
+    List<MessageCreateData> ephemeralMessageResponses;
     List<MessageEmbed> messageEmbeds;
     List<MessageEmbed> ephemeralMessageEmbeds;
 
@@ -35,9 +36,9 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
         }
     }
 
-    protected abstract ReplyCallbackAction replyMessage(Message message);
+    protected abstract ReplyCallbackAction replyMessage(MessageCreateData message);
 
-    protected ReplyCallbackAction replyEphemeralMessage(Message message) {
+    protected ReplyCallbackAction replyEphemeralMessage(MessageCreateData message) {
         return replyMessage(message).setEphemeral(true);
     }
 
@@ -53,11 +54,11 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
     }
 
     public T addEphemeralMessage(String message) {
-        ephemeralMessageResponses.add(new MessageBuilder().append(message).build());
+        ephemeralMessageResponses.add(new MessageCreateBuilder().addContent(message).build());
         return returnThis();
     }
 
-    public T addEphemeralMessage(Message message) {
+    public T addEphemeralMessage(MessageCreateData message) {
         ephemeralMessageResponses.add(message);
         return returnThis();
     }
@@ -65,5 +66,9 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
     public T addEphemeralMessage(MessageEmbed messageEmbed) {
         ephemeralMessageEmbeds.add(messageEmbed);
         return returnThis();
+    }
+
+    public T addEphemeralUnsuccessfulReaction() {
+        return addEphemeralMessage(Emojis.CROSS_X);
     }
 }

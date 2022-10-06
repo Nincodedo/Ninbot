@@ -6,8 +6,9 @@ import dev.nincodedo.ninbot.common.message.impersonation.Impersonator;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.concurrent.ExecutionException;
 
@@ -32,7 +33,7 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
         this.impersonation = impersonation;
     }
 
-    private void sendMessage(Message message) {
+    private void sendMessage(MessageCreateData message) {
         if (impersonation == null || getChannel().getType().isThread()) {
             getChannel().sendMessage(message).queue();
         } else {

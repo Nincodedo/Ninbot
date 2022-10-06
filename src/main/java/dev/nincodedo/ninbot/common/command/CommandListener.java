@@ -1,11 +1,13 @@
 package dev.nincodedo.ninbot.common.command;
 
 import dev.nincodedo.ninbot.common.BaseListenerAdapter;
+import dev.nincodedo.ninbot.common.command.component.ButtonInteractionCommandParser;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +57,11 @@ public class CommandListener extends BaseListenerAdapter {
     }
 
     @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        getButtonParser().parseEvent(event);
+    }
+
+    @Override
     public void onCommandAutoCompleteInteraction(
             @NotNull CommandAutoCompleteInteractionEvent event) {
         getAutoCompleteParser().parseEvent(event);
@@ -64,6 +71,13 @@ public class CommandListener extends BaseListenerAdapter {
         return commandParsers.stream()
                 .filter(AutoCompleteCommandParser.class::isInstance)
                 .map(AutoCompleteCommandParser.class::cast)
+                .findFirst().get();
+    }
+
+    private ButtonInteractionCommandParser getButtonParser() {
+        return commandParsers.stream()
+                .filter(ButtonInteractionCommandParser.class::isInstance)
+                .map(ButtonInteractionCommandParser.class::cast)
                 .findFirst().get();
     }
 }

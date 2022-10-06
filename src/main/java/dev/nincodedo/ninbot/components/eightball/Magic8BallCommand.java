@@ -22,7 +22,7 @@ public class Magic8BallCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var question = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get(), "",

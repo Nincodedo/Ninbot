@@ -1,8 +1,8 @@
 package dev.nincodedo.ninbot.common.message;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.TimerTask;
 
@@ -11,7 +11,7 @@ public class GenericAnnounce extends TimerTask {
     private ShardManager shardManager;
     private String announcementChannelId;
     private String announceString;
-    private Message announceMessage;
+    private MessageCreateData announceMessage;
 
     public GenericAnnounce(ShardManager shardManager, String announcementChannelId, String announceString) {
         this.shardManager = shardManager;
@@ -19,7 +19,7 @@ public class GenericAnnounce extends TimerTask {
         this.announceString = announceString;
     }
 
-    public GenericAnnounce(ShardManager shardManager, String announcementChannelId, Message announceMessage) {
+    public GenericAnnounce(ShardManager shardManager, String announcementChannelId, MessageCreateData announceMessage) {
         this.shardManager = shardManager;
         this.announcementChannelId = announcementChannelId;
         this.announceMessage = announceMessage;

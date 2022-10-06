@@ -40,11 +40,11 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
             CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         var countdowns =
                 countdownRepository.findCountdownByAudit_CreatedBy(commandAutoCompleteInteractionEvent.getMember()
-                        .getId())
-                .stream()
-                .map(Countdown::getName)
-                .limit(OptionData.MAX_CHOICES)
-                .toList();
+                                .getId())
+                        .stream()
+                        .map(Countdown::getName)
+                        .limit(OptionData.MAX_CHOICES)
+                        .toList();
         if (!countdowns.isEmpty()) {
             commandAutoCompleteInteractionEvent.replyChoiceStrings(countdowns).queue();
         }

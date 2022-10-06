@@ -6,7 +6,7 @@ import dev.nincodedo.ninbot.components.reaction.processor.ReactionContext;
 import dev.nincodedo.ninbot.components.reaction.processor.ReactionRule;
 import dev.nincodedo.ninbot.components.reaction.processor.ReactionRuleProcessor;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.util.List;
 

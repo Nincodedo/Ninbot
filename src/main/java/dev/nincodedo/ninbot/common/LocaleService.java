@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.common;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

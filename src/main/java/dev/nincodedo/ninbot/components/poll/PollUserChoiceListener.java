@@ -3,8 +3,8 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
         if (!pollChoices.contains(strippedMessage) && pollChoices.size() < pollChoiceLimit) {
             poll.getChoices().add(strippedMessage);
             pollService.save(poll);
-            refMessage.editMessage(poll.build()).queue();
+            refMessage.editMessage(poll.editOpen()).queue();
             pollAnnouncementSetup.setupAnnounce(poll, channel.getJDA().getShardManager(), refMessage);
         } else {
             message.addReaction(Emoji.fromFormatted(Emojis.CROSS_X)).queue();

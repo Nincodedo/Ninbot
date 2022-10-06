@@ -2,10 +2,11 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Data
 public class ReactionResponse {
@@ -33,7 +34,7 @@ public class ReactionResponse {
         return switch (reactionMatchType) {
             case EXACT -> getTarget().equalsIgnoreCase(event.getMessage().getContentStripped());
             case CONTAINS -> event.getMessage().getContentStripped().toLowerCase().contains(getTarget().toLowerCase());
-            case REGEX -> event.getMessage().getContentStripped().matches(getTarget());
+            case REGEX -> Pattern.matches(getTarget(), event.getMessage().getContentStripped().replace("\n", ""));
         };
     }
 }

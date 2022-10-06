@@ -10,14 +10,16 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.RichPresence;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,6 +57,9 @@ class StreamListenerTest {
     @InjectMocks
     StreamListener streamListener;
 
+    @Mock
+    StreamMessageBuilder streamMessageBuilder;
+
     @Test
     void userStartsStreamingNotAlreadyStreamingNoCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
@@ -64,11 +69,14 @@ class StreamListenerTest {
         User user = mock(User.class);
         TextChannel textChannel = mock(TextChannel.class);
         GuildMessageChannelUnion channelUnion = mock(GuildMessageChannelUnion.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         Role streamingRole = mock(Role.class);
         RichPresence richPresence = mock(RichPresence.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Message message = mock(Message.class);
+        var streamingUrl = "https://twitch.tv/nincodedo";
+        var gameName = "Zeldo Breath of the Wild 2";
+        var streamTitle = "Zeldo";
 
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
@@ -85,19 +93,22 @@ class StreamListenerTest {
         when(user.getName()).thenReturn("Nin");
         when(activity.isRich()).thenReturn(true);
         when(activity.asRichPresence()).thenReturn(richPresence);
-        when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
-        when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
+        when(activity.getUrl()).thenReturn(streamingUrl);
+        when(richPresence.getState()).thenReturn(gameName);
+        when(richPresence.getDetails()).thenReturn(streamTitle);
         when(guild.getLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getGuildChannelById("123")).thenReturn(channelUnion);
         when(channelUnion.asStandardGuildMessageChannel()).thenReturn(textChannel);
-        when(textChannel.sendMessage(any(Message.class))).thenReturn(messageAction);
+        when(textChannel.sendMessage(any(MessageCreateData.class))).thenReturn(messageAction);
         when(guild.getRoleById("123")).thenReturn(streamingRole);
         when(guild.addRoleToMember(member, streamingRole)).thenReturn(auditableRestAction);
         when(textChannel.getLatestMessageId()).thenReturn("123");
         when(textChannel.retrieveMessageById("123")).thenReturn(auditableRestAction);
         when(auditableRestAction.complete()).thenReturn(message);
         when(message.getContentRaw()).thenReturn("some other stream announcement");
+        when(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl, gameName, streamTitle, guild))
+                .thenReturn(new MessageCreateBuilder().addContent("aaa").build());
 
         streamListener.onGenericUserPresence(userActivityStartEvent);
 
@@ -111,7 +122,7 @@ class StreamListenerTest {
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -134,7 +145,7 @@ class StreamListenerTest {
         User user = mock(User.class);
         Guild guild = mock(Guild.class);
         Activity activity = mock(Activity.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(userActivityStartEvent.getMember()).thenReturn(member);
@@ -157,7 +168,7 @@ class StreamListenerTest {
         UserActivityEndEvent userActivityEndEvent = mock(UserActivityEndEvent.class);
         Member member = mock(Member.class);
         Guild guild = mock(Guild.class);
-        MessageAction messageAction = mock(MessageAction.class);
+        MessageCreateAction messageAction = mock(MessageCreateAction.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Role streamingRole = mock(Role.class);
         User user = mock(User.class);

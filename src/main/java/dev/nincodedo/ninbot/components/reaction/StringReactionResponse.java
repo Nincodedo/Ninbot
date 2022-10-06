@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.reaction;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 class StringReactionResponse extends ReactionResponse {
 

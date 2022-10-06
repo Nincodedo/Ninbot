@@ -4,8 +4,8 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -32,19 +32,19 @@ public class DabCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         doDabarinos(slashCommandEvent.getJDA()
                         .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
                 messageExecutor,
                 slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser));
-
-        messageExecutor.addMessageResponse(dabber.buildDabMessage(slashCommandEvent.getJDA(),
-                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser)));
+        var user = slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser);
+        if (user != null) {
+            messageExecutor.addMessageResponse(dabber.buildDabMessage(user));
+        }
         return messageExecutor;
     }
-
 
     private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
             User eventMessageAuthor, MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, User dabbedOn) {

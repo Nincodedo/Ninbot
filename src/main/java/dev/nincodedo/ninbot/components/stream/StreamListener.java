@@ -1,11 +1,11 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
+import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Activity;
@@ -35,12 +35,13 @@ public class StreamListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public StreamListener(ConfigService configService, ComponentService componentService,
-            StreamingMemberRepository streamingMemberRepository, StatManager statManager) {
+            StreamingMemberRepository streamingMemberRepository, StatManager statManager,
+            StreamMessageBuilder streamMessageBuilder) {
         super(statManager);
         this.configService = configService;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
-        this.streamMessageBuilder = new StreamMessageBuilder();
+        this.streamMessageBuilder = streamMessageBuilder;
         this.componentName = "stream-announce";
         componentService.registerComponent(componentName, ComponentType.LISTENER);
     }
@@ -87,7 +88,8 @@ public class StreamListener extends StatAwareListenerAdapter {
                     if (currentStream.getAnnounceMessageId() == null) {
                         log.trace("No current announcement for user {} stream. Announcing",
                                 FormatLogObject.userInfo(user));
-                        announceStream(guild, member, streamingUrl, getActivityFromEvent(event), streamingMember);
+                        announceStream(guild, member, streamingUrl, getActivity(event, member.getActivities()),
+                                streamingMember);
                     } else {
                         log.trace("Stream of user {} already has an announcement.", FormatLogObject.userInfo(user));
                     }
@@ -122,9 +124,11 @@ public class StreamListener extends StatAwareListenerAdapter {
         }
     }
 
-    private Activity getActivityFromEvent(GenericEvent event) {
+    private Activity getActivity(GenericEvent event, List<Activity> activities) {
         if (event instanceof UserActivityStartEvent userActivityStartEvent) {
             return userActivityStartEvent.getNewActivity();
+        } else if (activities != null && !activities.isEmpty()) {
+            return activities.get(0);
         } else {
             return null;
         }
@@ -205,11 +209,17 @@ public class StreamListener extends StatAwareListenerAdapter {
                 var channel = channelUnion.asStandardGuildMessageChannel();
                 String gameName = null;
                 String streamTitle = null;
-                if (activity != null && activity.isRich() && activity.asRichPresence().getState() != null) {
-                    var richActivity = activity.asRichPresence();
-                    gameName = richActivity.getState();
-                    streamTitle = richActivity.getDetails();
-                    log.trace("Rich activity found, updating game name to {}, was {}", gameName, streamTitle);
+                if (activity != null) {
+                    if (activity.isRich()) {
+                        var richActivity = activity.asRichPresence();
+                        if (richActivity != null) {
+                            gameName = richActivity.getState();
+                            streamTitle = richActivity.getDetails();
+                            log.trace("Rich activity found, using game name {}", gameName);
+                        }
+                    } else {
+                        gameName = activity.getName();
+                    }
                 }
                 channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl,
                                 gameName, streamTitle, guild))

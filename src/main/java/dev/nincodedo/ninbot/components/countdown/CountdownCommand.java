@@ -3,20 +3,20 @@ package dev.nincodedo.ninbot.components.countdown;
 import dev.nincodedo.ninbot.common.Emojis;
 import dev.nincodedo.ninbot.common.command.Subcommand;
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
-import dev.nincodedo.ninbot.common.message.MessageExecutor;
-import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
+import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
@@ -59,18 +59,22 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
         return messageExecutor;
     }
 
-    private Message deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
+    private MessageCreateData deleteCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var countdownName = slashCommandEvent.getOption(CountdownCommandName.Option.NAME.get(),
                 OptionMapping::getAsString);
+        if (countdownName == null) {
+            return new MessageCreateBuilder().addContent(resourceBundle().getString("command.countdown.delete.failure"))
+                    .build();
+        }
         var userId = slashCommandEvent.getUser().getId();
         var optionalCountdown = countdownRepository.findByAudit_CreatedByAndName(userId, countdownName);
         if (optionalCountdown.isPresent()) {
             countdownRepository.delete(optionalCountdown.get());
-            return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.success"))
-                    .append(countdownName).build();
+            return new MessageCreateBuilder().addContent(resourceBundle().getString("command.countdown.delete.success"))
+                    .addContent(countdownName).build();
         } else {
-            return new MessageBuilder().append(resourceBundle().getString("command.countdown.delete.failure"))
-                    .append(countdownName).build();
+            return new MessageCreateBuilder().addContent(resourceBundle().getString("command.countdown.delete.failure"))
+                    .addContent(countdownName).build();
         }
     }
 
@@ -103,7 +107,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
                 + countdownCreator.getEffectiveName();
     }
 
-    private Message setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
+    private MessageCreateData setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var year = slashCommandEvent.getOption("year", OptionMapping::getAsString);
         var month = String.format("%02d",
                 Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get(),
@@ -124,13 +128,13 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
         countdownRepository.save(countdown);
         countdownScheduler.scheduleOne(countdown, slashCommandEvent.getJDA().getShardManager());
         countdown.setResourceBundle(resourceBundle(slashCommandEvent.getGuild().getLocale()));
-        return new MessageBuilder().append("Created ")
-                .append(countdown.getName())
-                .append(" ")
-                .append("starts ")
-                .append(countdown.getEventDateDescription())
-                .append(" ")
-                .append(Emojis.CHECK_MARK)
+        return new MessageCreateBuilder().addContent("Created ")
+                .addContent(countdown.getName())
+                .addContent(" ")
+                .addContent("starts ")
+                .addContent(countdown.getEventDateDescription())
+                .addContent(" ")
+                .addContent(Emojis.CHECK_MARK)
                 .build();
     }
 

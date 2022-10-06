@@ -4,7 +4,6 @@ import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,6 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class InfoCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> executeCommandAction(
+    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var selfUser = slashCommandEvent.getJDA().getSelfUser();
@@ -52,7 +52,7 @@ public class InfoCommand implements SlashCommand {
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle().getString("command.info.patreonthanks.name"), patronsList, false);
         }
-        messageExecutor.addMessageResponse(new MessageBuilder(embedBuilder).build());
+        messageExecutor.addMessageResponse(new MessageCreateBuilder().addEmbeds(embedBuilder.build()).build());
         return messageExecutor;
     }
 

@@ -3,13 +3,12 @@ package dev.nincodedo.ninbot.components.poll;
 import dev.nincodedo.ninbot.NinbotRunner;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +21,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
-import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +52,7 @@ class PollCommandTest {
         when(slashCommandEvent.getOption(eq("choice2"), any())).thenReturn("2nd");
         when(slashCommandEvent.getOption(eq("question"), any())).thenReturn("why?");
         when(slashCommandEvent.getOption(eq("polllength"), eq(5L), any())).thenReturn(5L);
-        when(slashCommandEvent.reply(any(Message.class))).thenReturn(replyAction);
+        when(slashCommandEvent.reply(any(MessageCreateData.class))).thenReturn(replyAction);
         when(guild.getId()).thenReturn("1");
         when(channelUnion.getId()).thenReturn("1");
         when(member.getEffectiveAvatarUrl()).thenReturn("http://google.com/a-url");
