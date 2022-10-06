@@ -26,7 +26,7 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
         if (buttonId != null && buttonId.contains("-")) {
             var splitId = buttonId.split("-");
             if (splitId.length == 3) {
-                var button = new Button(splitId[0], splitId[1], splitId[2]);
+                var button = new ButtonData(splitId[0], splitId[1], splitId[2]);
                 return executeButtonPress(event, button);
             }
         }
@@ -34,5 +34,5 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
     }
 
     MessageExecutor<ButtonInteractionCommandMessageExecutor> executeButtonPress(@NotNull ButtonInteractionEvent event
-            , @NotNull Button button);
+            , @NotNull ButtonData buttonData);
 }

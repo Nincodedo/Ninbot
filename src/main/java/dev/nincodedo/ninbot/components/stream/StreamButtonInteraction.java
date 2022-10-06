@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.common.command.component.Button;
+import dev.nincodedo.ninbot.common.command.component.ButtonData;
 import dev.nincodedo.ninbot.common.command.component.ButtonInteraction;
 import dev.nincodedo.ninbot.common.config.db.Config;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
@@ -22,9 +22,9 @@ public class StreamButtonInteraction implements ButtonInteraction {
 
     @Override
     public MessageExecutor<ButtonInteractionCommandMessageExecutor> executeButtonPress(
-            @NotNull ButtonInteractionEvent event, @NotNull Button button) {
+            @NotNull ButtonInteractionEvent event, @NotNull ButtonData buttonData) {
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
-        var buttonAction = StreamCommandName.Button.valueOf(button.action().toUpperCase());
+        var buttonAction = StreamCommandName.Button.valueOf(buttonData.action().toUpperCase());
         if (buttonAction == StreamCommandName.Button.NOTHING) {
             messageExecutor.editEphemeralMessage(resource("button.stream.nothing"))
                     .clearComponents();

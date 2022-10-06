@@ -61,6 +61,8 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
             case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(),
                             OptionMapping::getAsString)
                     .toLowerCase(), messageExecutor);
+            case SUBTRACT -> {
+            }
         }
         return messageExecutor;
     }
