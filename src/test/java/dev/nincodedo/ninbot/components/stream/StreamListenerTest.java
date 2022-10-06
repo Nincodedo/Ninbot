@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +57,9 @@ class StreamListenerTest {
     @InjectMocks
     StreamListener streamListener;
 
+    @Mock
+    StreamMessageBuilder streamMessageBuilder;
+
     @Test
     void userStartsStreamingNotAlreadyStreamingNoCooldown() {
         UserActivityStartEvent userActivityStartEvent = mock(UserActivityStartEvent.class);
@@ -70,6 +74,9 @@ class StreamListenerTest {
         RichPresence richPresence = mock(RichPresence.class);
         AuditableRestAction auditableRestAction = mock(AuditableRestAction.class);
         Message message = mock(Message.class);
+        var streamingUrl = "https://twitch.tv/nincodedo";
+        var gameName = "Zeldo Breath of the Wild 2";
+        var streamTitle = "Zeldo";
 
         when(configService.getValuesByName("123", ConfigConstants.STREAMING_ANNOUNCE_USERS)).thenReturn(List.of("123"));
         when(configService.getSingleValueByName("123", ConfigConstants.STREAMING_ANNOUNCE_CHANNEL)).thenReturn(Optional.of("123"));
@@ -86,8 +93,9 @@ class StreamListenerTest {
         when(user.getName()).thenReturn("Nin");
         when(activity.isRich()).thenReturn(true);
         when(activity.asRichPresence()).thenReturn(richPresence);
-        when(activity.getUrl()).thenReturn("https://twitch.tv/nincodedo");
-        when(richPresence.getState()).thenReturn("Zeldo Breath of the Wild 2");
+        when(activity.getUrl()).thenReturn(streamingUrl);
+        when(richPresence.getState()).thenReturn(gameName);
+        when(richPresence.getDetails()).thenReturn(streamTitle);
         when(guild.getLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(guild.getMember(user)).thenReturn(member);
         when(guild.getGuildChannelById("123")).thenReturn(channelUnion);
@@ -99,6 +107,8 @@ class StreamListenerTest {
         when(textChannel.retrieveMessageById("123")).thenReturn(auditableRestAction);
         when(auditableRestAction.complete()).thenReturn(message);
         when(message.getContentRaw()).thenReturn("some other stream announcement");
+        when(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl, gameName, streamTitle, guild))
+                .thenReturn(new MessageCreateBuilder().addContent("aaa").build());
 
         streamListener.onGenericUserPresence(userActivityStartEvent);
 
