@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class SteamGridDBBannerBuilderTest {
+class SteamGridDBBannerBuilderTestIT {
 
     @Autowired
-    SteamGridDBBannerBuilderTest(SteamGridDBBannerBuilder steamGridDBBannerBuilder){
+    SteamGridDBBannerBuilderTestIT(SteamGridDBBannerBuilder steamGridDBBannerBuilder){
         this.steamGridDBBannerBuilder = steamGridDBBannerBuilder;
     }
 
