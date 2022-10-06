@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.components.stream.banner.steamgriddb.SteamGridDBBann
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class SteamGridDBBannerBuilderTestIT {
@@ -46,7 +48,7 @@ class SteamGridDBBannerBuilderTestIT {
                 "Elden Ring",
                 "The Legend of Zelda: A Link to the Past",
                 "Crypt of the Necrodancer",
-                "Into the breach",
+                "Into the Breach",
                 "Paper Mario");
     }
 
