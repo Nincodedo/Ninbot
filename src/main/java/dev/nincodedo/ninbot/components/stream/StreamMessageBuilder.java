@@ -56,6 +56,8 @@ public class StreamMessageBuilder {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             log.error("Failed to get a game banner", e);
+        } catch (Exception e) {
+            log.error("Something failed with game banners", e);
         }
         log.trace("Game banner didn't work out, building a boring message");
         return buildBoringStreamAnnounceMessage(member, streamingUrl, gameName, streamTitle, guild);
