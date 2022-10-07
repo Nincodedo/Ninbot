@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.stream.banner;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public interface GameBannerBuilder {
 
     GameBannerRepository getGameBannerRepository();
+
+    Logger log();
 
     default CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
         CompletableFuture<GameBanner> futureGameBanner = new CompletableFuture<GameBanner>().completeOnTimeout(null,
@@ -66,7 +69,8 @@ public interface GameBannerBuilder {
     default List<File> getGameBannerFilesFromCache(String gameTitle) {
         var cacheFolder = new File("cache");
         if (!cacheFolder.exists()) {
-            cacheFolder.mkdir();
+            var folderMade = cacheFolder.mkdir();
+            log().trace("Cache folder did not exist, made folder: {}", folderMade);
             return new ArrayList<>();
         }
         var cachedFileName = getCachedFileName(gameTitle);

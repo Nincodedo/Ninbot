@@ -7,6 +7,7 @@ import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -39,9 +40,15 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
         this.random = new SecureRandom();
     }
 
+
     @Override
     public GameBannerRepository getGameBannerRepository() {
         return gameBannerRepository;
+    }
+
+    @Override
+    public Logger log() {
+        return log;
     }
 
     @Override
