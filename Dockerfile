@@ -11,11 +11,11 @@ FROM openjdk:19-jdk-slim-buster
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
 LABEL org.opencontainers.image.source = "https://github.com/Nincodedo/Ninbot"
-RUN mkdir /app
 RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
+RUN mkdir /app && chown -hR ninbot:ninbot /app
 WORKDIR /app
 COPY --chown=ninbot:ninbot --from=build target/ninbot*.jar /app/ninbot.jar
-COPY DockerHealthCheck.java /app
+COPY --chown=ninbot:ninbot DockerHealthCheck.java /app
 USER ninbot
 HEALTHCHECK --start-period=20s CMD java /app/DockerHealthCheck.java 2>&1 || exit 1
 EXPOSE 8080
