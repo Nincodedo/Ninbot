@@ -13,9 +13,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -40,12 +39,15 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     }
 
     @Override
-    public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+    public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
         checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
+        if(event.getChannelJoined() == null) {
+            checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
+        }
     }
 
     private void checkIfShouldCreateTempChannel(Guild guild, Member member, AudioChannelUnion channelJoined) {
-        if (componentService.isDisabled(componentName, guild.getId())) {
+        if (componentService.isDisabled(componentName, guild.getId()) || channelJoined == null) {
             return;
         }
         log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild
@@ -87,19 +89,8 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         };
     }
 
-    @Override
-    public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
-        checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
-        checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
-    }
-
-    @Override
-    public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
-    }
-
     private void checkIfShouldDeleteTempChannel(Guild guild, AudioChannelUnion audioChannel) {
-        if (componentService.isDisabled(componentName, guild.getId())) {
+        if (componentService.isDisabled(componentName, guild.getId()) || audioChannel == null) {
             return;
         }
         if (isTemporaryChannel(audioChannel.getId()) && hasManageChannelPermission(guild) && audioChannel.getMembers()

@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.managers.channel.attribute.IPermissionContainerManager;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
@@ -57,7 +57,7 @@ class TempVoiceChannelManagerTest {
     @Test
     void onGuildVoiceJoin() {
         var guild = Mockito.mock(Guild.class);
-        var joinEvent = Mockito.mock(GuildVoiceJoinEvent.class);
+        var joinEvent = Mockito.mock(GuildVoiceUpdateEvent.class);
         var selfMember = Mockito.mock(Member.class);
         var member = Mockito.mock(Member.class);
         var voiceChannelJoined = Mockito.mock(AudioChannelUnion.class);
@@ -90,7 +90,7 @@ class TempVoiceChannelManagerTest {
                         Permission.PRIORITY_SPEAKER, Permission.MANAGE_CHANNEL, Permission.VOICE_MUTE_OTHERS,
                         Permission.VOICE_DEAF_OTHERS), null)).thenReturn(permissionContainerManager);
 
-        tempVoiceChannelManager.onGuildVoiceJoin(joinEvent);
+        tempVoiceChannelManager.onGuildVoiceUpdate(joinEvent);
 
         verify(lastRestAction).queue(lambdaCaptor.capture());
 
