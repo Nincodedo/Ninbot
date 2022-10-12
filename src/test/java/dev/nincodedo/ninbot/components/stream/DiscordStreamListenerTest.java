@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {NinbotRunner.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StreamListenerTest {
+class DiscordStreamListenerTest {
 
     @Mock
     ConfigService configService;
@@ -55,7 +55,7 @@ class StreamListenerTest {
     StreamingMemberRepository streamingMemberRepository;
 
     @InjectMocks
-    StreamListener streamListener;
+    DiscordStreamListener discordStreamListener;
 
     @Mock
     StreamMessageBuilder streamMessageBuilder;
@@ -110,7 +110,7 @@ class StreamListenerTest {
         when(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl, gameName, streamTitle, guild))
                 .thenReturn(new MessageCreateBuilder().addContent("aaa").build());
 
-        streamListener.onGenericUserPresence(userActivityStartEvent);
+        discordStreamListener.onGenericUserPresence(userActivityStartEvent);
 
         verify(messageAction, times(1)).queue(any());
         verify(auditableRestAction, times(1)).queue();
@@ -132,7 +132,7 @@ class StreamListenerTest {
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.PLAYING);
 
-        streamListener.onGenericUserPresence(userActivityStartEvent);
+        discordStreamListener.onGenericUserPresence(userActivityStartEvent);
 
         verify(messageAction, times(0)).queue();
         verify(auditableRestAction, times(0)).queue();
@@ -157,7 +157,7 @@ class StreamListenerTest {
         when(userActivityStartEvent.getNewActivity()).thenReturn(activity);
         when(activity.getType()).thenReturn(Activity.ActivityType.STREAMING);
 
-        streamListener.onGenericUserPresence(userActivityStartEvent);
+        discordStreamListener.onGenericUserPresence(userActivityStartEvent);
 
         verify(messageAction, times(0)).queue();
         verify(auditableRestAction, times(0)).queue();
@@ -183,7 +183,7 @@ class StreamListenerTest {
         when(guild.removeRoleFromMember(member, streamingRole)).thenReturn(auditableRestAction);
         when(member.getRoles()).thenReturn(List.of(streamingRole));
 
-        streamListener.onGenericUserPresence(userActivityEndEvent);
+        discordStreamListener.onGenericUserPresence(userActivityEndEvent);
 
         verify(messageAction, times(0)).queue();
         verify(auditableRestAction, times(1)).queue();

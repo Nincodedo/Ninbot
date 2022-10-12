@@ -1,5 +1,9 @@
 package dev.nincodedo.ninbot.config;
 
+import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.ninbot.common.config.app.NincodedoAutoConfig;
 import dev.nincodedo.ninbot.common.config.app.SupporterConfig;
 import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
@@ -67,5 +71,18 @@ public class AppConfiguration {
     @Bean
     public ExecutorService commandParserThreadPool() {
         return Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
+    }
+
+    @Bean
+    public TwitchClient twitchClient() {
+        var credentialManager = CredentialManagerBuilder.builder().build();
+        var twitch = nincodedoAutoConfig.twitch();
+        credentialManager.registerIdentityProvider(new TwitchIdentityProvider(twitch.clientId(),
+                twitch.clientSecret(), ""));
+        return TwitchClientBuilder.builder()
+                .withCredentialManager(credentialManager)
+                .withEnablePubSub(true)
+                .withEnableHelix(true)
+                .build();
     }
 }

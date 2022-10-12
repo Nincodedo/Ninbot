@@ -26,7 +26,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class StreamListener extends StatAwareListenerAdapter {
+public class DiscordStreamListener extends StatAwareListenerAdapter {
 
     private StreamMessageBuilder streamMessageBuilder;
     private ConfigService configService;
@@ -34,7 +34,7 @@ public class StreamListener extends StatAwareListenerAdapter {
     private StreamingMemberRepository streamingMemberRepository;
     private String componentName;
 
-    public StreamListener(ConfigService configService, ComponentService componentService,
+    public DiscordStreamListener(ConfigService configService, ComponentService componentService,
             StreamingMemberRepository streamingMemberRepository, StatManager statManager,
             StreamMessageBuilder streamMessageBuilder) {
         super(statManager);
@@ -113,8 +113,7 @@ public class StreamListener extends StatAwareListenerAdapter {
     }
 
     private boolean isStreamRecent(StreamInstance currentStream) {
-        return currentStream.getEndTimestamp() == null
-                || currentStream.getEndTimestamp() != null && currentStream.getEndTimestamp()
+        return currentStream.getEndTimestamp() == null || currentStream.getEndTimestamp()
                 .isAfter(LocalDateTime.now().minus(5, ChronoUnit.MINUTES));
     }
 

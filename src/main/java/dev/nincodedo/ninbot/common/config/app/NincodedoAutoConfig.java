@@ -9,5 +9,6 @@ public record NincodedoAutoConfig(String ninbotToken,
                                   SupporterConfig supporter,
                                   InfoCommandConfig info,
                                   Class<? extends ReleaseFilter> releaseFilterClass,
-                                  String mainServerId) {
+                                  String mainServerId,
+                                  TwitchConfig twitch) {
 }
