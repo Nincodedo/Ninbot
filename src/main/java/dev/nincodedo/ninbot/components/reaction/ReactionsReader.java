@@ -19,8 +19,6 @@ import java.util.List;
 @Component
 class ReactionsReader {
 
-    private List<String> badCharacters = Arrays.asList(" ", "!", ":");
-
     @Bean
     List<ReactionResponse> reactionResponseList() {
         try {
@@ -56,35 +54,13 @@ class ReactionsReader {
         return resultStringBuilder.toString();
     }
 
-
     private ReactionResponse generateResponse(ReactionResponse response) {
-        if (hasSpecialActionsActions(response.getResponse())) {
+        if (ReactionUtils.hasSpecialActionsActions(response.getResponse())) {
             return new SpecialReactionResponse(response);
-        } else if (isCanEmoji(response.getResponse())) {
+        } else if (ReactionUtils.isCanEmoji(response.getResponse())) {
             return new EmojiReactionResponse(response);
         } else {
             return new StringReactionResponse(response);
         }
-    }
-
-    private boolean hasSpecialActionsActions(String response) {
-        return response.contains("$");
-    }
-
-    private boolean isCanEmoji(String response) {
-        if (containsBadCharacters(response)) {
-            return false;
-        }
-        for (char c : response.toCharArray()) {
-            String check = StringUtils.replaceOnce(response, Character.toString(c), "");
-            if (check.contains(Character.toString(c))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean containsBadCharacters(String response) {
-        return badCharacters.stream().anyMatch(response::contains);
     }
 }

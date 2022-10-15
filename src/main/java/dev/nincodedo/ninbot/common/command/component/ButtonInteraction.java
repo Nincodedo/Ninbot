@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
 public interface ButtonInteraction extends Command<ButtonInteractionCommandMessageExecutor,
-        ButtonInteractionEvent> {
+        ButtonInteractionEvent>, Interaction {
 
     @Override
     default CommandType getType() {
@@ -22,17 +22,13 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
 
     @Override
     default MessageExecutor<ButtonInteractionCommandMessageExecutor> execute(@NotNull ButtonInteractionEvent event) {
-        var buttonId = event.getButton().getId();
-        if (buttonId != null && buttonId.contains("-")) {
-            var splitId = buttonId.split("-");
-            if (splitId.length == 3) {
-                var button = new ButtonData(splitId[0], splitId[1], splitId[2]);
-                return executeButtonPress(event, button);
-            }
+        var componentDataOptional = getComponentDataFromEvent(event);
+        if (componentDataOptional.isPresent()) {
+            return executeButtonPress(event, componentDataOptional.get());
         }
-        return new ButtonInteractionCommandMessageExecutor(event).editEphemeralMessage("💀");
+        return new ButtonInteractionCommandMessageExecutor(event).addEphemeralMessage("💀");
     }
 
     MessageExecutor<ButtonInteractionCommandMessageExecutor> executeButtonPress(@NotNull ButtonInteractionEvent event
-            , @NotNull ButtonData buttonData);
+            , ComponentData componentData);
 }

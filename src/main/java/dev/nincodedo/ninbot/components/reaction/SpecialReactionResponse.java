@@ -12,7 +12,6 @@ import java.util.List;
 
 class SpecialReactionResponse extends ReactionResponse {
 
-
     public SpecialReactionResponse(ReactionResponse response) {
         super(response);
     }
