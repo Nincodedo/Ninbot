@@ -7,7 +7,6 @@ import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -21,55 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
 @Component
-public class SteamGridDBBannerBuilder implements GameBannerBuilder {
+public class SteamGridDBBannerBuilder extends GameBannerBuilder {
 
     private SteamGridDBFeign steamGridDBFeign;
-    private GameBannerRepository gameBannerRepository;
-    private ExecutorService executorService;
     private Random random;
 
     public SteamGridDBBannerBuilder(SteamGridDBFeign steamGridDBFeign, GameBannerRepository gameBannerRepository) {
+        super(gameBannerRepository, Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder")));
         this.steamGridDBFeign = steamGridDBFeign;
-        this.gameBannerRepository = gameBannerRepository;
-        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder"));
         this.random = new SecureRandom();
-    }
-
-    @Override
-    public GameBannerRepository getGameBannerRepository() {
-        return gameBannerRepository;
-    }
-
-    @Override
-    public Logger log() {
-        return log;
-    }
-
-    @Override
-    public ExecutorService getExecutorService() {
-        return executorService;
-    }
-
-    @Override
-    public GameBanner generateGameBannerFromTitle(String gameTitle) {
-        var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
-        if (searchResponse.isSuccess()) {
-            var gameId = searchResponse.firstData().id();
-            var logoResponse = steamGridDBFeign.retrieveLogoByGameId(gameId, new String[]{"official"});
-            var heroResponse = steamGridDBFeign.retrieveHeroByGameId(gameId);
-            if (logoResponse.isSuccess() && heroResponse.isSuccess() && !logoResponse.getData().isEmpty()
-                    && !heroResponse.getData().isEmpty()) {
-                var gameBanners = generateGameBanners(gameTitle, gameId, logoResponse.getData(),
-                        heroResponse.getData());
-                return randomBanner(gameBanners).orElse(null);
-            }
-        }
-        return null;
     }
 
     private Optional<GameBanner> randomBanner(List<GameBanner> gameBanners) {
@@ -165,5 +128,22 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
             log.error("Failed to read image", e);
         }
         return image;
+    }
+
+    @Override
+    protected GameBanner generateGameBannerFromTitle(String gameTitle) {
+        var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
+        if (searchResponse.isSuccess()) {
+            var gameId = searchResponse.firstData().id();
+            var logoResponse = steamGridDBFeign.retrieveLogoByGameId(gameId, new String[]{"official"});
+            var heroResponse = steamGridDBFeign.retrieveHeroByGameId(gameId);
+            if (logoResponse.isSuccess() && heroResponse.isSuccess() && !logoResponse.getData().isEmpty()
+                    && !heroResponse.getData().isEmpty()) {
+                var gameBanners = generateGameBanners(gameTitle, gameId, logoResponse.getData(),
+                        heroResponse.getData());
+                return randomBanner(gameBanners).orElse(null);
+            }
+        }
+        return null;
     }
 }

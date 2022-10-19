@@ -28,6 +28,8 @@ public class BaseEntity {
     private Long id;
     @Embedded
     private AuditMetadata audit = new AuditMetadata();
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean deleted = false;
 
     @PostLoad
     protected void postLoad() {

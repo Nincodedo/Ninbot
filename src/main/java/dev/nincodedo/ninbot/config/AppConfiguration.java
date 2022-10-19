@@ -76,6 +76,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ExecutorService schedulerThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("scheduler"));
+    }
+
+    @Bean
     public ExecutorService listenerThreadPool() {
         return Executors.newCachedThreadPool(new NamedThreadFactory("listeners"));
     }
