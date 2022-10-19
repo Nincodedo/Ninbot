@@ -1,10 +1,6 @@
 package dev.nincodedo.ninbot.components.activity;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
-import java.util.List;
-
-public interface ActivityStatusRepository extends CrudRepository<ActivityStatus, Long> {
-    @NotNull List<ActivityStatus> findAll();
+public interface ActivityStatusRepository extends BaseRepository<ActivityStatus> {
 }

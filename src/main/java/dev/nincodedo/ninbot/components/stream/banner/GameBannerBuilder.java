@@ -25,7 +25,7 @@ public abstract class GameBannerBuilder {
         this.executorService = executorService;
     }
 
-    protected CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
+    public CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
         CompletableFuture<GameBanner> futureGameBanner = new CompletableFuture<GameBanner>().completeOnTimeout(null,
                 20, TimeUnit.SECONDS);
         executorService.submit(() -> {

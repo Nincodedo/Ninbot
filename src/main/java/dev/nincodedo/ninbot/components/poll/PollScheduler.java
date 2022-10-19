@@ -6,17 +6,27 @@ import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutorService;
+
 @Component
-public class PollScheduler implements Schedulable<Poll, PollService> {
+public class PollScheduler extends Schedulable<Poll, PollService> {
 
     private PollService pollService;
     private PollAnnouncementSetup pollAnnouncementSetup;
 
-    public PollScheduler(PollService pollService, PollAnnouncementSetup pollAnnouncementSetup) {
+    public PollScheduler(PollService pollService, PollAnnouncementSetup pollAnnouncementSetup, @Qualifier(
+            "schedulerThreadPool") ExecutorService executorService) {
+        super(executorService);
         this.pollService = pollService;
         this.pollAnnouncementSetup = pollAnnouncementSetup;
+    }
+
+    @Override
+    protected String getSchedulerName() {
+        return "poll";
     }
 
     @Override

@@ -87,7 +87,8 @@ public class CountdownScheduler extends Schedulable<Countdown, CountdownService>
     }
 
     private boolean isUnannounceable(long dayDifference) {
-        return dayDifference > 1000 && dayDifference % 1000 != 0 || dayDifference < 1000 && dayDifference > 100 && dayDifference % 100 != 0
+        return dayDifference > 1000 && dayDifference % 1000 != 0
+                || dayDifference < 1000 && dayDifference > 100 && dayDifference % 100 != 0
                 || dayDifference < 100 && dayDifference > 7 && dayDifference % 7 != 0;
     }
 }

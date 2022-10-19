@@ -1,11 +1,12 @@
 package dev.nincodedo.ninbot.common;
 
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 
-public abstract class Schedulable<T, S extends Scheduler<T, ?>> {
+public abstract class Schedulable<T extends BaseEntity, S extends Scheduler<T, ?>> {
 
     protected ExecutorService executorService;
     protected String schedulerName;
@@ -24,14 +25,14 @@ public abstract class Schedulable<T, S extends Scheduler<T, ?>> {
         return timer;
     }
 
-    protected void scheduleAll(ShardManager shardManager) {
+    public void scheduleAll(ShardManager shardManager) {
         getScheduler().findAllOpenItems()
                 .forEach(schedulable -> executorService.execute(() -> scheduleOne(schedulable, shardManager)));
     }
 
     protected abstract void scheduleOne(T schedulable, ShardManager shardManager);
 
-    protected void addOne(T schedulable, ShardManager shardManager) {
+    public void addOne(T schedulable, ShardManager shardManager) {
         getScheduler().save(schedulable);
         scheduleOne(schedulable, shardManager);
     }

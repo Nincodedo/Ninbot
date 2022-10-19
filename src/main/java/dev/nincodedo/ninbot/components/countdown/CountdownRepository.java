@@ -1,18 +1,27 @@
 package dev.nincodedo.ninbot.components.countdown;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CountdownRepository extends CrudRepository<Countdown, Long> {
+public interface CountdownRepository extends BaseRepository<Countdown> {
 
-    @NotNull List<Countdown> findAll();
+    default List<Countdown> findByServerId(String serverId) {
+        return findByServerIdAndDeleted(serverId, false);
+    }
 
-    List<Countdown> findByServerId(String serverId);
+    default List<Countdown> findCountdownByAudit_CreatedBy(String creatorId) {
+        return findCountdownByAudit_CreatedByAndDeleted(creatorId, false);
+    }
 
-    List<Countdown> findCountdownByAudit_CreatedBy(String creatorId);
+    default Optional<Countdown> findByAudit_CreatedByAndName(String creatorId, String name) {
+        return findByAudit_CreatedByAndNameAndDeleted(creatorId, name, false);
+    }
 
-    Optional<Countdown> findByAudit_CreatedByAndName(String creatorId, String name);
+    List<Countdown> findByServerIdAndDeleted(String serverId, Boolean isDeleted);
+
+    List<Countdown> findCountdownByAudit_CreatedByAndDeleted(String creatorId, Boolean isDeleted);
+
+    Optional<Countdown> findByAudit_CreatedByAndNameAndDeleted(String creatorId, String name, Boolean isDeleted);
 }

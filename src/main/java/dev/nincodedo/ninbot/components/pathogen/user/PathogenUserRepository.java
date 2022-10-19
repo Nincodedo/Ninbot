@@ -1,11 +1,12 @@
 package dev.nincodedo.ninbot.components.pathogen.user;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
-import java.util.List;
+public interface PathogenUserRepository extends BaseRepository<PathogenUser> {
+    default PathogenUser getByUserIdAndServerId(String userId, String serverId) {
+        return getByUserIdAndServerIdAndDeleted(userId, serverId, false);
+    }
 
-public interface PathogenUserRepository extends CrudRepository<PathogenUser, Long> {
-    PathogenUser getByUserIdAndServerId(String userId, String serverId);
+    PathogenUser getByUserIdAndServerIdAndDeleted(String userId, String serverId, Boolean isDeleted);
 
-    List<PathogenUser> getAllByUserIdIsIn(List<String> userIds);
 }

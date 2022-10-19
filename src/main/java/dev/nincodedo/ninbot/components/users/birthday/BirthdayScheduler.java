@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -24,21 +25,29 @@ import java.util.GregorianCalendar;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class BirthdayScheduler implements Schedulable<NinbotUser, UserService> {
+public class BirthdayScheduler extends Schedulable<NinbotUser, UserService> {
 
     private UserService userService;
 
-    public BirthdayScheduler(UserService userService) {
+    public BirthdayScheduler(UserService userService,
+            @Qualifier("schedulerThreadPool") ExecutorService executorService) {
+        super(executorService);
         this.userService = userService;
     }
 
     @Override
+    protected String getSchedulerName() {
+        return "birthday";
+    }
+
+    @Override
     public void scheduleAll(ShardManager shardManager) {
-        new Timer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
+        getTimer().scheduleAtFixedRate(new Scheduler(shardManager), new Date(), TimeUnit.DAYS.toMillis(1));
     }
 
     @Override
@@ -79,7 +88,7 @@ public class BirthdayScheduler implements Schedulable<NinbotUser, UserService> {
                     return;
                 }
                 var announcementChannelId = defaultChannel.getId();
-                new Timer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
+                getTimer().schedule(new GenericAnnounce(shardManager, announcementChannelId, birthdayMessage),
                         Date.from(LocalDate.now(ZoneId.systemDefault())
                                 .atStartOfDay(ZoneId.systemDefault())
                                 .plus(1, ChronoUnit.DAYS)
