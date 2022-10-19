@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -23,6 +26,16 @@ public class BaseEntity {
     @EqualsAndHashCode.Exclude
     private Long id;
     @Embedded
-    private AuditMetadata audit;
+    private AuditMetadata audit = new AuditMetadata();
+
+    @PrePersist
+    private void prePersist() {
+        audit.setCreatedDateTime(LocalDateTime.now());
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        audit.setModifiedDateTime(LocalDateTime.now());
+    }
 }
 
