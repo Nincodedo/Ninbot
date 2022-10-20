@@ -31,7 +31,7 @@ jobs:
       - name: Build, Test
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw clean verify -P git-commit,integration --no-transfer-progress
+        run: ./mvnw clean verify sonar:sonar -P git-commit,integration -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref.name }} --no-transfer-progress
   buildDocker:
     name: Build Docker  
     runs-on: ubuntu-latest
