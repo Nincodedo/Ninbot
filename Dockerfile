@@ -6,7 +6,7 @@ COPY src ./src
 COPY .git ./.git
 RUN mvn package -P git-commit
 
-FROM openjdk:19-jdk-slim-bullseye
+FROM openjdk:20-jdk-slim-bullseye
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
