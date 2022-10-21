@@ -4,8 +4,8 @@ import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 @Data

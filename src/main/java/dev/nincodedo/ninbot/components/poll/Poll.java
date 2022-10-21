@@ -12,11 +12,11 @@ import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OrderColumn;
-import javax.persistence.Transient;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;

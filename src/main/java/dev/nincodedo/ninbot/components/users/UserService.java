@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.users;
 import dev.nincodedo.ninbot.common.Scheduler;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service

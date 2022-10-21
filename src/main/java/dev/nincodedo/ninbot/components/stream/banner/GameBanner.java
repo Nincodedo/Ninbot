@@ -3,11 +3,11 @@ package dev.nincodedo.ninbot.components.stream.banner;
 import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import java.io.File;
 import java.util.List;
 
