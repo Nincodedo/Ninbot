@@ -68,6 +68,11 @@ public abstract class GameBannerBuilder {
                 backgroundId);
     }
 
+    /**
+     * Generates 3 GameBanners, returning only 1, or null if one could not be created. Others are stored in cache.
+     * @param gameTitle String title of a game
+     * @return a GameBanner or null if one could not be created
+     */
     protected abstract GameBanner generateGameBannerFromTitle(String gameTitle);
 
     protected List<File> getGameBannerFilesFromCache(String gameTitle) {
