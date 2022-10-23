@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.activity;
 
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ public class ActivityUpdater {
 
     private final ShardManager shardManager;
     private final Random random;
-    private List<String> activityStatusList;
+    private List<ActivityStatus> activityStatusList;
     private ActivityStatusRepository activityStatusRepository;
 
     public ActivityUpdater(ShardManager shardManager, ActivityStatusRepository activityStatusRepository) {
@@ -28,17 +27,14 @@ public class ActivityUpdater {
 
     @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
     protected void updateStatusList() {
-        activityStatusList = activityStatusRepository.findAll()
-                .stream()
-                .map(ActivityStatus::getStatus)
-                .toList();
+        activityStatusList = activityStatusRepository.findAll();
     }
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     protected void setNinbotActivity() {
         if (!activityStatusList.isEmpty()) {
-            var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
-            shardManager.setActivity(Activity.playing(status));
+            var activityStatus = activityStatusList.get(random.nextInt(activityStatusList.size()));
+            shardManager.setActivity(activityStatus.getAsActivity());
         }
     }
 }
