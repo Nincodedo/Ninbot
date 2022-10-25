@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.Embeddable;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Data
@@ -35,5 +36,14 @@ public class AuditMetadata {
     @PreUpdate
     private void preUpdate() {
         modifiedDateTime = LocalDateTime.now();
+    }
+
+    @Transient
+    public void setCreatedModifiedBy(String userId) {
+        if (createdBy == null) {
+            createdBy = userId;
+        } else {
+            modifiedBy = userId;
+        }
     }
 }
