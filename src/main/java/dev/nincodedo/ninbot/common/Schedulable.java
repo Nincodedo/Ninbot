@@ -11,7 +11,7 @@ public abstract class Schedulable<T extends BaseEntity, S extends Scheduler<T, ?
     protected ExecutorService executorService;
     protected String schedulerName;
     protected Timer timer;
-    
+
     protected Schedulable(ExecutorService schedulerExecutorService) {
         this.executorService = schedulerExecutorService;
         this.schedulerName = getSchedulerName();
