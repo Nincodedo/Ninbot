@@ -30,7 +30,7 @@ public class BaseEntity {
     private AuditMetadata audit = new AuditMetadata();
 
     @PostLoad
-    private void postLoad() {
+    protected void postLoad() {
         if (audit == null) {
             audit = new AuditMetadata();
         }

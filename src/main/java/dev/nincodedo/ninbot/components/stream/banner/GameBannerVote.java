@@ -13,6 +13,5 @@ public class GameBannerVote extends BaseEntity {
     @ManyToOne
     @ToString.Exclude
     private GameBanner gameBanner;
-    private String userId;
     private Integer vote;
 }

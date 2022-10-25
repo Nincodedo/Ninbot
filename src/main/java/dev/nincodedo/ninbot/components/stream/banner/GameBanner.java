@@ -31,10 +31,11 @@ public class GameBanner extends BaseEntity {
     @Transient
     private File file;
 
-    @PostLoad
-    private void onLoad() {
+    @Override
+    protected void postLoad() {
+        super.postLoad();
         this.score = votes.stream()
-                .filter(gameBannerVote -> gameBannerVote.getUserId() != null)
+                .filter(gameBannerVote -> gameBannerVote.getAudit().getCreatedBy() != null)
                 .map(GameBannerVote::getVote)
                 .reduce(0, Integer::sum);
     }
