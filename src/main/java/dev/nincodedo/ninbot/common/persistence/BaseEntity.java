@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
@@ -27,6 +28,13 @@ public class BaseEntity {
     private Long id;
     @Embedded
     private AuditMetadata audit = new AuditMetadata();
+
+    @PostLoad
+    private void postLoad() {
+        if (audit == null) {
+            audit = new AuditMetadata();
+        }
+    }
 
     @PrePersist
     private void prePersist() {
