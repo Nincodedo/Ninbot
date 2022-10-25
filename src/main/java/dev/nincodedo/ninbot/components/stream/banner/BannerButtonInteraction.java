@@ -37,10 +37,10 @@ public class BannerButtonInteraction implements ButtonInteraction {
         var gameBanner = gameBannerOptional.get();
         var optionalVote = gameBanner.getVotes()
                 .stream()
-                .filter(gameBannerVote -> gameBannerVote.getUserId().equals(userId))
+                .filter(gameBannerVote -> gameBannerVote.getAudit().getCreatedBy().equals(userId))
                 .findFirst();
         var vote = optionalVote.orElse(new GameBannerVote());
-        vote.setUserId(userId);
+        vote.getAudit().setCreatedModifiedBy(userId);
         var score = buttonData.action().equals("good") ? 1 : -1;
         vote.setVote(score);
         messageExecutor.addEphemeralMessage("Thanks for your feedback!");
