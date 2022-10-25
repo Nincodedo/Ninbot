@@ -31,11 +31,11 @@ public class NinbotRunner {
 
     private final ShardManager shardManager;
 
-    private final List<Schedulable> schedulableList;
+    private final List<Schedulable<?, ?>> schedulableList;
 
     private final StatManager statManager;
 
-    public NinbotRunner(ShardManager shardManager, List<Schedulable> schedulableList, StatManager statManager) {
+    public NinbotRunner(ShardManager shardManager, List<Schedulable<?, ?>> schedulableList, StatManager statManager) {
         this.shardManager = shardManager;
         this.schedulableList = schedulableList;
         this.statManager = statManager;
