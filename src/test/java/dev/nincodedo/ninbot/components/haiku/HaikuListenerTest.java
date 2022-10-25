@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.haiku;
 
 
 import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -44,6 +45,9 @@ class HaikuListenerTest {
     ComponentService componentService;
 
     @Mock
+    ConfigService configService;
+
+    @Mock
     StatManager statManager;
 
     @InjectMocks
@@ -69,7 +73,7 @@ class HaikuListenerTest {
 
         haikuListener.onMessageReceived(messageEvent);
 
-        assertThat(haikuListener.isHaikuable(unhaikuable)).isNotPresent();
+        assertThat(haikuListener.isHaikuable(unhaikuable, "1")).isNotPresent();
     }
 
     @Test
@@ -96,17 +100,17 @@ class HaikuListenerTest {
 
         haikuListener.onMessageReceived(messageEvent);
 
-        assertThat(haikuListener.isHaikuable(bestHaiku)).isPresent();
+        assertThat(haikuListener.isHaikuable(bestHaiku, "1")).isPresent();
     }
 
     public static class MockHaikuListener extends HaikuListener {
 
-        public MockHaikuListener(ComponentService componentService, StatManager statManager) {
-            super(componentService, statManager);
+        public MockHaikuListener(ComponentService componentService, StatManager statManager, ConfigService configService) {
+            super(componentService, statManager, configService);
         }
 
         @Override
-        boolean checkChance() {
+        boolean checkChance(String guildId) {
             return true;
         }
     }
