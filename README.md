@@ -1,6 +1,6 @@
 ![Ninbot Logo](docs/images/ninbot-github-social.png)
 
-# Ninbot ![Master Branch Build](https://github.com/Nincodedo/Ninbot/workflows/Master%20Build/Deploy/badge.svg?branch=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dev.nincodedo%3Aninbot&metric=alert_status)](https://sonarcloud.io/dashboard?id=dev.nincodedo%3Aninbot) [![Ninbot Uptime](https://status.nincodedo.dev/api/badge/1/uptime/24?label=Ninbot%20Uptime&labelSuffix=&color=blue)](https://status.nincodedo.dev)
+# Ninbot ![Master Branch Build](https://github.com/Nincodedo/Ninbot/workflows/Master%20Build/Deploy/badge.svg?branch=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dev.nincodedo%3Aninbot&metric=alert_status)](https://sonarcloud.io/dashboard?id=dev.nincodedo%3Aninbot) [![Uptime](https://status.nincodedo.dev/api/badge/1/uptime/720?label=Uptime&labelSuffix=&color=blue)](https://status.nincodedo.dev)
 
 Ninbot is a Discord bot with various silly commands and actions, such as dabbing. Ninbot is built for OCW Discord
 using [JDA.](https://github.com/DV8FromTheWorld/JDA)
