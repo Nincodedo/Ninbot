@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 import java.io.File;
 import java.util.List;

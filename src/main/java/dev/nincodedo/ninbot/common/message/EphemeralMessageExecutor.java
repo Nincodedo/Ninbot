@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common.message;
 
 import dev.nincodedo.ninbot.common.Emojis;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -9,7 +10,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> extends MessageExecutor<T> {
+public abstract class EphemeralMessageExecutor extends MessageExecutor {
     List<MessageCreateData> ephemeralMessageResponses;
     List<MessageEmbed> messageEmbeds;
     List<MessageEmbed> ephemeralMessageEmbeds;
@@ -36,6 +37,13 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
         }
     }
 
+    /**
+     * Returns the {@link ReplyCallbackAction} right away instead of queuing everything up for the end. Good if you need
+     * access to the {@link ReplyCallbackAction#queue()} result.
+     *
+     * @param message the {@link Message} being sent
+     * @return the {@link ReplyCallbackAction}
+     */
     protected abstract ReplyCallbackAction replyMessage(MessageCreateData message);
 
     protected ReplyCallbackAction replyEphemeralMessage(MessageCreateData message) {
@@ -48,27 +56,23 @@ public abstract class EphemeralMessageExecutor<T extends MessageExecutor<T>> ext
         return replyEmbeds(messageEmbeds).setEphemeral(true);
     }
 
-    public T addMessageEmbed(MessageEmbed messageEmbed) {
+    public void addMessageEmbed(MessageEmbed messageEmbed) {
         messageEmbeds.add(messageEmbed);
-        return returnThis();
     }
 
-    public T addEphemeralMessage(String message) {
+    public void addEphemeralMessage(String message) {
         ephemeralMessageResponses.add(new MessageCreateBuilder().addContent(message).build());
-        return returnThis();
     }
 
-    public T addEphemeralMessage(MessageCreateData message) {
+    public void addEphemeralMessage(MessageCreateData message) {
         ephemeralMessageResponses.add(message);
-        return returnThis();
     }
 
-    public T addEphemeralMessage(MessageEmbed messageEmbed) {
+    public void addEphemeralMessage(MessageEmbed messageEmbed) {
         ephemeralMessageEmbeds.add(messageEmbed);
-        return returnThis();
     }
 
-    public T addEphemeralUnsuccessfulReaction() {
-        return addEphemeralMessage(Emojis.CROSS_X);
+    public void addEphemeralUnsuccessfulReaction() {
+        addEphemeralMessage(Emojis.CROSS_X);
     }
 }

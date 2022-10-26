@@ -41,7 +41,7 @@ public class HugemojiCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var emojiOption = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),

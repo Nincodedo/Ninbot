@@ -19,7 +19,7 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
     }
 
     @Override
-    public MessageExecutor<MessageContextInteractionEventMessageExecutor> execute(@NotNull MessageContextInteractionEvent event) {
+    public MessageExecutor execute(@NotNull MessageContextInteractionEvent event) {
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
         TextInput input = TextInput.create("emojitizer-text", "What do you want to Emojitize?",
                         TextInputStyle.SHORT)

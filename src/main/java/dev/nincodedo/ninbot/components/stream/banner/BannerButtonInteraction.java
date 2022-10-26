@@ -32,7 +32,8 @@ public class BannerButtonInteraction implements ButtonInteraction {
         var userId = event.getUser().getId();
         var gameBannerOptional = gameBannerRepository.findById(gameBannerId);
         if (gameBannerOptional.isEmpty()) {
-            return messageExecutor.addEphemeralMessage("Could not find that banner, did you click on an old one?");
+            messageExecutor.addEphemeralMessage("Could not find that banner, did you click on an old one?");
+            return messageExecutor;
         }
         var gameBanner = gameBannerOptional.get();
         var optionalVote = gameBanner.getVotes()

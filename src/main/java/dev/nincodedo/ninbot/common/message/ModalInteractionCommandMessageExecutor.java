@@ -9,11 +9,12 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.List;
 
-public class ModalInteractionCommandMessageExecutor extends EphemeralMessageExecutor<ModalInteractionCommandMessageExecutor> {
+public class ModalInteractionCommandMessageExecutor extends EphemeralMessageExecutor {
 
     private ModalInteractionEvent event;
 
     public ModalInteractionCommandMessageExecutor(ModalInteractionEvent event) {
+        super();
         this.event = event;
     }
 
@@ -25,11 +26,6 @@ public class ModalInteractionCommandMessageExecutor extends EphemeralMessageExec
     @Override
     protected ReplyCallbackAction replyEmbeds(List<MessageEmbed> messageEmbeds) {
         return event.replyEmbeds(messageEmbeds);
-    }
-
-    @Override
-    public ModalInteractionCommandMessageExecutor returnThis() {
-        return this;
     }
 
     @Override

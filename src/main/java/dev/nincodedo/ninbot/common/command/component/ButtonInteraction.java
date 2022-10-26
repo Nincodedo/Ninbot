@@ -21,14 +21,16 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
     }
 
     @Override
-    default MessageExecutor<ButtonInteractionCommandMessageExecutor> execute(@NotNull ButtonInteractionEvent event) {
+    default MessageExecutor execute(@NotNull ButtonInteractionEvent event) {
         var componentDataOptional = getComponentDataFromEvent(event);
         if (componentDataOptional.isPresent()) {
             return executeButtonPress(event, componentDataOptional.get());
         }
-        return new ButtonInteractionCommandMessageExecutor(event).addEphemeralMessage("💀");
+        var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
+        messageExecutor.addEphemeralMessage("💀");
+        return messageExecutor;
     }
 
-    MessageExecutor<ButtonInteractionCommandMessageExecutor> executeButtonPress(@NotNull ButtonInteractionEvent event
+    MessageExecutor executeButtonPress(@NotNull ButtonInteractionEvent event
             , ComponentData componentData);
 }

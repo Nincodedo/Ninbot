@@ -15,15 +15,17 @@ public interface ModalInteraction extends Command<ModalInteractionCommandMessage
     }
 
     @Override
-    default MessageExecutor<ModalInteractionCommandMessageExecutor> execute(@NotNull ModalInteractionEvent event) {
+    default MessageExecutor execute(@NotNull ModalInteractionEvent event) {
         var componentDataOptional = getComponentDataFromEvent(event);
         if (componentDataOptional.isPresent()) {
             return execute(event, componentDataOptional.get());
         }
-        return new ModalInteractionCommandMessageExecutor(event).addEphemeralMessage("💀");
+        var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
+        messageExecutor.addEphemeralMessage("💀");
+        return messageExecutor;
     }
 
-    MessageExecutor<ModalInteractionCommandMessageExecutor> execute(@NotNull ModalInteractionEvent event,
+    MessageExecutor execute(@NotNull ModalInteractionEvent event,
             @NotNull ComponentData componentData);
 
     @Override
