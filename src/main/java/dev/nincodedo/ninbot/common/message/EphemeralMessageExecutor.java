@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common.message;
 
 import dev.nincodedo.ninbot.common.Emojis;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public abstract class EphemeralMessageExecutor extends MessageExecutor {
     List<MessageCreateData> ephemeralMessageResponses;
     List<MessageEmbed> messageEmbeds;

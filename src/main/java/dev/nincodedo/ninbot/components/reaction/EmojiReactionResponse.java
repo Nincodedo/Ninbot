@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @EqualsAndHashCode(callSuper = false)
 public class EmojiReactionResponse extends ReactionResponse {
@@ -41,6 +42,9 @@ public class EmojiReactionResponse extends ReactionResponse {
     public void react(Message message, MessageChannel channel) {
         List<RestAction<Void>> restActions = new ArrayList<>();
         emojiList.forEach(emoji -> restActions.add(message.addReaction(Emoji.fromFormatted(emoji))));
-        RestAction.allOf(restActions).queue();
+        restActions.removeIf(Objects::isNull);
+        if (!restActions.isEmpty()) {
+            RestAction.allOf(restActions).queue();
+        }
     }
 }

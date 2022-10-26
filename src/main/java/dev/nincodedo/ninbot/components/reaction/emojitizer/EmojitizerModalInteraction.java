@@ -29,7 +29,6 @@ public class EmojitizerModalInteraction implements ModalInteraction {
         if (textInput != null) {
             var emojiText = textInput.getAsString().replace(" ", "");
             if (ReactionUtils.isCanEmoji(emojiText)) {
-
                 event.deferReply(true).queue();
                 var reaction = new EmojiReactionResponse(emojiText);
                 var target = componentData.data();
