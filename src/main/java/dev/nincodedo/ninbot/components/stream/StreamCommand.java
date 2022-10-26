@@ -56,11 +56,11 @@ public class StreamCommand implements SlashCommand {
 
     @NotNull
     private Button getSecondaryButton(String userId, String onOff) {
-        return Button.secondary("stream-nothing-"+userId, "No, keep them " + onOff);
+        return Button.secondary("stream-nothing-" + userId, "No, keep them " + onOff);
     }
 
     @NotNull
     private Button getPrimaryButton(String userId, String opposite) {
-        return Button.primary("stream-toggle-"+userId, "Yes, turn them " + opposite);
+        return Button.primary("stream-toggle-" + userId, "Yes, turn them " + opposite);
     }
 }

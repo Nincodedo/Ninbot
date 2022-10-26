@@ -58,9 +58,11 @@ public class CommandListener extends BaseListenerAdapter {
 
     @Override
     public void onGenericInteractionCreate(@NotNull GenericInteractionCreateEvent event) {
-        switch (event){
-            case ButtonInteractionEvent buttonInteractionEvent -> getCommandParserForEvent(buttonInteractionEvent).parseEvent(buttonInteractionEvent);
-            case ModalInteractionEvent modalInteractionEvent -> getCommandParserForEvent(modalInteractionEvent).parseEvent(modalInteractionEvent);
+        switch (event) {
+            case ButtonInteractionEvent buttonInteractionEvent ->
+                    getCommandParserForEvent(buttonInteractionEvent).parseEvent(buttonInteractionEvent);
+            case ModalInteractionEvent modalInteractionEvent ->
+                    getCommandParserForEvent(modalInteractionEvent).parseEvent(modalInteractionEvent);
             default -> {
                 //no-op
             }
