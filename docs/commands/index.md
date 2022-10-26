@@ -92,7 +92,7 @@ Set your birthdate and if you want Ninbot to announce your birthday to the serve
 
 Message commands can be found on the context menu of a message under "Apps".
 
-### Dab
+### Dab and HugeDab
 
 Like the Dab slash command, dabs on that specific message. There is also a Huge Dab variant.
 
