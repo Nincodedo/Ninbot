@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ public class EmojiReactionResponse extends ReactionResponse {
 
     @Override
     public void react(Message message, MessageChannel channel) {
-        emojiList.forEach(emoji -> message.addReaction(Emoji.fromFormatted(emoji)).queue());
+        List<RestAction<Void>> restActions = new ArrayList<>();
+        emojiList.forEach(emoji -> restActions.add(message.addReaction(Emoji.fromFormatted(emoji))));
+        RestAction.allOf(restActions).queue();
     }
 }
