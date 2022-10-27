@@ -5,7 +5,7 @@ This page will highlight more interesting changes between versions.
 
 ## [3.9.0](https://github.com/Nincodedo/Ninbot/releases/tag/3.9.0)
 
-* Added the [Emojitize](../commands/index.md#emojitize) message command
+* Added the [Emojitizer](../commands/index.md#emojitizer) message command
 
 ## [3.8.0](https://github.com/Nincodedo/Ninbot/releases/tag/3.8.0)
 

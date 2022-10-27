@@ -96,8 +96,8 @@ Message commands can be found on the context menu of a message under "Apps".
 
 Like the Dab slash command, dabs on that specific message. There is also a Huge Dab variant.
 
-### Emojitize
+### Emojitizer
 
-Emojitize lets you enter a word you want to turn into reaction emojis on a message. You can only use each letter once so
-words with duplicate letters are not allowed. Also, if you use Emojitizer on a message that already has emoji letters on
-it, those are not available to you.
+Emojitizer lets you enter a word you want to turn into reaction emojis on a message. You can only use each letter once
+so words with duplicate letters are not allowed. Also, if you use Emojitizer on a message that already has emoji letters
+on it, those are not available to you.
