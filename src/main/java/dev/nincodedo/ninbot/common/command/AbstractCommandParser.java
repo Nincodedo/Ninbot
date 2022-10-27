@@ -42,13 +42,13 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     private Optional<T> getCommand(F event) {
         return switch (event) {
             case CommandAutoCompleteInteractionEvent autoCompleteEvent ->
-                    Optional.of(commandMap.get(autoCompleteEvent.getName()));
+                    Optional.ofNullable(commandMap.get(autoCompleteEvent.getName()));
             case GenericCommandInteractionEvent commandInteractionEvent ->
-                    Optional.of(commandMap.get(commandInteractionEvent.getName()));
+                    Optional.ofNullable(commandMap.get(commandInteractionEvent.getName()));
             case GenericComponentInteractionCreateEvent genericComponentInteractionCreateEvent ->
-                    Optional.of(commandMap.get(getComponentName(genericComponentInteractionCreateEvent)));
+                    Optional.ofNullable(commandMap.get(getComponentName(genericComponentInteractionCreateEvent)));
             case ModalInteractionEvent modalInteractionEvent ->
-                    Optional.of(commandMap.get(getComponentName(modalInteractionEvent)));
+                    Optional.ofNullable(commandMap.get(getComponentName(modalInteractionEvent)));
             default -> Optional.empty();
         };
     }
