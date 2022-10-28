@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
@@ -88,6 +89,7 @@ class EmojitizerModalInteractionTest {
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
+        when(modalEvent.getUserLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(modalMapping.getAsString()).thenReturn("aaa");
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
@@ -102,6 +104,7 @@ class EmojitizerModalInteractionTest {
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
+        when(modalEvent.getUserLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(modalMapping.getAsString()).thenReturn("a");
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
