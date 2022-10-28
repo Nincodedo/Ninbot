@@ -7,10 +7,13 @@ import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class StreamButtonInteraction implements ButtonInteraction {
 
@@ -35,6 +38,11 @@ public class StreamButtonInteraction implements ButtonInteraction {
                     .clearComponents();
         }
         return messageExecutor;
+    }
+
+    @Override
+    public Logger log() {
+        return log;
     }
 
     private boolean toggleConfig(String userId, String serverId) {

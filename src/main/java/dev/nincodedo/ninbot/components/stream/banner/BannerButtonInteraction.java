@@ -3,10 +3,13 @@ package dev.nincodedo.ninbot.components.stream.banner;
 import dev.nincodedo.ninbot.common.command.component.ButtonInteraction;
 import dev.nincodedo.ninbot.common.command.component.ComponentData;
 import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecutor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class BannerButtonInteraction implements ButtonInteraction {
 
@@ -50,5 +53,10 @@ public class BannerButtonInteraction implements ButtonInteraction {
         }
         gameBannerVoteRepository.save(vote);
         return messageExecutor;
+    }
+
+    @Override
+    public Logger log() {
+        return log;
     }
 }

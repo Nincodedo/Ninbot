@@ -6,14 +6,17 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.ModalInteractionCommandMessageExecutor;
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
 import dev.nincodedo.ninbot.components.reaction.ReactionUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+@Slf4j
 @Component
 public class EmojitizerModalInteraction implements ModalInteraction {
 
@@ -50,6 +53,11 @@ public class EmojitizerModalInteraction implements ModalInteraction {
                     + ".cantbecausenotemojitizable"));
         }
         return messageExecutor;
+    }
+
+    @Override
+    public Logger log() {
+        return log;
     }
 
     private boolean isExistingLetterUsed(String emojiText, String[] existingEmojiLetters) {

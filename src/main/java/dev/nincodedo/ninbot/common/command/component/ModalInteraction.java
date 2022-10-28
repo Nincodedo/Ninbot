@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.ModalInteractionCommandMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 public interface ModalInteraction extends Command<ModalInteractionCommandMessageExecutor, ModalInteractionEvent>,
         Interaction {
@@ -21,7 +22,9 @@ public interface ModalInteraction extends Command<ModalInteractionCommandMessage
             return execute(event, componentDataOptional.get());
         }
         var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
-        messageExecutor.addEphemeralMessage("💀");
+        messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
+        log().error("ButtonInteraction {} received event {} without parseable component data {} {}", getName(),
+                event.getResponseNumber(), event.getModalId(), event.getRawData());
         return messageExecutor;
     }
 
@@ -32,4 +35,6 @@ public interface ModalInteraction extends Command<ModalInteractionCommandMessage
     default boolean isAbleToRegisterOnGuild() {
         return false;
     }
+
+    Logger log();
 }

@@ -6,6 +6,7 @@ import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecut
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 public interface ButtonInteraction extends Command<ButtonInteractionCommandMessageExecutor,
         ButtonInteractionEvent>, Interaction {
@@ -27,10 +28,14 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
             return executeButtonPress(event, componentDataOptional.get());
         }
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
-        messageExecutor.addEphemeralMessage("💀");
+        messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
+        log().error("ButtonInteraction {} received event {} without parseable component data {} {}", getName(),
+                event.getResponseNumber(), event.getComponentId(), event.getRawData());
         return messageExecutor;
     }
 
     MessageExecutor executeButtonPress(@NotNull ButtonInteractionEvent event
             , ComponentData componentData);
+
+    Logger log();
 }
