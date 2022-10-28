@@ -26,7 +26,7 @@ public class UserCommand implements SlashCommand, Subcommand<UserCommandName.Sub
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var subcommandName = slashCommandEvent.getSubcommandName();

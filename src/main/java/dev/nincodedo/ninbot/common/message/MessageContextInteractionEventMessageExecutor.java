@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.util.List;
 
-public class MessageContextInteractionEventMessageExecutor extends EphemeralMessageExecutor<MessageContextInteractionEventMessageExecutor> {
+public class MessageContextInteractionEventMessageExecutor extends EphemeralMessageExecutor {
 
     private MessageContextInteractionEvent messageContextInteractionEvent;
 
@@ -20,13 +20,6 @@ public class MessageContextInteractionEventMessageExecutor extends EphemeralMess
     }
 
     @Override
-    public void executeMessageActions() {
-        if (!messageResponses.isEmpty()) {
-            messageResponses.forEach(message -> messageContextInteractionEvent.reply(message).queue());
-        }
-    }
-
-    @Override
     protected ReplyCallbackAction replyMessage(MessageCreateData message) {
         return messageContextInteractionEvent.reply(message);
     }
@@ -34,11 +27,6 @@ public class MessageContextInteractionEventMessageExecutor extends EphemeralMess
     @Override
     protected ReplyCallbackAction replyEmbeds(List<MessageEmbed> messageEmbeds) {
         return messageContextInteractionEvent.replyEmbeds(messageEmbeds);
-    }
-
-    @Override
-    public MessageContextInteractionEventMessageExecutor returnThis() {
-        return this;
     }
 
     @Override

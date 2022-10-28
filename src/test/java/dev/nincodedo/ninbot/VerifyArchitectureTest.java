@@ -25,7 +25,7 @@ class VerifyArchitectureTest {
 
     static List<ArchRule> generalRules() {
         return List.of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.because("All logging should go "
-                + "through Slf4j"),
+                        + "through Slf4j"),
                 GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION.because("That's illegal"),
                 GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING.because("That's also illegal"));
     }
@@ -37,11 +37,11 @@ class VerifyArchitectureTest {
                 .and()
                 .areNotInterfaces();
         return List.of(slashCommandClasses.should()
-                .implement(SlashCommand.class)
-                .because("Slash commands need the SlashCommand implementation to be auto registered"),
+                        .implement(SlashCommand.class)
+                        .because("Slash commands need the SlashCommand implementation to be auto registered"),
                 slashCommandClasses.should()
-                .dependOnClassesThat(JavaClass.Predicates.simpleNameEndingWith("CommandName"))
-                .because("Slash commands should use CommandName enums"));
+                        .dependOnClassesThat(JavaClass.Predicates.simpleNameEndingWith("CommandName"))
+                        .because("Slash commands should use CommandName enums"));
     }
 
     @Test

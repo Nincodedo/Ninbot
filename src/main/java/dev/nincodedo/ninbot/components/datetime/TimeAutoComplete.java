@@ -20,7 +20,7 @@ public class TimeAutoComplete implements AutoCompleteCommand {
     }
 
     @Override
-    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         TimeCommandName.Option option = getOptionFromName(commandAutoCompleteInteractionEvent.getFocusedOption()
                 .getName());
         List<String> choices = switch (option) {

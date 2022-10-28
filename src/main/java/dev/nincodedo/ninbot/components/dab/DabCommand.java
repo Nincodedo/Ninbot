@@ -32,7 +32,7 @@ public class DabCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         doDabarinos(slashCommandEvent.getJDA()
@@ -47,7 +47,7 @@ public class DabCommand implements SlashCommand {
     }
 
     private void doDabarinos(ShardManager shardManager, MessageChannel messageChannel,
-            User eventMessageAuthor, MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor, User dabbedOn) {
+            User eventMessageAuthor, MessageExecutor messageExecutor, User dabbedOn) {
         var eventMessageOptional = messageChannel.getIterableHistory()
                 .stream()
                 .limit(10)

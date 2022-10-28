@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
-public class MessageReceivedEventMessageExecutor extends MessageExecutor<MessageReceivedEventMessageExecutor> {
+public class MessageReceivedEventMessageExecutor extends MessageExecutor {
 
     private MessageReceivedEvent messageReceivedEvent;
     private Impersonation impersonation = null;
@@ -45,11 +45,6 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor<Message
                 log.error("Failed to send webhook message in server {}", FormatLogObject.guildName(getGuild()), e);
             }
         }
-    }
-
-    @Override
-    public MessageReceivedEventMessageExecutor returnThis() {
-        return this;
     }
 
     public Guild getGuild() {

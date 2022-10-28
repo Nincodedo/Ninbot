@@ -105,7 +105,8 @@ class HaikuListenerTest {
 
     public static class MockHaikuListener extends HaikuListener {
 
-        public MockHaikuListener(ComponentService componentService, StatManager statManager, ConfigService configService) {
+        public MockHaikuListener(ComponentService componentService, StatManager statManager,
+                ConfigService configService) {
             super(componentService, statManager, configService);
         }
 

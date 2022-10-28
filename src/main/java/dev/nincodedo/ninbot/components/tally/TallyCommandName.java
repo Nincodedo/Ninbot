@@ -6,7 +6,7 @@ enum TallyCommandName implements CommandNameEnum {
     TALLY;
 
     enum Subcommand implements CommandNameEnum {
-        ADD, GET, SUBTRACT
+        ADD, GET
     }
 
     enum Option implements CommandNameEnum {

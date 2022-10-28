@@ -31,7 +31,7 @@ public class RollCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         var notation = slashCommandEvent.getOption(RollCommandName.Option.NOTATION.get(), "1d20",

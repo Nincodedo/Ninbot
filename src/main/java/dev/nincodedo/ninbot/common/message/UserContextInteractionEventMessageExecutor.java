@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class UserContextInteractionEventMessageExecutor extends MessageExecutor<UserContextInteractionEventMessageExecutor> {
+public class UserContextInteractionEventMessageExecutor extends MessageExecutor {
 
     private UserContextInteractionEvent userContextInteractionEvent;
 
@@ -19,11 +19,6 @@ public class UserContextInteractionEventMessageExecutor extends MessageExecutor<
         if (!messageResponses.isEmpty()) {
             messageResponses.forEach(message -> userContextInteractionEvent.reply(message).queue());
         }
-    }
-
-    @Override
-    public UserContextInteractionEventMessageExecutor returnThis() {
-        return this;
     }
 
     @Override

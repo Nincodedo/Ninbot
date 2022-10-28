@@ -17,9 +17,9 @@ public class DabMessageInteraction implements MessageContextCommand {
     }
 
     @Override
-    public MessageExecutor<MessageContextInteractionEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull MessageContextInteractionEvent event) {
-        MessageExecutor<MessageContextInteractionEventMessageExecutor> messageExecutor =
+        MessageExecutor messageExecutor =
                 new MessageContextInteractionEventMessageExecutor(event);
         messageExecutor.setOverrideMessage(event.getInteraction().getTarget());
         dabber.dabOnMessage(messageExecutor, event.getJDA().getShardManager(), event.getUser());

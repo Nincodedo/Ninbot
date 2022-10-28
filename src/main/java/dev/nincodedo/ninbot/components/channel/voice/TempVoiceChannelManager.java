@@ -41,7 +41,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
         checkIfShouldCreateTempChannel(event.getGuild(), event.getMember(), event.getChannelJoined());
-        if(event.getChannelJoined() == null) {
+        if (event.getChannelJoined() == null) {
             checkIfShouldDeleteTempChannel(event.getGuild(), event.getChannelLeft());
         }
     }

@@ -10,18 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class SlashCommandEventMessageExecutor extends EphemeralMessageExecutor<SlashCommandEventMessageExecutor> {
+public class SlashCommandEventMessageExecutor extends EphemeralMessageExecutor {
 
     private SlashCommandInteractionEvent slashCommandEvent;
 
     public SlashCommandEventMessageExecutor(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
         super();
         this.slashCommandEvent = slashCommandEvent;
-    }
-
-    @Override
-    public SlashCommandEventMessageExecutor returnThis() {
-        return this;
     }
 
     @Override
@@ -34,13 +29,6 @@ public class SlashCommandEventMessageExecutor extends EphemeralMessageExecutor<S
         return overrideMessage;
     }
 
-    /**
-     * Returns the {@link ReplyCallbackAction} right away instead of queuing everything up for the end. Good if you need
-     * access to the {@link ReplyCallbackAction#queue()} result.
-     *
-     * @param message the {@link Message} being sent
-     * @return the {@link ReplyCallbackAction}
-     */
     public ReplyCallbackAction replyMessage(MessageCreateData message) {
         return slashCommandEvent.reply(message);
     }

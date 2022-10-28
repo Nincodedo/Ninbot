@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface GameBannerRepository extends CrudRepository<GameBanner, Long> {
     List<GameBanner> findAllByGameTitle(String gameTitle);
+
     Optional<GameBanner> findGameBannerByLogoIdAndBackgroundId(int logoId, int backgroundId);
 
     @Override

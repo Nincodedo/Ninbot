@@ -31,7 +31,7 @@ public class TopicChangeCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent event) {
         var messageExecutor = new SlashCommandEventMessageExecutor(event);
         var guild = event.getGuild();

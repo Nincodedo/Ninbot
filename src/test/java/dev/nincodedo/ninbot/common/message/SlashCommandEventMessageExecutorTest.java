@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 class SlashCommandEventMessageExecutorTest {
 
-    MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor;
+    MessageExecutor messageExecutor;
 
     @Test
     void executeOneMessageAction() {
