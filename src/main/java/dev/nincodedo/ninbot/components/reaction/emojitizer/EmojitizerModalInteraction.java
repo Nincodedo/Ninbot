@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 @Component
@@ -26,20 +27,42 @@ public class EmojitizerModalInteraction implements ModalInteraction {
             @NotNull ComponentData componentData) {
         var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
         var textInput = event.getValue("emojitizer-text");
-        if (textInput != null) {
-            var emojiText = textInput.getAsString().replace(" ", "");
-            if (ReactionUtils.isCanEmoji(emojiText)) {
-                event.deferReply(true).queue();
-                var reaction = new EmojiReactionResponse(emojiText);
-                var target = componentData.data();
-                event.getGuildChannel().getHistoryAround(target, 1).queue(replyAfterSuccess(event, reaction, target));
-            } else {
-                messageExecutor.addEphemeralMessage("That ain't something I can emojitize");
-            }
+        if (textInput == null) {
+            return messageExecutor;
+        }
+        var emojiText = textInput.getAsString().replace(" ", "");
+        String[] existingEmojiLetters = new String[0];
+        if (componentData.data().split("\\$").length > 1) {
+            existingEmojiLetters = componentData.data().split("\\$")[1].split(",");
+        }
+        if (ReactionUtils.isCanEmoji(emojiText) && !isExistingLetterUsed(emojiText, existingEmojiLetters)) {
+            event.deferReply(true).queue();
+            var reaction = new EmojiReactionResponse(emojiText);
+            var messageId = componentData.data().split("\\$")[0];
+            event.getGuildChannel()
+                    .getHistoryAround(messageId, 1)
+                    .queue(replyAfterSuccess(event, reaction, messageId));
+        } else if (ReactionUtils.isCanEmoji(emojiText)) {
+            messageExecutor.addEphemeralMessage("Some of those letters are already on that message!");
         } else {
-            messageExecutor.addEphemeralMessage("You gotta submit something.");
+            messageExecutor.addEphemeralMessage("That ain't something I can emojitize");
         }
         return messageExecutor;
+    }
+
+    private boolean isExistingLetterUsed(String emojiText, String[] existingEmojiLetters) {
+        if (existingEmojiLetters.length == 0) {
+            return false;
+        }
+        boolean existingLetterUsed = false;
+        for (char c : emojiText.toCharArray()) {
+            var emojiLetter = ReactionUtils.getLetterMap().get(Character.toString(c).toUpperCase());
+            if (Arrays.asList(existingEmojiLetters).contains(emojiLetter)) {
+                existingLetterUsed = true;
+                break;
+            }
+        }
+        return existingLetterUsed;
     }
 
     @NotNull

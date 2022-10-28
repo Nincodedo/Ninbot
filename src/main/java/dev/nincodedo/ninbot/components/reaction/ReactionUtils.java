@@ -46,5 +46,4 @@ public class ReactionUtils {
     public static boolean hasSpecialActionsActions(String response) {
         return response.contains("$");
     }
-
 }
