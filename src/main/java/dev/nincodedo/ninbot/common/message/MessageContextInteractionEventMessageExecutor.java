@@ -20,13 +20,6 @@ public class MessageContextInteractionEventMessageExecutor extends EphemeralMess
     }
 
     @Override
-    public void executeMessageActions() {
-        if (!messageResponses.isEmpty()) {
-            messageResponses.forEach(message -> messageContextInteractionEvent.reply(message).queue());
-        }
-    }
-
-    @Override
     protected ReplyCallbackAction replyMessage(MessageCreateData message) {
         return messageContextInteractionEvent.reply(message);
     }
