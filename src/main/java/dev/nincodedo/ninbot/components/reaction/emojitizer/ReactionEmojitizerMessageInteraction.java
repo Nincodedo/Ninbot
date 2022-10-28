@@ -55,7 +55,7 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     characterBundle + "single") : resourceBundle(event.getUserLocale()).getString(
                     characterBundle + "plural");
             Modal modal = Modal.create("emojitizer-modal-" + event.getTarget().getId() + "$"
-                            + alreadyExistingLetterEmojis,
+                                    + alreadyExistingLetterEmojis,
                             String.format(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
                                     + ".messagecontext.modal.title"), maxCount, character))
                     .addActionRow(input)

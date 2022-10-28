@@ -46,7 +46,8 @@ public class EmojitizerModalInteraction implements ModalInteraction {
             messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer"
                     + ".cantbecauseletters"));
         } else {
-            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer.cantbecausenotemojitizable"));
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer"
+                    + ".cantbecausenotemojitizable"));
         }
         return messageExecutor;
     }

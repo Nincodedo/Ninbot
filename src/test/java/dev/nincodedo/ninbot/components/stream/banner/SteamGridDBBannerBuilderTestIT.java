@@ -25,6 +25,7 @@ class SteamGridDBBannerBuilderTestIT {
     @MockBean
     ShardManager shardManager;
     SteamGridDBBannerBuilder steamGridDBBannerBuilder;
+
     @Autowired
     SteamGridDBBannerBuilderTestIT(SteamGridDBBannerBuilder steamGridDBBannerBuilder) {
         this.steamGridDBBannerBuilder = steamGridDBBannerBuilder;
