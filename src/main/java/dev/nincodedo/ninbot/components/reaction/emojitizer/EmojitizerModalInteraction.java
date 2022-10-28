@@ -43,9 +43,10 @@ public class EmojitizerModalInteraction implements ModalInteraction {
                     .getHistoryAround(messageId, 1)
                     .queue(replyAfterSuccess(event, reaction, messageId));
         } else if (ReactionUtils.isCanEmoji(emojiText)) {
-            messageExecutor.addEphemeralMessage("Some of those letters are already on that message!");
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer"
+                    + ".cantbecauseletters"));
         } else {
-            messageExecutor.addEphemeralMessage("That ain't something I can emojitize");
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer.cantbecausenotemojitizable"));
         }
         return messageExecutor;
     }

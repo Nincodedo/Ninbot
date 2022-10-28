@@ -31,10 +31,12 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
         var currentEmojiCount = event.getTarget().getReactions().size();
         if (currentEmojiCount >= Message.MAX_REACTIONS) {
-            messageExecutor.addEphemeralMessage("Sorry, that message is already full of emojis!");
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
+                    + ".messagecontext.maxreactions"));
         } else {
             var maxCount = Message.MAX_REACTIONS - currentEmojiCount;
-            TextInput input = TextInput.create("emojitizer-text", "What do you want to Emojitize?",
+            TextInput input = TextInput.create("emojitizer-text", resourceBundle(event.getUserLocale()).getString(
+                                    "command.emojitizer.messagecontext.textinput"),
                             TextInputStyle.SHORT)
                     .setMinLength(1)
                     .setMaxLength(maxCount)
@@ -48,9 +50,14 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     .map(UnicodeEmoji::getFormatted)
                     .filter(s -> ReactionUtils.getLetterMap().containsValue(s))
                     .collect(Collectors.joining(","));
-            var character = maxCount == 1 ? "character" : "characters";
+            var characterBundle = "command.emojitizer.messagecontext.modal.character.";
+            var character = maxCount == 1 ? resourceBundle(event.getUserLocale()).getString(
+                    characterBundle + "single") : resourceBundle(event.getUserLocale()).getString(
+                    characterBundle + "plural");
             Modal modal = Modal.create("emojitizer-modal-" + event.getTarget().getId() + "$"
-                            + alreadyExistingLetterEmojis, String.format("Emojitizer - %d %s", maxCount, character))
+                            + alreadyExistingLetterEmojis,
+                            String.format(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
+                                    + ".messagecontext.modal.title"), maxCount, character))
                     .addActionRow(input)
                     .build();
             event.replyModal(modal).queue();
