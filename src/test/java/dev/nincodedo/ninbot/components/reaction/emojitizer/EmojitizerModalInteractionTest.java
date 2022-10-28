@@ -99,6 +99,6 @@ class EmojitizerModalInteractionTest {
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
                 componentData);
 
-        assertThat(messageExecutor.getEphemeralMessageResponses()).isNotEmpty();
+        assertThat(messageExecutor.getEphemeralMessageResponses()).isEmpty();
     }
 }
