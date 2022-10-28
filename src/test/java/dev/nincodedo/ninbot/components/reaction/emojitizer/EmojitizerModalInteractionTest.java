@@ -5,16 +5,16 @@ import dev.nincodedo.ninbot.common.command.component.ComponentData;
 import dev.nincodedo.ninbot.common.message.ModalInteractionCommandMessageExecutor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -24,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,8 +43,13 @@ class EmojitizerModalInteractionTest {
     @Captor
     private ArgumentCaptor<Consumer> lambdaCaptor;
 
-    @Test
-    void somethingEmojitizable() {
+    public static Stream<String> emojitizableWords() {
+        return Stream.of("big", "grand", "thanks", "uncopyrightable", "dermatoglyphics");
+    }
+
+    @ParameterizedTest
+    @MethodSource("emojitizableWords")
+    void somethingEmojitizable(String emojiText) {
         var componentData = new ComponentData("", "", "1");
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
@@ -55,7 +61,7 @@ class EmojitizerModalInteractionTest {
         var hook = Mockito.mock(InteractionHook.class);
         var webhookEditAction = Mockito.mock(WebhookMessageEditAction.class);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
-        when(modalMapping.getAsString()).thenReturn("big");
+        when(modalMapping.getAsString()).thenReturn(emojiText);
         when(modalEvent.deferReply(true)).thenReturn(replyCallback);
         when(modalEvent.getGuildChannel()).thenReturn(channel);
         when(channel.getHistoryAround("1", 1)).thenReturn(messageRetrieveAction);
@@ -87,7 +93,21 @@ class EmojitizerModalInteractionTest {
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
                 componentData);
 
-        assertThat(messageExecutor.getEphemeralMessageResponses()).isNotEmpty();
+        assertThat(messageExecutor.getEphemeralMessageResponses().get(0).getContent()).contains("emojitize");
+    }
+
+    @Test
+    void somethingEmojitizableButTheresLettersUsed() {
+        var componentData = new ComponentData("", "", "1$\uD83C\uDDE6");
+        var modalEvent = Mockito.mock(ModalInteractionEvent.class);
+        var modalMapping = Mockito.mock(ModalMapping.class);
+        when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
+        when(modalMapping.getAsString()).thenReturn("a");
+
+        var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
+                componentData);
+
+        assertThat(messageExecutor.getEphemeralMessageResponses().get(0).getContent()).contains("already");
     }
 
     @Test
