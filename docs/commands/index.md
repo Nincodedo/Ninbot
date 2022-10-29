@@ -92,6 +92,12 @@ Set your birthdate and if you want Ninbot to announce your birthday to the serve
 
 Message commands can be found on the context menu of a message under "Apps".
 
-### Dab
+### Dab and HugeDab
 
-Like the Dab slash command, dabs on that specific message.
+Like the Dab slash command, dabs on that specific message. There is also a Huge Dab variant.
+
+### Emojitizer
+
+Emojitizer lets you enter a word you want to turn into reaction emojis on a message. You can only use each letter once
+so words with duplicate letters are not allowed. Also, if you use Emojitizer on a message that already has emoji letters
+on it, those are not available to you.

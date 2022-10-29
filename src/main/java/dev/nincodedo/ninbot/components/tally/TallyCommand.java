@@ -47,7 +47,7 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommand = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
@@ -61,8 +61,6 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
             case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(),
                             OptionMapping::getAsString)
                     .toLowerCase(), messageExecutor);
-            case SUBTRACT -> {
-            }
         }
         return messageExecutor;
     }
@@ -77,7 +75,7 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
     }
 
     private void addToTally(OptionMapping optionalCount, String name,
-            MessageExecutor<SlashCommandEventMessageExecutor> messageExecutor) {
+            MessageExecutor messageExecutor) {
         var count = optionalCount == null ? 1 : (int) optionalCount.getAsLong();
         tallyCount.putIfAbsent(name, 0);
         tallyCount.put(name, tallyCount.get(name) + count);

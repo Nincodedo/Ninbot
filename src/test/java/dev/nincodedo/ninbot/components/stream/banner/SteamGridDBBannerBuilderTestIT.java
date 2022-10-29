@@ -22,14 +22,14 @@ import java.util.stream.Stream;
 @SpringBootTest
 class SteamGridDBBannerBuilderTestIT {
 
-    @Autowired
-    SteamGridDBBannerBuilderTestIT(SteamGridDBBannerBuilder steamGridDBBannerBuilder){
-        this.steamGridDBBannerBuilder = steamGridDBBannerBuilder;
-    }
-
     @MockBean
     ShardManager shardManager;
     SteamGridDBBannerBuilder steamGridDBBannerBuilder;
+
+    @Autowired
+    SteamGridDBBannerBuilderTestIT(SteamGridDBBannerBuilder steamGridDBBannerBuilder) {
+        this.steamGridDBBannerBuilder = steamGridDBBannerBuilder;
+    }
 
     public static Stream<String> gameTitles() {
         return Stream.of(

@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import java.util.Collections;
 import java.util.List;
 
-public class ButtonInteractionCommandMessageExecutor extends EphemeralMessageExecutor<ButtonInteractionCommandMessageExecutor> {
+public class ButtonInteractionCommandMessageExecutor extends EphemeralMessageExecutor {
 
     private MessageEditData messageEdit;
     private ButtonInteractionEvent buttonInteractionEvent;
@@ -43,11 +43,6 @@ public class ButtonInteractionCommandMessageExecutor extends EphemeralMessageExe
     @Override
     protected ReplyCallbackAction replyEmbeds(List<MessageEmbed> messageEmbeds) {
         return buttonInteractionEvent.replyEmbeds(messageEmbeds);
-    }
-
-    @Override
-    public ButtonInteractionCommandMessageExecutor returnThis() {
-        return this;
     }
 
     @Override

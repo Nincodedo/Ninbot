@@ -44,7 +44,7 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var subcommandName = slashCommandEvent.getSubcommandName();
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);

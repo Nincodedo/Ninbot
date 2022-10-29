@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public abstract class MessageExecutor<T> {
+public abstract class MessageExecutor {
 
     List<String> reactions;
     List<Emoji> reactionEmotes;
@@ -49,61 +50,33 @@ public abstract class MessageExecutor<T> {
 
     public abstract void executeMessageActions();
 
-    public abstract T returnThis();
-
-    public T addMessageResponse(MessageCreateData message) {
+    public void addMessageResponse(MessageCreateData message) {
         messageResponses.add(message);
-        return returnThis();
     }
 
-    public T addMessageResponse(String message) {
+    public void addMessageResponse(String message) {
         messageResponses.add(new MessageCreateBuilder().addContent(message).build());
-        return returnThis();
     }
 
-    public T addCorrectReaction(boolean isSuccessful) {
-        if (isSuccessful) {
-            addSuccessfulReaction();
-        } else {
-            addUnsuccessfulReaction();
-        }
-        return returnThis();
-    }
-
-    public T addUnknownReaction() {
-        addReaction(Emojis.QUESTION_MARK);
-        return returnThis();
-    }
-
-    public T addSuccessfulReaction() {
-        addReaction(Emojis.CHECK_MARK);
-        return returnThis();
-    }
-
-    public T addUnsuccessfulReaction() {
+    public void addUnsuccessfulReaction() {
         addReaction(Emojis.CROSS_X);
-        return returnThis();
     }
 
-    public T addReaction(String... emoji) {
+    public void addReaction(String... emoji) {
         reactions.addAll(Arrays.asList(emoji));
-        return returnThis();
     }
 
-    public T addReaction(List<String> emoji) {
+    public void addReaction(List<String> emoji) {
         reactions.addAll(emoji);
-        return returnThis();
     }
 
 
-    public T setOverrideMessage(Message message) {
+    public void setOverrideMessage(Message message) {
         this.overrideMessage = message;
-        return returnThis();
     }
 
-    public T addReactionEmotes(List<Emoji> emotes) {
+    public void addReactionEmotes(List<RichCustomEmoji> emotes) {
         reactionEmotes.addAll(emotes);
-        return returnThis();
     }
 
     public abstract MessageChannel getChannel();

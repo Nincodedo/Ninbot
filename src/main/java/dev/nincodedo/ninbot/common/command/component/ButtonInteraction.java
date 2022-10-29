@@ -6,9 +6,10 @@ import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecut
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 public interface ButtonInteraction extends Command<ButtonInteractionCommandMessageExecutor,
-        ButtonInteractionEvent> {
+        ButtonInteractionEvent>, Interaction {
 
     @Override
     default CommandType getType() {
@@ -21,18 +22,20 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
     }
 
     @Override
-    default MessageExecutor<ButtonInteractionCommandMessageExecutor> execute(@NotNull ButtonInteractionEvent event) {
-        var buttonId = event.getButton().getId();
-        if (buttonId != null && buttonId.contains("-")) {
-            var splitId = buttonId.split("-");
-            if (splitId.length == 3) {
-                var button = new ButtonData(splitId[0], splitId[1], splitId[2]);
-                return executeButtonPress(event, button);
-            }
+    default MessageExecutor execute(@NotNull ButtonInteractionEvent event) {
+        var componentDataOptional = getComponentDataFromEvent(event);
+        if (componentDataOptional.isPresent()) {
+            return executeButtonPress(event, componentDataOptional.get());
         }
-        return new ButtonInteractionCommandMessageExecutor(event).editEphemeralMessage("💀");
+        var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
+        messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
+        log().error("ButtonInteraction {} received event {} without parseable component data {} {}", getName(),
+                event.getResponseNumber(), event.getComponentId(), event.getRawData());
+        return messageExecutor;
     }
 
-    MessageExecutor<ButtonInteractionCommandMessageExecutor> executeButtonPress(@NotNull ButtonInteractionEvent event
-            , @NotNull ButtonData buttonData);
+    MessageExecutor executeButtonPress(@NotNull ButtonInteractionEvent event
+            , ComponentData componentData);
+
+    Logger log();
 }

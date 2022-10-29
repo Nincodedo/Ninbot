@@ -24,7 +24,7 @@ public class CountdownAutoComplete implements AutoCompleteCommand, Subcommand<Co
     }
 
     @Override
-    public MessageExecutor<AutoCompleteCommandMessageExecutor> execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
+    public MessageExecutor execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
         var subcommandName = commandAutoCompleteInteractionEvent.getSubcommandName();
         var messageExecutor = new AutoCompleteCommandMessageExecutor(commandAutoCompleteInteractionEvent);
         if (subcommandName == null) {

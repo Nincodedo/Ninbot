@@ -2,7 +2,6 @@ package dev.nincodedo.ninbot.components.reaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -12,14 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Component
 class ReactionsReader {
-
-    private List<String> badCharacters = Arrays.asList(" ", "!", ":");
 
     @Bean
     List<ReactionResponse> reactionResponseList() {
@@ -56,35 +52,13 @@ class ReactionsReader {
         return resultStringBuilder.toString();
     }
 
-
     private ReactionResponse generateResponse(ReactionResponse response) {
-        if (hasSpecialActionsActions(response.getResponse())) {
+        if (ReactionUtils.hasSpecialActionsActions(response.getResponse())) {
             return new SpecialReactionResponse(response);
-        } else if (isCanEmoji(response.getResponse())) {
+        } else if (ReactionUtils.isCanEmoji(response.getResponse())) {
             return new EmojiReactionResponse(response);
         } else {
             return new StringReactionResponse(response);
         }
-    }
-
-    private boolean hasSpecialActionsActions(String response) {
-        return response.contains("$");
-    }
-
-    private boolean isCanEmoji(String response) {
-        if (containsBadCharacters(response)) {
-            return false;
-        }
-        for (char c : response.toCharArray()) {
-            String check = StringUtils.replaceOnce(response, Character.toString(c), "");
-            if (check.contains(Character.toString(c))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean containsBadCharacters(String response) {
-        return badCharacters.stream().anyMatch(response::contains);
     }
 }

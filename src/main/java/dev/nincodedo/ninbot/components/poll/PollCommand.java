@@ -30,7 +30,7 @@ public class PollCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor<SlashCommandEventMessageExecutor> execute(
+    public MessageExecutor execute(
             @NotNull SlashCommandInteractionEvent slashCommandEvent) {
         var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
         if (slashCommandEvent.getMember() == null || slashCommandEvent.getGuild() == null) {

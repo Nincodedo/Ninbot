@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 @Component
 public class MessageContextCommandParser extends AbstractCommandParser<MessageContextCommand,
         MessageContextInteractionEvent> {
-    
+
     protected MessageContextCommandParser(ExecutorService commandExecutorService) {
         super(commandExecutorService);
     }
