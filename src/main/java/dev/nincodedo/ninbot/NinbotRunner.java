@@ -63,15 +63,6 @@ public class NinbotRunner {
             log.info("Starting Ninbot with {} shard(s)", shards.size());
             shardManager.getShards().forEach(this::waitForShardStartup);
             schedulableList.forEach(schedule -> schedule.scheduleAll(shardManager));
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                shardManager.setActivity(Activity.playing("Shutting down, be back in a few!"));
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    log.error("Failed to sleep before shutdown", e);
-                }
-            }));
         };
     }
 }

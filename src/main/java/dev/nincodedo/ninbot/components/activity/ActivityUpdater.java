@@ -27,7 +27,7 @@ public class ActivityUpdater {
     }
 
     @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
-    private void updateStatusList() {
+    protected void updateStatusList() {
         activityStatusList = activityStatusRepository.findAll()
                 .stream()
                 .map(ActivityStatus::getStatus)
@@ -35,7 +35,7 @@ public class ActivityUpdater {
     }
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
-    private void setNinbotActivity() {
+    protected void setNinbotActivity() {
         if (!activityStatusList.isEmpty()) {
             var status = activityStatusList.get(random.nextInt(activityStatusList.size()));
             shardManager.setActivity(Activity.playing(status));
