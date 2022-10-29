@@ -58,23 +58,10 @@
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
-        <spring-cloud-sleuth-otel-dependencies.version>1.1.0</spring-cloud-sleuth-otel-dependencies.version>
         <spring-cloud-starter-openfeign.version>3.1.4</spring-cloud-starter-openfeign.version>
-        <spring-cloud-starter-sleuth.version>3.1.4</spring-cloud-starter-sleuth.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.5</testcontainers.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-sleuth-otel-dependencies</artifactId>
-                <version>${spring-cloud-sleuth-otel-dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>club.minnced</groupId>
@@ -135,10 +122,6 @@
             <groupId>eu.crydee</groupId>
             <artifactId>syllable-counter</artifactId>
             <version>${syllable-counter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-exporter-otlp</artifactId>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -240,23 +223,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-sleuth-otel-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
-            <version>${spring-cloud-starter-sleuth.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-sleuth-brave</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
