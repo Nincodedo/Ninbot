@@ -30,7 +30,7 @@ public class StreamCleanup {
         });
     }
 
-    private void endOldStreams(StreamingMember streamingMember) {
+    protected void endOldStreams(StreamingMember streamingMember) {
         streamingMember.currentStream().ifPresent(streamInstance -> {
             var guild = shardManager.getGuildById(streamingMember.getGuildId());
             if (guild != null) {
