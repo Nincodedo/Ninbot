@@ -21,7 +21,7 @@ public class StreamCleanup {
     }
 
     @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
-    private void endOldStreams() {
+    protected void endOldStreams() {
         log.trace("Running scheduled end of old streams");
         streamingMemberRepository.findAll().forEach(streamingMember -> {
             if (streamingMember.currentStream().isPresent() && streamingMember.currentStream().get().isStreaming()) {
