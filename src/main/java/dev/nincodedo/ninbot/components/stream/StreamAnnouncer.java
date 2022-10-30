@@ -68,6 +68,7 @@ public class StreamAnnouncer {
                         .queue(message -> {
                             statManager.addOneCount(componentName, StatCategory.LISTENER, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
+                            addRole(guild, member);
                         });
                 log.trace("Queued stream message for {} to channel {}", FormatLogObject.memberInfo(member),
                         FormatLogObject.channelInfo(channel));
@@ -112,5 +113,42 @@ public class StreamAnnouncer {
                     streamingMember.updateCurrentStream(streamInstance);
                     streamingMemberRepository.save(streamingMember);
                 });
+    }
+
+    private void removeRole(Guild guild, Member member) {
+        configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE).ifPresent(roleId -> {
+            var streamingRole = guild.getRoleById(roleId);
+            if (streamingRole != null && member.getRoles().contains(streamingRole)) {
+                guild.removeRoleFromMember(member, streamingRole).queue();
+            }
+        });
+    }
+
+    private void addRole(Guild guild, Member member) {
+        var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        streamingRoleId.ifPresent(roleId -> {
+            var streamingRole = guild.getRoleById(roleId);
+            if (streamingRole != null) {
+                log.trace("Adding role {} to {}", FormatLogObject.roleInfo(streamingRole),
+                        FormatLogObject.memberInfo(member));
+                guild.addRoleToMember(member, streamingRole).queue();
+            } else {
+                log.error("Could not add role ID {} for {}", streamingRoleId, FormatLogObject.memberInfo(member));
+            }
+        });
+    }
+
+    public void endStream(Guild guild, Member member) {
+        removeRole(guild, member);
+    }
+
+    public void endStream(StreamingMember streamingMember) {
+        var guild = shardManager.getGuildById(streamingMember.getGuildId());
+        if (guild == null) {
+            log.error("Failed to get guild {} for stream member {}", streamingMember.getGuildId(), streamingMember);
+            return;
+        }
+        var member = guild.getMemberById(streamingMember.getUserId());
+        endStream(guild, member);
     }
 }

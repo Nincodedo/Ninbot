@@ -25,17 +25,6 @@ public class StatManager {
         this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("stat-manager"));
     }
 
-    public void recordCount(String name, String category, String serverId, int count) {
-        executorService.execute(() -> {
-            Stat stat = new Stat();
-            stat.setName(name);
-            stat.setCategory(category);
-            stat.setServerId(serverId);
-            stat.setCount(count);
-            statRepository.save(stat);
-        });
-    }
-
     /**
      * If the stat exists, update it. If it doesn't exist, create it.
      *

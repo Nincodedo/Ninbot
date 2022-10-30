@@ -1,9 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
-import dev.nincodedo.ninbot.common.config.db.Config;
-import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,20 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class StreamCommand implements SlashCommand {
 
-    private ConfigService configService;
+    private StreamingMemberRepository streamingMemberRepository;
 
-    public StreamCommand(ConfigService configService) {
-        this.configService = configService;
-    }
-
-    private boolean isAnnouncementsEnabledForUser(String userId, String serverId) {
-        var streamingAnnounceUsers = configService.getConfigByName(serverId, ConfigConstants.STREAMING_ANNOUNCE_USERS);
-        for (Config config : streamingAnnounceUsers) {
-            if (config.getValue().equals(userId)) {
-                return true;
-            }
-        }
-        return false;
+    public StreamCommand(StreamingMemberRepository streamingMemberRepository) {
+        this.streamingMemberRepository = streamingMemberRepository;
     }
 
     @Override
@@ -52,6 +39,15 @@ public class StreamCommand implements SlashCommand {
                 .addComponents(ActionRow.of(getPrimaryButton(userId, opposite), getSecondaryButton(userId, onOff)))
                 .build());
         return messageExecutor;
+    }
+
+    private boolean isAnnouncementsEnabledForUser(String userId, String guildId) {
+        var streamMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId);
+        if (streamMember.isPresent()) {
+            return streamMember.get().getAnnounceEnabled();
+        } else {
+            return false;
+        }
     }
 
     @NotNull
