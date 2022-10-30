@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class StreamAnnouncer {
+class StreamAnnouncer {
 
     private ConfigService configService;
     private StreamMessageBuilder streamMessageBuilder;

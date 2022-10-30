@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -20,7 +21,7 @@ public class StreamCleanup {
         this.shardManager = shardManager;
     }
 
-    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedDelay = 12, timeUnit = TimeUnit.HOURS)
     protected void endOldStreams() {
         log.trace("Running scheduled end of old streams");
         streamingMemberRepository.findAll().forEach(streamingMember -> {
@@ -46,6 +47,22 @@ public class StreamCleanup {
                     streamingMemberRepository.save(streamingMember);
                 });
             }
+        });
+    }
+
+    @Scheduled(fixedDelay = 7, timeUnit = TimeUnit.DAYS)
+    protected void removeOldStreams() {
+        log.trace("Removing old stream instances");
+        var oldDate = LocalDateTime.now().minus(30, ChronoUnit.DAYS);
+        streamingMemberRepository.findAll().forEach(streamingMember -> {
+            var list = streamingMember.getStreamInstances()
+                    .stream()
+                    .filter(streamInstance -> streamInstance.getEndTimestamp() != null)
+                    .filter(streamInstance -> streamInstance.getEndTimestamp().isBefore(oldDate))
+                    .toList();
+            log.trace("Removing {} streams from {}", list.size(), streamingMember.getId());
+            streamingMember.getStreamInstances().removeAll(list);
+            streamingMemberRepository.save(streamingMember);
         });
     }
 }
