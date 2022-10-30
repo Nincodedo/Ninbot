@@ -80,6 +80,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ExecutorService statCounterThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
+    }
+
+    @Bean
     public TwitchClient twitchClient() {
         var twitchIdentityProvider = new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
                 nincodedoAutoConfig.twitch().clientSecret(), "");

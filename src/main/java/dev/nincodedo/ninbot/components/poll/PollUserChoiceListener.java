@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ExecutorService;
+
 public class PollUserChoiceListener extends StatAwareListenerAdapter {
 
     private PollService pollService;
@@ -16,9 +18,9 @@ public class PollUserChoiceListener extends StatAwareListenerAdapter {
     private String pollMessageId;
 
 
-    public PollUserChoiceListener(StatManager statManager, PollService pollService, String pollMessageId,
-            PollAnnouncementSetup pollAnnouncementSetup) {
-        super(statManager);
+    public PollUserChoiceListener(StatManager statManager, ExecutorService executorService, PollService pollService,
+            String pollMessageId, PollAnnouncementSetup pollAnnouncementSetup) {
+        super(statManager, executorService);
         this.pollService = pollService;
         this.pollMessageId = pollMessageId;
         this.pollAnnouncementSetup = pollAnnouncementSetup;

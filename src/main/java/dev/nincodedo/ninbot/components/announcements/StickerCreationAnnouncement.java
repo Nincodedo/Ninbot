@@ -18,9 +18,11 @@ import net.dv8tion.jda.api.events.sticker.GuildStickerAddedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
@@ -30,9 +32,10 @@ public class StickerCreationAnnouncement extends StatAwareListenerAdapter {
     private ConfigService configService;
     private String componentName;
 
-    public StickerCreationAnnouncement(StatManager statManager, ConfigService configService,
+    public StickerCreationAnnouncement(StatManager statManager,
+            @Qualifier("statCounterThreadPool") ExecutorService executorService, ConfigService configService,
             ComponentService componentService) {
-        super(statManager);
+        super(statManager, executorService);
         this.configService = configService;
         this.componentService = componentService;
         componentName = "sticker-added-announcement";

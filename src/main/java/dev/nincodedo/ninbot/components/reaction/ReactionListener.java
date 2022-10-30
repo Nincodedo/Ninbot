@@ -9,9 +9,11 @@ import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
@@ -24,8 +26,8 @@ class ReactionListener extends StatAwareListenerAdapter {
 
     @Autowired
     public ReactionListener(List<ReactionResponse> reactionResponseList, ComponentService componentService,
-            StatManager statManager) {
-        super(statManager);
+            StatManager statManager, @Qualifier("statCounterThreadPool") ExecutorService executorService) {
+        super(statManager, executorService);
         this.reactionResponseList = reactionResponseList;
         this.componentService = componentService;
         this.statManager = statManager;

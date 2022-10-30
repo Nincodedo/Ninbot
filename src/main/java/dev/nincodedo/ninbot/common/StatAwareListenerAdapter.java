@@ -2,22 +2,20 @@ package dev.nincodedo.ninbot.common;
 
 import dev.nincodedo.ninbot.components.stats.StatCategory;
 import dev.nincodedo.ninbot.components.stats.StatManager;
-import io.micrometer.core.instrument.util.NamedThreadFactory;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class StatAwareListenerAdapter extends BaseListenerAdapter {
+public abstract class StatAwareListenerAdapter extends BaseListenerAdapter {
 
     private StatManager statManager;
     private ExecutorService executorService;
 
-    public StatAwareListenerAdapter(StatManager statManager) {
+    protected StatAwareListenerAdapter(StatManager statManager, ExecutorService executorService) {
         this.statManager = statManager;
-        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
+        this.executorService = executorService;
     }
 
-    public void countOneStat(String name, String guildId) {
+    protected void countOneStat(String name, String guildId) {
         executorService.execute(() -> statManager.addOneCount(name, StatCategory.LISTENER, guildId));
     }
 }

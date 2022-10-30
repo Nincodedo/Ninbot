@@ -1,7 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.StatAwareListenerAdapter;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentType;
 import dev.nincodedo.ninbot.common.logging.FormatLogObject;
@@ -16,27 +15,26 @@ import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
 public class DiscordStreamListener extends StatAwareListenerAdapter implements StreamListener {
 
-    private ConfigService configService;
     private ComponentService componentService;
     private StreamingMemberRepository streamingMemberRepository;
     private StreamAnnouncer streamAnnouncer;
     private String componentName;
 
-    public DiscordStreamListener(ConfigService configService, ComponentService componentService,
+    public DiscordStreamListener(ComponentService componentService,
             StreamingMemberRepository streamingMemberRepository, StatManager statManager,
-            StreamAnnouncer streamAnnouncer) {
-        super(statManager);
-        this.configService = configService;
+            @Qualifier("statCounterThreadPool") ExecutorService executorService, StreamAnnouncer streamAnnouncer) {
+        super(statManager, executorService);
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
         this.streamAnnouncer = streamAnnouncer;

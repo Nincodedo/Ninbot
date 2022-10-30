@@ -11,6 +11,7 @@ import eu.crydee.syllablecounter.SyllableCounter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
 @Component
@@ -29,8 +31,9 @@ public class HaikuListener extends StatAwareListenerAdapter {
     private Random random;
     private String componentName;
 
-    public HaikuListener(ComponentService componentService, StatManager statManager, ConfigService configService) {
-        super(statManager);
+    public HaikuListener(StatManager statManager, @Qualifier("statCounterThreadPool") ExecutorService executorService
+            , ComponentService componentService, ConfigService configService) {
+        super(statManager, executorService);
         this.componentService = componentService;
         this.configService = configService;
         this.syllableCounter = new SyllableCounter();

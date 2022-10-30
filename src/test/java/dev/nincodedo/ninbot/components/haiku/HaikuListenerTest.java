@@ -25,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,6 +44,9 @@ class HaikuListenerTest {
 
     @Mock
     ComponentService componentService;
+
+    @Mock
+    ExecutorService executorService;
 
     @Mock
     ConfigService configService;
@@ -106,8 +110,9 @@ class HaikuListenerTest {
     public static class MockHaikuListener extends HaikuListener {
 
         public MockHaikuListener(ComponentService componentService, StatManager statManager,
+                ExecutorService executorService,
                 ConfigService configService) {
-            super(componentService, statManager, configService);
+            super(statManager, executorService, componentService, configService);
         }
 
         @Override
