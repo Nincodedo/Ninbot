@@ -238,6 +238,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>feign-core</artifactId>
+                    <groupId>io.github.openfeign</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>

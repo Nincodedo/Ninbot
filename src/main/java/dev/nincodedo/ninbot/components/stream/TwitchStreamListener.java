@@ -2,29 +2,22 @@ package dev.nincodedo.ninbot.components.stream;
 
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
-import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Slf4j
 @Component
 public class TwitchStreamListener {
-    private StreamMessageBuilder streamMessageBuilder;
-    private ConfigService configService;
+    private StreamAnnouncer streamAnnouncer;
     private ComponentService componentService;
     private StreamingMemberRepository streamingMemberRepository;
     private TwitchClient twitchClient;
     private String componentName;
 
-    public TwitchStreamListener(StreamMessageBuilder streamMessageBuilder, ConfigService configService,
-            ComponentService componentService, StreamingMemberRepository streamingMemberRepository,
-            TwitchClient twitchClient) {
-        this.streamMessageBuilder = streamMessageBuilder;
-        this.configService = configService;
+    public TwitchStreamListener(StreamAnnouncer streamAnnouncer, ComponentService componentService,
+            StreamingMemberRepository streamingMemberRepository, TwitchClient twitchClient) {
+        this.streamAnnouncer = streamAnnouncer;
         this.componentService = componentService;
         this.streamingMemberRepository = streamingMemberRepository;
         this.twitchClient = twitchClient;
@@ -38,15 +31,13 @@ public class TwitchStreamListener {
     }
 
     private void registerChannels() {
-        var list = streamingMemberRepository.findAll()
+        var list = streamingMemberRepository.findAllByTwitchUsernameIsNotNull()
                 .stream()
-                .filter(streamingMember -> configService.getValuesByName(streamingMember.getGuildId(),
-                                ConfigConstants.STREAMING_ANNOUNCE_USERS)
-                        .contains(streamingMember.getUserId()))
+                .filter(StreamingMember::getAnnounceEnabled)
                 .map(StreamingMember::getTwitchUsername)
-                .filter(Objects::nonNull)
                 .distinct()
                 .toList();
+        log.trace("Adding {} user(s) to stream event listener", list.size());
         twitchClient.getClientHelper().enableStreamEventListener(list);
     }
 
@@ -55,23 +46,22 @@ public class TwitchStreamListener {
                 .getName());
         for (var streamingMember : streamingMembers) {
             if (componentService.isDisabled(componentName, streamingMember.getGuildId())
-                    || !configService.getValuesByName(streamingMember.getGuildId(),
-                            ConfigConstants.STREAMING_ANNOUNCE_USERS)
-                    .contains(streamingMember.getUserId())) {
+                    || Boolean.FALSE.equals(streamingMember.getAnnounceEnabled())) {
                 continue;
             }
+            var currentStream = streamingMember.currentStream();
             //no current stream, do complete setup
-            if (streamingMember.currentStream().isEmpty()) {
+            if (currentStream.isEmpty()) {
                 streamingMember.startNewStream();
                 streamingMemberRepository.save(streamingMember);
-
+                streamAnnouncer.announceStream(streamingMember, channelGoLiveEvent.getStream()
+                        .getGameName(), channelGoLiveEvent.getStream().getTitle());
             }
             //current stream, but no announcement made?
-            else if (streamingMember.currentStream().isPresent()
-                    && streamingMember.currentStream().get().getAnnounceMessageId() == null) {
-
+            else if (currentStream.get().getAnnounceMessageId() == null) {
+                streamAnnouncer.announceStream(streamingMember, channelGoLiveEvent.getStream()
+                        .getGameName(), channelGoLiveEvent.getStream().getTitle());
             }
         }
-
     }
 }

@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.config;
 
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
@@ -81,6 +82,7 @@ public class AppConfiguration {
                 twitch.clientSecret(), ""));
         return TwitchClientBuilder.builder()
                 .withCredentialManager(credentialManager)
+                .withDefaultAuthToken(new OAuth2Credential("twitch", twitch.token()))
                 .withEnablePubSub(true)
                 .withEnableHelix(true)
                 .build();

@@ -14,5 +14,8 @@ public interface StreamingMemberRepository extends CrudRepository<StreamingMembe
     List<StreamingMember> findAll();
 
     @NotNull
+    List<StreamingMember> findAllByTwitchUsernameIsNotNull();
+
+    @NotNull
     List<StreamingMember> findAllByTwitchUsername(String twitchUsername);
 }

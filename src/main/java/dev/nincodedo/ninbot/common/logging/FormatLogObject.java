@@ -75,6 +75,12 @@ public class FormatLogObject {
         return String.format(NAME_ID_ENTITY_FORMAT, user.getName(), user.getId());
     }
 
+    /**
+     * Returns the role and id formatted for logging.
+     *
+     * @param role JDA role
+     * @return String of role(role id)
+     */
     public static String roleInfo(Role role) {
         if (role == null) {
             return "null role";
