@@ -75,6 +75,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ExecutorService listenerThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("listeners"));
+    }
+
+    @Bean
     public TwitchClient twitchClient() {
         var twitchIdentityProvider = new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
                 nincodedoAutoConfig.twitch().clientSecret(), "");
