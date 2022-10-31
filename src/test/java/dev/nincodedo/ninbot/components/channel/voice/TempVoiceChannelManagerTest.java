@@ -27,6 +27,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.any;
@@ -47,6 +48,9 @@ class TempVoiceChannelManagerTest {
 
     @Mock
     StatManager statManager;
+
+    @Mock
+    ExecutorService executorService;
 
     @InjectMocks
     TempVoiceChannelManager tempVoiceChannelManager;

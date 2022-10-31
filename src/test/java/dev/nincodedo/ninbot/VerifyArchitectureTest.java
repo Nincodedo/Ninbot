@@ -62,7 +62,11 @@ class VerifyArchitectureTest {
     void testListenerClasses() {
         ArchRuleDefinition.classes()
                 .that()
+                .areNotInterfaces()
+                .and()
                 .haveSimpleNameEndingWith("Listener")
+                .and()
+                .haveSimpleNameNotStartingWith("Twitch")
                 .should()
                 .beAssignableTo(BaseListenerAdapter.class)
                 .check(ninbotClasses);

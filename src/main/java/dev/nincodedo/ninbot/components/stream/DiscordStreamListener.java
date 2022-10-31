@@ -77,7 +77,6 @@ public class DiscordStreamListener extends StatAwareListenerAdapter implements S
             } else {
                 log.trace("{} has no current stream?", FormatLogObject.memberInfo(member));
             }
-
         } else if (hasStoppedStreaming(event)) {
             streamingMemberRepository.findByUserIdAndGuildId(member.getUser().getId(), guildId)
                     .ifPresent(streamingMember -> streamingMember.currentStream().ifPresent(streamInstance -> {
