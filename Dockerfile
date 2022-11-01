@@ -4,6 +4,7 @@ COPY .mvn ./.mvn
 RUN mvn -B dependency:resolve
 COPY src ./src
 COPY .git ./.git
+COPY docs ./docs
 RUN mvn package -P git-commit
 RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.19.1/opentelemetry-javaagent.jar
 
