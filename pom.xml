@@ -43,6 +43,7 @@
         <dice.version>2.2.1</dice.version>
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
+        <instancio-junit.version>1.5.2</instancio-junit.version>
         <jackson-databind.version>2.14.0-rc2</jackson-databind.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <jsr305.version>3.0.2</jsr305.version>
@@ -167,6 +168,12 @@
             <groupId>org.imgscalr</groupId>
             <artifactId>imgscalr-lib</artifactId>
             <version>${imgscalr-lib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.instancio</groupId>
+            <artifactId>instancio-junit</artifactId>
+            <version>${instancio-junit.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
