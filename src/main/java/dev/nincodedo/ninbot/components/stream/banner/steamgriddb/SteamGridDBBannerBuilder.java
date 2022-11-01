@@ -40,7 +40,6 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
         this.random = new SecureRandom();
     }
 
-
     @Override
     public GameBannerRepository getGameBannerRepository() {
         return gameBannerRepository;
@@ -99,6 +98,7 @@ public class SteamGridDBBannerBuilder implements GameBannerBuilder {
             gameBanner.setFile(image);
             gameBannerRepository.save(gameBanner);
             gameBanners.add(gameBanner);
+            allBanners.add(gameBanner);
         }
         log.debug("Finished with {} game banners generated", gameBanners.size());
         return gameBanners;
