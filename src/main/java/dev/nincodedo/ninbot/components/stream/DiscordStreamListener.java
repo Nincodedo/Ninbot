@@ -69,6 +69,7 @@ public class DiscordStreamListener extends StatAwareListenerAdapter implements S
                 var currentStream = currentStreamOptional.get();
                 if (currentStream.getAnnounceMessageId() == null) {
                     log.trace("No current announcement for {} stream. Announcing", FormatLogObject.memberInfo(member));
+                    countOneStat(componentName, guildId);
                     streamAnnouncer.announceStream(streamingMember, guild, member, streamingUrl, getActivity(event,
                             member.getActivities()));
                 } else {

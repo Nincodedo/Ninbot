@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false)
     @EqualsAndHashCode.Exclude
     private Long id;
     @Embedded
@@ -46,4 +46,3 @@ public class BaseEntity {
         audit.setModifiedDateTime(LocalDateTime.now());
     }
 }
-

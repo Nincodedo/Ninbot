@@ -49,7 +49,7 @@ public interface GameBannerBuilder {
         return futureGameBanner;
     }
 
-    private Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
+    default Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
         int logoId;
         int backgroundId;
         try {

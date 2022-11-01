@@ -93,13 +93,10 @@ class StreamAnnouncer {
     private String getGameName(Activity activity) {
         String gameName = null;
         if (activity != null) {
-            if (activity.isRich()) {
-                var richActivity = activity.asRichPresence();
-                if (richActivity != null) {
-                    gameName = richActivity.getState();
-                }
-            } else {
+            if (activity.getType() == Activity.ActivityType.PLAYING) {
                 gameName = activity.getName();
+            } else if (activity.getType() == Activity.ActivityType.STREAMING && activity.isRich()) {
+                gameName = activity.asRichPresence().getState();
             }
         }
         return gameName;
