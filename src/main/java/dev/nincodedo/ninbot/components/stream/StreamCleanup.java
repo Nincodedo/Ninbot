@@ -60,9 +60,11 @@ public class StreamCleanup {
                     .filter(streamInstance -> streamInstance.getEndTimestamp() != null)
                     .filter(streamInstance -> streamInstance.getEndTimestamp().isBefore(oldDate))
                     .toList();
-            log.trace("Removing {} streams from {}", list.size(), streamingMember.getId());
-            streamingMember.getStreamInstances().removeAll(list);
-            streamingMemberRepository.save(streamingMember);
+            if (!list.isEmpty()) {
+                log.trace("Removing {} streams from {}", list.size(), streamingMember.getId());
+                streamingMember.getStreamInstances().removeAll(list);
+                streamingMemberRepository.save(streamingMember);
+            }
         });
     }
 }
