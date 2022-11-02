@@ -6,6 +6,9 @@ import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecut
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -31,8 +34,20 @@ public class StreamButtonInteraction implements ButtonInteraction {
         } else if (buttonAction == StreamCommandName.Button.TOGGLE) {
             var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
             var onOff = found ? "on" : "off";
-            messageExecutor.editEphemeralMessage(resource("button.stream.toggle." + onOff))
-                    .clearComponents();
+            messageExecutor.editEphemeralMessage(resource("button.stream.toggle." + onOff)).clearComponents();
+        } else if (buttonAction == StreamCommandName.Button.TWITCHNAME) {
+            var userId = event.getUser().getId();
+            var serverId = event.getGuild().getId();
+            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId).orElse(new StreamingMember());
+            Modal modal = Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
+                    .addActionRow(TextInput.create(
+                                    "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
+                            .setMinLength(4)
+                            .setMaxLength(25)
+                            .setValue(streamingMember.getTwitchUsername())
+                            .build())
+                    .build();
+            event.replyModal(modal).queue();
         }
         return messageExecutor;
     }

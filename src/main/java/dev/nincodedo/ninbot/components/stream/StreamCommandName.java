@@ -6,6 +6,6 @@ enum StreamCommandName implements CommandNameEnum {
     STREAM;
 
     enum Button implements CommandNameEnum {
-        NOTHING, TOGGLE
+        NOTHING, TOGGLE, TWITCHNAME
     }
 }
