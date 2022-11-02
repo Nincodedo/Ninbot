@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.config;
 
+import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
 import com.github.twitch4j.TwitchClient;
@@ -85,17 +86,26 @@ public class AppConfiguration {
     }
 
     @Bean
-    public TwitchClient twitchClient() {
-        var twitchIdentityProvider = new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
-                nincodedoAutoConfig.twitch().clientSecret(), "");
+    public TwitchIdentityProvider twitchIdentityProvider() {
+        return new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
+                nincodedoAutoConfig.twitch().clientSecret(), null);
+    }
+
+    @Bean
+    public CredentialManager credentialManager(TwitchIdentityProvider twitchIdentityProvider) {
         var credentialManager = CredentialManagerBuilder.builder()
                 .withStorageBackend(new TemporaryStorageBackend())
                 .build();
         credentialManager.registerIdentityProvider(twitchIdentityProvider);
+        return credentialManager;
+    }
+
+    @Bean
+    public TwitchClient twitchClient(TwitchIdentityProvider twitchIdentityProvider,
+            CredentialManager credentialManager) {
         return TwitchClientBuilder.builder()
                 .withCredentialManager(credentialManager)
                 .withDefaultAuthToken(twitchIdentityProvider.getAppAccessToken())
-                .withEnablePubSub(true)
                 .withEnableHelix(true)
                 .build();
     }

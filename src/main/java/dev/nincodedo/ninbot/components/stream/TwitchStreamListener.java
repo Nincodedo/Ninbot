@@ -46,7 +46,7 @@ public class TwitchStreamListener implements StreamListener {
                         channelGoOfflineEvent -> executorService.submit(() -> streamEnds(channelGoOfflineEvent)));
     }
 
-    @Scheduled(timeUnit = TimeUnit.HOURS, fixedDelay = 12)
+    @Scheduled(timeUnit = TimeUnit.HOURS, fixedDelay = 12, initialDelay = 1)
     protected void registerChannels() {
         var allUsers = streamingMemberRepository.findAllByTwitchUsernameIsNotNull();
         var announceEnabledUsers = allUsers.stream()
@@ -66,7 +66,7 @@ public class TwitchStreamListener implements StreamListener {
         twitchClient.getClientHelper().disableStreamEventListener(noAnnouncementUsers);
     }
 
-    private void streamStarts(ChannelGoLiveEvent channelGoLiveEvent) {
+    protected void streamStarts(ChannelGoLiveEvent channelGoLiveEvent) {
         var streamingMembers = streamingMemberRepository.findAllByTwitchUsername(channelGoLiveEvent.getChannel()
                 .getName());
         for (var streamingMember : streamingMembers) {
@@ -84,7 +84,7 @@ public class TwitchStreamListener implements StreamListener {
         }
     }
 
-    private void streamEnds(ChannelGoOfflineEvent channelGoOfflineEvent) {
+    protected void streamEnds(ChannelGoOfflineEvent channelGoOfflineEvent) {
         var streamingMembers = streamingMemberRepository.findAllByTwitchUsername(channelGoOfflineEvent.getChannel()
                 .getName());
         for (var streamingMember : streamingMembers) {
