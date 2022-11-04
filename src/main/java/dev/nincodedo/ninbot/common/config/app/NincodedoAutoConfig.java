@@ -1,12 +1,13 @@
 package dev.nincodedo.ninbot.common.config.app;
 
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
-import dev.nincodedo.ninbot.common.supporter.SupporterCheck;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("nincodedo")
 public record NincodedoAutoConfig(String ninbotToken,
                                   String steamGridDbApiKey,
-                                  Class<? extends SupporterCheck> supporterCheckClass,
-                                  Class<? extends ReleaseFilter> releaseFilterClass) {
+                                  SupporterConfig supporter,
+                                  InfoCommandConfig info,
+                                  Class<? extends ReleaseFilter> releaseFilterClass,
+                                  String mainServerId) {
 }

@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.config;
 
 import dev.nincodedo.ninbot.common.config.app.NincodedoAutoConfig;
+import dev.nincodedo.ninbot.common.config.app.SupporterConfig;
 import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
 import dev.nincodedo.ninbot.common.release.ReleaseFilter;
 import dev.nincodedo.ninbot.common.supporter.DefaultSupporterCheck;
@@ -55,9 +56,12 @@ public class AppConfiguration {
     @Bean
     public SupporterCheck supporterCheck() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        var supporterCheckClass = nincodedoAutoConfig.supporterCheckClass()
-                == null ? DefaultSupporterCheck.class : nincodedoAutoConfig.supporterCheckClass();
-        return supporterCheckClass.getDeclaredConstructor().newInstance();
+        SupporterConfig supporterConfig = nincodedoAutoConfig.supporter();
+        var supporterCheckClass = supporterConfig.checkClass()
+                == null ? DefaultSupporterCheck.class : supporterConfig.checkClass();
+        var supporterCheck = supporterCheckClass.getDeclaredConstructor().newInstance();
+        supporterCheck.setPatreonServerId(supporterConfig.patreonServerId());
+        return supporterCheck;
     }
 
     @Bean

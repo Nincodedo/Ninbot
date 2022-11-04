@@ -31,5 +31,11 @@ logging:
       nincodedo: INFO
     root: ERROR
 nincodedo:
-  releaseFilterClass: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
-  supporterCheckClass: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
+  supporter:
+    check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
+    patreon-server-id: 608765747728220161
+  info:
+    documentation-url: https://ninbot.nincodedo.dev
+    github-url: https://github.com/Nincodedo/Ninbot
+  release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
+  main-server-id: 109466144993210368

@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -22,7 +21,7 @@ public class InfoCommand implements SlashCommand {
 
     private BotInfo botInfo;
 
-    public InfoCommand(BotInfo botInfo) {
+    protected InfoCommand(BotInfo botInfo) {
         this.botInfo = botInfo;
     }
 
@@ -67,7 +66,7 @@ public class InfoCommand implements SlashCommand {
                     .filter(member -> !member.isOwner())
                     .map(Member::getUser)
                     .filter(user -> !user.isBot())
-                    .map(User::getName)
+                    .map(user -> user.getName() + user.getDiscriminator())
                     .collect(Collectors.joining(", "))
                     .trim();
         }

@@ -13,4 +13,14 @@ public class DefaultSupporterCheck implements SupporterCheck {
     public boolean isPatreonSupporter(ShardManager shardManager, User user) {
         return false;
     }
+
+    @Override
+    public String getPatreonServerId() {
+        return null;
+    }
+
+    @Override
+    public void setPatreonServerId(String patreonServerId) {
+        // NO-OP
+    }
 }
