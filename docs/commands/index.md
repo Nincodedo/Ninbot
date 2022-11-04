@@ -66,7 +66,8 @@ Rolls one 20 sided die by default. Can also take in [Dice Notation](https://en.w
 
 ### Stream
 
-Toggles your going live announcement. Announcements are off by default.
+Brings up a menu where you can turn Stream Announcements on or off for that server and set your Twitch username.
+Announcements are off by default.
 
 ### Subscribe/Unsubscribe
 
