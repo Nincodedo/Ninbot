@@ -55,7 +55,7 @@ public abstract class GameBannerBuilder {
         return futureGameBanner;
     }
 
-    Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
+    public Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
         int logoId;
         int backgroundId;
         try {
@@ -76,7 +76,7 @@ public abstract class GameBannerBuilder {
      */
     protected abstract GameBanner generateGameBannerFromTitle(String gameTitle);
 
-    protected List<File> getGameBannerFilesFromCache(String gameTitle) {
+    public List<File> getGameBannerFilesFromCache(String gameTitle) {
         var cacheFolder = new File("cache");
         if (!cacheFolder.exists()) {
             var folderMade = cacheFolder.mkdir();

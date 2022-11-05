@@ -70,10 +70,6 @@ public abstract class EphemeralMessageExecutor extends MessageExecutor {
         ephemeralMessageResponses.add(message);
     }
 
-    public void addEphemeralMessage(MessageEmbed messageEmbed) {
-        ephemeralMessageEmbeds.add(messageEmbed);
-    }
-
     public void addEphemeralUnsuccessfulReaction() {
         addEphemeralMessage(Emojis.CROSS_X);
     }

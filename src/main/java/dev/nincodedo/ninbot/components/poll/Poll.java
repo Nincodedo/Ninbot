@@ -97,9 +97,9 @@ class Poll extends BaseEntity {
 
     private String buildPollChoices() {
         StringBuilder stringBuilder = new StringBuilder();
-        char digitalOneEmoji = '\u0031';
+        char digitalOneEmoji = '1';
         for (String choice : choices) {
-            stringBuilder.append(digitalOneEmoji).append("\u20E3").append(" ").append(choice).append("\n");
+            stringBuilder.append(digitalOneEmoji).append("⃣").append(" ").append(choice).append("\n");
             digitalOneEmoji++;
         }
         return stringBuilder.toString();

@@ -55,8 +55,7 @@ public class ButtonInteractionCommandMessageExecutor extends EphemeralMessageExe
         return buttonInteractionEvent.getMessage();
     }
 
-    public ButtonInteractionCommandMessageExecutor clearComponents() {
+    public void clearComponents() {
         messageEdit = new MessageEditBuilder().applyData(messageEdit).setComponents(Collections.emptyList()).build();
-        return this;
     }
 }

@@ -62,9 +62,9 @@ public class PollAnnouncementSetup {
     }
 
     private void addPollChoiceEmotes(Message message, List<String> choices) {
-        char digitalOneEmoji = '\u0031';
+        char digitalOneEmoji = '1';
         for (int i = 0; i < choices.size(); i++) {
-            message.addReaction(Emoji.fromFormatted(digitalOneEmoji + "\u20E3")).queue();
+            message.addReaction(Emoji.fromFormatted(digitalOneEmoji + "⃣")).queue();
             digitalOneEmoji++;
         }
     }
