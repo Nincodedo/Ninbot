@@ -37,16 +37,13 @@ import static org.mockito.Mockito.when;
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class SteamGridDBBannerBuilderTest {
 
+    static File cache = new File("cache");
     @Mock
     SteamGridDBFeign steamGridDBFeign;
-
     @Mock
     GameBannerRepository gameBannerRepository;
-
     @InjectMocks
     SteamGridDBBannerBuilder steamGridDBBannerBuilder;
-
-    static File cache = new File("cache");
 
     @BeforeAll
     static void before() throws IOException {
