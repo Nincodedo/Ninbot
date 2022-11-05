@@ -20,7 +20,7 @@ public class BannerCleanup {
         this.gameBannerRepository = gameBannerRepository;
     }
 
-    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS, initialDelay = 12)
+    @Scheduled(fixedDelay = 12, timeUnit = TimeUnit.HOURS, initialDelay = 12)
     public void deleteBadBannersFromCache() {
         gameBannerRepository.findAll()
                 .stream()
@@ -35,7 +35,7 @@ public class BannerCleanup {
                 });
     }
 
-    @Scheduled(fixedRate = 7, timeUnit = TimeUnit.DAYS, initialDelay = 7)
+    @Scheduled(fixedDelay = 7, timeUnit = TimeUnit.DAYS, initialDelay = 7)
     public void deleteAllBannersFromCache() {
         File cacheDirectory = new File("cache");
         if (cacheDirectory.exists()) {

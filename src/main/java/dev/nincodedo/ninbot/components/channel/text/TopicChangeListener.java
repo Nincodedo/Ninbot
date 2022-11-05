@@ -11,9 +11,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.channel.update.ChannelUpdateTopicEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 @Component
 public class TopicChangeListener extends StatAwareListenerAdapter {
@@ -23,8 +25,9 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
     private String componentName;
 
     public TopicChangeListener(ConfigService configService,
+            @Qualifier("statCounterThreadPool") ExecutorService executorService,
             ComponentService componentService, StatManager statManager) {
-        super(statManager);
+        super(statManager, executorService);
         this.configService = configService;
         this.componentService = componentService;
         this.componentName = "topic-change";

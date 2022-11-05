@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.common.command.component;
 
 import dev.nincodedo.ninbot.common.command.AbstractCommandParser;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
@@ -9,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 @Component
 public class ModalInteractionCommandParser extends AbstractCommandParser<ModalInteraction, ModalInteractionEvent> {
 
-    protected ModalInteractionCommandParser(ExecutorService commandExecutorService) {
+    protected ModalInteractionCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService) {
         super(commandExecutorService);
     }
 

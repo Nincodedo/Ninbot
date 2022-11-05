@@ -36,15 +36,15 @@ public class CommandRegistration extends ListenerAdapter {
         var shardManager = readyEvent.getJDA().getShardManager();
         if (shardManager != null) {
             var guilds = shardManager.getGuilds();
-            log.trace("Registering commands on {} guild(s)", guilds.size());
+            log.info("Registering commands on {} guild(s)", guilds.size());
             guilds.forEach(this::registerCommands);
-            log.trace("Finished registering commands");
+            log.info("Finished registering commands");
         }
     }
 
     @Override
     public void onGuildJoin(@Nonnull GuildJoinEvent event) {
-        log.trace("Registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
+        log.info("Registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
         registerCommands(event.getGuild());
         log.trace("Finished registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
     }
@@ -63,7 +63,7 @@ public class CommandRegistration extends ListenerAdapter {
                     .toList();
             guild.updateCommands()
                     .addCommands(commandDataList)
-                    .queue(commandList -> log.trace("Successfully registered {} commands on server {}",
+                    .queue(commandList -> log.info("Successfully registered {} commands on server {}",
                             commandList.size(), FormatLogObject.guildName(guild)));
         } catch (Exception e) {
             log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);

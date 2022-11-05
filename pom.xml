@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
+        <version>3.0.0-RC1</version>
         <relativePath/>
     </parent>
     <groupId>dev.nincodedo</groupId>
@@ -59,9 +59,10 @@
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
-        <spring-cloud-starter-openfeign.version>3.1.4</spring-cloud-starter-openfeign.version>
+        <spring-cloud-starter-openfeign.version>4.0.0-M5</spring-cloud-starter-openfeign.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.5</testcontainers.version>
+        <twitch4j.version>1.12.0</twitch4j.version>
     </properties>
     <dependencies>
         <dependency>
@@ -88,6 +89,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.twitch4j</groupId>
+            <artifactId>twitch4j</artifactId>
+            <version>${twitch4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -232,6 +238,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>feign-core</artifactId>
+                    <groupId>io.github.openfeign</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -267,7 +279,25 @@
             <name>sonatype-snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <resources>
             <resource>
@@ -378,6 +408,20 @@
                         <version>1.1.0</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <targetClasses>
+                        <param>dev.nincodedo.ninbot.*</param>
+                    </targetClasses>
+                    <avoidCallsTo>
+                        <avoidCallsTo>org.slf4j</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.components.stats.StatManager</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.common.config.db.component.ComponentService</avoidCallsTo>
+                    </avoidCallsTo>
+                    <verbose>true</verbose>
+                    <jvmArgs>
+                        <jvmArg>--enable-preview</jvmArg>
+                    </jvmArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

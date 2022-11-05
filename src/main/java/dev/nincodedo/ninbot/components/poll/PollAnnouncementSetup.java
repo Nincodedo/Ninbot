@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.components.stats.StatManager;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +15,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class PollAnnouncementSetup {
 
     private StatManager statManager;
+    private ExecutorService executorService;
     private PollService pollService;
     private Map<Long, PollListeners> pollListenersMap;
 
-    PollAnnouncementSetup(PollService pollService, StatManager statManager) {
+    PollAnnouncementSetup(PollService pollService, StatManager statManager,
+            @Qualifier("statCounterThreadPool") ExecutorService executorService) {
         this.pollService = pollService;
         this.statManager = statManager;
+        this.executorService = executorService;
         pollListenersMap = new HashMap<>();
     }
 
@@ -40,9 +45,8 @@ public class PollAnnouncementSetup {
         message.pin().queue();
         PollResultsAnnouncer pollResultsAnnouncer = new PollResultsAnnouncer(poll, message, pollService);
         Timer timer;
-        PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager,
-                pollService, poll
-                .getMessageId(), this);
+        PollUserChoiceListener pollUserChoiceListener = new PollUserChoiceListener(statManager, executorService,
+                pollService, poll.getMessageId(), this);
         if (pollListenersMap.containsKey(poll.getId())) {
             PollListeners pollListeners = pollListenersMap.remove(poll.getId());
             pollListeners.timer().cancel();

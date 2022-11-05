@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 public class ConfigConstants {
     public static final String ANNOUNCE_CHANNEL = "announcementChannel";
     public static final String DADBOT_DENY_LIST_CHANNEL = "dadbotChannelDenyList";
-    public static final String STREAMING_ANNOUNCE_USERS = "streamingAnnounceUsers";
     public static final String STREAMING_ANNOUNCE_CHANNEL = "streamingAnnounceChannel";
     public static final String ROLE_DENY_LIST = "roleDenyList";
     public static final String STREAMING_ROLE = "streamingRole";

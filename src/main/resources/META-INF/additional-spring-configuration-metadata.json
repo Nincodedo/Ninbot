@@ -24,6 +24,11 @@
       "name" : "nincodedo.info.githubUrl",
       "type" : "java.lang.String",
       "description" : "Info command's GitHub URL."
+    },
+    {
+      "name": "nincodedo.twitch.clientId",
+      "type": "java.lang.String",
+      "description": "Twitch Application Client ID."
     }
   ]
 }

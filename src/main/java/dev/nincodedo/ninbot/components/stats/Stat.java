@@ -4,8 +4,8 @@ package dev.nincodedo.ninbot.components.stats;
 import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
 @Entity
 @Data

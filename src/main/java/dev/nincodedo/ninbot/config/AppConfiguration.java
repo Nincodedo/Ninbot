@@ -1,5 +1,11 @@
 package dev.nincodedo.ninbot.config;
 
+import com.github.philippheuer.credentialmanager.CredentialManager;
+import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.ninbot.common.config.app.NincodedoAutoConfig;
 import dev.nincodedo.ninbot.common.config.app.SupporterConfig;
 import dev.nincodedo.ninbot.common.release.DefaultReleaseFilter;
@@ -67,5 +73,40 @@ public class AppConfiguration {
     @Bean
     public ExecutorService commandParserThreadPool() {
         return Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
+    }
+
+    @Bean
+    public ExecutorService listenerThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("listeners"));
+    }
+
+    @Bean
+    public ExecutorService statCounterThreadPool() {
+        return Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
+    }
+
+    @Bean
+    public TwitchIdentityProvider twitchIdentityProvider() {
+        return new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
+                nincodedoAutoConfig.twitch().clientSecret(), null);
+    }
+
+    @Bean
+    public CredentialManager credentialManager(TwitchIdentityProvider twitchIdentityProvider) {
+        var credentialManager = CredentialManagerBuilder.builder()
+                .withStorageBackend(new TemporaryStorageBackend())
+                .build();
+        credentialManager.registerIdentityProvider(twitchIdentityProvider);
+        return credentialManager;
+    }
+
+    @Bean
+    public TwitchClient twitchClient(TwitchIdentityProvider twitchIdentityProvider,
+            CredentialManager credentialManager) {
+        return TwitchClientBuilder.builder()
+                .withCredentialManager(credentialManager)
+                .withDefaultAuthToken(twitchIdentityProvider.getAppAccessToken())
+                .withEnableHelix(true)
+                .build();
     }
 }

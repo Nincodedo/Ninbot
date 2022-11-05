@@ -20,9 +20,11 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
@@ -32,9 +34,10 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
     private ConfigService configService;
     private String componentName;
 
-    public EmojiCreationAnnouncement(StatManager statManager, ConfigService configService,
+    public EmojiCreationAnnouncement(StatManager statManager,
+            @Qualifier("statCounterThreadPool") ExecutorService executorService, ConfigService configService,
             ComponentService componentService) {
-        super(statManager);
+        super(statManager, executorService);
         this.componentService = componentService;
         this.configService = configService;
         componentName = "emote-added-announcement";

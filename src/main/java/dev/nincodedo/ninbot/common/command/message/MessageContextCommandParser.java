@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.common.command.message;
 
 import dev.nincodedo.ninbot.common.command.AbstractCommandParser;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
@@ -10,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 public class MessageContextCommandParser extends AbstractCommandParser<MessageContextCommand,
         MessageContextInteractionEvent> {
 
-    protected MessageContextCommandParser(ExecutorService commandExecutorService) {
+    protected MessageContextCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService) {
         super(commandExecutorService);
     }
 

@@ -2,13 +2,13 @@ package dev.nincodedo.ninbot.components.stream;
 
 import dev.nincodedo.ninbot.common.command.component.ButtonInteraction;
 import dev.nincodedo.ninbot.common.command.component.ComponentData;
-import dev.nincodedo.ninbot.common.config.db.Config;
-import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
-import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class StreamButtonInteraction implements ButtonInteraction {
 
-    private ConfigService configService;
+    private StreamingMemberRepository streamingMemberRepository;
 
-    public StreamButtonInteraction(ConfigService configService) {
-        this.configService = configService;
+    public StreamButtonInteraction(StreamingMemberRepository streamingMemberRepository) {
+        this.streamingMemberRepository = streamingMemberRepository;
     }
 
     @Override
@@ -33,9 +33,21 @@ public class StreamButtonInteraction implements ButtonInteraction {
                     .clearComponents();
         } else if (buttonAction == StreamCommandName.Button.TOGGLE) {
             var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
-            var onOff = found ? "off" : "on";
-            messageExecutor.editEphemeralMessage(resource("button.stream.toggle." + onOff))
-                    .clearComponents();
+            var onOff = found ? "on" : "off";
+            messageExecutor.editEphemeralMessage(resource("button.stream.toggle." + onOff)).clearComponents();
+        } else if (buttonAction == StreamCommandName.Button.TWITCHNAME) {
+            var userId = event.getUser().getId();
+            var serverId = event.getGuild().getId();
+            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId).orElse(new StreamingMember());
+            Modal modal = Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
+                    .addActionRow(TextInput.create(
+                                    "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
+                            .setMinLength(4)
+                            .setMaxLength(25)
+                            .setValue(streamingMember.getTwitchUsername())
+                            .build())
+                    .build();
+            event.replyModal(modal).queue();
         }
         return messageExecutor;
     }
@@ -46,20 +58,17 @@ public class StreamButtonInteraction implements ButtonInteraction {
     }
 
     private boolean toggleConfig(String userId, String serverId) {
-        var configName = ConfigConstants.STREAMING_ANNOUNCE_USERS;
-        var streamingAnnounceUsers = configService.getConfigByName(serverId, configName);
-        boolean foundUser = false;
-        for (Config config : streamingAnnounceUsers) {
-            if (config.getValue().equals(userId)) {
-                configService.removeConfig(config);
-                foundUser = true;
-                break;
-            }
+        var streamingMemberOptional = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId);
+        StreamingMember streamingMember;
+        if (streamingMemberOptional.isPresent()) {
+            streamingMember = streamingMemberOptional.get();
+            streamingMember.setAnnounceEnabled(!streamingMember.getAnnounceEnabled());
+        } else {
+            streamingMember = new StreamingMember(userId, serverId);
+            streamingMember.setAnnounceEnabled(true);
         }
-        if (!foundUser) {
-            configService.addConfig(serverId, configName, userId);
-        }
-        return foundUser;
+        streamingMemberRepository.save(streamingMember);
+        return streamingMember.getAnnounceEnabled();
     }
 
     @Override

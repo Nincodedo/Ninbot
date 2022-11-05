@@ -15,13 +15,14 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -35,9 +36,9 @@ public class Dadbot extends StatAwareListenerAdapter {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
     private Impersonation dadbotImpersonation;
 
-    @Autowired
-    public Dadbot(ConfigService configService, ComponentService componentService, StatManager statManager) {
-        super(statManager);
+    public Dadbot(StatManager statManager, @Qualifier("statCounterThreadPool") ExecutorService executorService,
+            ConfigService configService, ComponentService componentService) {
+        super(statManager, executorService);
         random = new SecureRandom();
         this.configService = configService;
         componentName = "dad";

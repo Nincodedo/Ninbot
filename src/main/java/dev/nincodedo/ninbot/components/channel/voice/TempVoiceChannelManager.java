@@ -15,9 +15,11 @@ import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -29,9 +31,11 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
     private ComponentService componentService;
     private String componentName;
 
-    public TempVoiceChannelManager(TempVoiceChannelRepository tempVoiceChannelRepository,
-            ComponentService componentService, StatManager statManager) {
-        super(statManager);
+    public TempVoiceChannelManager(StatManager statManager,
+            @Qualifier("statCounterThreadPool") ExecutorService executorService,
+            TempVoiceChannelRepository tempVoiceChannelRepository,
+            ComponentService componentService) {
+        super(statManager, executorService);
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
         this.componentName = "voice-channel-manager";

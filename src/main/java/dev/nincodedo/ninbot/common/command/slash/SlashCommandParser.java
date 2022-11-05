@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.common.command.slash;
 
 import dev.nincodedo.ninbot.common.command.AbstractCommandParser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
@@ -9,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 @Component
 public class SlashCommandParser extends AbstractCommandParser<SlashCommand, SlashCommandInteractionEvent> {
 
-    protected SlashCommandParser(ExecutorService commandExecutorService) {
+    protected SlashCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService) {
         super(commandExecutorService);
     }
 

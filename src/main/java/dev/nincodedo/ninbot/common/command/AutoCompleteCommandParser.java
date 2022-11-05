@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.common.command;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
@@ -9,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 public class AutoCompleteCommandParser extends AbstractCommandParser<AutoCompleteCommand,
         CommandAutoCompleteInteractionEvent> {
 
-    protected AutoCompleteCommandParser(ExecutorService commandExecutorService) {
+    protected AutoCompleteCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService) {
         super(commandExecutorService);
     }
 
