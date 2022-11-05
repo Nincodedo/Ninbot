@@ -4,6 +4,7 @@ import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import dev.nincodedo.ninbot.common.config.db.component.ComponentService;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -66,9 +67,8 @@ public class TwitchStreamListener implements StreamListener {
         twitchClient.getClientHelper().disableStreamEventListener(noAnnouncementUsers);
     }
 
-    protected void streamStarts(ChannelGoLiveEvent channelGoLiveEvent) {
-        var streamingMembers = streamingMemberRepository.findAllByTwitchUsername(channelGoLiveEvent.getChannel()
-                .getName());
+    protected void streamStarts(String username, String gameName, String streamTitle) {
+        var streamingMembers = streamingMemberRepository.findAllByTwitchUsername(username);
         for (var streamingMember : streamingMembers) {
             if (componentService.isDisabled(componentName, streamingMember.getGuildId())
                     || isAnnouncementNotNeeded(streamingMember)) {
@@ -78,10 +78,14 @@ public class TwitchStreamListener implements StreamListener {
             streamingMemberRepository.save(streamingMember);
             var currentStreamOptional = streamingMember.currentStream();
             if (currentStreamOptional.isPresent() && currentStreamOptional.get().getAnnounceMessageId() == null) {
-                streamAnnouncer.announceStream(streamingMember, channelGoLiveEvent.getStream()
-                        .getGameName(), channelGoLiveEvent.getStream().getTitle());
+                streamAnnouncer.announceStream(streamingMember, gameName, streamTitle);
             }
         }
+    }
+
+    protected void streamStarts(ChannelGoLiveEvent channelGoLiveEvent) {
+        var stream = channelGoLiveEvent.getStream();
+        streamStarts(channelGoLiveEvent.getChannel().getName(), stream.getGameName(), stream.getTitle());
     }
 
     protected void streamEnds(ChannelGoOfflineEvent channelGoOfflineEvent) {

@@ -408,6 +408,20 @@
                         <version>1.1.0</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <targetClasses>
+                        <param>dev.nincodedo.ninbot.*</param>
+                    </targetClasses>
+                    <avoidCallsTo>
+                        <avoidCallsTo>org.slf4j</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.components.stats.StatManager</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.common.config.db.component.ComponentService</avoidCallsTo>
+                    </avoidCallsTo>
+                    <verbose>true</verbose>
+                    <jvmArgs>
+                        <jvmArg>--enable-preview</jvmArg>
+                    </jvmArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
