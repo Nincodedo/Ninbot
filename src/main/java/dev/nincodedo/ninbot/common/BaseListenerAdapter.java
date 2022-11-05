@@ -21,7 +21,4 @@ public abstract class BaseListenerAdapter extends ListenerAdapter {
         return resourceBundle().getString(resourceBundleKey);
     }
 
-    protected String resource(String resourceBundleKey, Locale locale) {
-        return resourceBundle(locale).getString(resourceBundleKey);
-    }
 }

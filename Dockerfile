@@ -10,7 +10,7 @@ RUN cp target/ninbot-*-SNAPSHOT.jar ninbot.jar
 RUN java -Djarmode=layertools -jar ninbot.jar extract
 RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.19.1/opentelemetry-javaagent.jar
 
-FROM openjdk:19-jdk-slim-bullseye
+FROM eclipse-temurin:19-jre-focal
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
@@ -24,7 +24,7 @@ COPY --chown=ninbot:ninbot --from=build spring-boot-loader/ ./
 COPY --chown=ninbot:ninbot --from=build application/ ./
 COPY --chown=ninbot:ninbot DockerHealthCheck.java /app
 COPY --chown=ninbot:ninbot --from=build opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
-USER ninbot
+USER ninbot:ninbot
 HEALTHCHECK --start-period=20s CMD java /app/DockerHealthCheck.java 2>&1 || exit 1
 EXPOSE 8080
 ENTRYPOINT ["java"]

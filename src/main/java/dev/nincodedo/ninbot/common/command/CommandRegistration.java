@@ -77,27 +77,26 @@ public class CommandRegistration extends ListenerAdapter {
      * @return JDA CommandData
      */
     private CommandData convertToCommandData(Command<?, ?> command) {
-        switch (command) {
-            case SlashCommand slashCommand:
+        return switch (command) {
+            case SlashCommand slashCommand -> {
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
-                        slashCommand.getDescription()).setDefaultPermissions(getDefaultPermissions(slashCommand));
+                                slashCommand.getDescription())
+                        .setDefaultPermissions(getDefaultPermissions(slashCommand));
                 try {
                     slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
                     slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
-                    return slashCommandData;
+                    yield slashCommandData;
                 } catch (Exception e) {
                     log.error("Failed to add {}", slashCommand, e);
                 }
-                return slashCommandData;
-            case UserContextCommand userContextCommand:
-                return Commands.user(userContextCommand.getName())
-                        .setDefaultPermissions(getDefaultPermissions(userContextCommand));
-            case MessageContextCommand messageContextCommand:
-                return Commands.message(messageContextCommand.getName())
-                        .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
-            default:
-                return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
-        }
+                yield slashCommandData;
+            }
+            case UserContextCommand userContextCommand -> Commands.user(userContextCommand.getName())
+                    .setDefaultPermissions(getDefaultPermissions(userContextCommand));
+            case MessageContextCommand messageContextCommand -> Commands.message(messageContextCommand.getName())
+                    .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
+            default -> Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
+        };
     }
 
     private DefaultMemberPermissions getDefaultPermissions(Command<?, ?> command) {

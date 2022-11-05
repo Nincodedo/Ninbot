@@ -57,6 +57,8 @@ jobs:
           push: true
           tags: |
             ghcr.io/nincodedo/ninbot:latest
+            ghcr.io/nincodedo/ninbot:stable
+            ghcr.io/nincodedo/ninbot:${{ github.ref }}
             ghcr.io/nincodedo/ninbot:${{ github.sha }}
   deployGKE:
     needs: [buildMaven, buildDocker]
