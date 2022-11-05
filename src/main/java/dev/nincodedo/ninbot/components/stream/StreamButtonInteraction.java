@@ -38,7 +38,8 @@ public class StreamButtonInteraction implements ButtonInteraction {
         } else if (buttonAction == StreamCommandName.Button.TWITCHNAME) {
             var userId = event.getUser().getId();
             var serverId = event.getGuild().getId();
-            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId).orElse(new StreamingMember());
+            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId)
+                    .orElse(new StreamingMember());
             Modal modal = Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
                     .addActionRow(TextInput.create(
                                     "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
