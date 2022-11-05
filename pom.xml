@@ -427,6 +427,7 @@
                     <avoidCallsTo>
                         <avoidCallsTo>org.slf4j</avoidCallsTo>
                         <avoidCallsTo>dev.nincodedo.ninbot.components.stats.StatManager</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.common.StatAwareListenerAdapter</avoidCallsTo>
                         <avoidCallsTo>dev.nincodedo.ninbot.common.config.db.component.ComponentService</avoidCallsTo>
                     </avoidCallsTo>
                     <verbose>true</verbose>
