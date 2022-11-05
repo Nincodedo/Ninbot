@@ -55,7 +55,7 @@ public abstract class GameBannerBuilder {
         return futureGameBanner;
     }
 
-    default Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
+    Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
         int logoId;
         int backgroundId;
         try {
