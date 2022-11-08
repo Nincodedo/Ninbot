@@ -1,11 +1,23 @@
-spring.datasource.url=jdbc:tc:mysql://localhost:3306/ninbot
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
-logging.file.name=ninbot.log
-logging.file.path=logs
-ninbotToken=1
-sapToken=1
-twitchClientId=1
-twitchClientSecret=1
-spring.jpa.hibernate.ddl-auto=update
-management.endpoints.web.exposure.include=info,health,metrics
-nincodedo.steamgriddbapikey=1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:tc:mysql://localhost:3306/ninbot
+logging:
+  file:
+    path: logs
+    name: ninbot.log
+  level:
+    root: info
+nincodedo:
+  steamgriddbapikey: 1
+  ninbotToken: 1
