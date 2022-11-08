@@ -14,10 +14,12 @@ import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.test.context.TestPropertySource;
 
 import jakarta.persistence.Entity;
 import java.util.List;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 class VerifyArchitectureTest {
 
@@ -27,7 +29,12 @@ class VerifyArchitectureTest {
         return List.of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.because("All logging should go "
                         + "through Slf4j"),
                 GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION.because("That's illegal"),
-                GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING.because("That's also illegal"));
+                GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING.because("That's also illegal"),
+                noClasses().that()
+                        .resideInAPackage("dev.nincodedo.ninbot.common")
+                        .should()
+                        .dependOnClassesThat()
+                        .resideInAPackage("dev.nincodedo.ninbot.components").because("Common should be independent"));
     }
 
     static List<ArchRule> slashCommandRules() {
