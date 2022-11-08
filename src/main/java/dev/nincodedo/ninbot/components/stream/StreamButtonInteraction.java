@@ -33,8 +33,9 @@ public class StreamButtonInteraction implements ButtonInteraction {
                     .clearComponents();
         } else if (buttonAction == StreamCommandName.Button.TOGGLE) {
             var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
-            var onOff = found ? "on" : "off";
-            messageExecutor.editEphemeralMessage(resource("button.stream.toggle." + onOff)).clearComponents();
+            var onOff = found ? resource("common.on") : resource("common.off");
+            messageExecutor.editEphemeralMessage(String.format(resource("button.stream.toggle"), onOff))
+                    .clearComponents();
         } else if (buttonAction == StreamCommandName.Button.TWITCHNAME) {
             var userId = event.getUser().getId();
             var serverId = event.getGuild().getId();
