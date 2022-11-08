@@ -99,7 +99,7 @@ class EmojitizerModalInteractionTest {
 
     @Test
     void somethingEmojitizableButTheresLettersUsed() {
-        var componentData = new ComponentData("", "", "1$\uD83C\uDDE6");
+        var componentData = new ComponentData("", "", "1;\uD83C\uDDE6");
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
