@@ -58,6 +58,8 @@
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>nincraft</sonar.organization>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
         <spring-cloud-starter-openfeign.version>4.0.0-M5</spring-cloud-starter-openfeign.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
@@ -240,8 +242,8 @@
             <version>${spring-cloud-starter-openfeign.version}</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>feign-core</artifactId>
                     <groupId>io.github.openfeign</groupId>
+                    <artifactId>feign-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -280,22 +282,22 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
         </pluginRepository>
     </pluginRepositories>
     <build>
@@ -401,13 +403,6 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>${pitest-maven.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>1.1.0</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <targetClasses>
                         <param>dev.nincodedo.ninbot.*</param>
@@ -422,6 +417,13 @@
                         <jvmArg>--enable-preview</jvmArg>
                     </jvmArgs>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.1.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
