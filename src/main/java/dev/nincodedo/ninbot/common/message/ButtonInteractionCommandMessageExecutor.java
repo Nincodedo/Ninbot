@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
@@ -28,6 +30,11 @@ public class ButtonInteractionCommandMessageExecutor extends EphemeralMessageExe
         if (messageEdit != null) {
             buttonInteractionEvent.editMessage(messageEdit).queue();
         }
+    }
+
+    @Override
+    protected ModalCallbackAction replyModal(Modal modal) {
+        return buttonInteractionEvent.replyModal(modal);
     }
 
     @Override

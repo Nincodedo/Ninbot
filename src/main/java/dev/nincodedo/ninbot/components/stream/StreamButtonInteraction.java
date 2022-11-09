@@ -28,30 +28,34 @@ public class StreamButtonInteraction implements ButtonInteraction {
             @NotNull ButtonInteractionEvent event, ComponentData componentData) {
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
         var buttonAction = StreamCommandName.Button.valueOf(componentData.action().toUpperCase());
-        if (buttonAction == StreamCommandName.Button.NOTHING) {
-            messageExecutor.editEphemeralMessage(resource("button.stream.nothing"))
+        switch (buttonAction) {
+            case NOTHING -> messageExecutor.editEphemeralMessage(resource("button.stream.nothing"))
                     .clearComponents();
-        } else if (buttonAction == StreamCommandName.Button.TOGGLE) {
-            var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
-            var onOff = found ? resource("common.on") : resource("common.off");
-            messageExecutor.editEphemeralMessage(String.format(resource("button.stream.toggle"), onOff))
-                    .clearComponents();
-        } else if (buttonAction == StreamCommandName.Button.TWITCHNAME) {
-            var userId = event.getUser().getId();
-            var serverId = event.getGuild().getId();
-            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId)
-                    .orElse(new StreamingMember());
-            Modal modal = Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
-                    .addActionRow(TextInput.create(
-                                    "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
-                            .setMinLength(4)
-                            .setMaxLength(25)
-                            .setValue(streamingMember.getTwitchUsername())
-                            .build())
-                    .build();
-            event.replyModal(modal).queue();
+            case TOGGLE -> {
+                var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
+                var onOff = found ? resource("common.on") : resource("common.off");
+                messageExecutor.editEphemeralMessage(String.format(resource("button.stream.toggle"), onOff))
+                        .clearComponents();
+            }
+            case TWITCHNAME -> messageExecutor.addModal(updateTwitchName(event));
+            default -> throw new IllegalStateException("Unexpected value: " + buttonAction);
         }
         return messageExecutor;
+    }
+
+    private Modal updateTwitchName(@NotNull ButtonInteractionEvent event) {
+        var userId = event.getUser().getId();
+        var serverId = event.getGuild().getId();
+        var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId)
+                .orElse(new StreamingMember());
+        return Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
+                .addActionRow(TextInput.create(
+                                "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
+                        .setMinLength(4)
+                        .setMaxLength(25)
+                        .setValue(streamingMember.getTwitchUsername())
+                        .build())
+                .build();
     }
 
     @Override
