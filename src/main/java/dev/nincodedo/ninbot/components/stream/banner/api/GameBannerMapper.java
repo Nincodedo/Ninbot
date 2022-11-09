@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.stream.banner.api;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface GameBannerMapper {
 
     GameBannerDTO mapToDto(GameBanner gameBanner);

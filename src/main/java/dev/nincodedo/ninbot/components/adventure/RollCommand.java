@@ -32,11 +32,10 @@ public class RollCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var notation = slashCommandEvent.getOption(RollCommandName.Option.NOTATION.get(), "1d20",
+            @NotNull SlashCommandInteractionEvent event, @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        var notation = event.getOption(RollCommandName.Option.NOTATION.get(), "1d20",
                 OptionMapping::getAsString);
-        messageExecutor.addMessageResponse(rollDice(notation, slashCommandEvent.getMember().getEffectiveName()));
+        messageExecutor.addMessageResponse(rollDice(notation, event.getMember().getEffectiveName()));
         return messageExecutor;
     }
 

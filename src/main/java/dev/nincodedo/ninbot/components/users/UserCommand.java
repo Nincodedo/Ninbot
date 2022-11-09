@@ -1,10 +1,10 @@
 package dev.nincodedo.ninbot.components.users;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.command.Subcommand;
-import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashSubCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.components.users.UserCommandName.Subcommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class UserCommand implements SlashCommand, Subcommand<UserCommandName.Subcommand> {
+public class UserCommand implements SlashSubCommand<Subcommand> {
 
     private UserService userService;
 
@@ -26,19 +26,13 @@ public class UserCommand implements SlashCommand, Subcommand<UserCommandName.Sub
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var subcommandName = slashCommandEvent.getSubcommandName();
-        if (subcommandName == null) {
-            return messageExecutor;
-        }
-        UserCommandName.Subcommand subcommand = getSubcommand(subcommandName);
-        if (subcommand == UserCommandName.Subcommand.BIRTHDAY) {
-            updateBirthday(slashCommandEvent);
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor, @NotNull Subcommand subcommand) {
+        if (subcommand == Subcommand.BIRTHDAY) {
+            updateBirthday(event);
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
-        } else if (subcommand == UserCommandName.Subcommand.ANNOUNCEMENT) {
-            toggleAnnouncement(slashCommandEvent.getUser().getId());
+        } else if (subcommand == Subcommand.ANNOUNCEMENT) {
+            toggleAnnouncement(event.getUser().getId());
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         }
         return messageExecutor;
@@ -48,11 +42,11 @@ public class UserCommand implements SlashCommand, Subcommand<UserCommandName.Sub
         userService.toggleBirthdayAnnouncement(userId);
     }
 
-    private void updateBirthday(SlashCommandInteractionEvent slashCommandEvent) {
-        var birthday = slashCommandEvent.getOption(UserCommandName.Option.MONTH.get(), OptionMapping::getAsString) + "-"
-                + slashCommandEvent.getOption(UserCommandName.Option.DAY.get(), OptionMapping::getAsString);
-        var userId = slashCommandEvent.getMember().getId();
-        var guildId = slashCommandEvent.getGuild().getId();
+    private void updateBirthday(SlashCommandInteractionEvent event) {
+        var birthday = event.getOption(UserCommandName.Option.MONTH.get(), OptionMapping::getAsString) + "-"
+                + event.getOption(UserCommandName.Option.DAY.get(), OptionMapping::getAsString);
+        var userId = event.getMember().getId();
+        var guildId = event.getGuild().getId();
         userService.updateBirthday(userId, guildId, birthday);
     }
 
@@ -64,19 +58,19 @@ public class UserCommand implements SlashCommand, Subcommand<UserCommandName.Sub
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
-                new SubcommandData(UserCommandName.Subcommand.BIRTHDAY.get(), "Set your birthday for announcements.")
+                new SubcommandData(Subcommand.BIRTHDAY.get(), "Set your birthday for announcements.")
                         .addOptions(new OptionData(OptionType.INTEGER, UserCommandName.Option.MONTH.get(), "Month of "
                                 + "your birthday.",
                                 true, true).setMinValue(1).setMaxValue(12))
                         .addOptions(new OptionData(OptionType.INTEGER, UserCommandName.Option.DAY.get(), "Day of your"
                                 + " birthday.", true, true).setMinValue(1)
                                 .setMaxValue(31)),
-                new SubcommandData(UserCommandName.Subcommand.ANNOUNCEMENT.get(), "Toggles your birthday announcement"
+                new SubcommandData(Subcommand.ANNOUNCEMENT.get(), "Toggles your birthday announcement"
                         + " on or off."));
     }
 
     @Override
-    public Class<UserCommandName.Subcommand> enumSubcommandClass() {
-        return UserCommandName.Subcommand.class;
+    public Class<Subcommand> enumSubcommandClass() {
+        return Subcommand.class;
     }
 }

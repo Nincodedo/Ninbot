@@ -60,7 +60,7 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                                     + ".messagecontext.modal.title"), maxCount, character))
                     .addActionRow(input)
                     .build();
-            event.replyModal(modal).queue();
+            messageExecutor.addModal(modal);
         }
         return messageExecutor;
     }

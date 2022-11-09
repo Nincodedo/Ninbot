@@ -28,13 +28,12 @@ public class StreamCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var userId = slashCommandEvent.getUser().getId();
-        var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, slashCommandEvent.getGuild()
+            @NotNull SlashCommandInteractionEvent event, @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        var userId = event.getUser().getId();
+        var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, event.getGuild()
                 .getId()).orElse(new StreamingMember());
         boolean announcementsEnabled = streamingMember.getAnnounceEnabled();
-        var resourceBundle = resourceBundle(slashCommandEvent.getUserLocale());
+        var resourceBundle = resourceBundle(event.getUserLocale());
         var onOff = announcementsEnabled ? resourceBundle.getString("common.on") : resourceBundle.getString("common"
                 + ".off");
         var opposite = announcementsEnabled ? resourceBundle.getString("common.off") : resourceBundle.getString(
