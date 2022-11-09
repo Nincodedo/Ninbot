@@ -24,7 +24,7 @@ public class StreamButtonInteraction implements ButtonInteraction {
     }
 
     @Override
-    public MessageExecutor executeButtonPress(
+    public MessageExecutor execute(
             @NotNull ButtonInteractionEvent event, ComponentData componentData) {
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
         var buttonAction = StreamCommandName.Button.valueOf(componentData.action().toUpperCase());

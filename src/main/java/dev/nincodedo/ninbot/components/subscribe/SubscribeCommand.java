@@ -32,19 +32,16 @@ public class SubscribeCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
         messageExecutor.deferEphemeralReply();
-        var guild = slashCommandEvent.getGuild();
-        var role = slashCommandEvent.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(),
-                OptionMapping::getAsRole);
+        var guild = event.getGuild();
+        var role = event.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(), OptionMapping::getAsRole);
         if (guild != null && isValidSubscribeRole(role, guild.getId())) {
             try {
-                addOrRemoveSubscription(slashCommandEvent.getInteraction()
-                        .getHook(), slashCommandEvent.getMember(), guild, role);
+                addOrRemoveSubscription(event.getInteraction().getHook(), event.getMember(), guild, role);
             } catch (PermissionException e) {
-                slashCommandEvent.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
+                event.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
             }
         } else {
             messageExecutor.addEphemeralMessage(resourceBundle().getString(""));

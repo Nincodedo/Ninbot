@@ -1,12 +1,12 @@
 package dev.nincodedo.ninbot.components.countdown;
 
 import dev.nincodedo.ninbot.common.Emojis;
-import dev.nincodedo.ninbot.common.command.Subcommand;
-import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashSubCommand;
 import dev.nincodedo.ninbot.common.config.db.ConfigConstants;
 import dev.nincodedo.ninbot.common.config.db.ConfigService;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.components.countdown.CountdownCommandName.Subcommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -26,11 +26,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Component
-public class CountdownCommand implements SlashCommand, Subcommand<CountdownCommandName.Subcommand> {
+public class CountdownCommand implements SlashSubCommand<Subcommand> {
 
     private final CountdownRepository countdownRepository;
     private final CountdownScheduler countdownScheduler;
@@ -44,17 +45,12 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var subcommandName = slashCommandEvent.getSubcommandName();
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        if (subcommandName == null) {
-            return messageExecutor;
-        }
-        switch (getSubcommand(subcommandName)) {
-            case LIST -> messageExecutor.addMessageEmbed(listCountdowns(slashCommandEvent));
-            case CREATE -> messageExecutor.addMessageResponse(setupCountdown(slashCommandEvent));
-            case DELETE -> messageExecutor.addEphemeralMessage(deleteCountdown(slashCommandEvent));
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor, @NotNull Subcommand subcommand) {
+        switch (subcommand) {
+            case LIST -> messageExecutor.addMessageEmbed(listCountdowns(event));
+            case CREATE -> messageExecutor.addMessageResponse(setupCountdown(event));
+            case DELETE -> messageExecutor.addEphemeralMessage(deleteCountdown(event));
         }
         return messageExecutor;
     }
@@ -109,12 +105,10 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
 
     private MessageCreateData setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var year = slashCommandEvent.getOption("year", OptionMapping::getAsString);
-        var month = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.MONTH.get(),
-                        OptionMapping::getAsString)));
-        var day = String.format("%02d",
-                Integer.parseInt(slashCommandEvent.getOption(CountdownCommandName.Option.DAY.get(),
-                        OptionMapping::getAsString)));
+        var month = String.format("%02d", Integer.parseInt(getRequiredOption(slashCommandEvent,
+                CountdownCommandName.Option.MONTH.get())));
+        var day = String.format("%02d", Integer.parseInt(getRequiredOption(slashCommandEvent,
+                CountdownCommandName.Option.DAY.get())));
         var stringDate = getCountdownDate(year, month, day);
         var countdownName = slashCommandEvent.getOption("name", OptionMapping::getAsString);
         ZoneId serverTimezone = ZoneId.of(getServerTimeZone(slashCommandEvent.getGuild().getId()));
@@ -136,6 +130,11 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
                 .addContent(" ")
                 .addContent(Emojis.CHECK_MARK)
                 .build();
+    }
+
+    @NotNull
+    private String getRequiredOption(SlashCommandInteractionEvent slashCommandEvent, String optionName) {
+        return Objects.requireNonNull(slashCommandEvent.getOption(optionName, OptionMapping::getAsString));
     }
 
     private String getCountdownDate(String year, String month, String day) {
@@ -174,26 +173,24 @@ public class CountdownCommand implements SlashCommand, Subcommand<CountdownComma
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
-        return Arrays.asList(
-                new SubcommandData(CountdownCommandName.Subcommand.CREATE.get(), "Create a new countdown.")
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The name for this "
-                                + "countdown.", true)
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.MONTH.get(), "The numerical month "
-                                + "for this countdown.", true)
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.DAY.get(), "The numerical day for "
-                                + "this countdown.", true)
-                        .addOption(OptionType.STRING, CountdownCommandName.Option.YEAR.get(), "The year for this "
-                                + "countdown. Defaults to the upcoming date this month and day fall."),
-                new SubcommandData(CountdownCommandName.Subcommand.LIST.get(), "List all the current countdowns for "
-                        + "this server."),
-                new SubcommandData(CountdownCommandName.Subcommand.DELETE.get(), "Delete a countdown you created.")
-                        .addOptions(new OptionData(OptionType.STRING, CountdownCommandName.Option.NAME.get(), "The "
-                                + "name of the countdown.", true, true))
-        );
+        return Arrays.asList(new SubcommandData(Subcommand.CREATE.get(), "Create a new countdown.").addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(),
+                        "The name for this " + "countdown.", true)
+                .addOption(OptionType.STRING, CountdownCommandName.Option.MONTH.get(),
+                        "The numerical month " + "for this countdown.", true)
+                .addOption(OptionType.STRING, CountdownCommandName.Option.DAY.get(),
+                        "The numerical day for " + "this countdown.", true)
+                .addOption(OptionType.STRING, CountdownCommandName.Option.YEAR.get(), "The year for this "
+                        + "countdown. Defaults to the upcoming date this month and day fall."),
+                new SubcommandData(Subcommand.LIST.get(),
+                "List all the current countdowns for " + "this server."), new SubcommandData(Subcommand.DELETE.get(),
+                "Delete a countdown you "
+                        + "created.").addOptions(new OptionData(OptionType.STRING,
+                        CountdownCommandName.Option.NAME.get(),
+                "The " + "name of the countdown.", true, true)));
     }
 
     @Override
-    public Class<CountdownCommandName.Subcommand> enumSubcommandClass() {
-        return CountdownCommandName.Subcommand.class;
+    public Class<Subcommand> enumSubcommandClass() {
+        return Subcommand.class;
     }
 }

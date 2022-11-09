@@ -8,8 +8,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-public interface ButtonInteraction extends Command<ButtonInteractionCommandMessageExecutor,
-        ButtonInteractionEvent>, Interaction {
+public interface ButtonInteraction extends Command<ButtonInteractionEvent>, Interaction {
 
     @Override
     default CommandType getType() {
@@ -25,7 +24,7 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
     default MessageExecutor execute(@NotNull ButtonInteractionEvent event) {
         var componentDataOptional = getComponentDataFromEvent(event);
         if (componentDataOptional.isPresent()) {
-            return executeButtonPress(event, componentDataOptional.get());
+            return execute(event, componentDataOptional.get());
         }
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
         messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
@@ -34,8 +33,7 @@ public interface ButtonInteraction extends Command<ButtonInteractionCommandMessa
         return messageExecutor;
     }
 
-    MessageExecutor executeButtonPress(@NotNull ButtonInteractionEvent event
-            , ComponentData componentData);
+    MessageExecutor execute(@NotNull ButtonInteractionEvent event, ComponentData componentData);
 
     Logger log();
 }

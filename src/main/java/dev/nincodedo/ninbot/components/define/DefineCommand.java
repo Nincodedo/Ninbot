@@ -28,9 +28,9 @@ public class DefineCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        String word = slashCommandEvent.getOption(DefineCommandName.Option.WORD.get(), OptionMapping::getAsString);
+            @NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        String word = event.getOption(DefineCommandName.Option.WORD.get(), OptionMapping::getAsString);
         List<Word> wordList = defineWordAPI.defineWord(word).list();
         if (wordList.isEmpty() || wordList.get(0) == null) {
             messageExecutor.addEphemeralMessage(Emojis.CROSS_X);

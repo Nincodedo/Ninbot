@@ -23,10 +23,10 @@ import java.util.List;
 @Component
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command<?, ?>> commands;
+    private List<Command<?>> commands;
     private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command<?, ?>> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command<?>> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
         this.releaseFilter = releaseFilter;
     }
@@ -76,7 +76,7 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToCommandData(Command<?, ?> command) {
+    private CommandData convertToCommandData(Command<?> command) {
         return switch (command) {
             case SlashCommand slashCommand -> {
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
@@ -99,7 +99,7 @@ public class CommandRegistration extends ListenerAdapter {
         };
     }
 
-    private DefaultMemberPermissions getDefaultPermissions(Command<?, ?> command) {
+    private DefaultMemberPermissions getDefaultPermissions(Command<?> command) {
         return command.isCommandEnabledByDefault() ? DefaultMemberPermissions.ENABLED :
                 DefaultMemberPermissions.DISABLED;
     }

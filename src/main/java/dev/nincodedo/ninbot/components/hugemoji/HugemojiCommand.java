@@ -41,11 +41,9 @@ public class HugemojiCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var emojiOption = slashCommandEvent.getOption(HugemojiCommandName.Option.EMOTE.get(),
-                OptionMapping::getAsString);
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        var emojiOption = event.getOption(HugemojiCommandName.Option.EMOTE.get(), OptionMapping::getAsString);
         if (emojiOption == null) {
             return messageExecutor;
         }
@@ -56,11 +54,10 @@ public class HugemojiCommand implements SlashCommand {
         } else if (emojiType == Type.CUSTOM) {
             var customEmoji = emojiUnion.asCustom();
             var imageFileType = customEmoji.getImageUrl().substring(customEmoji.getImageUrl().lastIndexOf('.'));
-            var optionalInputStream = getImageInputStream(slashCommandEvent, messageExecutor, customEmoji,
-                    imageFileType);
+            var optionalInputStream = getImageInputStream(event, messageExecutor, customEmoji, imageFileType);
             if (optionalInputStream.isPresent()) {
-                slashCommandEvent.deferReply().queue();
-                slashCommandEvent.getHook()
+                event.deferReply().queue();
+                event.getHook()
                         .editOriginalAttachments(FileUpload.fromData(optionalInputStream.get(),
                                 customEmoji.getName() + imageFileType))
                         .queue();
