@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream.banner;
 
 import dev.nincodedo.ninbot.common.StreamUtils;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -14,18 +14,24 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public interface GameBannerBuilder {
+@Slf4j
+public abstract class GameBannerBuilder {
 
-    GameBannerRepository getGameBannerRepository();
+    protected GameBannerRepository gameBannerRepository;
+    protected ExecutorService executorService;
 
-    Logger log();
+    protected GameBannerBuilder(GameBannerRepository gameBannerRepository, ExecutorService executorService) {
+        this.gameBannerRepository = gameBannerRepository;
+        this.executorService = executorService;
+    }
 
-    default CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
+    protected CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
         CompletableFuture<GameBanner> futureGameBanner = new CompletableFuture<GameBanner>().completeOnTimeout(null,
                 20, TimeUnit.SECONDS);
-        getExecutorService().submit(() -> {
+        executorService.submit(() -> {
             if (gameTitle == null) {
                 futureGameBanner.complete(null);
+                return null;
             }
             var cachedBanners = getGameBannerFilesFromCache(gameTitle).stream()
                     .sorted(StreamUtils.shuffle())
@@ -38,7 +44,7 @@ public interface GameBannerBuilder {
                         gameBanner.setFile(cachedBannerFile);
                         futureGameBanner.complete(gameBanner);
                         return null;
-                    } else if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() < 0) {
+                    } else if (gameBannerOptional.isPresent()) {
                         Files.deleteIfExists(cachedBannerFile.toPath());
                     }
                 }
@@ -53,36 +59,26 @@ public interface GameBannerBuilder {
         int logoId;
         int backgroundId;
         try {
-            logoId = Integer.parseInt(cachedBannerFile.getName().split("-")[2]);
-            backgroundId = Integer.parseInt(cachedBannerFile.getName().split("-")[3].split("\\.")[0]);
+            logoId = GameBannerUtils.getLogoIdFromFile(cachedBannerFile);
+            backgroundId = GameBannerUtils.getBackgroundIdFromFile(cachedBannerFile);
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
-        return getGameBannerRepository().findGameBannerByLogoIdAndBackgroundId(logoId,
+        return gameBannerRepository.findGameBannerByLogoIdAndBackgroundId(logoId,
                 backgroundId);
     }
 
-    ExecutorService getExecutorService();
+    protected abstract GameBanner generateGameBannerFromTitle(String gameTitle);
 
-    GameBanner generateGameBannerFromTitle(String gameTitle);
-
-    default List<File> getGameBannerFilesFromCache(String gameTitle) {
+    protected List<File> getGameBannerFilesFromCache(String gameTitle) {
         var cacheFolder = new File("cache");
         if (!cacheFolder.exists()) {
             var folderMade = cacheFolder.mkdir();
-            log().trace("Cache folder did not exist, made folder: {}", folderMade);
+            log.trace("Cache folder did not exist, made folder: {}", folderMade);
             return new ArrayList<>();
         }
-        var cachedFileName = getCachedFileName(gameTitle);
+        var cachedFileName = GameBannerUtils.getCachedFileName(gameTitle);
         return Arrays.stream(Objects.requireNonNull(cacheFolder.listFiles((dir, name) -> name.startsWith(cachedFileName))))
                 .toList();
-    }
-
-    default String getCachedFileName(String gameTitle) {
-        if (gameTitle == null) {
-            return null;
-        } else {
-            return gameTitle.replaceAll("[^A-Za-z0-9]", "");
-        }
     }
 }

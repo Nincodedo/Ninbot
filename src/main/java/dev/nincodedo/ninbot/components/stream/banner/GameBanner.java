@@ -40,16 +40,8 @@ public class GameBanner extends BaseEntity {
     }
 
     @Transient
-    public String getGameTitleStripped() {
-        if (gameTitle == null) {
-            return null;
-        } else {
-            return gameTitle.replaceAll("[^A-Za-z0-9]", "");
-        }
-    }
-
-    @Transient
     public String getFileName() {
-        return String.format("%s-%d-%d-%d.png", getGameTitleStripped(), gameId, logoId, backgroundId);
+        return String.format("%s-%d-%d-%d.png", GameBannerUtils.getCachedFileName(gameTitle), gameId, logoId,
+                backgroundId);
     }
 }
