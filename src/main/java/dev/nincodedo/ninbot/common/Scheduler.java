@@ -1,10 +1,11 @@
 package dev.nincodedo.ninbot.common;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.List;
 
-public interface Scheduler<T, R extends CrudRepository<T, Long>> {
+public interface Scheduler<T extends BaseEntity, R extends BaseRepository<T>> {
     List<T> findAllOpenItems();
 
     default void save(T item) {

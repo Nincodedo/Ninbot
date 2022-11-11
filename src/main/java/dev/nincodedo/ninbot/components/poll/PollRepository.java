@@ -1,14 +1,15 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PollRepository extends CrudRepository<Poll, Long> {
-    List<Poll> findAllByPollOpen(boolean isPollOpen);
+public interface PollRepository extends BaseRepository<Poll> {
 
     Optional<Poll> findByMessageIdAndPollOpen(String messageId, boolean isPollOpen);
 
     List<Poll> findAllByIdIn(List<Long> ids);
+
+    List<Poll> findAllByPollOpen(Boolean isOpen);
 }
