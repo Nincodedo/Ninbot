@@ -127,12 +127,12 @@ public class BirthdayScheduler extends Schedulable<NinbotUser, UserService> {
         try {
             return Optional.of(new SimpleDateFormat(birthdayFormat1).parse(birthdayString));
         } catch (ParseException e) {
-            log.trace("Failed to parse date {} with format {}, attempting with {}", birthdayString, birthdayFormat1,
+            log.warn("Failed to parse date {} with format {}, attempting with {}", birthdayString, birthdayFormat1,
                     birthdayFormat2);
             try {
                 return Optional.of(new SimpleDateFormat(birthdayFormat2).parse(birthdayString));
             } catch (ParseException ex) {
-                log.error("Failed to parse date {} with format {}, nothing left to try :(", birthdayString,
+                log.warn("Failed to parse date {} with format {}, nothing left to try :(", birthdayString,
                         birthdayFormat2);
                 return Optional.empty();
             }
