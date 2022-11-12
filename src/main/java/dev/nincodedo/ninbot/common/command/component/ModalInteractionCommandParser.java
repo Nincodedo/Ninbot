@@ -15,6 +15,11 @@ public class ModalInteractionCommandParser extends AbstractCommandParser<ModalIn
     }
 
     @Override
+    protected String getCommandName(ModalInteractionEvent event) {
+        return getComponentName(event.getModalId());
+    }
+
+    @Override
     public Class<ModalInteraction> getCommandClass() {
         return ModalInteraction.class;
     }

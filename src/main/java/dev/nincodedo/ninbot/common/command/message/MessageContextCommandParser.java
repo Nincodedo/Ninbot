@@ -16,6 +16,11 @@ public class MessageContextCommandParser extends AbstractCommandParser<MessageCo
     }
 
     @Override
+    protected String getCommandName(MessageContextInteractionEvent event) {
+        return event.getName();
+    }
+
+    @Override
     public Class<MessageContextCommand> getCommandClass() {
         return MessageContextCommand.class;
     }

@@ -15,6 +15,11 @@ public class UserContextCommandParser extends AbstractCommandParser<UserContextC
     }
 
     @Override
+    protected String getCommandName(UserContextInteractionEvent event) {
+        return event.getName();
+    }
+
+    @Override
     public Class<UserContextCommand> getCommandClass() {
         return UserContextCommand.class;
     }

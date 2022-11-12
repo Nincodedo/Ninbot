@@ -4,10 +4,6 @@ import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -40,20 +36,14 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
     }
 
     private Optional<T> getCommand(F event) {
-        String commandName = switch (event) {
-            case CommandAutoCompleteInteractionEvent autoCompleteEvent -> autoCompleteEvent.getName();
-            case GenericCommandInteractionEvent commandInteractionEvent -> commandInteractionEvent.getName();
-            case GenericComponentInteractionCreateEvent genericComponentInteractionCreateEvent ->
-                    getComponentName(genericComponentInteractionCreateEvent);
-            case ModalInteractionEvent modalInteractionEvent -> getComponentName(modalInteractionEvent);
-            default -> "";
-        };
+        String commandName = getCommandName(event);
         return Optional.ofNullable(commandMap.get(commandName));
     }
 
+    protected abstract String getCommandName(F event);
+
     @NotNull
-    private String getComponentName(GenericInteractionCreateEvent event) {
-        var componentId = getComponentId(event);
+    protected String getComponentName(String componentId) {
         if (componentId.contains("-")) {
             var split = componentId.split("-");
             if (split.length > 0) {
@@ -61,16 +51,6 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
             }
         }
         return "";
-    }
-
-    @NotNull
-    private String getComponentId(GenericInteractionCreateEvent event) {
-        return switch (event) {
-            case ModalInteractionEvent modalInteractionEvent -> modalInteractionEvent.getModalId();
-            case GenericComponentInteractionCreateEvent genericComponentInteractionCreateEvent ->
-                    genericComponentInteractionCreateEvent.getComponentId();
-            default -> "";
-        };
     }
 
     void addCommand(T command) {

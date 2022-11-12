@@ -16,6 +16,11 @@ public class ButtonInteractionCommandParser extends AbstractCommandParser<Button
     }
 
     @Override
+    protected String getCommandName(ButtonInteractionEvent event) {
+        return getComponentName(event.getComponentId());
+    }
+
+    @Override
     public Class<ButtonInteraction> getCommandClass() {
         return ButtonInteraction.class;
     }

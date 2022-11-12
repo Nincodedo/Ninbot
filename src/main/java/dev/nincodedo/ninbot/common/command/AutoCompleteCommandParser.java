@@ -15,6 +15,11 @@ public class AutoCompleteCommandParser extends AbstractCommandParser<AutoComplet
     }
 
     @Override
+    protected String getCommandName(CommandAutoCompleteInteractionEvent event) {
+        return event.getName();
+    }
+
+    @Override
     public Class<AutoCompleteCommand> getCommandClass() {
         return AutoCompleteCommand.class;
     }
