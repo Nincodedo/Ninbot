@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.pathogen.audit;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
-public interface PathogenAuditRepository extends CrudRepository<PathogenAudit, Long> {
+public interface PathogenAuditRepository extends BaseRepository<PathogenAudit> {
 }

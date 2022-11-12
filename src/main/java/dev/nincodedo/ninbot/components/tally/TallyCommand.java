@@ -1,9 +1,9 @@
 package dev.nincodedo.ninbot.components.tally;
 
-import dev.nincodedo.ninbot.common.command.Subcommand;
-import dev.nincodedo.ninbot.common.command.slash.SlashCommand;
+import dev.nincodedo.ninbot.common.command.slash.SlashSubCommand;
 import dev.nincodedo.ninbot.common.message.MessageExecutor;
 import dev.nincodedo.ninbot.common.message.SlashCommandEventMessageExecutor;
+import dev.nincodedo.ninbot.components.tally.TallyCommandName.Subcommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.Subcommand> {
+public class TallyCommand implements SlashSubCommand<Subcommand> {
 
     private static HashMap<String, Integer> tallyCount = new HashMap<>();
 
@@ -33,33 +33,26 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
-        return Arrays.asList(new SubcommandData(TallyCommandName.Subcommand.ADD.get(), "Add to the thing you're "
-                        + "tallying.")
-                        .addOptions(Arrays.asList(
-                                new OptionData(OptionType.STRING, TallyCommandName.Option.NAME.get(), "Name of the "
-                                        + "thing you're tallying.", true)
-                                , new OptionData(OptionType.INTEGER, TallyCommandName.Option.COUNT.get(),
-                                        "How many you want to add to the tally."
-                                                + " Defaults to 1.", false))),
-                new SubcommandData(TallyCommandName.Subcommand.GET.get(), "Gets the current tally count.")
-                        .addOption(OptionType.STRING, TallyCommandName.Option.NAME.get(), "Name of the thing you're "
-                                + "tallying."));
+        return Arrays.asList(new SubcommandData(Subcommand.ADD.get(), "Add to the thing you're "
+                + "tallying.").addOptions(Arrays.asList(new OptionData(OptionType.STRING,
+                TallyCommandName.Option.NAME.get(),
+                "Name of the "
+                        + "thing you're tallying.", true), new OptionData(OptionType.INTEGER,
+                TallyCommandName.Option.COUNT.get(),
+                "How many you want to add to the tally."
+                        + " Defaults to 1.", false))), new SubcommandData(Subcommand.GET.get(), "Gets the current "
+                + "tally count.").addOption(OptionType.STRING, TallyCommandName.Option.NAME.get(),
+                "Name of the thing you're " + "tallying."));
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var subcommand = slashCommandEvent.getSubcommandName();
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        if (subcommand == null) {
-            return messageExecutor;
-        }
-        switch (getSubcommand(subcommand)) {
-            case ADD -> addToTally(slashCommandEvent.getOption(TallyCommandName.Option.COUNT.get()),
-                    slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor, @NotNull Subcommand subcommand) {
+        switch (subcommand) {
+            case ADD -> addToTally(event.getOption(TallyCommandName.Option.COUNT.get()),
+                    event.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
                             .toLowerCase(), messageExecutor);
-            case GET -> getTallyCount(slashCommandEvent.getOption(TallyCommandName.Option.NAME.get(),
-                            OptionMapping::getAsString)
+            case GET -> getTallyCount(event.getOption(TallyCommandName.Option.NAME.get(), OptionMapping::getAsString)
                     .toLowerCase(), messageExecutor);
         }
         return messageExecutor;
@@ -84,7 +77,7 @@ public class TallyCommand implements SlashCommand, Subcommand<TallyCommandName.S
     }
 
     @Override
-    public Class<TallyCommandName.Subcommand> enumSubcommandClass() {
-        return TallyCommandName.Subcommand.class;
+    public Class<Subcommand> enumSubcommandClass() {
+        return Subcommand.class;
     }
 }

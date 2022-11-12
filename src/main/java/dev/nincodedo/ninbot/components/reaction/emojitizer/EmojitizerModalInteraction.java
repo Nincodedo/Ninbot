@@ -35,13 +35,13 @@ public class EmojitizerModalInteraction implements ModalInteraction {
         }
         var emojiText = textInput.getAsString().replace(" ", "");
         String[] existingEmojiLetters = new String[0];
-        if (componentData.data().split("\\$").length > 1) {
-            existingEmojiLetters = componentData.data().split("\\$")[1].split(",");
+        if (componentData.hasExtraData()) {
+            existingEmojiLetters = componentData.extraData().get(1).split(",");
         }
         if (ReactionUtils.isCanEmoji(emojiText) && !isExistingLetterUsed(emojiText, existingEmojiLetters)) {
             event.deferReply(true).queue();
             var reaction = new EmojiReactionResponse(emojiText);
-            var messageId = componentData.data().split("\\$")[0];
+            var messageId = componentData.data();
             event.getGuildChannel()
                     .getHistoryAround(messageId, 1)
                     .queue(replyAfterSuccess(event, reaction, messageId));

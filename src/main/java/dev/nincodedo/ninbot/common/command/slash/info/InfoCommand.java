@@ -27,12 +27,11 @@ public class InfoCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var selfUser = slashCommandEvent.getJDA().getSelfUser();
+            @NotNull SlashCommandInteractionEvent event, @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        var selfUser = event.getJDA().getSelfUser();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(selfUser.getName(), botInfo.getGitHubUrl(), selfUser.getEffectiveAvatarUrl());
-        var extra = slashCommandEvent.getOption(InfoCommandName.Option.EXTRA.get(), OptionMapping::getAsBoolean);
+        var extra = event.getOption(InfoCommandName.Option.EXTRA.get(), OptionMapping::getAsBoolean);
         if (Boolean.TRUE.equals(extra)) {
             embedBuilder.addField(resourceBundle().getString("command.info.git.hash"), botInfo.getCommitHash(), false)
                     .addField(resourceBundle().getString("command.info.uptime"), botInfo.getUptime(resourceBundle()),
@@ -47,7 +46,7 @@ public class InfoCommand implements SlashCommand {
                         botInfo.getGitHubUrl() + "/issues/new/choose", false)
                 .addField(resourceBundle().getString("command.info.documentation.name"),
                         botInfo.getDocumentationUrl(), false);
-        var patronsList = getPatronsList(slashCommandEvent.getJDA().getShardManager());
+        var patronsList = getPatronsList(event.getJDA().getShardManager());
         if (patronsList != null && !patronsList.isEmpty()) {
             embedBuilder.addField(resourceBundle().getString("command.info.patreonthanks.name"), patronsList, false);
         }

@@ -23,10 +23,10 @@ import java.util.List;
 @Component
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command<?, ?>> commands;
+    private List<Command<?>> commands;
     private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command<?, ?>> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command<?>> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
         this.releaseFilter = releaseFilter;
     }
@@ -76,31 +76,30 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToCommandData(Command<?, ?> command) {
-        switch (command) {
-            case SlashCommand slashCommand:
+    private CommandData convertToCommandData(Command<?> command) {
+        return switch (command) {
+            case SlashCommand slashCommand -> {
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
-                        slashCommand.getDescription()).setDefaultPermissions(getDefaultPermissions(slashCommand));
+                                slashCommand.getDescription())
+                        .setDefaultPermissions(getDefaultPermissions(slashCommand));
                 try {
                     slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
                     slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
-                    return slashCommandData;
+                    yield slashCommandData;
                 } catch (Exception e) {
                     log.error("Failed to add {}", slashCommand, e);
                 }
-                return slashCommandData;
-            case UserContextCommand userContextCommand:
-                return Commands.user(userContextCommand.getName())
-                        .setDefaultPermissions(getDefaultPermissions(userContextCommand));
-            case MessageContextCommand messageContextCommand:
-                return Commands.message(messageContextCommand.getName())
-                        .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
-            default:
-                return Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
-        }
+                yield slashCommandData;
+            }
+            case UserContextCommand userContextCommand -> Commands.user(userContextCommand.getName())
+                    .setDefaultPermissions(getDefaultPermissions(userContextCommand));
+            case MessageContextCommand messageContextCommand -> Commands.message(messageContextCommand.getName())
+                    .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
+            default -> Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
+        };
     }
 
-    private DefaultMemberPermissions getDefaultPermissions(Command<?, ?> command) {
+    private DefaultMemberPermissions getDefaultPermissions(Command<?> command) {
         return command.isCommandEnabledByDefault() ? DefaultMemberPermissions.ENABLED :
                 DefaultMemberPermissions.DISABLED;
     }

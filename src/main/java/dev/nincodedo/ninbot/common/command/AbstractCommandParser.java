@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 @Slf4j
-public abstract class AbstractCommandParser<T extends Command<?, F>, F extends GenericInteractionCreateEvent> {
+public abstract class AbstractCommandParser<T extends Command<F>, F extends GenericInteractionCreateEvent> {
 
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;
@@ -40,17 +40,15 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
     }
 
     private Optional<T> getCommand(F event) {
-        return switch (event) {
-            case CommandAutoCompleteInteractionEvent autoCompleteEvent ->
-                    Optional.ofNullable(commandMap.get(autoCompleteEvent.getName()));
-            case GenericCommandInteractionEvent commandInteractionEvent ->
-                    Optional.ofNullable(commandMap.get(commandInteractionEvent.getName()));
+        String commandName = switch (event) {
+            case CommandAutoCompleteInteractionEvent autoCompleteEvent -> autoCompleteEvent.getName();
+            case GenericCommandInteractionEvent commandInteractionEvent -> commandInteractionEvent.getName();
             case GenericComponentInteractionCreateEvent genericComponentInteractionCreateEvent ->
-                    Optional.ofNullable(commandMap.get(getComponentName(genericComponentInteractionCreateEvent)));
-            case ModalInteractionEvent modalInteractionEvent ->
-                    Optional.ofNullable(commandMap.get(getComponentName(modalInteractionEvent)));
-            default -> Optional.empty();
+                    getComponentName(genericComponentInteractionCreateEvent);
+            case ModalInteractionEvent modalInteractionEvent -> getComponentName(modalInteractionEvent);
+            default -> "";
         };
+        return Optional.ofNullable(commandMap.get(commandName));
     }
 
     @NotNull
@@ -83,7 +81,7 @@ public abstract class AbstractCommandParser<T extends Command<?, F>, F extends G
         return getEventClass().isInstance(event);
     }
 
-    public boolean isCommandMatchParser(Command<?, ?> command) {
+    public boolean isCommandMatchParser(Command<?> command) {
         return getCommandClass().isInstance(command);
     }
 

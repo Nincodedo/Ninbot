@@ -24,7 +24,7 @@ add Ninbot to your server!
 
 - [Check the documentation for a list of features and help with commands](https://ninbot.nincodedo.dev/)
 - [Create an issue if you think you've found a bug](https://github.com/Nincodedo/Ninbot/issues/new/choose)
-- [Join the support Discord server if you need additional help](https://discord.gg/hdw9NhJ)
+- [Ask a question in GitHub Discussions if you need additional help](https://github.com/Nincodedo/Ninbot/discussions/new?category=q-a)
 
 ## Want to help develop Ninbot?
 
@@ -43,12 +43,6 @@ will react with emojis automatically if it is possible. This also helps with the
 Prioritize reacting with emojis when possible. Sending chat messages should only be done if absolutely necessary (comedy
 is sometimes necessary). Commonly used Emojis for Ninbot can be found in
 the [common Emojis class](src/main/java/dev/nincodedo/ninbot/common/Emojis.java).
-
-|  Action|Emoji  |
-|--------|-------|
-|Success |✅     |
-|Failure |❌     |
-|Unknown |❔      |
 
 #### Updated Documentation
 

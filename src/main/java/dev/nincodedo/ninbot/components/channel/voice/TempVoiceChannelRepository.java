@@ -1,10 +1,10 @@
 package dev.nincodedo.ninbot.components.channel.voice;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.Optional;
 
-public interface TempVoiceChannelRepository extends CrudRepository<TempVoiceChannel, Long> {
+public interface TempVoiceChannelRepository extends BaseRepository<TempVoiceChannel> {
 
     Optional<TempVoiceChannel> findByVoiceChannelId(String voiceChannelId);
 }

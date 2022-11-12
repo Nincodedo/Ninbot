@@ -8,6 +8,7 @@ import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.common.message.GenericAnnounce;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -15,18 +16,25 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Timer;
+import java.util.concurrent.ExecutorService;
 
 @Component
 @Slf4j
-public class CountdownScheduler implements Schedulable<Countdown, CountdownService> {
+public class CountdownScheduler extends Schedulable<Countdown, CountdownService> {
 
     private CountdownService countdownService;
     private ConfigService configService;
 
-    public CountdownScheduler(CountdownService countdownService, ConfigService configService) {
+    public CountdownScheduler(CountdownService countdownService, ConfigService configService, @Qualifier(
+            "schedulerThreadPool") ExecutorService executorService) {
+        super(executorService);
         this.countdownService = countdownService;
         this.configService = configService;
+    }
+
+    @Override
+    protected String getSchedulerName() {
+        return "countdown";
     }
 
     public void scheduleOne(Countdown countdown, ShardManager shardManager) {
@@ -37,7 +45,7 @@ public class CountdownScheduler implements Schedulable<Countdown, CountdownServi
                 .atZone(countdownDate.getZone());
         if (countdownDate.isEqual(tomorrowDate) || countdownDate.isAfter(tomorrowDate)) {
             var dayDifference = countdown.getDayDifference();
-            if (isAnnounceable(dayDifference)) {
+            if (isUnannounceable(dayDifference)) {
                 log.debug("Not scheduling countdown {} because it is {} days away", countdown.getName(), dayDifference);
                 return;
             }
@@ -61,7 +69,7 @@ public class CountdownScheduler implements Schedulable<Countdown, CountdownServi
                         .getId(), FormatLogObject.guildName(guild));
                 return;
             }
-            new Timer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),
+            getTimer().schedule(new GenericAnnounce(shardManager, announceChannel, countdownMessage),
                     Date.from(LocalDate.now(countdownDate.getZone())
                             .atStartOfDay(countdownDate.getZone())
                             .plus(1, ChronoUnit.DAYS)
@@ -77,7 +85,9 @@ public class CountdownScheduler implements Schedulable<Countdown, CountdownServi
         return countdownService;
     }
 
-    private boolean isAnnounceable(long dayDifference) {
-        return dayDifference > 100 && dayDifference % 100 != 0 || dayDifference > 7 && dayDifference % 7 != 0;
+    private boolean isUnannounceable(long dayDifference) {
+        return dayDifference > 1000 && dayDifference % 1000 != 0
+                || dayDifference < 1000 && dayDifference > 100 && dayDifference % 100 != 0
+                || dayDifference < 100 && dayDifference > 7 && dayDifference % 7 != 0;
     }
 }

@@ -1,26 +1,40 @@
 package dev.nincodedo.ninbot.common;
 
-import io.micrometer.core.instrument.util.NamedThreadFactory;
+import dev.nincodedo.ninbot.common.persistence.BaseEntity;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public interface Schedulable<T, S extends Scheduler<T, ?>> {
+public abstract class Schedulable<T extends BaseEntity, S extends Scheduler<T, ?>> {
 
-    ExecutorService executorService = Executors.newCachedThreadPool(new NamedThreadFactory("scheduler"));
+    protected ExecutorService executorService;
+    protected String schedulerName;
+    protected Timer timer;
 
-    default void scheduleAll(ShardManager shardManager) {
+    protected Schedulable(ExecutorService schedulerExecutorService) {
+        this.executorService = schedulerExecutorService;
+        this.schedulerName = getSchedulerName();
+        this.timer = new Timer(schedulerName, true);
+    }
+
+    protected abstract String getSchedulerName();
+
+    protected Timer getTimer() {
+        return timer;
+    }
+
+    public void scheduleAll(ShardManager shardManager) {
         getScheduler().findAllOpenItems()
                 .forEach(schedulable -> executorService.execute(() -> scheduleOne(schedulable, shardManager)));
     }
 
-    void scheduleOne(T schedulable, ShardManager shardManager);
+    protected abstract void scheduleOne(T schedulable, ShardManager shardManager);
 
-    default void addOne(T schedulable, ShardManager shardManager) {
+    public void addOne(T schedulable, ShardManager shardManager) {
         getScheduler().save(schedulable);
         scheduleOne(schedulable, shardManager);
     }
 
-    S getScheduler();
+    protected abstract S getScheduler();
 }

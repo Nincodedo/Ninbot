@@ -21,10 +21,9 @@ public class PathogenCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        messageExecutor.addMessageResponse(getUserInfectionLevel(slashCommandEvent));
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        messageExecutor.addMessageResponse(getUserInfectionLevel(event));
         return messageExecutor;
     }
 

@@ -1,11 +1,12 @@
 package dev.nincodedo.ninbot.common.config.db.component;
 
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.List;
 
-public interface DisabledComponentsRepository extends CrudRepository<DisabledComponents, Long> {
-    List<DisabledComponents> findByComponentAndServerId(Component component, String serverId);
+public interface DisabledComponentsRepository extends BaseRepository<DisabledComponents> {
 
     List<DisabledComponents> findByServerId(String serverId);
+
+    List<DisabledComponents> findByComponentAndServerId(Component component, String serverId);
 }

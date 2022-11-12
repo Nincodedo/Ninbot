@@ -4,6 +4,8 @@ import dev.nincodedo.ninbot.common.Emojis;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -16,6 +18,7 @@ public abstract class EphemeralMessageExecutor extends MessageExecutor {
     List<MessageCreateData> ephemeralMessageResponses;
     List<MessageEmbed> messageEmbeds;
     List<MessageEmbed> ephemeralMessageEmbeds;
+    Modal modal;
 
     protected EphemeralMessageExecutor() {
         this.ephemeralMessageResponses = new ArrayList<>();
@@ -37,6 +40,15 @@ public abstract class EphemeralMessageExecutor extends MessageExecutor {
         if (!ephemeralMessageEmbeds.isEmpty()) {
             replyEphemeralEmbeds(ephemeralMessageEmbeds).queue();
         }
+        if (modal != null) {
+            replyModal(modal).queue();
+        }
+    }
+
+    protected abstract ModalCallbackAction replyModal(Modal modal);
+
+    public void addModal(Modal modal) {
+        this.modal = modal;
     }
 
     /**
@@ -68,10 +80,6 @@ public abstract class EphemeralMessageExecutor extends MessageExecutor {
 
     public void addEphemeralMessage(MessageCreateData message) {
         ephemeralMessageResponses.add(message);
-    }
-
-    public void addEphemeralMessage(MessageEmbed messageEmbed) {
-        ephemeralMessageEmbeds.add(messageEmbed);
     }
 
     public void addEphemeralUnsuccessfulReaction() {

@@ -1,13 +1,10 @@
 package dev.nincodedo.ninbot.common.config.db.component;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface ComponentRepository extends CrudRepository<Component, Long> {
-    @NotNull List<Component> findAll();
+public interface ComponentRepository extends BaseRepository<Component> {
 
     Component findByName(String name);
 

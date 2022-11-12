@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -44,16 +44,19 @@
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>1.5.3</instancio-junit.version>
-        <jackson-databind.version>2.14.0-rc2</jackson-databind.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
         <jsr305.version>3.0.2</jsr305.version>
         <log4j.version>2.19.0</log4j.version>
+        <lombok-mapstruct.version>0.1.0</lombok-mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
+        <pitest-junit5-plugin.version>1.1.0</pitest-junit5-plugin.version>
         <pitest-maven.version>1.9.8</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
@@ -62,6 +65,7 @@
         <sonar.organization>nincraft</sonar.organization>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
         <spring-cloud-starter-openfeign.version>4.0.0-RC1</spring-cloud-starter-openfeign.version>
+        <springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.5</testcontainers.version>
         <twitch4j.version>1.12.0</twitch4j.version>
@@ -86,11 +90,6 @@
                     <artifactId>icu4j</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.twitch4j</groupId>
@@ -194,6 +193,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
@@ -202,6 +206,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -223,6 +233,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
@@ -235,6 +249,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -345,8 +365,45 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <release>${maven.compiler.target}</release>
+                    <additionalOptions>--enable-preview</additionalOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -410,6 +467,7 @@
                     <avoidCallsTo>
                         <avoidCallsTo>org.slf4j</avoidCallsTo>
                         <avoidCallsTo>dev.nincodedo.ninbot.components.stats.StatManager</avoidCallsTo>
+                        <avoidCallsTo>dev.nincodedo.ninbot.common.StatAwareListenerAdapter</avoidCallsTo>
                         <avoidCallsTo>dev.nincodedo.ninbot.common.config.db.component.ComponentService</avoidCallsTo>
                     </avoidCallsTo>
                     <verbose>true</verbose>
@@ -421,7 +479,7 @@
                     <dependency>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>1.1.0</version>
+                        <version>${pitest-junit5-plugin.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -429,8 +487,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>dev.nincodedo.ninbot.NinbotRunner</mainClass>
-                    <layout>ZIP</layout>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
         </plugins>

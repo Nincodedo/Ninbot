@@ -53,30 +53,32 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
                 FormatLogObject.guildName(event.getGuild()));
         var optionalChannelId = configService.getSingleValueByName(event.getGuild()
                 .getId(), ConfigConstants.EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID);
-        optionalChannelId.ifPresent(channelId -> {
-            log.trace("Event Response {}: Emote announcement channel id {}", event.getResponseNumber(),
-                    channelId);
-            var channel = (GuildMessageChannel) event.getGuild().getGuildChannelById(channelId);
-            if (channel == null) {
-                log.trace("Event Response {}: Channel id {} not found", event.getResponseNumber(), channelId);
-                return;
-            }
-            log.trace("Event Response {}: Found channel {}", event.getResponseNumber(),
-                    FormatLogObject.channelInfo(channel));
-            var emoji = event.getEmoji();
-            countOneStat(componentName, event.getGuild().getId());
-            Member member = getMemberFromAudit(event, channel);
-            log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(), emoji.getName(),
-                    FormatLogObject.guildName(event.getGuild()));
-            channel.sendMessage(buildAnnouncementMessage(emoji, event.getGuild(), member))
-                    .queue(message -> {
-                        log.trace("Event Response {}: Sent message, adding reaction for {} in {}",
-                                event.getResponseNumber(),
-                                emoji.getName(), FormatLogObject.guildName(event.getGuild()));
-                        message.addReaction(emoji).queue();
-                    }, throwable -> log.trace("Event Response {}: Failed to send message for {} in {}",
-                            event.getResponseNumber(), emoji.getName(), FormatLogObject.guildName(event.getGuild())));
-        });
+        if (optionalChannelId.isEmpty()) {
+            return;
+        }
+        var channelId = optionalChannelId.get();
+        log.trace("Event Response {}: Emote announcement channel id {}", event.getResponseNumber(),
+                channelId);
+        var channel = (GuildMessageChannel) event.getGuild().getGuildChannelById(channelId);
+        if (channel == null) {
+            log.trace("Event Response {}: Channel id {} not found", event.getResponseNumber(), channelId);
+            return;
+        }
+        log.trace("Event Response {}: Found channel {}", event.getResponseNumber(),
+                FormatLogObject.channelInfo(channel));
+        var emoji = event.getEmoji();
+        countOneStat(componentName, event.getGuild().getId());
+        Member member = getMemberFromAudit(event, channel);
+        log.trace("Event Response {}: Sending message for {} in {}", event.getResponseNumber(), emoji.getName(),
+                FormatLogObject.guildName(event.getGuild()));
+        channel.sendMessage(buildAnnouncementMessage(emoji, event.getGuild(), member))
+                .queue(message -> {
+                    log.trace("Event Response {}: Sent message, adding reaction for {} in {}",
+                            event.getResponseNumber(),
+                            emoji.getName(), FormatLogObject.guildName(event.getGuild()));
+                    message.addReaction(emoji).queue();
+                }, throwable -> log.trace("Event Response {}: Failed to send message for {} in {}",
+                        event.getResponseNumber(), emoji.getName(), FormatLogObject.guildName(event.getGuild())));
     }
 
     @Nullable

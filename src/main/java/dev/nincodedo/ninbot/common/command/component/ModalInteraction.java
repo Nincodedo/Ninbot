@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-public interface ModalInteraction extends Command<ModalInteractionCommandMessageExecutor, ModalInteractionEvent>,
+public interface ModalInteraction extends Command<ModalInteractionEvent>,
         Interaction {
     @Override
     default CommandType getType() {
@@ -28,8 +28,7 @@ public interface ModalInteraction extends Command<ModalInteractionCommandMessage
         return messageExecutor;
     }
 
-    MessageExecutor execute(@NotNull ModalInteractionEvent event,
-            @NotNull ComponentData componentData);
+    MessageExecutor execute(@NotNull ModalInteractionEvent event, @NotNull ComponentData componentData);
 
     @Override
     default boolean isAbleToRegisterOnGuild() {

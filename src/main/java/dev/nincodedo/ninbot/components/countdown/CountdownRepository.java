@@ -1,14 +1,11 @@
 package dev.nincodedo.ninbot.components.countdown;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.repository.CrudRepository;
+import dev.nincodedo.ninbot.common.persistence.BaseRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CountdownRepository extends CrudRepository<Countdown, Long> {
-
-    @NotNull List<Countdown> findAll();
+public interface CountdownRepository extends BaseRepository<Countdown> {
 
     List<Countdown> findByServerId(String serverId);
 

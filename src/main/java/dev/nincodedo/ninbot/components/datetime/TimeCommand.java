@@ -26,13 +26,12 @@ public class TimeCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        SlashCommandEventMessageExecutor messageExecutor =
-                new SlashCommandEventMessageExecutor(slashCommandEvent);
-        Double amount = slashCommandEvent.getOption(TimeCommandName.Option.AMOUNT.get(), OptionMapping::getAsDouble);
-        String unit = slashCommandEvent.getOption(TimeCommandName.Option.UNIT.get(), "days",
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        Double amount = event.getOption(TimeCommandName.Option.AMOUNT.get(), OptionMapping::getAsDouble);
+        String unit = event.getOption(TimeCommandName.Option.UNIT.get(), "days",
                 OptionMapping::getAsString);
-        String display = slashCommandEvent.getOption(TimeCommandName.Option.DISPLAY.get(), "relative",
+        String display = event.getOption(TimeCommandName.Option.DISPLAY.get(), "relative",
                 OptionMapping::getAsString);
         if (amount != null && unit != null && display != null) {
             Timestamp timestamp = getTimestamp(amount, unit, display);

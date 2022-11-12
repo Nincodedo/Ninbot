@@ -5,7 +5,6 @@ import dev.nincodedo.ninbot.common.logging.FormatLogObject;
 import dev.nincodedo.ninbot.components.stats.StatManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,11 +30,11 @@ public class NinbotRunner {
 
     private final ShardManager shardManager;
 
-    private final List<Schedulable> schedulableList;
+    private final List<Schedulable<?, ?>> schedulableList;
 
     private final StatManager statManager;
 
-    public NinbotRunner(ShardManager shardManager, List<Schedulable> schedulableList, StatManager statManager) {
+    public NinbotRunner(ShardManager shardManager, List<Schedulable<?, ?>> schedulableList, StatManager statManager) {
         this.shardManager = shardManager;
         this.schedulableList = schedulableList;
         this.statManager = statManager;

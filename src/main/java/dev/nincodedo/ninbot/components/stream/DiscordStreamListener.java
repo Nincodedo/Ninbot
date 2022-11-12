@@ -152,6 +152,9 @@ public class DiscordStreamListener extends StatAwareListenerAdapter implements S
 
     @Override
     public void onGenericUserPresence(@NotNull GenericUserPresenceEvent event) {
+        if (!(event instanceof UserActivityStartEvent || event instanceof UserActivityEndEvent)) {
+            return;
+        }
         onStreamEvent(event, event.getGuild(), event.getMember());
     }
 

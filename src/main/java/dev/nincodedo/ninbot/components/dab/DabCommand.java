@@ -33,13 +33,12 @@ public class DabCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        doDabarinos(slashCommandEvent.getJDA()
-                        .getShardManager(), slashCommandEvent.getMessageChannel(), slashCommandEvent.getUser(),
+            @NotNull SlashCommandInteractionEvent event, @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        doDabarinos(event.getJDA()
+                        .getShardManager(), event.getMessageChannel(), event.getUser(),
                 messageExecutor,
-                slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser));
-        var user = slashCommandEvent.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser);
+                event.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser));
+        var user = event.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser);
         if (user != null) {
             messageExecutor.addMessageResponse(dabber.buildDabMessage(user));
         }

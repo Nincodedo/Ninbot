@@ -11,6 +11,7 @@ public interface Subcommand<T extends Enum<T>> {
      * @param subcommand String subcommand
      * @return Enum subcommand that matches the string
      */
+    @NotNull
     default T getSubcommand(@NotNull String subcommand) {
         return Enum.valueOf(enumSubcommandClass(), subcommand.toUpperCase());
     }

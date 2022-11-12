@@ -30,20 +30,18 @@ public class PollCommand implements SlashCommand {
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        if (slashCommandEvent.getMember() == null || slashCommandEvent.getGuild() == null) {
+    public MessageExecutor execute(@NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        if (event.getMember() == null || event.getGuild() == null) {
             return messageExecutor;
         }
-        Poll poll = parsePollMessage(slashCommandEvent, slashCommandEvent.getMember());
+        Poll poll = parsePollMessage(event, event.getMember());
         poll.setResourceBundle(resourceBundle());
-        poll.setLocaleString(LocaleService.getLocale(slashCommandEvent.getGuild()).toString());
-        slashCommandEvent.reply(poll.build())
-                .queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
-                    poll.setMessageId(message.getId());
-                    pollScheduler.addOne(poll, slashCommandEvent.getJDA().getShardManager());
-                }));
+        poll.setLocaleString(LocaleService.getLocale(event.getGuild()).toString());
+        event.reply(poll.build()).queue(interactionHook -> interactionHook.retrieveOriginal().queue(message -> {
+            poll.setMessageId(message.getId());
+            pollScheduler.addOne(poll, event.getJDA().getShardManager());
+        }));
         return messageExecutor;
     }
 

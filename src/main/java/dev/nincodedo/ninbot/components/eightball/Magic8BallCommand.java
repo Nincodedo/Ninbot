@@ -23,13 +23,13 @@ public class Magic8BallCommand implements SlashCommand {
 
     @Override
     public MessageExecutor execute(
-            @NotNull SlashCommandInteractionEvent slashCommandEvent) {
-        var messageExecutor = new SlashCommandEventMessageExecutor(slashCommandEvent);
-        var question = slashCommandEvent.getOption(Magic8BallCommandName.Option.QUESTION.get(), "",
+            @NotNull SlashCommandInteractionEvent event,
+            @NotNull SlashCommandEventMessageExecutor messageExecutor) {
+        var question = event.getOption(Magic8BallCommandName.Option.QUESTION.get(), "",
                 OptionMapping::getAsString);
         var messageEmbed = magic8BallMessageBuilder
                 .question(question)
-                .memberName(slashCommandEvent.getMember().getEffectiveName())
+                .memberName(event.getMember().getEffectiveName())
                 .build();
         messageExecutor.addMessageEmbed(messageEmbed);
         return messageExecutor;

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public interface Command<T, F> extends ReleaseStage {
+public interface Command<F> extends ReleaseStage {
     Locale defaultLocale = Locale.ENGLISH;
 
     /**

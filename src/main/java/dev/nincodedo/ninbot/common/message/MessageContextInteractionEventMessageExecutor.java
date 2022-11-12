@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
@@ -17,6 +19,11 @@ public class MessageContextInteractionEventMessageExecutor extends EphemeralMess
             MessageContextInteractionEvent messageContextInteractionEvent) {
         super();
         this.messageContextInteractionEvent = messageContextInteractionEvent;
+    }
+
+    @Override
+    protected ModalCallbackAction replyModal(Modal modal) {
+        return messageContextInteractionEvent.replyModal(modal);
     }
 
     @Override
