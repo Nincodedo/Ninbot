@@ -8,5 +8,6 @@ import java.util.List;
 
 @NoRepositoryBean
 public interface BaseRepository<T extends BaseEntity> extends JpaRepository<T, Long> {
-    @Override @NotNull List<T> findAll();
+    @Override
+    @NotNull List<T> findAll();
 }

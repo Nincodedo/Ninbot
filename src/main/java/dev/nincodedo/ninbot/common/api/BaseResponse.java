@@ -9,6 +9,7 @@ public class BaseResponse<T> {
 
     protected List<T> data;
     protected int count;
+
     public BaseResponse(List<T> data) {
         this.data = data;
         this.count = data.size();

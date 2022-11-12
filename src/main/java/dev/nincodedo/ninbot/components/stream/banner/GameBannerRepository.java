@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface GameBannerRepository extends BaseRepository<GameBanner> {
 
     Optional<GameBanner> findGameBannerByLogoIdAndBackgroundId(int logoId, int backgroundId);
+
     List<GameBanner> findAllByGameTitle(String gameTitle);
 }

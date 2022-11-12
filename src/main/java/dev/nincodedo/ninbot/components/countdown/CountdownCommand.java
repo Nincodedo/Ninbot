@@ -174,19 +174,20 @@ public class CountdownCommand implements SlashSubCommand<Subcommand> {
     @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(new SubcommandData(Subcommand.CREATE.get(), "Create a new countdown.").addOption(OptionType.STRING, CountdownCommandName.Option.NAME.get(),
-                        "The name for this " + "countdown.", true)
-                .addOption(OptionType.STRING, CountdownCommandName.Option.MONTH.get(),
-                        "The numerical month " + "for this countdown.", true)
-                .addOption(OptionType.STRING, CountdownCommandName.Option.DAY.get(),
-                        "The numerical day for " + "this countdown.", true)
-                .addOption(OptionType.STRING, CountdownCommandName.Option.YEAR.get(), "The year for this "
-                        + "countdown. Defaults to the upcoming date this month and day fall."),
+                                "The name for this " + "countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.MONTH.get(),
+                                "The numerical month " + "for this countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.DAY.get(),
+                                "The numerical day for " + "this countdown.", true)
+                        .addOption(OptionType.STRING, CountdownCommandName.Option.YEAR.get(), "The year for this "
+                                + "countdown. Defaults to the upcoming date this month and day fall."),
                 new SubcommandData(Subcommand.LIST.get(),
-                "List all the current countdowns for " + "this server."), new SubcommandData(Subcommand.DELETE.get(),
-                "Delete a countdown you "
-                        + "created.").addOptions(new OptionData(OptionType.STRING,
+                        "List all the current countdowns for "
+                                + "this server."), new SubcommandData(Subcommand.DELETE.get(),
+                        "Delete a countdown you "
+                                + "created.").addOptions(new OptionData(OptionType.STRING,
                         CountdownCommandName.Option.NAME.get(),
-                "The " + "name of the countdown.", true, true)));
+                        "The " + "name of the countdown.", true, true)));
     }
 
     @Override
