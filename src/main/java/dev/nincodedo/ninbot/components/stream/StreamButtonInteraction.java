@@ -24,33 +24,33 @@ public class StreamButtonInteraction implements ButtonInteraction {
     }
 
     @Override
-    public MessageExecutor execute(
-            @NotNull ButtonInteractionEvent event, ComponentData componentData) {
-        var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
+    public MessageExecutor execute(@NotNull ButtonInteractionEvent event,
+            @NotNull ButtonInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData) {
+        if (event.getGuild() == null) {
+            return messageExecutor;
+        }
         var buttonAction = StreamCommandName.Button.valueOf(componentData.action().toUpperCase());
         switch (buttonAction) {
-            case NOTHING -> messageExecutor.editEphemeralMessage(resource("button.stream.nothing"))
-                    .clearComponents();
+            case NOTHING -> messageExecutor.editEphemeralMessage(resource("button.stream.nothing")).clearComponents();
             case TOGGLE -> {
                 var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
                 var onOff = found ? resource("common.on") : resource("common.off");
                 messageExecutor.editEphemeralMessage(String.format(resource("button.stream.toggle"), onOff))
                         .clearComponents();
             }
-            case TWITCHNAME -> messageExecutor.addModal(updateTwitchName(event));
+            case TWITCHNAME ->
+                    messageExecutor.addModal(updateTwitchName(event.getUser().getId(), event.getGuild().getId()));
             default -> throw new IllegalStateException("Unexpected value: " + buttonAction);
         }
         return messageExecutor;
     }
 
-    private Modal updateTwitchName(@NotNull ButtonInteractionEvent event) {
-        var userId = event.getUser().getId();
-        var serverId = event.getGuild().getId();
-        var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId)
+    private Modal updateTwitchName(String userId, String guildId) {
+        var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, guildId)
                 .orElse(new StreamingMember());
         return Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
-                .addActionRow(TextInput.create(
-                                "stream-twitchname", "What's your Twitch username?", TextInputStyle.SHORT)
+                .addActionRow(TextInput.create("stream-twitchname", "What's your Twitch username?",
+                                TextInputStyle.SHORT)
                         .setMinLength(4)
                         .setMaxLength(25)
                         .setValue(streamingMember.getTwitchUsername())

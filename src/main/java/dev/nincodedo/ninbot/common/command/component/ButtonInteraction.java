@@ -23,17 +23,18 @@ public interface ButtonInteraction extends Command<ButtonInteractionEvent>, Inte
     @Override
     default MessageExecutor execute(@NotNull ButtonInteractionEvent event) {
         var componentDataOptional = getComponentDataFromEvent(event);
-        if (componentDataOptional.isPresent()) {
-            return execute(event, componentDataOptional.get());
-        }
         var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
+        if (componentDataOptional.isPresent()) {
+            return execute(event, messageExecutor, componentDataOptional.get());
+        }
         messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
         log().error("ButtonInteraction {} received event {} without parseable component data {} {}", getName(),
                 event.getResponseNumber(), event.getComponentId(), event.getRawData());
         return messageExecutor;
     }
 
-    MessageExecutor execute(@NotNull ButtonInteractionEvent event, ComponentData componentData);
+    MessageExecutor execute(@NotNull ButtonInteractionEvent event,
+            @NotNull ButtonInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData);
 
     Logger log();
 }

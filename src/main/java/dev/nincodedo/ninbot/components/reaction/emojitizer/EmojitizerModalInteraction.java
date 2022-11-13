@@ -27,8 +27,7 @@ public class EmojitizerModalInteraction implements ModalInteraction {
 
     @Override
     public MessageExecutor execute(@NotNull ModalInteractionEvent event,
-            @NotNull ComponentData componentData) {
-        var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
+            @NotNull ModalInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData) {
         var textInput = event.getValue("emojitizer-text");
         if (textInput == null) {
             return messageExecutor;
@@ -42,15 +41,13 @@ public class EmojitizerModalInteraction implements ModalInteraction {
             event.deferReply(true).queue();
             var reaction = new EmojiReactionResponse(emojiText);
             var messageId = componentData.data();
-            event.getGuildChannel()
-                    .getHistoryAround(messageId, 1)
-                    .queue(replyAfterSuccess(event, reaction, messageId));
+            event.getGuildChannel().getHistoryAround(messageId, 1).queue(replyAfterSuccess(event, reaction, messageId));
         } else if (ReactionUtils.isCanEmoji(emojiText)) {
-            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer"
-                    + ".cantbecauseletters"));
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString(
+                    "modal.emojitizer.cantbecauseletters"));
         } else {
-            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("modal.emojitizer"
-                    + ".cantbecausenotemojitizable"));
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString(
+                    "modal.emojitizer.cantbecausenotemojitizable"));
         }
         return messageExecutor;
     }

@@ -27,17 +27,16 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
     }
 
     @Override
-    public MessageExecutor execute(@NotNull MessageContextInteractionEvent event) {
-        var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
+    public MessageExecutor execute(@NotNull MessageContextInteractionEvent event,
+            @NotNull MessageContextInteractionEventMessageExecutor messageExecutor) {
         var currentEmojiCount = event.getTarget().getReactions().size();
         if (currentEmojiCount >= Message.MAX_REACTIONS) {
-            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
-                    + ".messagecontext.maxreactions"));
+            messageExecutor.addEphemeralMessage(resourceBundle(event.getUserLocale()).getString(
+                    "command.emojitizer.messagecontext.maxreactions"));
         } else {
             var maxCount = Message.MAX_REACTIONS - currentEmojiCount;
             TextInput input = TextInput.create("emojitizer-text", resourceBundle(event.getUserLocale()).getString(
-                                    "command.emojitizer.messagecontext.textinput"),
-                            TextInputStyle.SHORT)
+                            "command.emojitizer.messagecontext.textinput"), TextInputStyle.SHORT)
                     .setMinLength(1)
                     .setMaxLength(maxCount)
                     .build();
@@ -56,8 +55,8 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     characterBundle + "plural");
             Modal modal = Modal.create("emojitizer-modal-" + event.getTarget().getId() + ";"
                                     + alreadyExistingLetterEmojis,
-                            String.format(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
-                                    + ".messagecontext.modal.title"), maxCount, character))
+                            String.format(resourceBundle(event.getUserLocale()).getString(
+                                    "command.emojitizer.messagecontext.modal.title"), maxCount, character))
                     .addActionRow(input)
                     .build();
             messageExecutor.addModal(modal);

@@ -60,6 +60,7 @@ class EmojitizerModalInteractionTest {
         var message = Mockito.mock(Message.class);
         var hook = Mockito.mock(InteractionHook.class);
         var webhookEditAction = Mockito.mock(WebhookMessageEditAction.class);
+        var messageExecutor1 = new ModalInteractionCommandMessageExecutor(modalEvent);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
         when(modalMapping.getAsString()).thenReturn(emojiText);
         when(modalEvent.deferReply(true)).thenReturn(replyCallback);
@@ -70,7 +71,7 @@ class EmojitizerModalInteractionTest {
         when(hook.editOriginal(anyString())).thenReturn(webhookEditAction);
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
-                componentData);
+                messageExecutor1, componentData);
 
         assertThat(messageExecutor.getEphemeralMessageResponses()).isEmpty();
 
@@ -87,12 +88,13 @@ class EmojitizerModalInteractionTest {
         var componentData = new ComponentData("", "", "1");
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
+        var messageExecutor1 = new ModalInteractionCommandMessageExecutor(modalEvent);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
         when(modalEvent.getUserLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(modalMapping.getAsString()).thenReturn("aaa");
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
-                componentData);
+                messageExecutor1, componentData);
 
         assertThat(messageExecutor.getEphemeralMessageResponses().get(0).getContent()).contains("emojitize");
     }
@@ -102,12 +104,13 @@ class EmojitizerModalInteractionTest {
         var componentData = new ComponentData("", "", "1;\uD83C\uDDE6");
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
         var modalMapping = Mockito.mock(ModalMapping.class);
+        var messageExecutor1 = new ModalInteractionCommandMessageExecutor(modalEvent);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(modalMapping);
         when(modalEvent.getUserLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(modalMapping.getAsString()).thenReturn("a");
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
-                componentData);
+                messageExecutor1, componentData);
 
         assertThat(messageExecutor.getEphemeralMessageResponses().get(0).getContent()).contains("already");
     }
@@ -116,10 +119,11 @@ class EmojitizerModalInteractionTest {
     void nullMapping() {
         var componentData = new ComponentData("", "", "1");
         var modalEvent = Mockito.mock(ModalInteractionEvent.class);
+        var messageExecutor1 = new ModalInteractionCommandMessageExecutor(modalEvent);
         when(modalEvent.getValue("emojitizer-text")).thenReturn(null);
 
         var messageExecutor = (ModalInteractionCommandMessageExecutor) emojitizerModalInteraction.execute(modalEvent,
-                componentData);
+                messageExecutor1, componentData);
 
         assertThat(messageExecutor.getEphemeralMessageResponses()).isEmpty();
     }

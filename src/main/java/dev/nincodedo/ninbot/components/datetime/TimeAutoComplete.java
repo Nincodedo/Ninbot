@@ -20,8 +20,8 @@ public class TimeAutoComplete implements AutoCompleteCommand {
     }
 
     @Override
-    public MessageExecutor execute(@NotNull CommandAutoCompleteInteractionEvent commandAutoCompleteInteractionEvent) {
-        TimeCommandName.Option option = getOptionFromName(commandAutoCompleteInteractionEvent.getFocusedOption()
+    public MessageExecutor execute(@NotNull CommandAutoCompleteInteractionEvent event) {
+        TimeCommandName.Option option = getOptionFromName(event.getFocusedOption()
                 .getName());
         List<String> choices = switch (option) {
             case UNIT -> Arrays.asList("minutes", "hours", "seconds", "days");
@@ -29,8 +29,8 @@ public class TimeAutoComplete implements AutoCompleteCommand {
             default -> throw new IllegalStateException(String.format("TimeCommand autoComplete found option %s, which "
                     + "cannot be handled.", option));
         };
-        commandAutoCompleteInteractionEvent.replyChoiceStrings(choices).queue();
-        return new AutoCompleteCommandMessageExecutor(commandAutoCompleteInteractionEvent);
+        event.replyChoiceStrings(choices).queue();
+        return new AutoCompleteCommandMessageExecutor(event);
     }
 
     private TimeCommandName.Option getOptionFromName(String name) {

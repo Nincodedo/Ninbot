@@ -26,10 +26,10 @@ public class StreamModalInteraction implements ModalInteraction {
     }
 
     @Override
-    public MessageExecutor execute(@NotNull ModalInteractionEvent event, @NotNull ComponentData componentData) {
-        var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
+    public MessageExecutor execute(@NotNull ModalInteractionEvent event,
+            @NotNull ModalInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData) {
         var textInput = event.getValue("stream-twitchname");
-        if (textInput != null) {
+        if (textInput != null && event.getGuild() != null) {
             var userId = event.getUser().getId();
             var serverId = event.getGuild().getId();
             var twitchUsername = textInput.getAsString();

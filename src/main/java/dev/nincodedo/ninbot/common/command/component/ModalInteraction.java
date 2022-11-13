@@ -18,17 +18,18 @@ public interface ModalInteraction extends Command<ModalInteractionEvent>,
     @Override
     default MessageExecutor execute(@NotNull ModalInteractionEvent event) {
         var componentDataOptional = getComponentDataFromEvent(event);
-        if (componentDataOptional.isPresent()) {
-            return execute(event, componentDataOptional.get());
-        }
         var messageExecutor = new ModalInteractionCommandMessageExecutor(event);
+        if (componentDataOptional.isPresent()) {
+            return execute(event, messageExecutor, componentDataOptional.get());
+        }
         messageExecutor.addEphemeralMessage("A weird error has come up, please try again.");
         log().error("ButtonInteraction {} received event {} without parseable component data {} {}", getName(),
                 event.getResponseNumber(), event.getModalId(), event.getRawData());
         return messageExecutor;
     }
 
-    MessageExecutor execute(@NotNull ModalInteractionEvent event, @NotNull ComponentData componentData);
+    MessageExecutor execute(@NotNull ModalInteractionEvent event,
+            @NotNull ModalInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData);
 
     @Override
     default boolean isAbleToRegisterOnGuild() {

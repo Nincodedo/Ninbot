@@ -29,8 +29,7 @@ public class BannerButtonInteraction implements ButtonInteraction {
 
     @Override
     public ButtonInteractionCommandMessageExecutor execute(@NotNull ButtonInteractionEvent event,
-            ComponentData componentData) {
-        var messageExecutor = new ButtonInteractionCommandMessageExecutor(event);
+            @NotNull ButtonInteractionCommandMessageExecutor messageExecutor, @NotNull ComponentData componentData) {
         var gameBannerId = Long.valueOf(componentData.data());
         var userId = event.getUser().getId();
         var gameBannerOptional = gameBannerRepository.findById(gameBannerId);
