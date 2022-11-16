@@ -68,7 +68,7 @@
         <spring-cloud-starter-openfeign.version>4.0.0-RC1</spring-cloud-starter-openfeign.version>
         <springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
-        <testcontainers.version>1.17.5</testcontainers.version>
+        <testcontainers.version>1.17.6</testcontainers.version>
         <twitch4j.version>1.12.0</twitch4j.version>
     </properties>
     <dependencies>
