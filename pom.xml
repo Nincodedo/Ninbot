@@ -65,7 +65,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>nincraft</sonar.organization>
         <sortpom-maven-plugin.version>3.2.0</sortpom-maven-plugin.version>
-        <spring-cloud-starter-openfeign.version>4.0.0-RC1</spring-cloud-starter-openfeign.version>
+        <spring-cloud-starter-openfeign.version>4.0.0-RC2</spring-cloud-starter-openfeign.version>
         <springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.6</testcontainers.version>
