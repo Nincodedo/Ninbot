@@ -70,6 +70,7 @@
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <twitch4j.version>1.12.0</twitch4j.version>
+        <versions-maven-plugin.version>2.13.0</versions-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -346,6 +347,14 @@
                     <version>${maven-release-plugin.version}</version>
                     <configuration>
                         <tagNameFormat>@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                    <configuration>
+                        <processDependencyManagement>false</processDependencyManagement>
                     </configuration>
                 </plugin>
             </plugins>
