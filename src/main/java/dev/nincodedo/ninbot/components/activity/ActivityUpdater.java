@@ -25,12 +25,12 @@ public class ActivityUpdater {
         setNinbotActivity();
     }
 
-    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedDelay = 24, timeUnit = TimeUnit.HOURS)
     protected void updateStatusList() {
         activityStatusList = activityStatusRepository.findAll();
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedDelay = 4, timeUnit = TimeUnit.HOURS)
     protected void setNinbotActivity() {
         if (!activityStatusList.isEmpty()) {
             var activityStatus = activityStatusList.get(random.nextInt(activityStatusList.size()));

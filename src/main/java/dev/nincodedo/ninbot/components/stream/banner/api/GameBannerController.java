@@ -33,7 +33,7 @@ public class GameBannerController {
     public ResponseEntity<BaseResponse<GameBannerDTO>> allBanners() {
         var list = gameBannerRepository.findAll()
                 .stream()
-                .map(gameBanner -> gameBannerMapper.mapToDto(gameBanner))
+                .map(gameBannerMapper::mapToDto)
                 .sorted(Comparator.comparing(GameBannerDTO::getGameTitle)
                         .thenComparing(GameBannerDTO::getScore)
                         .reversed())
@@ -47,7 +47,7 @@ public class GameBannerController {
                 .stream()
                 .map(file -> gameBannerBuilder.getGameBannerFromFile(file))
                 .flatMap(Optional::stream)
-                .map(gameBanner -> gameBannerMapper.mapToDto(gameBanner))
+                .map(gameBannerMapper::mapToDto)
                 .sorted(Comparator.comparing(GameBannerDTO::getGameTitle)
                         .thenComparing(GameBannerDTO::getScore)
                         .reversed())
@@ -59,7 +59,7 @@ public class GameBannerController {
     public ResponseEntity<BaseResponse<GameBannerDTO>> allByGameName(@PathVariable String gameName) {
         var list = gameBannerRepository.findAllByGameTitle(gameName)
                 .stream()
-                .map(gameBanner -> gameBannerMapper.mapToDto(gameBanner))
+                .map(gameBannerMapper::mapToDto)
                 .sorted(Comparator.comparing(GameBannerDTO::getScore).reversed())
                 .toList();
         return new ResponseEntity<>(new BaseResponse<>(list), HttpStatus.OK);
