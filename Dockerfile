@@ -1,12 +1,8 @@
 FROM maven:3.8.6-eclipse-temurin-19 AS build
-COPY pom.xml .
-COPY .mvn ./.mvn
-RUN mvn -B dependency:resolve
-COPY src ./src
-COPY .git ./.git
-COPY docs ./docs
-RUN mvn package -P git-commit
-RUN cp target/ninbot-*-SNAPSHOT.jar ninbot.jar
+
+COPY . ./
+RUN mvn -B package -P git-commit
+RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
 RUN java -Djarmode=layertools -jar ninbot.jar extract
 RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.19.1/opentelemetry-javaagent.jar
 
@@ -19,8 +15,8 @@ RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
 RUN mkdir /app && chown -hR ninbot:ninbot /app
 WORKDIR /app
 COPY --chown=ninbot:ninbot --from=build dependencies/ ./
-COPY --chown=ninbot:ninbot --from=build snapshot-dependencies/ ./
 COPY --chown=ninbot:ninbot --from=build spring-boot-loader/ ./
+COPY --chown=ninbot:ninbot --from=build snapshot-dependencies/ ./
 COPY --chown=ninbot:ninbot --from=build application/ ./
 COPY --chown=ninbot:ninbot DockerHealthCheck.java /app
 COPY --chown=ninbot:ninbot --from=build opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar

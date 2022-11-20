@@ -10,3 +10,4 @@
 /sourcetrail_dependencies/
 Ninbot.src*
 *.jar
+**/target/**
