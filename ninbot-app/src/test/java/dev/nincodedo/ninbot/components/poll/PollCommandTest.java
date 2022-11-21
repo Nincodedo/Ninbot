@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PollCommandTest {

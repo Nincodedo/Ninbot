@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.stream;
 
 import com.github.twitch4j.TwitchClient;
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.nincord.config.db.component.ComponentService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class TwitchStreamListenerTest {
     @Mock

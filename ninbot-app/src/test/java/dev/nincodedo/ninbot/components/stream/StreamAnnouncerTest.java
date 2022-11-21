@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.nincord.config.db.ConfigConstants;
 import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.stats.StatManager;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class StreamAnnouncerTest {
     @Mock

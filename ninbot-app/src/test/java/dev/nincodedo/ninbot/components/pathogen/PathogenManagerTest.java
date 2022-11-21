@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.ninbot.components.pathogen.audit.PathogenAuditRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,7 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class PathogenManagerTest {
 

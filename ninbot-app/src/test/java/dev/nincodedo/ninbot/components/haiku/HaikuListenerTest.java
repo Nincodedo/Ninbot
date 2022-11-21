@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.haiku;
 
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.config.db.component.ComponentService;
 import dev.nincodedo.nincord.stats.StatManager;
@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class HaikuListenerTest {
 

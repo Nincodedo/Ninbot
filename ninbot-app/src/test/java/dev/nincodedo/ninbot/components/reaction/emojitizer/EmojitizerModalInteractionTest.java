@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.reaction.emojitizer;
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.nincord.command.component.ComponentData;
 import dev.nincodedo.nincord.message.ModalInteractionCommandMessageExecutor;
 import net.dv8tion.jda.api.entities.Message;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties"})
 class EmojitizerModalInteractionTest {
 

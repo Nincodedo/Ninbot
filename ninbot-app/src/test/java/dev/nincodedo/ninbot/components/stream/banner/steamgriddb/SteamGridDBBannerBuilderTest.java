@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream.banner.steamgriddb;
 
-import dev.nincodedo.ninbot.NinbotRunner;
+import dev.nincodedo.ninbot.NinbotApplication;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
 import org.apache.commons.io.FileUtils;
 import org.instancio.Instancio;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, InstancioExtension.class})
-@ContextConfiguration(classes = {NinbotRunner.class})
+@ContextConfiguration(classes = {NinbotApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class SteamGridDBBannerBuilderTest {
 

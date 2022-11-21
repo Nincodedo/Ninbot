@@ -32,7 +32,7 @@ import java.util.List;
 @EnableFeignClients
 @ComponentScan("dev.nincodedo")
 @ConfigurationPropertiesScan("dev.nincodedo")
-public class NinbotRunner {
+public class NinbotApplication {
 
     private final ShardManager shardManager;
 
@@ -40,14 +40,14 @@ public class NinbotRunner {
 
     private final StatManager statManager;
 
-    public NinbotRunner(ShardManager shardManager, List<Schedulable<?, ?>> schedulableList, StatManager statManager) {
+    public NinbotApplication(ShardManager shardManager, List<Schedulable<?, ?>> schedulableList, StatManager statManager) {
         this.shardManager = shardManager;
         this.schedulableList = schedulableList;
         this.statManager = statManager;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(NinbotRunner.class, args);
+        SpringApplication.run(NinbotApplication.class, args);
     }
 
     private void waitForShardStartup(JDA jda) {
