@@ -23,9 +23,6 @@ spring:
   banner:
     location: classpath:ninbot-ascii-art.txt
 logging:
-  file:
-    path: logs
-    name: ninbot.log
   level:
     dev:
       nincodedo: INFO
