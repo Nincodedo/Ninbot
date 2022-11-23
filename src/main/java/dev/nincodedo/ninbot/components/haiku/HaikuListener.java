@@ -120,7 +120,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
     private int getSyllableCount(String message) {
         int count = 0;
         for (String word : message.split("\\s+")) {
-            count += syllableCounter.count(word);
+            count += syllableCounter.count(word.replaceAll("\\W", ""));
         }
         return count;
     }
