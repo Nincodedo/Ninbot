@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -58,7 +57,13 @@ class HaikuListenerTest {
     MockHaikuListener haikuListener;
 
     static List<String> nonhaikuables() {
-        return List.of("too short", "the the the the the the the the the the the the the the the the 9");
+        return List.of("too short", "the the the the the the the the the the the the the the the the 9",
+            "Because Amazon continues to be a curse on my work life.");
+    }
+
+    static List<String> haikuables() {
+        return List.of("the the the the the the the the the the the the the the the the the",
+                "Because Amazon continues to be a curse on my whole work life.");
     }
 
     @ParameterizedTest
@@ -80,9 +85,9 @@ class HaikuListenerTest {
         assertThat(haikuListener.isHaikuable(unhaikuable, "1")).isNotPresent();
     }
 
-    @Test
-    void messageHaikuable() {
-        String bestHaiku = "the the the the the the the the the the the the the the the the the";
+    @ParameterizedTest
+    @MethodSource("haikuables")
+    void messageHaikuable(String haikuable) {
         Guild guild = Mockito.mock(Guild.class);
         MessageChannelUnion channel = Mockito.mock(MessageChannelUnion.class);
         User user = Mockito.mock(User.class);
@@ -90,8 +95,8 @@ class HaikuListenerTest {
         MessageCreateAction action = Mockito.mock(MessageCreateAction.class);
         when(messageEvent.getMessage()).thenReturn(message);
         when(message.getContentStripped())
-                .thenReturn(bestHaiku);
-        when(message.getContentRaw()).thenReturn(bestHaiku);
+                .thenReturn(haikuable);
+        when(message.getContentRaw()).thenReturn(haikuable);
         when(messageEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(componentService.isDisabled("haiku", "1")).thenReturn(false);
@@ -104,7 +109,7 @@ class HaikuListenerTest {
 
         haikuListener.onMessageReceived(messageEvent);
 
-        assertThat(haikuListener.isHaikuable(bestHaiku, "1")).isPresent();
+        assertThat(haikuListener.isHaikuable(haikuable, "1")).isPresent();
     }
 
     public static class MockHaikuListener extends HaikuListener {
