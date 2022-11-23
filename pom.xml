@@ -30,6 +30,7 @@
         <module>ninbot-app</module>
         <module>ninbot-shared-parent</module>
         <module>nincord-common</module>
+        <module>ninbot-test-coverage</module>
     </modules>
     <scm>
         <connection>scm:git:https://github.com/Nincodedo/Ninbot.git</connection>
