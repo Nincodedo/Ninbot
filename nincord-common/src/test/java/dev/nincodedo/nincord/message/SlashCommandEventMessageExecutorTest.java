@@ -25,7 +25,7 @@ class SlashCommandEventMessageExecutorTest {
 
         messageExecutor.executeActions();
 
-        verify(slashCommandEvent, times(1)).reply(any(MessageCreateData.class));
+        verify(slashCommandEvent).reply(any(MessageCreateData.class));
     }
 
     @Test

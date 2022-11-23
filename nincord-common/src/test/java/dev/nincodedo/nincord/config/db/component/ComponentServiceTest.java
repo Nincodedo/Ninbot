@@ -18,7 +18,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class ComponentServiceTest {
 
     @Mock
@@ -29,7 +28,6 @@ class ComponentServiceTest {
 
     @InjectMocks
     ComponentService componentService;
-
 
     @Test
     void getAllComponents() {
@@ -63,6 +61,6 @@ class ComponentServiceTest {
         when(componentRepository.findByNameAndType(name, componentType)).thenReturn(Optional.of(component));
 
         componentService.registerComponent(name, componentType);
-        verify(componentRepository, times(0)).save(Mockito.any(Component.class));
+        verify(componentRepository, Mockito.never()).save(Mockito.any(Component.class));
     }
 }
