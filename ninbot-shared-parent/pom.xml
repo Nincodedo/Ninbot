@@ -111,12 +111,12 @@
                 <version>2.2.2</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>log4j-slf4j-impl</artifactId>
                         <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-slf4j-impl</artifactId>
                     </exclusion>
                     <exclusion>
-                        <artifactId>icu4j</artifactId>
                         <groupId>com.ibm.icu</groupId>
+                        <artifactId>icu4j</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -166,8 +166,8 @@
                 <version>4.0.0-RC2</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>feign-core</artifactId>
                         <groupId>io.github.openfeign</groupId>
+                        <artifactId>feign-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

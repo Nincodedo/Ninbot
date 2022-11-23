@@ -26,10 +26,6 @@
             <email>nincodedo@gmail.com</email>
         </developer>
     </developers>
-    <properties>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.organization>nincraft</sonar.organization>
-    </properties>
     <modules>
         <module>ninbot-app</module>
         <module>ninbot-shared-parent</module>
@@ -40,6 +36,10 @@
         <developerConnection>scm:git:ssh://github.com:Nincodedo/Ninbot.git</developerConnection>
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
+    <properties>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>nincraft</sonar.organization>
+    </properties>
     <build>
         <plugins>
             <plugin>
