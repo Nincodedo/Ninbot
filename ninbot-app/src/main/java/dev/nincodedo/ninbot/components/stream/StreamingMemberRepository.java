@@ -10,6 +10,9 @@ public interface StreamingMemberRepository extends BaseRepository<StreamingMembe
     Optional<StreamingMember> findByUserIdAndGuildId(String userId, String guildId);
 
     @NotNull
+    List<StreamingMember> findAllByUserId(String userId);
+
+    @NotNull
     List<StreamingMember> findAllByTwitchUsernameIsNotNull();
 
     @NotNull

@@ -31,12 +31,12 @@ public class StreamModalInteraction implements ModalInteraction {
         var textInput = event.getValue("stream-twitchname");
         if (textInput != null && event.getGuild() != null) {
             var userId = event.getUser().getId();
-            var serverId = event.getGuild().getId();
             var twitchUsername = textInput.getAsString();
-            var streamingMember = streamingMemberRepository.findByUserIdAndGuildId(userId, serverId)
-                    .orElse(new StreamingMember(userId, serverId));
-            streamingMember.setTwitchUsername(twitchUsername);
-            streamingMemberRepository.save(streamingMember);
+            var streamingMembers = streamingMemberRepository.findAllByUserId(userId);
+            for (var streamingMember : streamingMembers) {
+                streamingMember.setTwitchUsername(twitchUsername);
+                streamingMemberRepository.save(streamingMember);
+            }
             messageExecutor.addEphemeralMessage("Updated your Twitch username to " + twitchUsername);
         }
         return messageExecutor;
