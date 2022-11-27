@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.0-RC2</version>
+        <version>3.0.0</version>
         <relativePath/>
     </parent>
 
@@ -23,7 +23,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.10.0</commons-text.version>
-        <dice.version>2.2.1</dice.version>
+        <dice.version>2.2.2</dice.version>
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>1.5.4</instancio-junit.version>
@@ -95,22 +95,23 @@
             <dependency>
                 <groupId>org.instancio</groupId>
                 <artifactId>instancio-junit</artifactId>
-                <version>1.5.4</version>
+                <version>${instancio-junit.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>1.10.0</version>
+                <version>${commons-text.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.twitch4j</groupId>
                 <artifactId>twitch4j</artifactId>
-                <version>1.12.0</version>
+                <version>${twitch4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.bernardomg.tabletop</groupId>
                 <artifactId>dice</artifactId>
-                <version>2.2.2</version>
+                <version>${dice.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.logging.log4j</groupId>
@@ -125,47 +126,47 @@
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
+                <version>${jsr305.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit</artifactId>
-                <version>1.0.0</version>
+                <version>${archunit.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.11.0</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
-                <version>2.6</version>
+                <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
                 <groupId>eu.crydee</groupId>
                 <artifactId>syllable-counter</artifactId>
-                <version>4.1.0</version>
+                <version>${syllable-counter.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.imgscalr</groupId>
                 <artifactId>imgscalr-lib</artifactId>
-                <version>4.2</version>
+                <version>${imgscalr-lib.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
-                <version>1.5.3.Final</version>
+                <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
-                <version>1.6.12</version>
+                <version>${springdoc-openapi-ui.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>4.0.0-RC2</version>
+                <version>${spring-cloud-starter-openfeign.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>io.github.openfeign</groupId>
@@ -176,32 +177,32 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>junit-jupiter</artifactId>
-                <version>1.17.6</version>
+                <version>${testcontainers.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>mysql</artifactId>
-                <version>1.17.6</version>
+                <version>${testcontainers.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
-                <version>1.17.6</version>
+                <version>${testcontainers.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-junit5-plugin</artifactId>
-                <version>1.1.0</version>
+                <version>${pitest-junit5-plugin.version}</version>
             </dependency>
             <dependency>
                 <groupId>club.minnced</groupId>
                 <artifactId>discord-webhooks</artifactId>
-                <version>0.8.2</version>
+                <version>${discord-webhooks.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.twitch4j</groupId>
                 <artifactId>twitch4j-auth</artifactId>
-                <version>1.12.0</version>
+                <version>${twitch4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -353,7 +354,7 @@
                     <plugin>
                         <groupId>io.github.git-commit-id</groupId>
                         <artifactId>git-commit-id-maven-plugin</artifactId>
-                        <version>5.0.0</version>
+                        <version>${git-commit-id-plugin.version}</version>
                     </plugin>
                 </plugins>
             </build>

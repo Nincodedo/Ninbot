@@ -4,6 +4,7 @@
 /logs/
 /config
 /Ninbot.iml
+**/*.iml
 /data/
 *.log
 *.gz
