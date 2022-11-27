@@ -35,14 +35,14 @@ Make sure to read our [contributing expectations](CONTRIBUTING.md) before making
 #### Use the reaction JSON framework
 
 Prioritize the reaction framework when possible. Adding a target phrase and a response to
-the [responses.json](src/main/resources/responses.json) is sometimes all you need to do. Responses done through this
-will react with emojis automatically if it is possible. This also helps with the next development goal...
+the [responses.json](ninbot-app/src/main/resources/responses.json) is sometimes all you need to do. Responses done
+through this will react with emojis automatically if it is possible. This also helps with the next development goal...
 
 #### Minimize Chat Clutter
 
 Prioritize reacting with emojis when possible. Sending chat messages should only be done if absolutely necessary (comedy
 is sometimes necessary). Commonly used Emojis for Ninbot can be found in
-the [common Emojis class](src/main/java/dev/nincodedo/ninbot/common/Emojis.java).
+the [common Emojis class](nincord-common/src/main/java/dev/nincodedo/nincord/Emojis.java).
 
 #### Updated Documentation
 
