@@ -1,10 +1,11 @@
 FROM maven:3.8.6-eclipse-temurin-19 AS build
 
+ARG open_telemetry_version=v1.20.2
 COPY . ./
 RUN mvn -B package -P git-commit
 RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
 RUN java -Djarmode=layertools -jar ninbot.jar extract
-RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.20.2/opentelemetry-javaagent.jar
+RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$open_telemetry_version/opentelemetry-javaagent.jar
 
 FROM eclipse-temurin:19-jre-focal
 
