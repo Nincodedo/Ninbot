@@ -8,6 +8,7 @@ import dev.nincodedo.nincord.config.db.component.ComponentType;
 import dev.nincodedo.nincord.message.MessageUtils;
 import dev.nincodedo.nincord.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -42,6 +43,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
         componentService.registerComponent(componentName, ComponentType.ACTION);
     }
 
+    @WithSpan
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild() || event.getAuthor().isBot()

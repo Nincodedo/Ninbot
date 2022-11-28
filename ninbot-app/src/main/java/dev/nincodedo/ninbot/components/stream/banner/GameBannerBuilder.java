@@ -1,6 +1,7 @@
 package dev.nincodedo.ninbot.components.stream.banner;
 
 import dev.nincodedo.nincord.StreamUtils;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -25,6 +26,7 @@ public abstract class GameBannerBuilder {
         this.executorService = executorService;
     }
 
+    @WithSpan
     public CompletableFuture<GameBanner> getGameBannerAsync(String gameTitle) {
         CompletableFuture<GameBanner> futureGameBanner = new CompletableFuture<GameBanner>().completeOnTimeout(null,
                 20, TimeUnit.SECONDS);
