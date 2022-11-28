@@ -44,8 +44,10 @@ public class StreamMessageBuilder {
             if (gameBanner != null) {
                 log.trace("Got a game banner! {}", gameBanner);
                 embedBuilder.setImage("attachment://" + gameBanner.getFileName());
-                embedBuilder.setFooter("How did Ninbot do with this generated banner? Leave some feedback with the "
-                        + "buttons below!");
+                if (gameBanner.getScore() == 0) {
+                    embedBuilder.setFooter("How did Ninbot do with this generated banner? Leave some feedback with "
+                            + "the buttons below!");
+                }
                 return new MessageCreateBuilder().addEmbeds(embedBuilder.build())
                         .addFiles(FileUpload.fromData(gameBanner.getFile()))
                         .addComponents(getComponentsForGameBanner(gameBanner))
