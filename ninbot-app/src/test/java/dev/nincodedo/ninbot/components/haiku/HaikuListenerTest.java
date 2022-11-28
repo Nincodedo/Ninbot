@@ -58,7 +58,7 @@ class HaikuListenerTest {
 
     static List<String> nonhaikuables() {
         return List.of("too short", "the the the the the the the the the the the the the the the the 9",
-            "Because Amazon continues to be a curse on my work life.");
+                "Because Amazon continues to be a curse on my work life.");
     }
 
     static List<String> haikuables() {

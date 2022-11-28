@@ -32,7 +32,7 @@ public class UserCommand implements SlashSubCommand<Subcommand> {
             updateBirthday(event);
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         } else if (subcommand == Subcommand.ANNOUNCEMENT) {
-            toggleAnnouncement(event.getUser().getId());
+            toggleAnnouncement(event.getMember().getId());
             messageExecutor.addEphemeralMessage(Emojis.THUMBS_UP);
         }
         return messageExecutor;

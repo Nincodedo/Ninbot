@@ -7,8 +7,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service
-public
-class UserService implements Scheduler<NinbotUser, UserRepository> {
+public class UserService implements Scheduler<NinbotUser, UserRepository> {
     private UserRepository userRepository;
 
     UserService(UserRepository userRepository) {
@@ -32,7 +31,10 @@ class UserService implements Scheduler<NinbotUser, UserRepository> {
 
     public void toggleBirthdayAnnouncement(String userId) {
         userRepository.getFirstByUserId(userId)
-                .ifPresent(ninbotUser -> ninbotUser.setAnnounceBirthday(!ninbotUser.getAnnounceBirthday()));
+                .ifPresent(user -> {
+                    user.setAnnounceBirthday(!user.getAnnounceBirthday());
+                    userRepository.save(user);
+                });
     }
 
     @Override

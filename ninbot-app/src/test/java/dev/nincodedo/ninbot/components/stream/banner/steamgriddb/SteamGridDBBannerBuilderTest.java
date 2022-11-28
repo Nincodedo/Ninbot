@@ -89,6 +89,7 @@ class SteamGridDBBannerBuilderTest {
 
         assertThat(banner.getGameTitle()).isEqualTo("Zeldo");
         assertThat(cache).isNotEmptyDirectory();
+        assertThat(cache.listFiles()).hasSizeBetween(1, 3);
         String bannerFileName = cache.listFiles()[0].getName();
         assertThat(bannerFileName).contains("Zeldo");
         assertThat(banner.getFile()).exists();
