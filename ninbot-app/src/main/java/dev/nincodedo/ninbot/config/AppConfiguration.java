@@ -54,25 +54,16 @@ public class AppConfiguration {
     @Bean
     public ReleaseFilter releaseFilter() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        var releaseFilterClass = nincodedoAutoConfig.releaseFilterClass()
-                == null ? DefaultReleaseFilter.class : nincodedoAutoConfig.releaseFilterClass();
-        return releaseFilterClass.getDeclaredConstructor().newInstance();
+        return nincodedoAutoConfig.releaseFilterClass().getDeclaredConstructor().newInstance();
     }
 
     @Bean
     public SupporterCheck supporterCheck() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
         SupporterConfig supporterConfig = nincodedoAutoConfig.supporter();
-        var supporterCheckClass = supporterConfig.checkClass()
-                == null ? DefaultSupporterCheck.class : supporterConfig.checkClass();
-        var supporterCheck = supporterCheckClass.getDeclaredConstructor().newInstance();
+        var supporterCheck = supporterConfig.checkClass().getDeclaredConstructor().newInstance();
         supporterCheck.setPatreonServerId(supporterConfig.patreonServerId());
         return supporterCheck;
-    }
-
-    @Bean
-    public ExecutorService commandParserThreadPool() {
-        return Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
     }
 
     @Bean
