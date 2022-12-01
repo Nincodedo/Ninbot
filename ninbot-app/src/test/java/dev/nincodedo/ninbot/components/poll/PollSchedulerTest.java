@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.poll;
 
-import dev.nincodedo.ninbot.NinbotApplication;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
@@ -20,8 +19,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
@@ -31,8 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotApplication.class})
-@TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PollSchedulerTest {
 

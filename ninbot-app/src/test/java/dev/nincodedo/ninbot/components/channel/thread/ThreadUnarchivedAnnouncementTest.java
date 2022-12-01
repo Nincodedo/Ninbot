@@ -1,6 +1,5 @@
 package dev.nincodedo.ninbot.components.channel.thread;
 
-import dev.nincodedo.ninbot.NinbotApplication;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.unions.ChannelUnion;
@@ -16,8 +15,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
@@ -29,8 +26,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {NinbotApplication.class})
-@TestPropertySource(locations = {"classpath:application.properties", "classpath:ninbot.properties"})
 class ThreadUnarchivedAnnouncementTest {
 
     @InjectMocks
