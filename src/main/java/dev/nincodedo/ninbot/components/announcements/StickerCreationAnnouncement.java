@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.sticker.GuildSticker;
 import net.dv8tion.jda.api.events.sticker.GuildStickerAddedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -53,12 +52,13 @@ public class StickerCreationAnnouncement extends StatAwareListenerAdapter {
             }
             var sticker = event.getSticker();
             var member = getMemberFromAudit(event.getJDA().getSelfUser(), event.getGuild(), channel);
-            channel.sendMessage(buildAnnouncementMessage(sticker, event.getGuild(), member))
+            channel.sendMessage(buildAnnouncementMessage(event.getGuild(), member))
+                    .setStickers(sticker)
                     .queue(message -> countOneStat(componentName, event.getGuild().getId()));
         });
     }
 
-    private MessageCreateData buildAnnouncementMessage(GuildSticker sticker, Guild guild, Member member) {
+    private MessageCreateData buildAnnouncementMessage(Guild guild, Member member) {
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
         messageBuilder.addContent(resourceBundle.getString("listener.sticker.announce.message"));
@@ -67,7 +67,7 @@ public class StickerCreationAnnouncement extends StatAwareListenerAdapter {
                     .addContent(resourceBundle.getString("listener.sticker.announce.message.member"))
                     .addContent(member.getEffectiveName());
         }
-        messageBuilder.addContent(String.valueOf(sticker));
+        messageBuilder.addContent("!");
         return messageBuilder.build();
     }
 
