@@ -33,8 +33,8 @@ public class TwitchStreamListener implements StreamListener {
         this.twitchClient = twitchClient;
         this.executorService = executorService;
         this.componentName = "stream-announce";
-        registerChannels();
         registerEvents();
+        registerChannels();
     }
 
     private void registerEvents() {

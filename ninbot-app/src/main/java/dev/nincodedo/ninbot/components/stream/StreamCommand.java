@@ -40,7 +40,7 @@ public class StreamCommand implements SlashCommand {
                 "common.on");
         var createBuilder = new MessageCreateBuilder();
         messageExecutor.addEphemeralMessage(createBuilder.addContent(String.format(resourceBundle.getString(
-                        "command" + ".stream.announcements"), onOff, opposite))
+                        "command.stream.announcements"), onOff, opposite))
                 .addComponents(ActionRow.of(getPrimaryButton(userId, opposite, resourceBundle),
                         getSecondaryButton(userId, onOff, resourceBundle)))
                 .addContent("\n" + resourceBundle.getString("command.stream.twitch.username")

@@ -5,6 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface GameBannerMapper {
-
     GameBannerDTO mapToDto(GameBanner gameBanner);
 }

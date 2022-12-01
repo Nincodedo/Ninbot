@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.stream;
 
+import com.github.twitch4j.TwitchClient;
 import dev.nincodedo.nincord.command.component.ButtonInteraction;
 import dev.nincodedo.nincord.command.component.ComponentData;
 import dev.nincodedo.nincord.message.ButtonInteractionCommandMessageExecutor;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Component;
 public class StreamButtonInteraction implements ButtonInteraction {
 
     private StreamingMemberRepository streamingMemberRepository;
+    private TwitchClient twitchClient;
 
-    public StreamButtonInteraction(StreamingMemberRepository streamingMemberRepository) {
+    public StreamButtonInteraction(StreamingMemberRepository streamingMemberRepository, TwitchClient twitchClient) {
         this.streamingMemberRepository = streamingMemberRepository;
+        this.twitchClient = twitchClient;
     }
 
     @Override
@@ -75,6 +78,12 @@ public class StreamButtonInteraction implements ButtonInteraction {
         } else {
             streamingMember = new StreamingMember(userId, serverId);
             streamingMember.setAnnounceEnabled(true);
+        }
+        if (Boolean.TRUE.equals(streamingMember.getAnnounceEnabled()) && streamingMember.getTwitchUsername() != null) {
+            twitchClient.getClientHelper().enableStreamEventListener(streamingMember.getTwitchUsername());
+        } else if (Boolean.FALSE.equals(streamingMember.getAnnounceEnabled())
+                && streamingMember.getTwitchUsername() != null) {
+            twitchClient.getClientHelper().disableStreamEventListener(streamingMember.getTwitchUsername());
         }
         streamingMemberRepository.save(streamingMember);
         return streamingMember.getAnnounceEnabled();

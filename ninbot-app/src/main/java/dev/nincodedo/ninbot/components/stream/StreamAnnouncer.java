@@ -122,15 +122,15 @@ class StreamAnnouncer {
     }
 
     private void addRole(Guild guild, Member member) {
-        var streamingRoleId = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
-        streamingRoleId.ifPresent(roleId -> {
+        var streamingRoleIdOptional = configService.getSingleValueByName(guild.getId(), ConfigConstants.STREAMING_ROLE);
+        streamingRoleIdOptional.ifPresent(roleId -> {
             var streamingRole = guild.getRoleById(roleId);
             if (streamingRole != null) {
                 log.trace("Adding role {} to {}", FormatLogObject.roleInfo(streamingRole),
                         FormatLogObject.memberInfo(member));
                 guild.addRoleToMember(member, streamingRole).queue();
             } else {
-                log.error("Could not add role ID {} for {}", streamingRoleId, FormatLogObject.memberInfo(member));
+                log.error("Could not add role ID {} for {}", roleId, FormatLogObject.memberInfo(member));
             }
         });
     }

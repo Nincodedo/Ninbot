@@ -56,7 +56,7 @@ public class DiscordStreamListener extends StatAwareListenerAdapter implements S
             StreamingMember streamingMember =
                     streamingMemberRepository.findByUserIdAndGuildId(member.getId(), guildId)
                             .orElseGet(() -> new StreamingMember(member.getId(), guildId));
-            if (isAnnouncementNotNeeded(streamingMember)) {
+            if (isAnnouncementNotNeeded(streamingMember) || streamingMember.getTwitchUsername() != null) {
                 return;
             }
             log.trace("{} started streaming and is configured to announce", FormatLogObject.memberInfo(member));

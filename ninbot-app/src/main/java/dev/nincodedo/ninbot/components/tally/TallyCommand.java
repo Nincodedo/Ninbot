@@ -29,11 +29,6 @@ public class TallyCommand implements SlashSubCommand<Subcommand> {
     }
 
     @Override
-    public String getDescription() {
-        return "Count something, I dunno";
-    }
-
-    @Override
     public List<SubcommandData> getSubcommandDatas() {
         return Arrays.asList(
                 new SubcommandData(Subcommand.ADD.get(), "Add to the thing you're tallying.")
