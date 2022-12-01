@@ -80,21 +80,6 @@ public class AppConfiguration {
     }
 
     @Bean
-    public TwitchIdentityProvider twitchIdentityProvider() {
-        return new TwitchIdentityProvider(nincodedoAutoConfig.twitch().clientId(),
-                nincodedoAutoConfig.twitch().clientSecret(), null);
-    }
-
-    @Bean
-    public CredentialManager credentialManager(TwitchIdentityProvider twitchIdentityProvider) {
-        var credentialManager = CredentialManagerBuilder.builder()
-                .withStorageBackend(new TemporaryStorageBackend())
-                .build();
-        credentialManager.registerIdentityProvider(twitchIdentityProvider);
-        return credentialManager;
-    }
-
-    @Bean
     public TwitchClient twitchClient(TwitchIdentityProvider twitchIdentityProvider,
             CredentialManager credentialManager) {
         return TwitchClientBuilder.builder()
