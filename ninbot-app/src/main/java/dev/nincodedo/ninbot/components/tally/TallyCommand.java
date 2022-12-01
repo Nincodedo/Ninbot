@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.components.tally.TallyCommandName.Subcommand;
 import dev.nincodedo.nincord.command.slash.SlashSubCommand;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.SlashCommandEventMessageExecutor;
+import lombok.Getter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -19,6 +20,7 @@ import java.util.List;
 @Component
 public class TallyCommand implements SlashSubCommand<Subcommand> {
 
+    @Getter
     private static HashMap<String, Integer> tallyCount = new HashMap<>();
 
     @Override
@@ -33,16 +35,15 @@ public class TallyCommand implements SlashSubCommand<Subcommand> {
 
     @Override
     public List<SubcommandData> getSubcommandDatas() {
-        return Arrays.asList(new SubcommandData(Subcommand.ADD.get(), "Add to the thing you're "
-                + "tallying.").addOptions(Arrays.asList(new OptionData(OptionType.STRING,
-                TallyCommandName.Option.NAME.get(),
-                "Name of the "
-                        + "thing you're tallying.", true), new OptionData(OptionType.INTEGER,
-                TallyCommandName.Option.COUNT.get(),
-                "How many you want to add to the tally."
-                        + " Defaults to 1.", false))), new SubcommandData(Subcommand.GET.get(), "Gets the current "
-                + "tally count.").addOption(OptionType.STRING, TallyCommandName.Option.NAME.get(),
-                "Name of the thing you're " + "tallying."));
+        return Arrays.asList(
+                new SubcommandData(Subcommand.ADD.get(), "Add to the thing you're tallying.")
+                        .addOptions(Arrays.asList(new OptionData(OptionType.STRING,
+                                        TallyCommandName.Option.NAME.get(), "Name of the thing you're tallying.", true),
+                                new OptionData(OptionType.INTEGER, TallyCommandName.Option.COUNT.get(), "How many you"
+                                        + " want to add to the tally. Defaults to 1.", false))),
+                new SubcommandData(Subcommand.GET.get(), "Gets the current tally count.")
+                        .addOption(OptionType.STRING, TallyCommandName.Option.NAME.get(), "Name of the thing you're "
+                                + "tallying."));
     }
 
     @Override
@@ -67,8 +68,7 @@ public class TallyCommand implements SlashSubCommand<Subcommand> {
         }
     }
 
-    private void addToTally(OptionMapping optionalCount, String name,
-            MessageExecutor messageExecutor) {
+    private void addToTally(OptionMapping optionalCount, String name, MessageExecutor messageExecutor) {
         var count = optionalCount == null ? 1 : (int) optionalCount.getAsLong();
         tallyCount.putIfAbsent(name, 0);
         tallyCount.put(name, tallyCount.get(name) + count);
