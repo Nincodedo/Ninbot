@@ -27,7 +27,7 @@ public class ConditionalAutoConfig {
         return new DefaultReleaseFilter();
     }
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(name = "commandParserThreadPool")
     @Bean
     public ExecutorService commandParserThreadPool() {
         return Executors.newCachedThreadPool(new NamedThreadFactory("command-parser"));
