@@ -1,0 +1,34 @@
+{
+  "properties" : [
+    {
+      "name" : "nincodedo.releaseFilterClass",
+      "type" : "java.lang.Class",
+      "description" : "Description for nincodedo.releaseFilterClass."
+    },
+    {
+      "name" : "nincodedo.supporter.checkClass",
+      "type" : "java.lang.Class",
+      "description" : "Description for nincodedo.supporter.checkClass."
+    },
+    {
+      "name" : "nincodedo.supporter.patreonServerId",
+      "type" : "java.lang.String",
+      "description" : "Description for nincodedo.supporter.patreonServerId."
+    },
+    {
+      "name" : "nincodedo.info.documentationUrl",
+      "type" : "java.lang.String",
+      "description" : "Info command's documentation URL."
+    },
+    {
+      "name" : "nincodedo.info.githubUrl",
+      "type" : "java.lang.String",
+      "description" : "Info command's GitHub URL."
+    },
+    {
+      "name": "nincodedo.twitch.clientId",
+      "type": "java.lang.String",
+      "description": "Twitch Application Client ID."
+    }
+  ]
+}

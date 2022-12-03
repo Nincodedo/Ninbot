@@ -4,9 +4,11 @@
 /logs/
 /config
 /Ninbot.iml
+**/*.iml
 /data/
 *.log
 *.gz
 /sourcetrail_dependencies/
 Ninbot.src*
 *.jar
+**/target/**

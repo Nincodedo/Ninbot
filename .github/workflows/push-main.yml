@@ -3,7 +3,7 @@ on:
     branches:
       - main
       - dev
-  pull_request:
+  pull_request_target:
     branches:
       - main
       - dev
@@ -17,8 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v2
-        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v3
+        if: github.event_name == 'pull_request_target'
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -30,10 +30,17 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Cache SonarCloud
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: Build, Test
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw clean verify sonar:sonar -P git-commit,integration -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nincraft -Dsonar.branch.name=${{ github.ref.name }} --no-transfer-progress
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P git-commit,integration --no-transfer-progress -Dsonar.projectKey=dev.nincodedo:ninbot
   buildDocker:
     name: Build Docker  
     runs-on: ubuntu-latest

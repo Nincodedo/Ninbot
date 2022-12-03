@@ -1,0 +1,38 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+  info:
+    git:
+      mode: full
+  endpoint:
+    health:
+      show-details: always
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
+  application:
+    name: ninbot
+  datasource:
+    url: jdbc:mysql://localhost:3306/ninbot
+  banner:
+    location: classpath:ninbot-ascii-art.txt
+logging:
+  level:
+    dev:
+      nincodedo: INFO
+    root: ERROR
+nincodedo:
+  supporter:
+    check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
+    patreon-server-id: 608765747728220161
+  info:
+    documentation-url: https://ninbot.nincodedo.dev
+    github-url: https://github.com/Nincodedo/Ninbot
+  release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
+  main-server-id: 109466144993210368

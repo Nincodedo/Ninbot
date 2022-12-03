@@ -1,0 +1,34 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:tc:mysql://localhost:3306/ninbot
+logging:
+  file:
+    path: logs
+    name: ninbot.log
+  level:
+    root: info
+nincodedo:
+  twitch:
+    clientId: 1
+    clientSecret: 1
+  supporter:
+    check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
+    patreon-server-id: 1
+  info:
+    documentation-url: https://ninbot.nincodedo.dev
+    github-url: https://github.com/Nincodedo/Ninbot
+  release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
+  main-server-id: 1
+  steamgriddbapikey: 1
+  ninbotToken: 1
