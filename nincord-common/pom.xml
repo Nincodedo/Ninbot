@@ -5,7 +5,7 @@
     <parent>
         <groupId>dev.nincodedo</groupId>
         <artifactId>ninbot-shared-parent</artifactId>
-        <version>3.10.0</version>
+        <version>3.10.1</version>
         <relativePath>../ninbot-shared-parent</relativePath>
     </parent>
 
