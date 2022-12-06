@@ -48,6 +48,6 @@ class TwitchStreamListenerTest {
         when(streamingMemberRepository.findAllByTwitchUsername("nincodedo")).thenReturn(streamingMemberList);
         twitchStreamListener.streamStarts("nincodedo", "Kirby 64", "what a surprise");
         verify(streamingMemberRepository, times(listSize)).save(any());
-        verify(streamAnnouncer, times(listSize)).announceStream(any(), eq("Kirby 64"), eq("what a surprise"));
+        verify(streamAnnouncer, times(listSize)).announceStream(any());
     }
 }

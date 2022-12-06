@@ -36,7 +36,7 @@ class StreamAnnouncer {
         this.componentName = "stream-announce";
     }
 
-    public void announceStream(StreamingMember streamingMember, String gameName, String streamTitle) {
+    public void announceStream(StreamingMember streamingMember) {
         var guild = shardManager.getGuildById(streamingMember.getGuildId());
         if (guild == null) {
             log.error("Failed to get guild {} for stream member {}", streamingMember.getGuildId(), streamingMember);
@@ -44,27 +44,34 @@ class StreamAnnouncer {
         }
         var member = guild.getMemberById(streamingMember.getUserId());
         var streamingUrl = "https://twitch.tv/" + streamingMember.getTwitchUsername();
-        announceStream(streamingMember, guild, member, streamingUrl, gameName, streamTitle);
+        streamingMember.currentStream().ifPresent(streamInstance -> streamInstance.setUrl(streamingUrl));
+        streamingMemberRepository.save(streamingMember);
+        announceStream(streamingMember, guild, member);
     }
 
     public void announceStream(StreamingMember streamingMember, Guild guild, Member member, String streamingUrl,
             Activity activity) {
-        String gameName = getGameName(activity);
-        String streamTitle = getStreamTitle(activity);
-        announceStream(streamingMember, guild, member, streamingUrl, gameName, streamTitle);
+        streamingMember.currentStream().ifPresent(streamInstance -> {
+            streamInstance.setGame(getGameName(activity));
+            streamInstance.setTitle(getStreamTitle(activity));
+            streamInstance.setUrl(streamingUrl);
+        });
+        streamingMemberRepository.save(streamingMember);
+        announceStream(streamingMember, guild, member);
     }
 
-    public void announceStream(StreamingMember streamingMember, Guild guild, Member member, String streamingUrl,
-            String gameName, String streamTitle) {
+    public void announceStream(StreamingMember streamingMember, Guild guild, Member member) {
         var guildId = guild.getId();
         var streamingAnnounceChannel = configService.getSingleValueByName(guildId,
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
         streamingAnnounceChannel.ifPresent(streamingAnnounceChannelString -> {
             var guildChannel = guild.getGuildChannelById(streamingAnnounceChannelString);
-            if (streamingUrl != null && guildChannel instanceof GuildMessageChannelUnion channelUnion) {
+            var streamInstanceOptional = streamingMember.currentStream();
+            if (streamInstanceOptional.isPresent() && streamInstanceOptional.get().getUrl() != null
+                    && guildChannel instanceof GuildMessageChannelUnion channelUnion) {
                 var channel = channelUnion.asStandardGuildMessageChannel();
-                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member, streamingUrl,
-                                gameName, streamTitle, guild))
+                channel.sendMessage(streamMessageBuilder.buildStreamAnnounceMessage(member,
+                                streamInstanceOptional.get(), guild))
                         .queue(message -> {
                             statManager.addOneCount(componentName, StatCategory.LISTENER, guild.getId());
                             updateStreamMemberWithMessageId(streamingMember, message.getId());
@@ -93,10 +100,11 @@ class StreamAnnouncer {
     private String getGameName(Activity activity) {
         String gameName = null;
         if (activity != null) {
+            var richPresence = activity.asRichPresence();
             if (activity.getType() == Activity.ActivityType.PLAYING) {
                 gameName = activity.getName();
-            } else if (activity.getType() == Activity.ActivityType.STREAMING && activity.isRich()) {
-                gameName = activity.asRichPresence().getState();
+            } else if (activity.getType() == Activity.ActivityType.STREAMING && richPresence != null) {
+                gameName = richPresence.getState();
             }
         }
         return gameName;
