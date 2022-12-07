@@ -35,6 +35,7 @@ public class GameBannerController {
                 .stream()
                 .map(gameBannerMapper::mapToDto)
                 .sorted(Comparator.comparing(GameBannerDTO::getGameTitle)
+                        .reversed()
                         .thenComparing(GameBannerDTO::getScore)
                         .reversed())
                 .toList();
@@ -49,6 +50,7 @@ public class GameBannerController {
                 .flatMap(Optional::stream)
                 .map(gameBannerMapper::mapToDto)
                 .sorted(Comparator.comparing(GameBannerDTO::getGameTitle)
+                        .reversed()
                         .thenComparing(GameBannerDTO::getScore)
                         .reversed())
                 .toList();
