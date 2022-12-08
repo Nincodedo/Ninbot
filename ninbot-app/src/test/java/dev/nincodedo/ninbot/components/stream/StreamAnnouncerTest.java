@@ -6,7 +6,6 @@ import dev.nincodedo.nincord.stats.StatManager;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.RichPresence;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

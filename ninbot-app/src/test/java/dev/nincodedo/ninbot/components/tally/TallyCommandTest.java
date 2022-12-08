@@ -47,7 +47,7 @@ class TallyCommandTest {
         when(event.getSubcommandName()).thenReturn("get");
         when(event.getOption(eq("name"), any())).thenReturn("test");
 
-        var messageExecutor = (EphemeralMessageExecutor)tallyCommand.execute(event);
+        var messageExecutor = (EphemeralMessageExecutor) tallyCommand.execute(event);
 
         assertThat(messageExecutor.getEphemeralMessageResponses().get(0).getContent()).contains("No count");
 

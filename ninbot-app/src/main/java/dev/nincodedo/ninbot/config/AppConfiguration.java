@@ -1,8 +1,6 @@
 package dev.nincodedo.ninbot.config;
 
 import com.github.philippheuer.credentialmanager.CredentialManager;
-import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
-import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
