@@ -39,10 +39,16 @@ public class BaseEntity {
     @PrePersist
     private void prePersist() {
         audit.setCreatedDateTime(LocalDateTime.now());
+        if (audit.getCreatedBy() == null) {
+            audit.setCreatedBy("Ninbot");
+        }
     }
 
     @PreUpdate
     private void preUpdate() {
         audit.setModifiedDateTime(LocalDateTime.now());
+        if (audit.getModifiedBy() == null) {
+            audit.setModifiedBy("Ninbot");
+        }
     }
 }

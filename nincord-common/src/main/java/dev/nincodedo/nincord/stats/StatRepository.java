@@ -8,5 +8,4 @@ import java.util.Optional;
 @Repository
 public interface StatRepository extends BaseRepository<Stat> {
     Optional<Stat> findByNameAndCategoryAndServerId(String name, String category, String serverId);
-
 }

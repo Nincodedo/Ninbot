@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.stream;
 import dev.nincodedo.nincord.persistence.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -25,10 +27,6 @@ class StreamingMember extends BaseEntity {
     private Boolean announceEnabled = false;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "streamingMember", fetch = FetchType.EAGER)
     private List<StreamInstance> streamInstances = new ArrayList<>();
-
-    public StreamingMember() {
-
-    }
 
     StreamingMember(String userId, String guildId) {
         this.userId = userId;

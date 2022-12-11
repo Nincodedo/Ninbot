@@ -11,13 +11,13 @@
 
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot-shared-parent</artifactId>
-    <version>3.10.1</version>
+    <version>3.11.0</version>
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
 
     <properties>
-        <JDA.version>5.0.0-beta.1</JDA.version>
-        <annotations.version>23.0.0</annotations.version>
+        <JDA.version>5.0.0-beta.2</JDA.version>
+        <annotations.version>23.1.0</annotations.version>
         <archunit.version>1.0.0</archunit.version>
         <assertj-core.version>3.23.1</assertj-core.version>
         <commons-io.version>2.11.0</commons-io.version>

@@ -25,16 +25,16 @@ public abstract class Schedulable<T extends BaseEntity, S extends Scheduler<T, ?
     }
 
     public void scheduleAll(ShardManager shardManager) {
-        getScheduler().findAllOpenItems()
+        getSchedulerService().findAllOpenItems()
                 .forEach(schedulable -> executorService.execute(() -> scheduleOne(schedulable, shardManager)));
     }
 
     protected abstract void scheduleOne(T schedulable, ShardManager shardManager);
 
     public void addOne(T schedulable, ShardManager shardManager) {
-        getScheduler().save(schedulable);
+        getSchedulerService().save(schedulable);
         scheduleOne(schedulable, shardManager);
     }
 
-    protected abstract S getScheduler();
+    protected abstract S getSchedulerService();
 }

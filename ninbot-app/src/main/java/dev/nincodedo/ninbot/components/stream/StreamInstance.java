@@ -20,6 +20,9 @@ public class StreamInstance extends BaseEntity {
     private LocalDateTime startTimestamp = LocalDateTime.now();
     private LocalDateTime endTimestamp;
     private String announceMessageId;
+    private String url;
+    private String game;
+    private String title;
     @ManyToOne
     @ToString.Exclude
     private StreamingMember streamingMember;

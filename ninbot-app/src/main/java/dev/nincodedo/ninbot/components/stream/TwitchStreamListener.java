@@ -73,11 +73,12 @@ public class TwitchStreamListener implements StreamListener {
                     || isAnnouncementNotNeeded(streamingMember)) {
                 continue;
             }
-            setupNewStream(streamingMember);
+            setupNewStream(streamingMember, gameName, streamTitle);
+
             streamingMemberRepository.save(streamingMember);
             var currentStreamOptional = streamingMember.currentStream();
             if (currentStreamOptional.isPresent() && currentStreamOptional.get().getAnnounceMessageId() == null) {
-                streamAnnouncer.announceStream(streamingMember, gameName, streamTitle);
+                streamAnnouncer.announceStream(streamingMember);
             }
         }
     }

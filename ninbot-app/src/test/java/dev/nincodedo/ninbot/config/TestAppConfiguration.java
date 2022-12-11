@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 @TestConfiguration
 public class TestAppConfiguration {
-    @MockBean
+    @MockBean(answer = Answers.RETURNS_MOCKS)
     ShardManager shardManager;
     @MockBean(answer = Answers.RETURNS_MOCKS)
     TwitchClient twitchClient;

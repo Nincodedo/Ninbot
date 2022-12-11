@@ -50,7 +50,7 @@ public class BirthdayScheduler extends Schedulable<NinbotUser, UserService> {
     }
 
     @Override
-    public UserService getScheduler() {
+    public UserService getSchedulerService() {
         return userService;
     }
 

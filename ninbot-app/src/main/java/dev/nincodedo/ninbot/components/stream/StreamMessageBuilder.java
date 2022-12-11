@@ -31,14 +31,14 @@ public class StreamMessageBuilder {
         this.gameBannerBuilder = gameBannerBuilder;
     }
 
-    MessageCreateData buildStreamAnnounceMessage(Member member,
-            String streamingUrl, String gameName, String streamTitle, Guild guild) {
+    MessageCreateData buildStreamAnnounceMessage(Member member, StreamInstance streamInstance, Guild guild) {
         log.trace("Building stream announce message for {} server {} with game {}", FormatLogObject.memberInfo(member),
-                FormatLogObject.guildName(guild), gameName);
-        var futureGameBanner = gameBannerBuilder.getGameBannerAsync(gameName);
+                FormatLogObject.guildName(guild), streamInstance.getGame());
+        var futureGameBanner = gameBannerBuilder.getGameBannerAsync(streamInstance.getGame());
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
-        EmbedBuilder embedBuilder = getEmbedBuilder(member, streamingUrl, gameName, streamTitle, resourceBundle);
-        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl())).setTitle(streamTitle);
+        EmbedBuilder embedBuilder = getEmbedBuilder(member, streamInstance, resourceBundle);
+        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))
+                .setTitle(streamInstance.getTitle());
         try {
             var gameBanner = futureGameBanner.get();
             if (gameBanner != null) {
@@ -62,7 +62,7 @@ public class StreamMessageBuilder {
             log.error("Something failed with game banners", e);
         }
         log.trace("Game banner didn't work out, building a boring message");
-        return buildBoringStreamAnnounceMessage(member, streamingUrl, gameName, streamTitle, guild);
+        return buildBoringStreamAnnounceMessage(member, streamInstance, guild);
     }
 
     private ActionRow getComponentsForGameBanner(GameBanner gameBanner) {
@@ -73,31 +73,30 @@ public class StreamMessageBuilder {
     }
 
     @NotNull
-    private EmbedBuilder getEmbedBuilder(Member member, String streamingUrl, String gameName, String streamTitle,
-            ResourceBundle resourceBundle) {
+    private EmbedBuilder getEmbedBuilder(Member member, StreamInstance streamInstance, ResourceBundle resourceBundle) {
         EmbedBuilder embedBuilder;
-        if (!streamingUrl.contains("https://")) {
+        if (!streamInstance.getUrl().contains("https://")) {
             embedBuilder = new EmbedBuilder()
                     .setAuthor(String.format(resourceBundle.getString("listener.stream.announce.voicechannel"),
-                            member.getEffectiveName(), streamingUrl), null, member.getEffectiveAvatarUrl())
-                    .setTitle(streamTitle);
+                            member.getEffectiveName(), streamInstance.getUrl()), null, member.getEffectiveAvatarUrl())
+                    .setTitle(streamInstance.getTitle());
         } else {
             embedBuilder = new EmbedBuilder()
                     .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"),
-                            member.getEffectiveName(), gameName,
-                            streamingUrl), streamingUrl, member.getEffectiveAvatarUrl())
-                    .setTitle(streamTitle);
+                            member.getEffectiveName(), streamInstance.getTitle(),
+                            streamInstance.getUrl()), streamInstance.getUrl(), member.getEffectiveAvatarUrl())
+                    .setTitle(streamInstance.getTitle());
         }
         return embedBuilder;
     }
 
-    MessageCreateData buildBoringStreamAnnounceMessage(Member member,
-            String streamingUrl, String gameName, String streamTitle, Guild guild) {
+    MessageCreateData buildBoringStreamAnnounceMessage(Member member, StreamInstance streamInstance, Guild guild) {
         log.trace("Building stream announce message for {} server {}", FormatLogObject.memberInfo(member),
                 FormatLogObject.guildName(guild));
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
-        EmbedBuilder embedBuilder = getEmbedBuilder(member, streamingUrl, gameName, streamTitle, resourceBundle);
-        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl())).setTitle(streamTitle);
+        EmbedBuilder embedBuilder = getEmbedBuilder(member, streamInstance, resourceBundle);
+        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))
+                .setTitle(streamInstance.getTitle());
         return new MessageCreateBuilder().addEmbeds(embedBuilder.build()).build();
     }
 }

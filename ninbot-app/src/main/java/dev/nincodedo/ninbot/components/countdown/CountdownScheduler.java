@@ -81,7 +81,7 @@ public class CountdownScheduler extends Schedulable<Countdown, CountdownService>
     }
 
     @Override
-    public CountdownService getScheduler() {
+    public CountdownService getSchedulerService() {
         return countdownService;
     }
 

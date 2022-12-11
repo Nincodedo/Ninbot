@@ -1,22 +1,16 @@
 package dev.nincodedo.nincord.stats;
 
-import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @Component
 public class StatManager {
 
     private StatRepository statRepository;
-    private ExecutorService executorService;
 
     public StatManager(StatRepository statRepository) {
         this.statRepository = statRepository;
-        this.executorService = Executors.newCachedThreadPool(new NamedThreadFactory("stat-manager"));
     }
 
     /**
@@ -28,18 +22,17 @@ public class StatManager {
      * @param count    The count of the stat.
      */
     public void upsertCount(String name, String category, String serverId, int count) {
-        executorService.execute(() -> statRepository.findByNameAndCategoryAndServerId(name, category, serverId)
-                .ifPresentOrElse(stat -> {
-                    stat.setCount(count);
-                    statRepository.save(stat);
-                }, () -> {
-                    Stat stat = new Stat();
-                    stat.setName(name);
-                    stat.setCategory(category);
-                    stat.setServerId(serverId);
-                    stat.setCount(count);
-                    statRepository.save(stat);
-                }));
+        statRepository.findByNameAndCategoryAndServerId(name, category, serverId).ifPresentOrElse(stat -> {
+            stat.setCount(count);
+            statRepository.save(stat);
+        }, () -> {
+            Stat stat = new Stat();
+            stat.setName(name);
+            stat.setCategory(category);
+            stat.setServerId(serverId);
+            stat.setCount(count);
+            statRepository.save(stat);
+        });
     }
 
     public void addOneCount(String name, String category, String serverId) {
@@ -55,21 +48,10 @@ public class StatManager {
      * @param count    The count of the stat.
      */
     public void addCount(String name, String category, String serverId, int count) {
-        executorService.execute(() -> {
-            var optionalStat = statRepository.findByNameAndCategoryAndServerId(name, category, serverId);
-            Stat stat;
-            if (optionalStat.isPresent()) {
-                stat = optionalStat.get();
-                stat.setCount(stat.getCount() + count);
-            } else {
-                stat = new Stat();
-                stat.setName(name);
-                stat.setCategory(category);
-                stat.setCount(count);
-                stat.setServerId(serverId);
-            }
-            statRepository.save(stat);
-        });
+        var stat = statRepository.findByNameAndCategoryAndServerId(name, category, serverId)
+                .orElse(new Stat(name, category, serverId));
+        stat.setCount(stat.getCount() + count);
+        statRepository.save(stat);
     }
 
 }

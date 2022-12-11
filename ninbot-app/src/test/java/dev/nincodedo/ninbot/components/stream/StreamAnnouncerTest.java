@@ -6,7 +6,6 @@ import dev.nincodedo.nincord.stats.StatManager;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.RichPresence;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ class StreamAnnouncerTest {
         when(guild.getMemberById(streamingMember.getUserId())).thenReturn(member);
         when(guild.getId()).thenReturn(streamingMember.getGuildId());
 
-        streamAnnouncer.announceStream(streamingMember, "Kirbo 64", "Wau");
+        streamAnnouncer.announceStream(streamingMember);
 
         verify(configService).getSingleValueByName(streamingMember.getGuildId(),
                 ConfigConstants.STREAMING_ANNOUNCE_CHANNEL);
@@ -55,12 +54,6 @@ class StreamAnnouncerTest {
         var guild = Mockito.mock(Guild.class);
         var member = Mockito.mock(Member.class);
         var activity = Mockito.mock(Activity.class);
-        var richActivity = Mockito.mock(RichPresence.class);
-        when(activity.isRich()).thenReturn(true);
-        when(activity.asRichPresence()).thenReturn(richActivity);
-        when(richActivity.getDetails()).thenReturn("Stream Title");
-        when(activity.getType()).thenReturn(Activity.ActivityType.STREAMING);
-        when(richActivity.getState()).thenReturn("Game Title");
         when(guild.getId()).thenReturn(streamingMember.getGuildId());
 
         streamAnnouncer.announceStream(streamingMember, guild, member, "https://twitch.tv/nincodedo", activity);
