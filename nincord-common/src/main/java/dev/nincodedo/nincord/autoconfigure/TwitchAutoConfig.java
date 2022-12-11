@@ -1,16 +1,19 @@
-package dev.nincodedo.nincord.twitch;
+package dev.nincodedo.nincord.autoconfigure;
 
 import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.nincord.config.app.TwitchConfig;
+import dev.nincodedo.nincord.twitch.TokenRefresh;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
+@AutoConfiguration
 @ConditionalOnProperty(prefix = "nincodedo.twitch", name = {"clientId", "clientSecret"})
-@Configuration
+@EnableConfigurationProperties(TwitchConfig.class)
 public class TwitchAutoConfig {
 
     private final TwitchConfig twitchConfig;

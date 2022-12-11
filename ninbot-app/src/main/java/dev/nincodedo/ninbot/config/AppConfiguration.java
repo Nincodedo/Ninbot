@@ -4,10 +4,7 @@ import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
-import dev.nincodedo.nincord.config.app.NincodedoAutoConfig;
-import dev.nincodedo.nincord.config.app.SupporterConfig;
-import dev.nincodedo.nincord.release.ReleaseFilter;
-import dev.nincodedo.nincord.supporter.SupporterCheck;
+import dev.nincodedo.nincord.config.app.NincordProperties;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -28,16 +24,16 @@ import java.util.concurrent.Executors;
 @Configuration
 public class AppConfiguration {
 
-    private NincodedoAutoConfig nincodedoAutoConfig;
+    private NincordProperties nincordProperties;
 
-    public AppConfiguration(NincodedoAutoConfig nincodedoAutoConfig) {
-        this.nincodedoAutoConfig = nincodedoAutoConfig;
+    public AppConfiguration(NincordProperties nincordProperties) {
+        this.nincordProperties = nincordProperties;
     }
 
     @Autowired
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
-        return DefaultShardManagerBuilder.create(nincodedoAutoConfig.ninbotToken(),
+        return DefaultShardManagerBuilder.create(nincordProperties.ninbotToken(),
                         EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                                 GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
                                 GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
@@ -45,21 +41,6 @@ public class AppConfiguration {
                 .addEventListeners(listenerAdapters.toArray())
                 .setShardsTotal(-1)
                 .build();
-    }
-
-    @Bean
-    public ReleaseFilter releaseFilter() throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        return nincodedoAutoConfig.releaseFilterClass().getDeclaredConstructor().newInstance();
-    }
-
-    @Bean
-    public SupporterCheck supporterCheck() throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        SupporterConfig supporterConfig = nincodedoAutoConfig.supporter();
-        var supporterCheck = supporterConfig.checkClass().getDeclaredConstructor().newInstance();
-        supporterCheck.setPatreonServerId(supporterConfig.patreonServerId());
-        return supporterCheck;
     }
 
     @Bean
