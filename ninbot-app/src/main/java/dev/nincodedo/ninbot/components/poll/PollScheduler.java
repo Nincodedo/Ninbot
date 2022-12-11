@@ -48,7 +48,7 @@ public class PollScheduler extends Schedulable<Poll, PollService> {
     }
 
     @Override
-    public PollService getScheduler() {
+    public PollService getSchedulerService() {
         return pollService;
     }
 }
