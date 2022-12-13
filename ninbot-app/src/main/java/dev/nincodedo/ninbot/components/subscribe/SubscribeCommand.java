@@ -36,8 +36,12 @@ public class SubscribeCommand implements SlashCommand {
             @NotNull SlashCommandEventMessageExecutor messageExecutor) {
         messageExecutor.deferEphemeralReply();
         var guild = event.getGuild();
+        if (guild == null) {
+            return messageExecutor;
+        }
         var role = event.getOption(SubscribeCommandName.Option.SUBSCRIPTION.get(), OptionMapping::getAsRole);
-        if (guild != null && isValidSubscribeRole(role, guild.getId())) {
+        var publicRole = event.getGuild().getPublicRole();
+        if (isValidSubscribeRole(role, publicRole, guild.getId())) {
             try {
                 addOrRemoveSubscription(event.getInteraction().getHook(), event.getMember(), guild, role);
             } catch (PermissionException e) {
@@ -64,11 +68,12 @@ public class SubscribeCommand implements SlashCommand {
         return success -> interactionHook.editOriginal(Emojis.CHECK_MARK).queue();
     }
 
-    private boolean isValidSubscribeRole(Role role, String serverId) {
+    private boolean isValidSubscribeRole(Role role, Role publicRole, String serverId) {
         List<String> roleDenyList = configService.getValuesByName(serverId, ConfigConstants.ROLE_DENY_LIST);
         roleDenyList.add(PathogenConfig.getINFECTED_ROLE_NAME());
         roleDenyList.add(PathogenConfig.getVACCINATED_ROLE_NAME());
-        return role != null && !roleDenyList.contains(role.getName());
+        return role != null && !roleDenyList.contains(role.getName())
+                && role.getPermissionsExplicit().size() <= publicRole.getPermissionsExplicit().size();
     }
 
     @Override
