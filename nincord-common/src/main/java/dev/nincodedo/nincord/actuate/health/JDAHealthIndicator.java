@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord;
+package dev.nincodedo.nincord.actuate.health;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
