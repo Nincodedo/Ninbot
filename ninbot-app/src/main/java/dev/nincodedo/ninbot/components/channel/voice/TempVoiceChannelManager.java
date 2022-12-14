@@ -82,7 +82,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     Consumer<VoiceChannel> saveAndMove(Guild guild, Member member) {
         return voiceChannel -> {
-            repository.save(new TempVoiceChannel(member.getId(), voiceChannel.getId()));
+            repository.save(new TempVoiceChannel(voiceChannel.getId(), member.getId()));
             guild.moveVoiceMember(member, voiceChannel).queue();
             voiceChannel.getPermissionContainer()
                     .getManager()
