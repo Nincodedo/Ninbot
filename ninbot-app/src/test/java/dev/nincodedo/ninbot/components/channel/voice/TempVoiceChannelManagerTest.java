@@ -68,7 +68,7 @@ class TempVoiceChannelManagerTest {
         var voiceChannel = Mockito.mock(VoiceChannel.class);
 
         when(joinEvent.getGuild()).thenReturn(guild);
-        when(guild.getId()).thenReturn("1");
+        when(guild.getId()).thenReturn("12");
         when(guild.getSelfMember()).thenReturn(selfMember);
         when(joinEvent.getChannelJoined()).thenReturn(voiceChannelJoined);
         when(voiceChannelJoined.asVoiceChannel()).thenReturn(voiceChannel);
@@ -76,8 +76,8 @@ class TempVoiceChannelManagerTest {
         when(voiceChannelJoined.getName()).thenReturn(Emojis.PLUS + " wot");
         when(selfMember.hasPermission(any(Permission.class))).thenReturn(true);
         when(member.getEffectiveName()).thenReturn("Nincodedo");
-        when(member.getId()).thenReturn("1");
-        when(member.getIdLong()).thenReturn(1L);
+        when(member.getId()).thenReturn("21");
+        when(member.getIdLong()).thenReturn(21L);
         when(voiceChannel.createCopy()).thenReturn(restAction);
         when(restAction.setName(anyString())).thenReturn(lastRestAction);
         when(guild.moveVoiceMember(member, voiceChannel)).thenReturn(moveVoiceAction);
@@ -96,6 +96,6 @@ class TempVoiceChannelManagerTest {
         Consumer<VoiceChannel> consumer = lambdaCaptor.getValue();
         consumer.accept(voiceChannel);
 
-        verify(tempVoiceChannelRepository).save(new TempVoiceChannel(member.getId(), voiceChannelJoined.getId()));
+        verify(tempVoiceChannelRepository).save(new TempVoiceChannel(voiceChannelJoined.getId(), member.getId()));
     }
 }

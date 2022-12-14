@@ -33,8 +33,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     public TempVoiceChannelManager(StatManager statManager,
             @Qualifier("statCounterThreadPool") ExecutorService executorService,
-            TempVoiceChannelRepository tempVoiceChannelRepository,
-            ComponentService componentService) {
+            TempVoiceChannelRepository tempVoiceChannelRepository, ComponentService componentService) {
         super(statManager, executorService);
         this.repository = tempVoiceChannelRepository;
         this.componentService = componentService;
@@ -54,13 +53,10 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         if (componentService.isDisabled(componentName, guild.getId()) || channelJoined == null) {
             return;
         }
-        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild
-        ), channelJoined
-                .getName(), channelJoined.getName()
+        log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild),
+                channelJoined.getName(), channelJoined.getName()
                 .startsWith(Emojis.PLUS));
-        if (hasManageChannelPermission(guild) && channelJoined
-                .getName()
-                .startsWith(Emojis.PLUS)) {
+        if (hasManageChannelPermission(guild) && channelJoined.getName().startsWith(Emojis.PLUS)) {
             countOneStat(componentName, guild.getId());
             createTemporaryChannel(channelJoined, guild, member);
         }
@@ -70,19 +66,16 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         var channelNameType = channelJoined.getName().substring(2);
         var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
         log.trace("Creating temporary channel named {} for member {} in server {}", channelName,
-                FormatLogObject.memberInfo(member),
-                FormatLogObject.guildName(guild));
+                FormatLogObject.memberInfo(member), FormatLogObject.guildName(guild));
         if (channelJoined.getType() == ChannelType.VOICE) {
             var voiceChannel = channelJoined.asVoiceChannel();
-            voiceChannel.createCopy()
-                    .setName(channelName)
-                    .queue(saveAndMove(guild, member));
+            voiceChannel.createCopy().setName(channelName).queue(saveAndMove(guild, member));
         }
     }
 
     Consumer<VoiceChannel> saveAndMove(Guild guild, Member member) {
         return voiceChannel -> {
-            repository.save(new TempVoiceChannel(member.getId(), voiceChannel.getId()));
+            repository.save(new TempVoiceChannel(voiceChannel.getId(), member.getId()));
             guild.moveVoiceMember(member, voiceChannel).queue();
             voiceChannel.getPermissionContainer()
                     .getManager()
@@ -109,9 +102,8 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     private void deleteTemporaryChannel(AudioChannelUnion audioChannel) {
         audioChannel.delete()
-                .queueAfter(10, TimeUnit.SECONDS, success ->
-                        repository.findByVoiceChannelId(audioChannel.getId())
-                                .ifPresent(tempVoiceChannel -> repository.delete(tempVoiceChannel)));
+                .queueAfter(10, TimeUnit.SECONDS, success -> repository.findByVoiceChannelId(audioChannel.getId())
+                        .ifPresent(repository::delete));
     }
 
     private boolean hasManageChannelPermission(Guild guild) {
