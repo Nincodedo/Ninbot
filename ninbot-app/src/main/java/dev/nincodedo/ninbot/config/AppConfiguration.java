@@ -4,7 +4,7 @@ import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
-import dev.nincodedo.nincord.config.app.NincordProperties;
+import dev.nincodedo.nincord.config.properties.NincordProperties;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

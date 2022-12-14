@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.info;
 
 import dev.nincodedo.nincord.command.slash.info.BotInfo;
-import dev.nincodedo.nincord.config.app.NincordProperties;
+import dev.nincodedo.nincord.config.properties.NincordProperties;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Component;

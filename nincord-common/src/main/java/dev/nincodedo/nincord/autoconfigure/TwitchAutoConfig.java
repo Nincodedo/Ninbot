@@ -4,7 +4,7 @@ import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
-import dev.nincodedo.nincord.config.app.TwitchConfig;
+import dev.nincodedo.nincord.config.properties.TwitchConfig;
 import dev.nincodedo.nincord.twitch.TokenRefresh;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

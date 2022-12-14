@@ -3,7 +3,7 @@ package dev.nincodedo.ninbot.components.stream.banner.steamgriddb;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
-import dev.nincodedo.nincord.StreamUtils;
+import dev.nincodedo.nincord.util.StreamUtils;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;

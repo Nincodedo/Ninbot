@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.dab;
 
 import dev.nincodedo.ninbot.components.reaction.EmojiReactionResponse;
-import dev.nincodedo.nincord.StreamUtils;
+import dev.nincodedo.nincord.util.StreamUtils;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.supporter.SupporterCheck;
 import lombok.Getter;

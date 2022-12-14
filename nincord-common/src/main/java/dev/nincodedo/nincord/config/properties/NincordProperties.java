@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord.config.app;
+package dev.nincodedo.nincord.config.properties;
 
 import dev.nincodedo.nincord.release.ReleaseFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,5 +10,6 @@ public record NincordProperties(String ninbotToken,
                                 InfoCommandConfig info,
                                 Class<? extends ReleaseFilter> releaseFilterClass,
                                 String mainServerId,
-                                TwitchConfig twitch) {
+                                TwitchConfig twitch,
+                                ActuatorConfig actuator) {
 }
