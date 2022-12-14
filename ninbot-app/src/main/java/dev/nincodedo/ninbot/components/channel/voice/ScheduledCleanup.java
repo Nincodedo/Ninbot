@@ -24,6 +24,8 @@ public class ScheduledCleanup {
                 .map(tempVoiceChannel -> shardManager.getVoiceChannelById(tempVoiceChannel.getVoiceChannelId()))
                 .filter(Objects::nonNull)
                 .filter(voiceChannel -> voiceChannel.getMembers().isEmpty())
-                .forEach(voiceChannel -> voiceChannel.delete().queue());
+                .forEach(voiceChannel -> voiceChannel.delete()
+                        .queue(unused -> tempVoiceChannelRepository.findByVoiceChannelId(voiceChannel.getId())
+                                .ifPresent(tempVoiceChannelRepository::delete)));
     }
 }
