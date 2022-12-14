@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -19,13 +18,13 @@ public class ScheduledCleanup {
 
     @Scheduled(fixedDelay = 12, timeUnit = TimeUnit.HOURS, initialDelay = 1)
     public void deleteEmptyTempChannels() {
-        tempVoiceChannelRepository.findAll()
-                .stream()
-                .map(tempVoiceChannel -> shardManager.getVoiceChannelById(tempVoiceChannel.getVoiceChannelId()))
-                .filter(Objects::nonNull)
-                .filter(voiceChannel -> voiceChannel.getMembers().isEmpty())
-                .forEach(voiceChannel -> voiceChannel.delete()
-                        .queue(unused -> tempVoiceChannelRepository.findByVoiceChannelId(voiceChannel.getId())
-                                .ifPresent(tempVoiceChannelRepository::delete)));
+        tempVoiceChannelRepository.findAll().forEach(tempVoiceChannel -> {
+            var voiceChannel = shardManager.getVoiceChannelById(tempVoiceChannel.getVoiceChannelId());
+            if (voiceChannel == null) {
+                tempVoiceChannelRepository.delete(tempVoiceChannel);
+            } else if (voiceChannel.getMembers().isEmpty()) {
+                voiceChannel.delete().queue(success -> tempVoiceChannelRepository.delete(tempVoiceChannel));
+            }
+        });
     }
 }
