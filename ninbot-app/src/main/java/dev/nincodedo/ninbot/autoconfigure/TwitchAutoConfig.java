@@ -1,11 +1,11 @@
-package dev.nincodedo.nincord.autoconfigure;
+package dev.nincodedo.ninbot.autoconfigure;
 
 import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
-import dev.nincodedo.nincord.config.properties.TwitchConfig;
-import dev.nincodedo.nincord.twitch.TokenRefresh;
+import dev.nincodedo.ninbot.components.stream.twitch.TokenRefresh;
+import dev.nincodedo.ninbot.config.properties.TwitchConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

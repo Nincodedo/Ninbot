@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord.config.properties;
+package dev.nincodedo.ninbot.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

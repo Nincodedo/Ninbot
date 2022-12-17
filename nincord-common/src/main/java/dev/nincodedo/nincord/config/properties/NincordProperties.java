@@ -10,6 +10,5 @@ public record NincordProperties(String ninbotToken,
                                 InfoCommandConfig info,
                                 Class<? extends ReleaseFilter> releaseFilterClass,
                                 String mainServerId,
-                                TwitchConfig twitch,
                                 ActuatorConfig actuator) {
 }

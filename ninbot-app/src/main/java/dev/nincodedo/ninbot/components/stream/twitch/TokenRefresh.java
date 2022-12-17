@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord.twitch;
+package dev.nincodedo.ninbot.components.stream.twitch;
 
 import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
