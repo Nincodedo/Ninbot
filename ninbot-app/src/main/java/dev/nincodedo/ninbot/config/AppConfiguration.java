@@ -4,7 +4,12 @@ import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
+import dev.nincodedo.ninbot.ocw.NinbotSupporterCheck;
+import dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot;
 import dev.nincodedo.nincord.config.properties.NincordProperties;
+import dev.nincodedo.nincord.config.properties.SupporterConfig;
+import dev.nincodedo.nincord.release.ReleaseFilter;
+import dev.nincodedo.nincord.supporter.SupporterCheck;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,6 +17,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,12 +28,15 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Configuration
+@EnableConfigurationProperties({NincordProperties.class, SupporterConfig.class})
 public class AppConfiguration {
 
     private NincordProperties nincordProperties;
+    private SupporterConfig supporterConfig;
 
-    public AppConfiguration(NincordProperties nincordProperties) {
+    public AppConfiguration(NincordProperties nincordProperties, SupporterConfig supporterConfig) {
         this.nincordProperties = nincordProperties;
+        this.supporterConfig = supporterConfig;
     }
 
     @Autowired
@@ -42,6 +51,19 @@ public class AppConfiguration {
                 .setShardsTotal(-1)
                 .build();
     }
+
+    @Bean
+    public SupporterCheck supporterCheck() {
+        var check = new NinbotSupporterCheck();
+        check.setPatreonServerId(supporterConfig.patreonServerId());
+        return check;
+    }
+
+    @Bean
+    public ReleaseFilter releaseFilter() {
+        return new DegreesOfNinbot();
+    }
+
 
     @Bean
     public ExecutorService schedulerThreadPool() {

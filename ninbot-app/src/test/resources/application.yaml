@@ -18,7 +18,7 @@ logging:
     name: ninbot.log
   level:
     root: info
-nincodedo:
+nincord:
   twitch:
     clientId: 1
     clientSecret: 1

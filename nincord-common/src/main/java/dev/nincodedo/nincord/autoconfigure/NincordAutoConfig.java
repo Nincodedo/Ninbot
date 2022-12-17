@@ -7,6 +7,7 @@ import dev.nincodedo.nincord.supporter.DefaultSupporterCheck;
 import dev.nincodedo.nincord.supporter.SupporterCheck;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -23,6 +24,7 @@ public class NincordAutoConfig {
         this.nincordProperties = nincordProperties;
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public ReleaseFilter releaseFilter() throws NoSuchMethodException,
             InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -31,6 +33,7 @@ public class NincordAutoConfig {
         return releaseFilter.getDeclaredConstructor().newInstance();
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public SupporterCheck supporterCheck() throws NoSuchMethodException,
             InvocationTargetException, InstantiationException, IllegalAccessException {

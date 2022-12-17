@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
-@ConditionalOnProperty(prefix = "nincodedo.twitch", name = {"clientId", "clientSecret"})
+@ConditionalOnProperty(prefix = "nincord.twitch", name = {"clientId", "clientSecret"})
 @EnableConfigurationProperties(TwitchConfig.class)
 public class TwitchAutoConfig {
 

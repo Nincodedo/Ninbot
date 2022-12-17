@@ -2,6 +2,6 @@ package dev.nincodedo.nincord.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("nincodedo.info")
+@ConfigurationProperties("nincord.info")
 public record InfoCommandConfig(String documentationUrl, String githubUrl) {
 }

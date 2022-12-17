@@ -4,6 +4,8 @@ import dev.nincodedo.nincord.command.AbstractCommandParser;
 import dev.nincodedo.nincord.command.Command;
 import dev.nincodedo.nincord.command.CommandListener;
 import dev.nincodedo.nincord.command.CommandRegistration;
+import dev.nincodedo.nincord.config.db.ConfigRepository;
+import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.release.ReleaseFilter;
 import dev.nincodedo.nincord.stats.StatManager;
 import dev.nincodedo.nincord.stats.StatRepository;
@@ -67,5 +69,10 @@ public class CommandAutoConfig {
     @Bean
     public StatManager statManager(StatRepository statRepository) {
         return new StatManager(statRepository);
+    }
+
+    @Bean
+    public ConfigService configService(ConfigRepository configRepository) {
+        return new ConfigService(configRepository);
     }
 }
