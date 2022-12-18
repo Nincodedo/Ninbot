@@ -55,7 +55,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
         }
         log.trace("hasPermission: {}, channel join {} is temp creator: {}", hasManageChannelPermission(guild),
                 channelJoined.getName(), channelJoined.getName()
-                .startsWith(Emojis.PLUS));
+                        .startsWith(Emojis.PLUS));
         if (hasManageChannelPermission(guild) && channelJoined.getName().startsWith(Emojis.PLUS)) {
             countOneStat(componentName, guild.getId());
             createTemporaryChannel(channelJoined, guild, member);
