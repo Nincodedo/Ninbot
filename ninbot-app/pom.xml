@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -8,18 +8,12 @@
         <version>3.12.0-SNAPSHOT</version>
         <relativePath>../ninbot-shared-parent</relativePath>
     </parent>
-
     <artifactId>ninbot-app</artifactId>
     <name>Ninbot Application</name>
-
     <properties>
         <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>dev.nincodedo</groupId>
-            <artifactId>nincord-common</artifactId>
-        </dependency>
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
@@ -31,10 +25,6 @@
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-instrumentation-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -63,8 +53,16 @@
             <artifactId>commons-lang</artifactId>
         </dependency>
         <dependency>
+            <groupId>dev.nincodedo</groupId>
+            <artifactId>nincord-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>eu.crydee</groupId>
             <artifactId>syllable-counter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-instrumentation-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
