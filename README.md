@@ -48,3 +48,7 @@ the [common Emojis class](nincord-common/src/main/java/dev/nincodedo/nincord/Emo
 
 Changes and additions to a command or action that would affect the end user should be documented. The latest version of
 Ninbot is the only supported version, so the documentation needs to be up-to-date.
+
+## Special Thanks
+
+Thanks to [GetSongbpm](https://getsongbpm.com/api) for the API access!
