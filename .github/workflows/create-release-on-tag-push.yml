@@ -48,6 +48,7 @@ jobs:
           tags: |
             ghcr.io/nincodedo/ninbot:latest
             ghcr.io/nincodedo/ninbot:${{ github.sha }}
+            ghcr.io/nincodedo/ninbot:${{ github.ref_name }}
   createRelease:
     needs: [buildMaven, buildDocker]
     name: Create Release
@@ -74,5 +75,7 @@ jobs:
         with:
           cluster_name: ninbot-cluster
           location: us-central1-c
+      - name: GKE Update Configs
+        run: kubectl patch configmap ninbot-config -p '{"data":{"OTEL_RESOURCE_ATTRIBUTES":"service.name=ninbot-${{ github.ref_name }},deployment.environment=PROD"}}'
       - name: GKE Deploy
         run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
