@@ -9,7 +9,7 @@ public class SteamGridDbFeignClientConfiguration {
     private static final String TOKEN_TYPE = "Bearer";
 
     @Bean
-    public RequestInterceptor bearerTokenRequestInterceptor(@Value("${nincord.steamgriddbapikey}") String apiKey) {
+    public RequestInterceptor bearerTokenRequestInterceptor(@Value("${nincodedo.steamgriddbapikey}") String apiKey) {
         return template -> template.header(AUTHORIZATION_HEADER, String.format("%s %s", TOKEN_TYPE, apiKey));
     }
 }
