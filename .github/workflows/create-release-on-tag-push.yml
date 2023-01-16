@@ -4,16 +4,6 @@ on:
     tags:
       - "*"
 jobs:
-  createRelease:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          generate_release_notes: true
-          discussion_category_name: 'Releases'
   buildMaven:
     name: Build Maven
     runs-on: ubuntu-latest
@@ -58,6 +48,19 @@ jobs:
           tags: |
             ghcr.io/nincodedo/ninbot:latest
             ghcr.io/nincodedo/ninbot:${{ github.sha }}
+            ghcr.io/nincodedo/ninbot:${{ github.ref_name }}
+  createRelease:
+    needs: [buildMaven, buildDocker]
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          discussion_category_name: 'Releases'
   deployGKE:
     needs: [buildMaven, buildDocker]
     name: Deploy GKE
@@ -72,5 +75,7 @@ jobs:
         with:
           cluster_name: ninbot-cluster
           location: us-central1-c
+      - name: GKE Update Configs
+        run: kubectl patch configmap ninbot-config -p '{"data":{"OTEL_RESOURCE_ATTRIBUTES":"service.name=ninbot-${{ github.ref_name }},deployment.environment=PROD", "OTEL_SERVICE_NAME":"ninbot-${{ github.ref_name }}"}}'
       - name: GKE Deploy
         run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
