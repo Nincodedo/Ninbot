@@ -1,5 +1,7 @@
 package dev.nincodedo.nincord.command.slash.info;
 
+import dev.nincodedo.nincord.config.properties.InfoCommandConfig;
+import dev.nincodedo.nincord.config.properties.SupporterConfig;
 import lombok.Data;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
@@ -15,11 +17,16 @@ public abstract class BotInfo {
     private final MetricsEndpoint metricsEndpoint;
     private final String commitHash;
     private final Instant timeStarted;
+    private final InfoCommandConfig infoCommandConfig;
+    private final SupporterConfig supporterConfig;
 
-    protected BotInfo(GitProperties gitProperties, MetricsEndpoint metricsEndpoint) {
+    protected BotInfo(GitProperties gitProperties, MetricsEndpoint metricsEndpoint,
+            InfoCommandConfig infoCommandConfig, SupporterConfig supporterConfig) {
         this.commitHash = gitProperties.getCommitId();
         this.metricsEndpoint = metricsEndpoint;
         this.timeStarted = Instant.now();
+        this.infoCommandConfig = infoCommandConfig;
+        this.supporterConfig = supporterConfig;
     }
 
     String getUptime(ResourceBundle resourceBundle) {
@@ -49,9 +56,15 @@ public abstract class BotInfo {
         return duration;
     }
 
-    public abstract String getGitHubUrl();
+    public String getGitHubUrl() {
+        return infoCommandConfig.githubUrl();
+    }
 
-    public abstract String getSupporterGuildId();
+    public String getSupporterGuildId() {
+        return supporterConfig.patreonServerId();
+    }
 
-    public abstract String getDocumentationUrl();
+    public String getDocumentationUrl() {
+        return infoCommandConfig.documentationUrl();
+    }
 }

@@ -42,7 +42,7 @@ public class AppConfiguration {
     @Autowired
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
-        return DefaultShardManagerBuilder.create(nincordProperties.ninbotToken(),
+        return DefaultShardManagerBuilder.create(nincordProperties.discordBotToken(),
                         EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                                 GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
                                 GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
