@@ -19,9 +19,6 @@ logging:
   level:
     root: info
 nincord:
-  twitch:
-    clientId: 1
-    clientSecret: 1
   supporter:
     check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
     patreon-server-id: 1
@@ -33,4 +30,7 @@ nincord:
   steamgriddbapikey: 1
   ninbotToken: 1
 nincodedo:
+  twitch:
+    clientId: 1
+    clientSecret: 1
   steamgriddbapikey: 1
