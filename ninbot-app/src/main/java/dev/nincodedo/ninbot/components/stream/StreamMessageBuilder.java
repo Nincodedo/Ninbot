@@ -83,7 +83,7 @@ public class StreamMessageBuilder {
         } else {
             embedBuilder = new EmbedBuilder()
                     .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"),
-                            member.getEffectiveName(), streamInstance.getTitle(),
+                            member.getEffectiveName(), streamInstance.getGame(),
                             streamInstance.getUrl()), streamInstance.getUrl(), member.getEffectiveAvatarUrl())
                     .setTitle(streamInstance.getTitle());
         }
