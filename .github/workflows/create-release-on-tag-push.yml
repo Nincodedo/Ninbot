@@ -40,11 +40,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PACKAGE_ACTIONS_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64
           push: true
+          provenance: false
           tags: |
             ghcr.io/nincodedo/ninbot:latest
             ghcr.io/nincodedo/ninbot:${{ github.sha }}

@@ -58,8 +58,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PACKAGE_ACTIONS_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64
           push: false
+          provenance: false
