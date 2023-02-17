@@ -1,32 +1,32 @@
 {
   "properties" : [
     {
-      "name" : "nincord.releaseFilterClass",
+      "name" : "nincodedo.releaseFilterClass",
       "type" : "java.lang.Class",
       "description" : "Description for nincodedo.releaseFilterClass."
     },
     {
-      "name" : "nincord.supporter.checkClass",
+      "name" : "nincodedo.supporter.checkClass",
       "type" : "java.lang.Class",
       "description" : "Description for nincodedo.supporter.checkClass."
     },
     {
-      "name" : "nincord.supporter.patreonServerId",
+      "name" : "nincodedo.supporter.patreonServerId",
       "type" : "java.lang.String",
       "description" : "Description for nincodedo.supporter.patreonServerId."
     },
     {
-      "name" : "nincord.info.documentationUrl",
+      "name" : "nincodedo.info.documentationUrl",
       "type" : "java.lang.String",
       "description" : "Info command's documentation URL."
     },
     {
-      "name" : "nincord.info.githubUrl",
+      "name" : "nincodedo.info.githubUrl",
       "type" : "java.lang.String",
       "description" : "Info command's GitHub URL."
     },
     {
-      "name": "nincord.twitch.clientId",
+      "name": "nincodedo.twitch.clientId",
       "type": "java.lang.String",
       "description": "Twitch Application Client ID."
     }
