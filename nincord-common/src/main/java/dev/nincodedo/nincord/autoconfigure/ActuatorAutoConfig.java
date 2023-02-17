@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(ActuatorConfig.class)
 public class ActuatorAutoConfig {
 
-    @ConditionalOnProperty(prefix = "nincord.actuator", name = "jdaHealthEnabled", havingValue = "true")
+    @ConditionalOnProperty(prefix = "nincodedo.actuator", name = "jdaHealthEnabled", havingValue = "true")
     @Bean
     public JDAHealthIndicator jdaHealthIndicator(ShardManager shardManager) {
         return new JDAHealthIndicator(shardManager);

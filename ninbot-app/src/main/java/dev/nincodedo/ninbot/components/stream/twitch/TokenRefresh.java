@@ -18,7 +18,6 @@ public class TokenRefresh {
     @Scheduled(timeUnit = TimeUnit.DAYS, fixedRate = 1, initialDelay = 1)
     protected void updateToken() {
         var oauthOptional = credentialManager.getOAuth2IdentityProviderByName("twitch");
-        oauthOptional.ifPresent(oAuth2IdentityProvider -> oAuth2IdentityProvider.getAppAccessToken()
-                .updateCredential(twitchIdentityProvider.getAppAccessToken()));
+        oauthOptional.ifPresent(oAuth2IdentityProvider -> oAuth2IdentityProvider.refreshCredential(twitchIdentityProvider.getAppAccessToken()));
     }
 }

@@ -18,7 +18,7 @@ logging:
     name: ninbot.log
   level:
     root: info
-nincord:
+nincodedo:
   supporter:
     check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
     patreon-server-id: 1
@@ -27,9 +27,7 @@ nincord:
     github-url: https://github.com/Nincodedo/Ninbot
   release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
   main-server-id: 1
-  steamgriddbapikey: 1
   ninbotToken: 1
-nincodedo:
   twitch:
     clientId: 1
     clientSecret: 1

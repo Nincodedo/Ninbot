@@ -4,6 +4,8 @@ import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
 import dev.nincodedo.nincord.util.StreamUtils;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;
@@ -28,6 +30,7 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
 
     private SteamGridDBFeign steamGridDBFeign;
     private Random random;
+    private Counter bannersGenerated = Metrics.counter("bot.stream.banners.generated.count");
 
     public SteamGridDBBannerBuilder(SteamGridDBFeign steamGridDBFeign, GameBannerRepository gameBannerRepository) {
         super(gameBannerRepository, Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder")));
@@ -42,9 +45,11 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
     private List<GameBanner> generateGameBanners(String gameTitle, int gameId, List<GameImage> logos,
             List<GameImage> heroes) {
         var allBanners = gameBannerRepository.findAllByGameTitle(gameTitle);
+
         List<GameBanner> gameBanners = new ArrayList<>();
         log.trace("Generating banners for {}", gameTitle);
-        for (int i = 0; i < 3; i++) {
+        int iterations = 0;
+        while (iterations < 12 && gameBanners.size() < 3) {
             var logo = logos.get(random.nextInt(logos.size()));
             var hero = heroes.get(random.nextInt(heroes.size()));
             var gameBanner = allBanners.stream()
@@ -52,6 +57,10 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
                             && gameBanner1.getBackgroundId() == hero.id())
                     .findFirst()
                     .orElse(new GameBanner());
+            iterations++;
+            if (gameBanner.getScore() < 0) {
+                continue;
+            }
             gameBanner.setGameTitle(gameTitle);
             gameBanner.setGameId(gameId);
             gameBanner.setLogoId(logo.id());
@@ -63,7 +72,8 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
             gameBanners.add(gameBanner);
             allBanners.add(gameBanner);
         }
-        log.debug("Finished with {} game banners generated", gameBanners.size());
+        bannersGenerated.increment(gameBanners.size());
+        log.debug("Finished with {} game banners generated in {} iterations", gameBanners.size(), iterations);
         return gameBanners;
     }
 

@@ -27,7 +27,7 @@ logging:
     dev:
       nincodedo: INFO
     root: ERROR
-nincord:
+nincodedo:
   supporter:
     patreon-server-id: 608765747728220161
   info:
