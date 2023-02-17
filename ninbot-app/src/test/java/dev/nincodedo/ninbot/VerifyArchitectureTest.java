@@ -20,7 +20,7 @@ import java.util.List;
 
 class VerifyArchitectureTest {
 
-    JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo");
+    JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo.ninbot");
 
     static List<ArchRule> generalRules() {
         return List.of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.because("All logging should go "

@@ -19,9 +19,6 @@ logging:
   level:
     root: info
 nincodedo:
-  twitch:
-    clientId: 1
-    clientSecret: 1
   supporter:
     check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
     patreon-server-id: 1
@@ -30,5 +27,8 @@ nincodedo:
     github-url: https://github.com/Nincodedo/Ninbot
   release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
   main-server-id: 1
-  steamgriddbapikey: 1
   ninbotToken: 1
+  twitch:
+    clientId: 1
+    clientSecret: 1
+  steamgriddbapikey: 1

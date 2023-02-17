@@ -16,9 +16,14 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
 
     private Map<String, T> commandMap = new HashMap<>();
     private ExecutorService executorService;
+    private Class<T> commandClass;
+    private Class<F> eventClass;
 
-    protected AbstractCommandParser(ExecutorService commandExecutorService) {
+    protected AbstractCommandParser(ExecutorService commandExecutorService, Class<T> commandClass,
+            Class<F> eventClass) {
         this.executorService = commandExecutorService;
+        this.commandClass = commandClass;
+        this.eventClass = eventClass;
     }
 
     public void parseEvent(@NotNull F event) {
@@ -65,7 +70,12 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
         return getCommandClass().isInstance(command);
     }
 
-    public abstract Class<T> getCommandClass();
 
-    public abstract Class<F> getEventClass();
+    public Class<T> getCommandClass() {
+        return commandClass;
+    }
+
+    public Class<F> getEventClass() {
+        return eventClass;
+    }
 }

@@ -1,6 +1,6 @@
 package dev.nincodedo.ninbot.components.stream.banner;
 
-import dev.nincodedo.nincord.StreamUtils;
+import dev.nincodedo.nincord.util.StreamUtils;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,17 +38,15 @@ public abstract class GameBannerBuilder {
             var cachedBanners = getGameBannerFilesFromCache(gameTitle).stream()
                     .sorted(StreamUtils.shuffle())
                     .toList();
-            if (!cachedBanners.isEmpty()) {
-                for (var cachedBannerFile : cachedBanners) {
-                    var gameBannerOptional = getGameBannerFromFile(cachedBannerFile);
-                    if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() >= 0) {
-                        var gameBanner = gameBannerOptional.get();
-                        gameBanner.setFile(cachedBannerFile);
-                        futureGameBanner.complete(gameBanner);
-                        return null;
-                    } else if (gameBannerOptional.isPresent()) {
-                        Files.deleteIfExists(cachedBannerFile.toPath());
-                    }
+            for (var cachedBannerFile : cachedBanners) {
+                var gameBannerOptional = getGameBannerFromFile(cachedBannerFile);
+                if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() >= 0) {
+                    var gameBanner = gameBannerOptional.get();
+                    gameBanner.setFile(cachedBannerFile);
+                    futureGameBanner.complete(gameBanner);
+                    return null;
+                } else if (gameBannerOptional.isPresent()) {
+                    Files.deleteIfExists(cachedBannerFile.toPath());
                 }
             }
             futureGameBanner.complete(generateGameBannerFromTitle(gameTitle));

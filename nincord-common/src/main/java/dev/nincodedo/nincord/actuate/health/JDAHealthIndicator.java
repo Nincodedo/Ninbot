@@ -1,14 +1,12 @@
-package dev.nincodedo.nincord;
+package dev.nincodedo.nincord.actuate.health;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
 public class JDAHealthIndicator implements HealthIndicator {
 
     private final ShardManager shardManager;

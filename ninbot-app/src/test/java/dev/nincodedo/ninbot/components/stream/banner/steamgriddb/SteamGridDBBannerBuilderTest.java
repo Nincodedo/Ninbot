@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.stream.banner.steamgriddb;
 
+import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
 import org.apache.commons.io.FileUtils;
 import org.instancio.Instancio;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -107,5 +109,47 @@ class SteamGridDBBannerBuilderTest {
         assertThat(bannerFromFileOptional).isPresent().contains(banner);
 
         verifyNoMoreInteractions(steamGridDBFeign);
+    }
+
+    @Test
+    void generateGameBannerFromTitleWithPoorScores() throws MalformedURLException, ExecutionException,
+            InterruptedException {
+        var bg = Path.of("..", "docs", "images", "ninbot-github-social.png").toUri().toURL();
+        var icon = Path.of("..", "docs", "images", "ninbot-github-logo-small.png").toUri().toURL();
+        BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
+        }).set(field("success"), true).create();
+        List<GameImage> backgrounds = Instancio.of(new TypeToken<GameImage>() {
+        }).set(field("url"), "file://" + bg.getPath()).stream().limit(5).toList();
+        List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
+        }).set(field("url"), "file://" + icon.getPath()).stream().limit(5).toList();
+        BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), logos).create();
+        BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), backgrounds).create();
+
+        List<GameBanner> poorScoreBanners = new ArrayList<>();
+        for (var logo : logos) {
+            for (var background : backgrounds) {
+                var gameBanner = Instancio.of(new TypeToken<GameBanner>() {
+                        })
+                        .set(field("logoId"), logo.id())
+                        .set(field("backgroundId"), background.id())
+                        .set(field("score"), -5)
+                        .create();
+                poorScoreBanners.add(gameBanner);
+            }
+        }
+        
+        when(steamGridDBFeign.searchGameByName(anyString())).thenReturn(gameBaseResponse);
+        when(steamGridDBFeign.retrieveLogoByGameId(gameBaseResponse.firstData()
+                .id(), new String[]{"official"})).thenReturn(logoResponse);
+        when(steamGridDBFeign.retrieveHeroByGameId(gameBaseResponse.firstData().id())).thenReturn(heroResponse);
+        when(gameBannerRepository.findAllByGameTitle("Zeldo")).thenReturn(poorScoreBanners);
+
+        var bannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
+        var banner = bannerAsync.get();
+
+        assertThat(banner).isNull();
+        assertThat(cache).isEmptyDirectory();
     }
 }

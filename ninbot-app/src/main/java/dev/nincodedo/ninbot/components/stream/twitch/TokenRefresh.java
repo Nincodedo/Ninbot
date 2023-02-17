@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord.twitch;
+package dev.nincodedo.ninbot.components.stream.twitch;
 
 import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
@@ -18,7 +18,6 @@ public class TokenRefresh {
     @Scheduled(timeUnit = TimeUnit.DAYS, fixedRate = 1, initialDelay = 1)
     protected void updateToken() {
         var oauthOptional = credentialManager.getOAuth2IdentityProviderByName("twitch");
-        oauthOptional.ifPresent(oAuth2IdentityProvider -> oAuth2IdentityProvider.getAppAccessToken()
-                .updateCredential(twitchIdentityProvider.getAppAccessToken()));
+        oauthOptional.ifPresent(oAuth2IdentityProvider -> oAuth2IdentityProvider.refreshCredential(twitchIdentityProvider.getAppAccessToken()));
     }
 }

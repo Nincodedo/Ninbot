@@ -14,19 +14,17 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 @Slf4j
-@Component
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command<?>> commands;
+    private List<Command> commands;
     private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command<?>> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
         this.commands = commands;
         this.releaseFilter = releaseFilter;
     }
@@ -57,8 +55,8 @@ public class CommandRegistration extends ListenerAdapter {
         try {
             log.trace("Registering commands for server {}", FormatLogObject.guildName(guild));
             List<CommandData> commandDataList = commands.stream()
-                    .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
                     .filter(Command::isAbleToRegisterOnGuild)
+                    .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
                     .map(this::convertToCommandData)
                     .toList();
             guild.updateCommands()

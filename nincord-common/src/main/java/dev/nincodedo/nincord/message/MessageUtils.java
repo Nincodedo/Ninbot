@@ -1,6 +1,6 @@
 package dev.nincodedo.nincord.message;
 
-import dev.nincodedo.nincord.image.ImageUtils;
+import dev.nincodedo.nincord.util.ImageUtils;
 import lombok.experimental.UtilityClass;
 
 import javax.imageio.ImageIO;

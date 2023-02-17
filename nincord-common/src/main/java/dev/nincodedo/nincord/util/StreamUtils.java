@@ -1,4 +1,4 @@
-package dev.nincodedo.nincord;
+package dev.nincodedo.nincord.util;
 
 import lombok.experimental.UtilityClass;
 

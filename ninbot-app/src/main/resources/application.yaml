@@ -29,7 +29,6 @@ logging:
     root: ERROR
 nincodedo:
   supporter:
-    check-class: dev.nincodedo.ninbot.ocw.NinbotSupporterCheck
     patreon-server-id: 608765747728220161
   info:
     documentation-url: https://ninbot.nincodedo.dev

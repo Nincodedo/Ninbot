@@ -1,7 +1,7 @@
 package dev.nincodedo.ninbot.components.pathogen;
 
 import dev.nincodedo.ninbot.components.pathogen.user.PathogenUserService;
-import dev.nincodedo.nincord.StreamUtils;
+import dev.nincodedo.nincord.util.StreamUtils;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
