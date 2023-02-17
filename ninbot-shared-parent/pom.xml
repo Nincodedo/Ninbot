@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot-shared-parent</artifactId>
-    <version>3.12.0-SNAPSHOT</version>
+    <version>3.13.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
@@ -37,7 +37,7 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
-        <opentelemetry-instrumentation-annotations.version>1.20.2</opentelemetry-instrumentation-annotations.version>
+        <opentelemetry-instrumentation-annotations.version>1.23.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.1.0</pitest-junit5-plugin.version>
         <pitest-maven.version>1.9.8</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
