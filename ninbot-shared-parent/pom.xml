@@ -28,7 +28,7 @@
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <log4j.version>2.19.0</log4j.version>
+        <log4j.version>2.20.0</log4j.version>
         <lombok-mapstruct.version>0.1.0</lombok-mapstruct.version>
         <lombok.version>1.18.26</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
