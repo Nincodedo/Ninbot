@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,16 +44,25 @@ public abstract class GameBannerBuilder {
                 if (gameBannerOptional.isPresent() && gameBannerOptional.get().getScore() >= 0) {
                     var gameBanner = gameBannerOptional.get();
                     gameBanner.setFile(cachedBannerFile);
+                    recordBannerUsed(gameBanner);
                     futureGameBanner.complete(gameBanner);
                     return null;
                 } else if (gameBannerOptional.isPresent()) {
                     Files.deleteIfExists(cachedBannerFile.toPath());
                 }
             }
-            futureGameBanner.complete(generateGameBannerFromTitle(gameTitle));
+            var gameBanner = generateGameBannerFromTitle(gameTitle);
+            recordBannerUsed(gameBanner);
+            futureGameBanner.complete(gameBanner);
             return null;
         });
         return futureGameBanner;
+    }
+
+    private void recordBannerUsed(GameBanner gameBanner) {
+        gameBanner.setUses(gameBanner.getUses() + 1);
+        gameBanner.setLastUse(LocalDateTime.now());
+        gameBannerRepository.save(gameBanner);
     }
 
     public Optional<GameBanner> getGameBannerFromFile(File cachedBannerFile) {
