@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,7 +27,7 @@ public class GameBanner extends BaseEntity {
             mappedBy = "gameBanner",
             fetch = FetchType.EAGER
     )
-    private List<GameBannerVote> votes;
+    private List<GameBannerVote> votes = new ArrayList<>();
     @Transient
     private File file;
 
