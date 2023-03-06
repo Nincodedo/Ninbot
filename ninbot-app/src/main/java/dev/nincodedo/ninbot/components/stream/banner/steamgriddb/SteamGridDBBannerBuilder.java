@@ -3,7 +3,6 @@ package dev.nincodedo.ninbot.components.stream.banner.steamgriddb;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
-import dev.nincodedo.nincord.util.StreamUtils;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
@@ -20,7 +19,6 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
@@ -36,10 +34,6 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
         super(gameBannerRepository, Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder")));
         this.steamGridDBFeign = steamGridDBFeign;
         this.random = new SecureRandom();
-    }
-
-    private Optional<GameBanner> randomBanner(List<GameBanner> gameBanners) {
-        return gameBanners.stream().min(StreamUtils.shuffle());
     }
 
     private List<GameBanner> generateGameBanners(String gameTitle, int gameId, List<GameImage> logos,
@@ -146,7 +140,7 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
         if (combinedResponse.allResponsesSuccessful()) {
             var gameBanners = generateGameBanners(gameTitle, combinedResponse.getGameId(), combinedResponse.logos()
                     .getData(), combinedResponse.heroes().getData());
-            return randomBanner(gameBanners).orElse(null);
+            return getMostSuitableBanner(gameBanners).orElse(null);
         } else {
             return null;
         }
