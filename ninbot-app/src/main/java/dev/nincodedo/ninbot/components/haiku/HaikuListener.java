@@ -8,6 +8,7 @@ import dev.nincodedo.nincord.config.db.component.ComponentType;
 import dev.nincodedo.nincord.message.MessageUtils;
 import dev.nincodedo.nincord.stats.StatManager;
 import eu.crydee.syllablecounter.SyllableCounter;
+import io.micrometer.core.instrument.Metrics;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -60,10 +61,12 @@ public class HaikuListener extends StatAwareListenerAdapter {
             event.getChannel()
                     .sendMessage(new MessageCreateBuilder().addEmbeds(embedBuilder.build()).build())
                     .queue(message1 -> countOneStat(componentName, event.getGuild().getId()));
+            Metrics.counter("bot.listener.haiku.success").increment();
         });
     }
 
     Optional<String> isHaikuable(String message, String guildId) {
+        Metrics.counter("bot.listener.haiku.checked").increment();
         if (isMessageOnlyCharacters(message) && getSyllableCount(message) == 17) {
             String[] splitMessage = message.split("\\s+");
             List<String> lines = new ArrayList<>();

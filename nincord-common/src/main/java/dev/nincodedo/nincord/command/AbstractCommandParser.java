@@ -1,6 +1,8 @@
 package dev.nincodedo.nincord.command;
 
 import dev.nincodedo.nincord.logging.FormatLogObject;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Metrics;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
@@ -18,6 +20,8 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
     private ExecutorService executorService;
     private Class<T> commandClass;
     private Class<F> eventClass;
+    private Counter eventsOutCounter = Metrics.counter("bot.listener.commands.events.out");
+    private Counter eventsErrorCounter = Metrics.counter("bot.listener.commands.events.error");
 
     protected AbstractCommandParser(ExecutorService commandExecutorService, Class<T> commandClass,
             Class<F> eventClass) {
@@ -32,10 +36,16 @@ public abstract class AbstractCommandParser<T extends Command<F>, F extends Gene
                 log.trace("Running {} command {} in server {} by user {}", command.getType(), command.getName(),
                         FormatLogObject.guildName(event.getGuild()), FormatLogObject.userInfo(event.getUser()));
                 command.execute(event).executeActions();
+                eventsOutCounter.increment();
+                Metrics.counter("bot.command.%s.%s.executed".formatted(
+                        command.getType().toString().toLowerCase(), command.getName().toLowerCase())).increment();
             } catch (Exception e) {
                 log.error("{} Command {} failed with an exception: Ran in server {} by {}", command.getType(),
                         command.getName(), FormatLogObject.guildName(event.getGuild()),
                         FormatLogObject.userInfo(event.getUser()), e);
+                eventsErrorCounter.increment();
+                Metrics.counter("bot.command.%s.%s.failed".formatted(
+                        command.getType().toString().toLowerCase(), command.getName().toLowerCase())).increment();
             }
         }));
     }
