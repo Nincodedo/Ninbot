@@ -5,6 +5,7 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.library.GeneralCodingRules;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Disabled("Until ArchUnit updates to support Java 20+")
 class VerifyArchitectureTest {
 
     JavaClasses nincordClasses = new ClassFileImporter().importPackages("dev.nincodedo.nincord");
@@ -28,7 +30,6 @@ class VerifyArchitectureTest {
         ArchRuleDefinition.classes()
                 .should().notBeAnnotatedWith(Component.class).check(nincordClasses);
     }
-
 
     @ParameterizedTest
     @MethodSource("generalRules")

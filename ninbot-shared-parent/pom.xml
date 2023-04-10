@@ -25,7 +25,7 @@
         <discord-webhooks.version>0.8.2</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>2.13.0</instancio-junit.version>
-        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.9</jacoco-maven-plugin.version>
         <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
         <jsr305.version>3.0.2</jsr305.version>
         <log4j.version>2.20.0</log4j.version>
@@ -35,8 +35,8 @@
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
         <opentelemetry-instrumentation-annotations.version>1.23.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.1.0</pitest-junit5-plugin.version>
         <pitest-maven.version>1.9.8</pitest-maven.version>
