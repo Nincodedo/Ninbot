@@ -142,18 +142,13 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
 
     @Override
     protected GameBanner generateGameBannerFromTitle(String gameTitle) {
-        var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
-        if (searchResponse.isSuccess()) {
-            var gameId = searchResponse.firstData().id();
-            var logoResponse = steamGridDBFeign.retrieveLogoByGameId(gameId, new String[]{"official"});
-            var heroResponse = steamGridDBFeign.retrieveHeroByGameId(gameId);
-            if (logoResponse.isSuccess() && heroResponse.isSuccess() && !logoResponse.getData().isEmpty()
-                    && !heroResponse.getData().isEmpty()) {
-                var gameBanners = generateGameBanners(gameTitle, gameId, logoResponse.getData(),
-                        heroResponse.getData());
-                return randomBanner(gameBanners).orElse(null);
-            }
+        var combinedResponse = steamGridDBFeign.findImagesFromTitle(gameTitle);
+        if (combinedResponse.allResponsesSuccessful()) {
+            var gameBanners = generateGameBanners(gameTitle, combinedResponse.getGameId(), combinedResponse.logos()
+                    .getData(), combinedResponse.heroes().getData());
+            return randomBanner(gameBanners).orElse(null);
+        } else {
+            return null;
         }
-        return null;
     }
 }
