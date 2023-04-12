@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 19
+          java-version: 20
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
@@ -51,7 +51,7 @@ jobs:
             ghcr.io/nincodedo/ninbot:${{ github.sha }}
             ghcr.io/nincodedo/ninbot:${{ github.ref_name }}
   createRelease:
-    needs: [buildMaven, buildDocker]
+    needs: [ buildMaven, buildDocker ]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +63,7 @@ jobs:
           generate_release_notes: true
           discussion_category_name: 'Releases'
   deployGKE:
-    needs: [buildMaven, buildDocker]
+    needs: [ buildMaven, buildDocker ]
     name: Deploy GKE
     runs-on: ubuntu-latest
     steps:
