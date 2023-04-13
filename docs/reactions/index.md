@@ -16,5 +16,5 @@ If Ninbot detects that a message was a Haiku, it will respond with it in Haiku f
 
 ## Reaction Emojis
 
-See [the reactions JSON.](/src/main/resources/responses.json) Ninbot will respond with any reaction that can be made
-with only emoji letters (words only made with at most one of each letter).
+See [the reactions JSON.](/ninbot-app/src/main/resources/responses.json) Ninbot will respond with any reaction that can
+be made with only emoji letters (words only made with at most one of each letter).
