@@ -2,11 +2,9 @@ on:
   push:
     branches:
       - main
-      - dev
   pull_request_target:
     branches:
       - main
-      - dev
 name: Build
 jobs:
   buildMaven:
