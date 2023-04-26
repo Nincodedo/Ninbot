@@ -16,28 +16,4 @@ public interface SteamGridDBFeign {
 
     @GetMapping(value = "/logos/game/{gameId}")
     BaseResponse<GameImage> retrieveLogoByGameId(@PathVariable int gameId, @RequestParam String[] styles);
-
-    default SteamGridDBCombinedResponse findImagesFromTitle(String gameTitle) {
-        var searchResponse = searchGameByName(gameTitle);
-        if (searchResponse.isSuccess()) {
-            var gameId = searchResponse.firstData().id();
-            var logoResponse = retrieveLogoByGameId(gameId, new String[]{"official"});
-            filterLockedImages(logoResponse);
-            var heroResponse = retrieveHeroByGameId(gameId);
-            filterLockedImages(heroResponse);
-            return new SteamGridDBCombinedResponse(searchResponse, logoResponse, heroResponse);
-        } else {
-            return new SteamGridDBCombinedResponse(searchResponse, null, null);
-        }
-    }
-
-    private void filterLockedImages(BaseResponse<GameImage> gameImageBaseResponse) {
-        gameImageBaseResponse.setData(gameImageBaseResponse.getData()
-                .stream()
-                .filter(gameImage -> !gameImage.lock())
-                .toList());
-        if (gameImageBaseResponse.isSuccess()) {
-            gameImageBaseResponse.setSuccess(!gameImageBaseResponse.getData().isEmpty());
-        }
-    }
 }
