@@ -142,18 +142,37 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
 
     @Override
     protected GameBanner generateGameBannerFromTitle(String gameTitle) {
+        var combinedResponse = findImagesFromTitle(gameTitle);
+        if (combinedResponse.allResponsesSuccessful()) {
+            var gameBanners = generateGameBanners(gameTitle, combinedResponse.getGameId(), combinedResponse.logos()
+                    .getData(), combinedResponse.heroes().getData());
+            return randomBanner(gameBanners).orElse(null);
+        } else {
+            return null;
+        }
+    }
+
+    private SteamGridDBCombinedResponse findImagesFromTitle(String gameTitle) {
         var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
         if (searchResponse.isSuccess()) {
             var gameId = searchResponse.firstData().id();
             var logoResponse = steamGridDBFeign.retrieveLogoByGameId(gameId, new String[]{"official"});
+            filterLockedImages(logoResponse);
             var heroResponse = steamGridDBFeign.retrieveHeroByGameId(gameId);
-            if (logoResponse.isSuccess() && heroResponse.isSuccess() && !logoResponse.getData().isEmpty()
-                    && !heroResponse.getData().isEmpty()) {
-                var gameBanners = generateGameBanners(gameTitle, gameId, logoResponse.getData(),
-                        heroResponse.getData());
-                return randomBanner(gameBanners).orElse(null);
-            }
+            filterLockedImages(heroResponse);
+            return new SteamGridDBCombinedResponse(searchResponse, logoResponse, heroResponse);
+        } else {
+            return new SteamGridDBCombinedResponse(searchResponse, null, null);
         }
-        return null;
+    }
+
+    private void filterLockedImages(BaseResponse<GameImage> gameImageBaseResponse) {
+        gameImageBaseResponse.setData(gameImageBaseResponse.getData()
+                .stream()
+                .filter(gameImage -> !gameImage.lock())
+                .toList());
+        if (gameImageBaseResponse.isSuccess()) {
+            gameImageBaseResponse.setSuccess(!gameImageBaseResponse.getData().isEmpty());
+        }
     }
 }
