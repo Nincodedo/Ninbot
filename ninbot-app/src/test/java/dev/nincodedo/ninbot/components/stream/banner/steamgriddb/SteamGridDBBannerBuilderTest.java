@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -68,18 +67,17 @@ class SteamGridDBBannerBuilderTest {
         BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
         }).set(field("success"), true).create();
         List<GameImage> backgrounds = Instancio.of(new TypeToken<GameImage>() {
-        }).set(field("url"), "file://" + bg.getPath()).stream().limit(5).toList();
+        }).set(field("url"), "file://" + bg.getPath()).set(field("lock"), false).stream().limit(5).toList();
         List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
-        }).set(field("url"), "file://" + icon.getPath()).stream().limit(5).toList();
+        }).set(field("url"), "file://" + icon.getPath()).set(field("lock"), false).stream().limit(5).toList();
         BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
         }).set(field("success"), true).set(field("data"), logos).create();
         BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
         }).set(field("success"), true).set(field("data"), backgrounds).create();
 
-        when(steamGridDBFeign.searchGameByName(anyString())).thenReturn(gameBaseResponse);
-        when(steamGridDBFeign.retrieveLogoByGameId(gameBaseResponse.firstData()
-                .id(), new String[]{"official"})).thenReturn(logoResponse);
-        when(steamGridDBFeign.retrieveHeroByGameId(gameBaseResponse.firstData().id())).thenReturn(heroResponse);
+        var combinedResponse = new SteamGridDBCombinedResponse(gameBaseResponse, logoResponse, heroResponse);
+
+        when(steamGridDBFeign.findImagesFromTitle("Zeldo")).thenReturn(combinedResponse);
 
         var bannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
         var banner = bannerAsync.get();
@@ -92,12 +90,9 @@ class SteamGridDBBannerBuilderTest {
         assertThat(banner.getFile()).exists();
 
         banner.setFile(null);
-        when(gameBannerRepository.findGameBannerByLogoIdAndBackgroundId(anyInt(), anyInt()))
-                .thenReturn(Optional.of(banner));
+        when(gameBannerRepository.findGameBannerByLogoIdAndBackgroundId(anyInt(), anyInt())).thenReturn(Optional.of(banner));
 
-        verify(steamGridDBFeign).searchGameByName(anyString());
-        verify(steamGridDBFeign).retrieveHeroByGameId(gameBaseResponse.firstData().id());
-        verify(steamGridDBFeign).retrieveLogoByGameId(gameBaseResponse.firstData().id(), new String[]{"official"});
+        verify(steamGridDBFeign).findImagesFromTitle("Zeldo");
 
         var cachedBannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
         var cachedBanner = cachedBannerAsync.get();
@@ -139,11 +134,10 @@ class SteamGridDBBannerBuilderTest {
                 poorScoreBanners.add(gameBanner);
             }
         }
-        
-        when(steamGridDBFeign.searchGameByName(anyString())).thenReturn(gameBaseResponse);
-        when(steamGridDBFeign.retrieveLogoByGameId(gameBaseResponse.firstData()
-                .id(), new String[]{"official"})).thenReturn(logoResponse);
-        when(steamGridDBFeign.retrieveHeroByGameId(gameBaseResponse.firstData().id())).thenReturn(heroResponse);
+
+        var combinedResponse = new SteamGridDBCombinedResponse(gameBaseResponse, logoResponse, heroResponse);
+
+        when(steamGridDBFeign.findImagesFromTitle("Zeldo")).thenReturn(combinedResponse);
         when(gameBannerRepository.findAllByGameTitle("Zeldo")).thenReturn(poorScoreBanners);
 
         var bannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
