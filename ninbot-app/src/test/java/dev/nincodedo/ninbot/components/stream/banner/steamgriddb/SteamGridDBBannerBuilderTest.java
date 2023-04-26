@@ -7,7 +7,7 @@ import org.instancio.Instancio;
 import org.instancio.TypeToken;
 import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,22 +42,22 @@ class SteamGridDBBannerBuilderTest {
     @InjectMocks
     SteamGridDBBannerBuilder steamGridDBBannerBuilder;
 
-    @BeforeAll
-    static void before() throws IOException {
+    @AfterAll
+    static void after() throws IOException {
+        FileUtils.deleteDirectory(cache);
+    }
+
+    @BeforeEach
+    void before() throws IOException {
         if (cache.exists() && !cache.isDirectory()) {
             if (!cache.delete()) {
                 fail("Failed to delete non directory cache file");
             }
         }
-        if (!cache.mkdir()) {
+        if (!cache.exists() && !cache.mkdir()) {
             fail("Failed to make cache directory");
         }
         FileUtils.cleanDirectory(cache);
-    }
-
-    @AfterAll
-    static void after() throws IOException {
-        FileUtils.deleteDirectory(cache);
     }
 
     @Test
@@ -150,5 +150,55 @@ class SteamGridDBBannerBuilderTest {
 
         assertThat(banner).isNull();
         assertThat(cache).isEmptyDirectory();
+    }
+
+    @Test
+    void generateGameBannerButOopsAllLocked() throws MalformedURLException, ExecutionException, InterruptedException {
+        var bg = Path.of("..", "docs", "images", "ninbot-github-social.png").toUri().toURL();
+        var icon = Path.of("..", "docs", "images", "ninbot-github-logo-small.png").toUri().toURL();
+        BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
+        }).set(field("success"), true).create();
+        List<GameImage> backgrounds = Instancio.of(new TypeToken<GameImage>() {
+        }).set(field("url"), "file://" + bg.getPath()).set(field("lock"), true).stream().limit(5).toList();
+        List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
+        }).set(field("url"), "file://" + icon.getPath()).set(field("lock"), true).stream().limit(5).toList();
+        BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), logos).create();
+        BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), backgrounds).create();
+
+        when(steamGridDBFeign.searchGameByName("Zeldo")).thenReturn(gameBaseResponse);
+        when(steamGridDBFeign.retrieveLogoByGameId(gameBaseResponse.firstData()
+                .id(), new String[]{"official"})).thenReturn(logoResponse);
+        when(steamGridDBFeign.retrieveHeroByGameId(gameBaseResponse.firstData().id())).thenReturn(heroResponse);
+
+        var bannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
+        var banner = bannerAsync.get();
+
+        assertThat(banner).isNull();
+        assertThat(cache).isEmptyDirectory();
+
+        verify(steamGridDBFeign).searchGameByName("Zeldo");
+        verify(steamGridDBFeign).retrieveHeroByGameId(gameBaseResponse.firstData().id());
+        verify(steamGridDBFeign).retrieveLogoByGameId(gameBaseResponse.firstData().id(), new String[]{"official"});
+    }
+
+    @Test
+    void generateGameBannerFromUnknownGame() throws MalformedURLException, ExecutionException, InterruptedException {
+        var bg = Path.of("..", "docs", "images", "ninbot-github-social.png").toUri().toURL();
+        var icon = Path.of("..", "docs", "images", "ninbot-github-logo-small.png").toUri().toURL();
+        BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
+        }).set(field("success"), false).create();
+
+        when(steamGridDBFeign.searchGameByName("Zeldo")).thenReturn(gameBaseResponse);
+
+        var bannerAsync = steamGridDBBannerBuilder.getGameBannerAsync("Zeldo");
+        var banner = bannerAsync.get();
+
+        assertThat(banner).isNull();
+        assertThat(cache).isEmptyDirectory();
+
+        verify(steamGridDBFeign).searchGameByName("Zeldo");
+        verifyNoMoreInteractions(steamGridDBFeign);
     }
 }
