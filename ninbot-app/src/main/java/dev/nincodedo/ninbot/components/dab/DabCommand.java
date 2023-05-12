@@ -39,8 +39,12 @@ public class DabCommand implements SlashCommand {
                 messageExecutor,
                 event.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser));
         var user = event.getOption(DabCommandName.Option.DABBED.get(), OptionMapping::getAsUser);
-        if (user != null) {
-            messageExecutor.addMessageResponse(dabber.buildDabMessage(user));
+        var guild = event.getGuild();
+        if (user != null && guild != null) {
+            var member = guild.getMember(user);
+            if (member != null) {
+                messageExecutor.addMessageResponse(dabber.buildDabMessage(member));
+            }
         }
         return messageExecutor;
     }

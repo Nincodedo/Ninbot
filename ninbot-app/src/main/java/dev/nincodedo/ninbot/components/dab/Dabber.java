@@ -6,6 +6,7 @@ import dev.nincodedo.nincord.supporter.SupporterCheck;
 import dev.nincodedo.nincord.util.StreamUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -73,10 +74,10 @@ public class Dabber {
                 .toList());
     }
 
-    MessageCreateData buildDabMessage(@NotNull User target) {
+    MessageCreateData buildDabMessage(@NotNull Member target) {
         return new MessageCreateBuilder().addContent("<:ninbotdab:786750382771535902>")
                 .addContent(" ")
-                .addContent(target.getName())
+                .addContent(target.getEffectiveName())
                 .build();
     }
 }
