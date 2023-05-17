@@ -18,7 +18,7 @@
         <annotations.version>24.0.1</annotations.version>
         <archunit.version>1.0.1</archunit.version>
         <assertj-core.version>3.24.2</assertj-core.version>
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-io.version>2.12.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.10.0</commons-text.version>
         <dice.version>2.2.3</dice.version>
