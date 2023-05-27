@@ -37,16 +37,13 @@ public class StreamMessageBuilder {
         var futureGameBanner = gameBannerBuilder.getGameBannerAsync(streamInstance.getGame());
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder = getEmbedBuilder(member, streamInstance, resourceBundle);
-        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))
-                .setTitle(streamInstance.getTitle());
         try {
             var gameBanner = futureGameBanner.get();
             if (gameBanner != null) {
                 log.trace("Got a game banner! {}", gameBanner);
                 embedBuilder.setImage("attachment://" + gameBanner.getFileName());
                 if (gameBanner.getScore() == 0) {
-                    embedBuilder.setFooter("How did Ninbot do with this generated banner? Leave some feedback with "
-                            + "the buttons below!");
+                    embedBuilder.setFooter(resourceBundle.getString("listener.stream.announce.banner.footer"));
                 }
                 return new MessageCreateBuilder().addEmbeds(embedBuilder.build())
                         .addFiles(FileUpload.fromData(gameBanner.getFile()))
@@ -87,7 +84,8 @@ public class StreamMessageBuilder {
                             streamInstance.getUrl()), streamInstance.getUrl(), member.getEffectiveAvatarUrl())
                     .setTitle(streamInstance.getTitle());
         }
-        return embedBuilder;
+        return embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))
+                .setTitle(streamInstance.getTitle());
     }
 
     MessageCreateData buildBoringStreamAnnounceMessage(Member member, StreamInstance streamInstance, Guild guild) {
@@ -95,8 +93,6 @@ public class StreamMessageBuilder {
                 FormatLogObject.guildName(guild));
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder = getEmbedBuilder(member, streamInstance, resourceBundle);
-        embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))
-                .setTitle(streamInstance.getTitle());
         return new MessageCreateBuilder().addEmbeds(embedBuilder.build()).build();
     }
 }
