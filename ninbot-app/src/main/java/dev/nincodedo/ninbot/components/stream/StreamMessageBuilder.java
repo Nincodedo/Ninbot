@@ -3,6 +3,9 @@ package dev.nincodedo.ninbot.components.stream;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.nincord.LocaleService;
+import dev.nincodedo.nincord.config.db.Config;
+import dev.nincodedo.nincord.config.db.ConfigConstants;
+import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.logging.FormatLogObject;
 import dev.nincodedo.nincord.message.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
@@ -26,14 +30,38 @@ import java.util.concurrent.ExecutionException;
 public class StreamMessageBuilder {
 
     private GameBannerBuilder gameBannerBuilder;
+    private ConfigService configService;
 
-    StreamMessageBuilder(GameBannerBuilder gameBannerBuilder) {
+    StreamMessageBuilder(GameBannerBuilder gameBannerBuilder, ConfigService configService) {
         this.gameBannerBuilder = gameBannerBuilder;
+        this.configService = configService;
     }
 
     MessageCreateData buildStreamAnnounceMessage(Member member, StreamInstance streamInstance, Guild guild) {
         log.trace("Building stream announce message for {} server {} with game {}", FormatLogObject.memberInfo(member),
                 FormatLogObject.guildName(guild), streamInstance.getGame());
+        var configs =
+                configService.getGlobalConfigsByName(ConfigConstants.STREAMING_GAME_TITLE_BANNER_DENY_LIST,
+                        guild.getId());
+        var isGameOnBannerDenyList = configs.stream()
+                .map(Config::getValue)
+                .anyMatch(value -> streamInstance.getGame().equalsIgnoreCase(value));
+        MessageCreateData announceMessage = null;
+        if (!isGameOnBannerDenyList) {
+            announceMessage = buildStreamAnnounceMessageWithBanner(member, streamInstance, guild);
+        } else {
+            log.trace("Game {} was on the deny list, skipping banner creation.", streamInstance.getGame());
+        }
+        if (announceMessage == null) {
+            log.trace("Game banner didn't work out, building a boring message");
+            announceMessage = buildBoringStreamAnnounceMessage(member, streamInstance, guild);
+        }
+        return announceMessage;
+    }
+
+    @Nullable
+    private MessageCreateData buildStreamAnnounceMessageWithBanner(Member member, StreamInstance streamInstance,
+            Guild guild) {
         var futureGameBanner = gameBannerBuilder.getGameBannerAsync(streamInstance.getGame());
         ResourceBundle resourceBundle = LocaleService.getResourceBundleOrDefault(guild);
         EmbedBuilder embedBuilder = getEmbedBuilder(member, streamInstance, resourceBundle);
@@ -58,8 +86,7 @@ public class StreamMessageBuilder {
         } catch (Exception e) {
             log.error("Something failed with game banners", e);
         }
-        log.trace("Game banner didn't work out, building a boring message");
-        return buildBoringStreamAnnounceMessage(member, streamInstance, guild);
+        return null;
     }
 
     private ActionRow getComponentsForGameBanner(GameBanner gameBanner) {
