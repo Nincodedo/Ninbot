@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -22,17 +24,22 @@ public class BannerCleanup {
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.DAYS, initialDelay = 1)
     protected void deleteBadBannersFromCache() {
+        List<Boolean> fileList = new ArrayList<>();
         gameBannerRepository.findAll()
                 .stream()
                 .filter(gameBanner -> gameBanner.getScore() < 0)
                 .map(gameBanner -> new File("cache" + File.separatorChar + gameBanner.getFileName()))
                 .forEach(file -> {
                     try {
-                        Files.deleteIfExists(file.toPath());
+                        fileList.add(Files.deleteIfExists(file.toPath()));
                     } catch (IOException e) {
                         log.error("Failed to delete {}", file, e);
                     }
                 });
+        long deletedFiles = fileList.stream().filter(aBoolean -> aBoolean).count();
+        if (deletedFiles > 0) {
+            log.trace("Cleared out {} file(s)", deletedFiles);
+        }
     }
 
     @Scheduled(fixedDelay = 30, timeUnit = TimeUnit.DAYS, initialDelay = 30)
@@ -40,6 +47,11 @@ public class BannerCleanup {
         File cacheDirectory = new File("cache");
         if (cacheDirectory.exists()) {
             try {
+                var fileList = cacheDirectory.listFiles();
+                if (fileList != null) {
+                    log.trace("Completely cleaning out banner cache directory of {} file(s)",
+                            fileList.length);
+                }
                 FileUtils.cleanDirectory(cacheDirectory);
             } catch (IOException e) {
                 log.error("Failed to clean cache directory", e);
