@@ -121,8 +121,9 @@ public abstract class GameBannerBuilder {
             return Optional.of(gameBanners.get(0));
         }
         var scoredGameBannerMap = gameBanners.stream()
-                .collect(Collectors.toMap(gameBanner -> ChronoUnit.DAYS.between(LocalDate.now(),
-                        gameBanner.getLastUse() == null ? LocalDate.now().minusDays(5) : gameBanner.getLastUse())
+                .collect(Collectors.toMap(gameBanner -> Math.min(ChronoUnit.WEEKS.between(LocalDate.now(),
+                        gameBanner.getLastUse() == null ? LocalDate.now()
+                                .minusDays(7) : gameBanner.getLastUse()), gameBanner.getScore())
                         + gameBanner.getScore(), gameBanner -> gameBanner, (oldV, newV) -> oldV, LinkedHashMap::new));
         var scoredNotUsedTodayGameBannerMap = scoredGameBannerMap.entrySet()
                 .stream()
