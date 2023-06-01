@@ -58,6 +58,7 @@ class SteamGridDBBannerBuilderTest {
             fail("Failed to make cache directory");
         }
         FileUtils.cleanDirectory(cache);
+        gameBannerRepository.deleteAll();
     }
 
     @Test
@@ -89,6 +90,8 @@ class SteamGridDBBannerBuilderTest {
         String bannerFileName = cache.listFiles()[0].getName();
         assertThat(bannerFileName).contains("Zeldo");
         assertThat(banner.getFile()).exists();
+        assertThat(banner.getUses()).isEqualTo(1);
+        assertThat(banner.getLastUse()).isNotNull();
 
         banner.setFile(null);
         when(gameBannerRepository.findGameBannerByLogoIdAndBackgroundId(anyInt(), anyInt()))
@@ -106,6 +109,8 @@ class SteamGridDBBannerBuilderTest {
         var bannerFromFileOptional = steamGridDBBannerBuilder.getGameBannerFromFile(cachedBanner.getFile());
 
         assertThat(bannerFromFileOptional).isPresent().contains(banner);
+        assertThat(cachedBanner.getUses()).isEqualTo(2);
+        assertThat(cachedBanner.getLastUse()).isNotNull();
 
         verifyNoMoreInteractions(steamGridDBFeign);
     }
@@ -150,6 +155,8 @@ class SteamGridDBBannerBuilderTest {
 
         assertThat(banner).isNull();
         assertThat(cache).isEmptyDirectory();
+
+        gameBannerRepository.findAll().forEach(gameBanner -> assertThat(gameBanner.getUses()).isZero());
     }
 
     @Test
@@ -184,9 +191,7 @@ class SteamGridDBBannerBuilderTest {
     }
 
     @Test
-    void generateGameBannerFromUnknownGame() throws MalformedURLException, ExecutionException, InterruptedException {
-        var bg = Path.of("..", "docs", "images", "ninbot-github-social.png").toUri().toURL();
-        var icon = Path.of("..", "docs", "images", "ninbot-github-logo-small.png").toUri().toURL();
+    void generateGameBannerFromUnknownGame() throws ExecutionException, InterruptedException {
         BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
         }).set(field("success"), false).create();
 

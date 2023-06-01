@@ -15,5 +15,7 @@ public interface ConfigRepository extends BaseRepository<Config> {
 
     Optional<Config> getConfigByServerIdAndNameAndValue(String serverId, String name, String value);
 
+    List<Config> getConfigsByNameAndGlobal(String name, Boolean isGlobal);
+
     Optional<Config> getConfigByNameAndGlobal(String name, Boolean isGlobal);
 }

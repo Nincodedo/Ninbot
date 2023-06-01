@@ -17,4 +17,5 @@ public class ConfigConstants {
     public static final String PATHOGEN_DENY_LIST_CHANNEL = "pathogenDenyListChannel";
     public static final String EMOTE_ADDED_ANNOUNCEMENT_CHANNEL_ID = "emoteAnnouncementChannelId";
     public static final String HAIKU_CHANCE = "haikuChance";
+    public static final String STREAMING_GAME_TITLE_BANNER_DENY_LIST = "streamingGameTitleBannerDenyList";
 }

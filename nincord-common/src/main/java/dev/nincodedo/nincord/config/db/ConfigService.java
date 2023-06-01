@@ -1,5 +1,6 @@
 package dev.nincodedo.nincord.config.db;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class ConfigService {
 
     private ConfigRepository configRepository;
@@ -73,6 +75,17 @@ public class ConfigService {
             oldConfig.setValue(config.getValue());
             configRepository.save(oldConfig);
         });
+    }
+
+    @Cacheable("global-configs-by-name")
+    public List<Config> getGlobalConfigsByName(String configName, String serverId) {
+        //First try to find config by server ID. If none found, then use the global
+        var serverConfig = configRepository.getConfigsByServerIdAndName(serverId, configName);
+        if (serverConfig.isEmpty()) {
+            return configRepository.getConfigsByNameAndGlobal(configName, true);
+        } else {
+            return serverConfig;
+        }
     }
 
     @Cacheable("global-configs-by-name")

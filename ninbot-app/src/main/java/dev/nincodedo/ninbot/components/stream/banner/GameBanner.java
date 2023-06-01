@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.stream.banner;
 
 import dev.nincodedo.nincord.persistence.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -9,9 +10,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 public class GameBanner extends BaseEntity {
@@ -28,6 +31,8 @@ public class GameBanner extends BaseEntity {
             fetch = FetchType.EAGER
     )
     private List<GameBannerVote> votes = new ArrayList<>();
+    private int uses = 0;
+    private LocalDateTime lastUse;
     @Transient
     private File file;
 
