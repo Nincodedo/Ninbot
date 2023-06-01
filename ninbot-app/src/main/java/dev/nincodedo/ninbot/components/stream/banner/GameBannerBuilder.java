@@ -109,7 +109,7 @@ public abstract class GameBannerBuilder {
 
     /**
      * Gets the "best" banner to choose from a list of banners. "Best" is determined by a combination of user votes
-     * and number of days since last use.
+     * and number of weeks since last use.
      *
      * @param gameBanners a possibly null list of game banners
      * @return a possibly empty optional
