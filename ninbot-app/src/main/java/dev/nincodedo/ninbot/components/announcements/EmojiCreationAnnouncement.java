@@ -104,7 +104,7 @@ public class EmojiCreationAnnouncement extends StatAwareListenerAdapter {
             messageBuilder.addContent(resourceBundle.getString("listener.emote.announce.message.member"));
             messageBuilder.addContent(member.getEffectiveName());
         }
-        messageBuilder.addContent("\n");
+        messageBuilder.addContent("!\n");
         messageBuilder.addContent(emoji.getFormatted());
         return messageBuilder.build();
     }
