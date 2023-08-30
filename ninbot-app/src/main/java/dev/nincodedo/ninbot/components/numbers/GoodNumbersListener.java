@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.numbers;
 
+import dev.nincodedo.nincord.LocaleService;
 import dev.nincodedo.nincord.StatAwareListenerAdapter;
 import dev.nincodedo.nincord.config.db.Config;
 import dev.nincodedo.nincord.config.db.ConfigConstants;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,13 +74,15 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
         if (goodNumbers.contains(total)) {
             log.trace("Good numbers in {}: {} totals to {}", FormatLogObject.eventInfo(event), numbers, total);
             countOneStat(componentName, event.getGuild().getId());
-            event.getMessage().reply(buildMessage(numbers, total)).queue();
+            event.getMessage()
+                    .reply(buildMessage(numbers, total, LocaleService.getResourceBundleOrDefault(event.getGuild())))
+                    .queue();
         }
     }
 
-    private MessageCreateData buildMessage(List<Integer> numbers, int total) {
+    private MessageCreateData buildMessage(List<Integer> numbers, int total, ResourceBundle resourceBundle) {
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder.addContent(String.format("All the numbers in your comment added up to %d.\n", total));
+        messageCreateBuilder.addContent(resourceBundle.getString("listener.goodnumbers.total").formatted(total));
         for (int i = 0; i < numbers.size(); i++) {
             var number = numbers.get(i);
             messageCreateBuilder.addContent(number + " ");

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,6 +74,7 @@ class GoodNumbersListenerTest {
         when(guild.getId()).thenReturn("1");
         when(messageReceivedEvent.getAuthor()).thenReturn(user);
         when(message.reply(any(MessageCreateData.class))).thenReturn(messageAction);
+        when(guild.getLocale()).thenReturn(DiscordLocale.ENGLISH_US);
         when(configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, "1")).thenReturn(CONFIGS);
 
         goodNumbersListener.onMessageReceived(messageReceivedEvent);
