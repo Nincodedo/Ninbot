@@ -59,6 +59,9 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
                 //cool
             }
         }
+        if (numbers.size() <= 1) {
+            return;
+        }
         var total = numbers.stream().mapToInt(Integer::intValue).sum();
         var goodNumbers = configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, event.getGuild().getId())
                 .stream()

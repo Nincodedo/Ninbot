@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,8 +29,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class GoodNumbersListenerTest {
 
+    private static final List<Config> CONFIGS = List.of(new Config("1", "goodNumbers", "69"), new Config("1",
+            "goodNumbers", "420"));
     @Mock
     ConfigService configService;
 
@@ -45,12 +50,12 @@ class GoodNumbersListenerTest {
     GoodNumbersListener goodNumbersListener;
 
     static List<String> goodNumbers() {
-        return List.of("60 FPS and 9 awards", "300 the movie was 120 years ago",
-                "Even 70, a non good number can become good with -1");
+        return List.of("60 FPS and 9 awards", "300 the movie was 120 years ago", "Even 70, a non good number can "
+                + "become good with -1");
     }
 
     static List<String> numbers() {
-        return List.of("It's 4:21 AM");
+        return List.of("It's 4:21 AM", "69", "this isn't even numbers");
     }
 
     @ParameterizedTest
@@ -68,8 +73,7 @@ class GoodNumbersListenerTest {
         when(guild.getId()).thenReturn("1");
         when(messageReceivedEvent.getAuthor()).thenReturn(user);
         when(message.reply(any(MessageCreateData.class))).thenReturn(messageAction);
-        when(configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, "1")).thenReturn(List.of(new Config(
-                "1", "goodNumbers", "69"), new Config("1", "goodNumbers", "420")));
+        when(configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, "1")).thenReturn(CONFIGS);
 
         goodNumbersListener.onMessageReceived(messageReceivedEvent);
 
@@ -89,8 +93,7 @@ class GoodNumbersListenerTest {
         when(messageReceivedEvent.getGuild()).thenReturn(guild);
         when(guild.getId()).thenReturn("1");
         when(messageReceivedEvent.getAuthor()).thenReturn(user);
-        when(configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, "1")).thenReturn(List.of(new Config(
-                "1", "goodNumbers", "69")));
+        when(configService.getGlobalConfigsByName(ConfigConstants.GOOD_NUMBERS, "1")).thenReturn(CONFIGS);
 
         goodNumbersListener.onMessageReceived(messageReceivedEvent);
 
