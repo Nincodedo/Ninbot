@@ -82,7 +82,7 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
 
     private MessageCreateData buildMessage(List<Integer> numbers, int total, ResourceBundle resourceBundle) {
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder.addContent(resourceBundle.getString("listener.goodnumbers.total").formatted(total));
+        messageCreateBuilder.addContent(resourceBundle.getString("listener.goodnumbers.total").formatted(total) + "\n");
         for (int i = 0; i < numbers.size(); i++) {
             var number = numbers.get(i);
             messageCreateBuilder.addContent(number + " ");
