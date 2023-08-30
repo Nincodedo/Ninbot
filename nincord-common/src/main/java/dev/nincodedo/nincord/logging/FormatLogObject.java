@@ -6,11 +6,23 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @UtilityClass
 public class FormatLogObject {
 
     public static final String NAME_ID_ENTITY_FORMAT = "%s(%s)";
+
+    /**
+     * Returns the info for the event with the guild, channel, and author's info.
+     *
+     * @param event JDA event
+     * @return String of guild name(guild id), channel name(channel id), username(user id)
+     */
+    public static String eventInfo(MessageReceivedEvent event) {
+        return "Server: " + guildName(event.getGuild()) + ", Channel: " + channelInfo(event.getChannel()) + ", Author: "
+                + userInfo(event.getAuthor());
+    }
 
     /**
      * Returns the guild name and id formatted for logging.
