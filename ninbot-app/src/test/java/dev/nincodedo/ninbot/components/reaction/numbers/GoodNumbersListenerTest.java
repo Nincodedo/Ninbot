@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.numbers;
+package dev.nincodedo.ninbot.components.reaction.numbers;
 
 import dev.nincodedo.nincord.config.db.Config;
 import dev.nincodedo.nincord.config.db.ConfigConstants;

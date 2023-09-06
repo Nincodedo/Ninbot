@@ -1,4 +1,4 @@
-package dev.nincodedo.ninbot.components.numbers;
+package dev.nincodedo.ninbot.components.reaction.numbers;
 
 import dev.nincodedo.nincord.LocaleService;
 import dev.nincodedo.nincord.StatAwareListenerAdapter;
@@ -50,17 +50,7 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
                 || componentService.isDisabled(componentName, event.getGuild().getId())) {
             return;
         }
-        var message = event.getMessage().getContentStripped();
-        Pattern pattern = Pattern.compile("(-?\\d+)");
-        Matcher matcher = pattern.matcher(message);
-        List<Integer> numbers = new ArrayList<>();
-        while (matcher.find()) {
-            try {
-                numbers.add(Integer.parseInt(matcher.group(1)));
-            } catch (NumberFormatException e) {
-                //cool
-            }
-        }
+        List<Integer> numbers = collectNumbers(event);
         if (numbers.size() <= 1) {
             return;
         }
@@ -72,12 +62,28 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
                 .map(Integer::parseInt)
                 .toList();
         if (goodNumbers.contains(total)) {
-            log.trace("Good numbers in {}: {} totals to {}", FormatLogObject.eventInfo(event), numbers, total);
+            log.info("Good numbers in {}: {} totals to {}", FormatLogObject.eventInfo(event), numbers, total);
             countOneStat(componentName, event.getGuild().getId());
             event.getMessage()
                     .reply(buildMessage(numbers, total, LocaleService.getResourceBundleOrDefault(event.getGuild())))
                     .queue();
         }
+    }
+
+    @NotNull
+    private List<Integer> collectNumbers(@NotNull MessageReceivedEvent event) {
+        var message = event.getMessage().getContentStripped();
+        Pattern pattern = Pattern.compile("(-?\\d+)");
+        Matcher matcher = pattern.matcher(message);
+        List<Integer> numbers = new ArrayList<>();
+        while (matcher.find()) {
+            try {
+                numbers.add(Integer.parseInt(matcher.group(1)));
+            } catch (NumberFormatException e) {
+                //cool
+            }
+        }
+        return numbers;
     }
 
     private MessageCreateData buildMessage(List<Integer> numbers, int total, ResourceBundle resourceBundle) {
