@@ -63,7 +63,7 @@ jobs:
           generate_release_notes: true
           discussion_category_name: 'Releases'
   deployGKE:
-    needs: [ buildMaven, buildDocker ]
+    needs: [ createRelease ]
     name: Deploy GKE
     runs-on: ubuntu-latest
     steps:
@@ -79,4 +79,4 @@ jobs:
       - name: GKE Update Configs
         run: kubectl patch configmap ninbot-config -p '{"data":{"OTEL_RESOURCE_ATTRIBUTES":"service.name=ninbot-${{ github.ref_name }},deployment.environment=PROD", "OTEL_SERVICE_NAME":"ninbot-${{ github.ref_name }}"}}'
       - name: GKE Deploy
-        run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.sha }}
+        run: kubectl set image deployment/ninbot ninbot=ghcr.io/nincodedo/ninbot:${{ github.ref_name }}
