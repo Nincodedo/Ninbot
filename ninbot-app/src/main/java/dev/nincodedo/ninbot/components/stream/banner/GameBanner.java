@@ -47,7 +47,6 @@ public class GameBanner extends BaseEntity {
 
     @Transient
     public String getFileName() {
-        return String.format("%s-%d-%d-%d.png", GameBannerUtils.getCachedFileName(gameTitle), gameId, logoId,
-                backgroundId);
+        return "%s-%d-%d-%d.png".formatted(GameBannerUtils.getCachedFileName(gameTitle), gameId, logoId, backgroundId);
     }
 }

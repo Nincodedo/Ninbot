@@ -45,8 +45,8 @@ public class InfoCommand implements SlashCommand {
             }
         }
         embedBuilder.addField(resourceBundle().getString("command.info.githublink.name"),
-                        String.format(resourceBundle().getString("command.info.githublink.value"),
-                                botInfo.getGitHubUrl()), false)
+                        resourceBundle().getString("command.info.githublink.value").formatted(botInfo.getGitHubUrl())
+                        , false)
                 .addField(resourceBundle().getString("command.info.githublink.issues"),
                         botInfo.getGitHubUrl() + "/issues/new/choose", false)
                 .addField(resourceBundle().getString("command.info.documentation.name"),

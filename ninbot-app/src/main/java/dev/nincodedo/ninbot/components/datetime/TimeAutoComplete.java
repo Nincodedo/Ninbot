@@ -26,8 +26,9 @@ public class TimeAutoComplete implements AutoCompleteCommand {
         List<String> choices = switch (option) {
             case UNIT -> Arrays.asList("minutes", "hours", "seconds", "days");
             case DISPLAY -> new ArrayList<>(TimeCommon.timeFormatMap.keySet());
-            default -> throw new IllegalStateException(String.format("TimeCommand autoComplete found option %s, which "
-                    + "cannot be handled.", option));
+            default ->
+                    throw new IllegalStateException(("TimeCommand autoComplete found option %s, which cannot be "
+                            + "handled.").formatted(option));
         };
         event.replyChoiceStrings(choices).queue();
         return new AutoCompleteCommandMessageExecutor(event);

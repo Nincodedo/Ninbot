@@ -74,7 +74,7 @@ public class PathogenManager {
         if (doAuditAction) {
             PathogenAudit audit = new PathogenAudit();
             audit.setAction("setRandomSeed");
-            audit.setDescription(String.format("Seed used %s, healing week %s", seed, healingWeek));
+            audit.setDescription("Seed used %s, healing week %s".formatted(seed, healingWeek));
             audit.getAudit().setCreatedBy("ninbot");
             audit.setWeekId(healingWeekId());
             pathogenAuditRepository.save(audit);
@@ -140,8 +140,7 @@ public class PathogenManager {
             String description) {
         PathogenAudit audit = new PathogenAudit();
         audit.setAction(action);
-        audit.setDescription(String.format(description, targetUser.getId(),
-                channelId));
+        audit.setDescription(description.formatted(targetUser.getId(), channelId));
         audit.getAudit().setCreatedBy(spreadSource.getId());
         audit.setWeekId(healingWeekId());
         pathogenAuditRepository.save(audit);

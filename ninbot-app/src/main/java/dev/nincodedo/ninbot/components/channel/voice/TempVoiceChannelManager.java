@@ -64,7 +64,7 @@ public class TempVoiceChannelManager extends StatAwareListenerAdapter {
 
     private void createTemporaryChannel(AudioChannelUnion channelJoined, Guild guild, Member member) {
         var channelNameType = channelJoined.getName().substring(2);
-        var channelName = String.format("%s's %s", member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
+        var channelName = "%s's %s".formatted(member.getEffectiveName().replace(Emojis.PLUS, ""), channelNameType);
         log.trace("Creating temporary channel named {} for member {} in server {}", channelName,
                 FormatLogObject.memberInfo(member), FormatLogObject.guildName(guild));
         if (channelJoined.getType() == ChannelType.VOICE) {

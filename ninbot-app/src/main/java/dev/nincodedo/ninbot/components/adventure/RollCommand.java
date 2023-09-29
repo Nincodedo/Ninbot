@@ -43,8 +43,8 @@ public class RollCommand implements SlashCommand {
         var parsed = parser.parse(diceArgs, roller);
         var diceCommand = diceArgs.split("d");
         MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
-        messageBuilder.addContent(String.format(resourceBundle().getString("command.roll.result"), memberEffectiveName,
-                diceCommand[0], diceCommand[1], parsed.getTotalRoll(), parsed));
+        messageBuilder.addContent(resourceBundle().getString("command.roll.result")
+                .formatted(memberEffectiveName, diceCommand[0], diceCommand[1], parsed.getTotalRoll(), parsed));
         return messageBuilder.build();
     }
 

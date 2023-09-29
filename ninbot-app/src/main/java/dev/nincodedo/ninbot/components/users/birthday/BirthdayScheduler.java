@@ -104,8 +104,8 @@ public class BirthdayScheduler extends Schedulable<NinbotUser, UserService> {
     }
 
     private String getStringDate(int monthOfYear, int dayOfMonth, int year) {
-        String date = String.format("%02d", monthOfYear);
-        date += String.format("%02d", dayOfMonth);
+        String date = "%02d".formatted(monthOfYear);
+        date += "%02d".formatted(dayOfMonth);
         date += year;
         return date;
     }

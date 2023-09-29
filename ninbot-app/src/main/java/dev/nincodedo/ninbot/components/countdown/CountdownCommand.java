@@ -105,9 +105,9 @@ public class CountdownCommand implements SlashSubCommand<Subcommand> {
 
     private MessageCreateData setupCountdown(SlashCommandInteractionEvent slashCommandEvent) {
         var year = slashCommandEvent.getOption("year", OptionMapping::getAsString);
-        var month = String.format("%02d", Integer.parseInt(getRequiredOption(slashCommandEvent,
+        var month = "%02d".formatted(Integer.parseInt(getRequiredOption(slashCommandEvent,
                 CountdownCommandName.Option.MONTH.get())));
-        var day = String.format("%02d", Integer.parseInt(getRequiredOption(slashCommandEvent,
+        var day = "%02d".formatted(Integer.parseInt(getRequiredOption(slashCommandEvent,
                 CountdownCommandName.Option.DAY.get())));
         var stringDate = getCountdownDate(year, month, day);
         var countdownName = slashCommandEvent.getOption("name", OptionMapping::getAsString);
@@ -158,7 +158,7 @@ public class CountdownCommand implements SlashSubCommand<Subcommand> {
     }
 
     private String getDateFormatted(String year, String month, String day) {
-        return String.format("%s-%s-%s", year, month, day);
+        return "%s-%s-%s".formatted(year, month, day);
     }
 
     private String getServerTimeZone(String serverId) {
