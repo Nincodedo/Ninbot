@@ -18,7 +18,7 @@
         <annotations.version>24.0.1</annotations.version>
         <archunit.version>1.1.0</archunit.version>
         <assertj-core.version>3.24.2</assertj-core.version>
-        <commons-io.version>2.13.0</commons-io.version>
+        <commons-io.version>2.14.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.10.0</commons-text.version>
         <dice.version>2.2.4</dice.version>
@@ -49,7 +49,7 @@
         <sortpom-maven-plugin.version>3.3.0</sortpom-maven-plugin.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
-        <testcontainers.version>1.19.0</testcontainers.version>
+        <testcontainers.version>1.19.1</testcontainers.version>
         <twitch4j.version>1.16.0</twitch4j.version>
         <versions-maven-plugin.version>2.16.0</versions-maven-plugin.version>
     </properties>

@@ -1,40 +1,42 @@
 package dev.nincodedo.ninbot.components.activity;
 
+import dev.nincodedo.nincord.util.StreamUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ActivityUpdater {
 
     private final ShardManager shardManager;
-    private final Random random;
-    private List<ActivityStatus> activityStatusList;
+    protected List<ActivityStatus> activityStatusList;
     private ActivityStatusRepository activityStatusRepository;
 
     public ActivityUpdater(ShardManager shardManager, ActivityStatusRepository activityStatusRepository) {
         this.shardManager = shardManager;
-        this.random = new SecureRandom();
+        this.activityStatusList = new ArrayList<>();
         this.activityStatusRepository = activityStatusRepository;
-        updateStatusList();
-        setNinbotActivity();
+        updateNinbotActivity();
     }
 
     @Scheduled(fixedDelay = 24, timeUnit = TimeUnit.HOURS)
-    protected void updateStatusList() {
-        activityStatusList = activityStatusRepository.findAll();
-    }
-
-    @Scheduled(fixedDelay = 4, timeUnit = TimeUnit.HOURS)
-    protected void setNinbotActivity() {
+    protected void updateNinbotActivity() {
+        if (activityStatusList.isEmpty()) {
+            activityStatusList.addAll(activityStatusRepository.findAll());
+            activityStatusList = activityStatusList.stream().sorted(StreamUtils.shuffle()).collect(Collectors.toList());
+        }
         if (!activityStatusList.isEmpty()) {
-            var activityStatus = activityStatusList.get(random.nextInt(activityStatusList.size()));
+            var activityStatus = activityStatusList.remove(0);
             shardManager.setActivity(activityStatus.getAsActivity());
+        } else {
+            log.error("Failed to retrieve activity status list");
         }
     }
 }
