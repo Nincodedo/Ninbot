@@ -7,7 +7,7 @@ RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
 RUN java -Djarmode=layertools -jar ninbot.jar extract
 RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$open_telemetry_version/opentelemetry-javaagent.jar
 
-FROM eclipse-temurin:20-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
