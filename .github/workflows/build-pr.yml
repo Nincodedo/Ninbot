@@ -34,7 +34,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P git-commit,integration --no-transfer-progress -Dsonar.projectKey=dev.nincodedo:ninbot -Dsonar.organization=nincraft -Dsonar.pullrequest.branch=${{ github.ref_name }} -Dsonar.pullrequest.key=${{ github.event.number }}
+        run: ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P git-commit,integration --no-transfer-progress -Dsonar.projectKey=dev.nincodedo:ninbot -Dsonar.organization=nincraft -Dsonar.pullrequest.branch=${{ github.head_ref }} -Dsonar.pullrequest.key=${{ github.event.number }}
   buildDocker:
     name: Build Docker
     runs-on: ubuntu-latest
