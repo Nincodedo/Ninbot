@@ -56,12 +56,11 @@ public class TopicChangeListener extends StatAwareListenerAdapter {
                     .getPermissions(channel)
                     .contains(Permission.VIEW_AUDIT_LOGS)) {
                 var auditLogs = guild.retrieveAuditLogs().complete();
-                message = String.format(resourceBundle.getString("listener.topic.updated.withpermission"),
+                message = resourceBundle.getString("listener.topic.updated.withpermission").formatted(
                         guild.getMember(auditLogs.get(0).getUser()).getEffectiveName(),
                         auditLogs.get(0).getChangeByKey("topic").getNewValue());
             } else {
-                message = String.format(resourceBundle.getString("listener.topic.update.nopermission"),
-                        newValue);
+                message = resourceBundle.getString("listener.topic.update.nopermission").formatted(newValue);
             }
             countOneStat(componentName, guild.getId());
             channel.sendMessage(message).queue();

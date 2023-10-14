@@ -7,7 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 
 @UtilityClass
@@ -43,11 +44,11 @@ public class MessageUtils {
             return Color.BLUE;
         } else {
             try {
-                URLConnection connection = new URL(avatarUrl).openConnection();
+                URLConnection connection = new URI(avatarUrl).toURL().openConnection();
                 connection.setRequestProperty("User-Agent", "NING/1.0");
                 BufferedImage image = ImageIO.read(connection.getInputStream());
                 return ImageUtils.getAverageColor(image);
-            } catch (IOException e) {
+            } catch (IOException | URISyntaxException e) {
                 return Color.BLUE;
             }
         }

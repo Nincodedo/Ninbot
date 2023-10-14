@@ -38,7 +38,7 @@ public class StreamButtonInteraction implements ButtonInteraction {
             case TOGGLE -> {
                 var found = toggleConfig(event.getUser().getId(), event.getGuild().getId());
                 var onOff = found ? resource("common.on") : resource("common.off");
-                messageExecutor.editEphemeralMessage(String.format(resource("button.stream.toggle"), onOff))
+                messageExecutor.editEphemeralMessage(resource("button.stream.toggle").formatted(onOff))
                         .clearComponents();
             }
             case TWITCHNAME ->

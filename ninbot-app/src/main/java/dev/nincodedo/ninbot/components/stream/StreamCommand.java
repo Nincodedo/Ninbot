@@ -39,14 +39,13 @@ public class StreamCommand implements SlashCommand {
         var opposite = announcementsEnabled ? resourceBundle.getString("common.off") : resourceBundle.getString(
                 "common.on");
         var createBuilder = new MessageCreateBuilder();
-        messageExecutor.addEphemeralMessage(createBuilder.addContent(String.format(resourceBundle.getString(
-                        "command.stream.announcements"), onOff, opposite))
+        messageExecutor.addEphemeralMessage(createBuilder.addContent(resourceBundle.getString(
+                        "command.stream.announcements").formatted(onOff, opposite))
                 .addComponents(ActionRow.of(getPrimaryButton(userId, opposite, resourceBundle),
                         getSecondaryButton(userId, onOff, resourceBundle)))
-                .addContent("\n" + resourceBundle.getString("command.stream.twitch.username")
-                        + streamingMember.getTwitchUsername())
+                .addContent(STR."\n\{resourceBundle.getString("command.stream.twitch.username")}\{streamingMember.getTwitchUsername()}")
                 .addComponents(ActionRow.of(Button.secondary(
-                        "stream-twitchname-" + userId, resourceBundle.getString("command.stream.button.update"))))
+                        STR."stream-twitchname-\{userId}", resourceBundle.getString("command.stream.button.update"))))
                 .build());
         return messageExecutor;
     }
@@ -54,14 +53,14 @@ public class StreamCommand implements SlashCommand {
     @NotNull
     private Button getSecondaryButton(String userId, String onOff, ResourceBundle resourceBundle) {
         return Button.secondary(
-                "stream-nothing-"
-                        + userId, String.format(resourceBundle.getString("command.stream.button.secondary"), onOff));
+                STR."stream-nothing-\{userId}", resourceBundle.getString("command.stream.button.secondary")
+                        .formatted(onOff));
     }
 
     @NotNull
     private Button getPrimaryButton(String userId, String opposite, ResourceBundle resourceBundle) {
         return Button.primary(
-                "stream-toggle-"
-                        + userId, String.format(resourceBundle.getString("command.stream.button.primary"), opposite));
+                STR."stream-toggle-\{userId}", resourceBundle.getString("command.stream.button.primary")
+                        .formatted(opposite));
     }
 }

@@ -91,8 +91,8 @@ public class StreamMessageBuilder {
 
     private ActionRow getComponentsForGameBanner(GameBanner gameBanner) {
         return ActionRow.of(
-                Button.primary(String.format("banner-good-%s", gameBanner.getId()), Emoji.fromFormatted("👍")),
-                Button.danger(String.format("banner-bad-%s", gameBanner.getId()), Emoji.fromFormatted("👎"))
+                Button.primary("banner-good-%s".formatted(gameBanner.getId()), Emoji.fromFormatted("👍")),
+                Button.danger("banner-bad-%s".formatted(gameBanner.getId()), Emoji.fromFormatted("👎"))
         );
     }
 
@@ -101,14 +101,16 @@ public class StreamMessageBuilder {
         EmbedBuilder embedBuilder;
         if (!streamInstance.getUrl().contains("https://")) {
             embedBuilder = new EmbedBuilder()
-                    .setAuthor(String.format(resourceBundle.getString("listener.stream.announce.voicechannel"),
-                            member.getEffectiveName(), streamInstance.getUrl()), null, member.getEffectiveAvatarUrl())
+                    .setAuthor(resourceBundle.getString("listener.stream.announce.voicechannel")
+                                    .formatted(member.getEffectiveName(), streamInstance.getUrl()), null,
+                            member.getEffectiveAvatarUrl())
                     .setTitle(streamInstance.getTitle());
         } else {
             embedBuilder = new EmbedBuilder()
-                    .setAuthor(String.format(resourceBundle.getString("listener.stream.announce"),
-                            member.getEffectiveName(), streamInstance.getGame(),
-                            streamInstance.getUrl()), streamInstance.getUrl(), member.getEffectiveAvatarUrl())
+                    .setAuthor(resourceBundle.getString("listener.stream.announce")
+                                    .formatted(member.getEffectiveName(), streamInstance.getGame(),
+                                            streamInstance.getUrl()),
+                            streamInstance.getUrl(), member.getEffectiveAvatarUrl())
                     .setTitle(streamInstance.getTitle());
         }
         return embedBuilder.setColor(MessageUtils.getColor(member.getEffectiveAvatarUrl()))

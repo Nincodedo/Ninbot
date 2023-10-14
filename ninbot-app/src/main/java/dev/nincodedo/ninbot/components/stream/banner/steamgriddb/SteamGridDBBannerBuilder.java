@@ -15,7 +15,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,13 +123,13 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
     private BufferedImage readScaledImage(String url, int maxWidth) {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new URL(url));
+            image = ImageIO.read(new URI(url).toURL());
             if (image.getWidth() > maxWidth) {
                 var scaled = Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, maxWidth);
                 image.flush();
                 return scaled;
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             log.error("Failed to read image", e);
         }
         return image;

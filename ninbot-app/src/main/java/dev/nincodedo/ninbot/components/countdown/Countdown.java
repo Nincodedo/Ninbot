@@ -31,11 +31,11 @@ class Countdown extends BaseEntity {
     String buildMessage() {
         var dayDifference = getDayDifference();
         if (dayDifference == 1) {
-            return String.format(resourceBundle.getString("countdown.announce.message.tomorrow"), name);
+            return resourceBundle.getString("countdown.announce.message.tomorrow").formatted(name);
         } else if (dayDifference == 0) {
-            return String.format(resourceBundle.getString("countdown.announce.message.today"), name);
+            return resourceBundle.getString("countdown.announce.message.today").formatted(name);
         } else {
-            return String.format(resourceBundle.getString("countdown.announce.message.later"), name, dayDifference);
+            return resourceBundle.getString("countdown.announce.message.later").formatted(name, dayDifference);
         }
     }
 

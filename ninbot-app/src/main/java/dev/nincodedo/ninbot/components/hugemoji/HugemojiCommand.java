@@ -23,7 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
@@ -72,8 +73,8 @@ public class HugemojiCommand implements SlashCommand {
             SlashCommandEventMessageExecutor messageExecutor, CustomEmoji customEmoji, String imageFileType) {
         InputStream inputStream;
         try {
-            inputStream = new URL(customEmoji.getImageUrl()).openStream();
-        } catch (IOException e) {
+            inputStream = new URI(customEmoji.getImageUrl()).toURL().openStream();
+        } catch (IOException | URISyntaxException e) {
             log.error("Failed to open custom emoji url {} for custom emoji {}", customEmoji.getImageUrl(),
                     customEmoji.getFormatted(), e);
             messageExecutor.addEphemeralUnsuccessfulReaction();
