@@ -16,7 +16,8 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -49,9 +50,9 @@ class WebhookHelper {
 
     public WebhookManager setWebhookIcon(String iconUrl) {
         try {
-            Icon icon = Icon.from(new URL(iconUrl).openStream());
+            Icon icon = Icon.from(new URI(iconUrl).toURL().openStream());
             webhook.getManager().setAvatar(icon).queue();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             log.error("Failed to grab avatar", e);
         }
         return webhook.getManager();

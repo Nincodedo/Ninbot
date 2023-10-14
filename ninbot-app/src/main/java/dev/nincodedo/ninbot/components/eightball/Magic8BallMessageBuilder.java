@@ -33,9 +33,9 @@ public class Magic8BallMessageBuilder {
     MessageEmbed build() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (StringUtils.isEmpty(StringUtils.trimToEmpty(question))) {
-            embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball", memberName));
+            embedBuilder.setTitle("%s shakes the Magic 8 Ball".formatted(memberName));
         } else {
-            embedBuilder.setTitle(String.format("%s shakes the Magic 8 Ball and asks \"%s\"", memberName, question));
+            embedBuilder.setTitle("%s shakes the Magic 8 Ball and asks \"%s\"".formatted(memberName, question));
         }
         embedBuilder.setThumbnail("https://i.imgur.com/80imnZ0.png");
         embedBuilder.appendDescription("The Magic 8 Ball says...\n\n");

@@ -49,14 +49,13 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     .map(UnicodeEmoji::getFormatted)
                     .filter(s -> ReactionUtils.getLetterMap().containsValue(s))
                     .collect(Collectors.joining(","));
-            var characterBundle = "command.emojitizer.messagecontext.modal.character.";
-            var character = maxCount == 1 ? resourceBundle(event.getUserLocale()).getString(
-                    characterBundle + "single") : resourceBundle(event.getUserLocale()).getString(
-                    characterBundle + "plural");
-            Modal modal = Modal.create("emojitizer-modal-" + event.getTarget().getId() + ";"
-                                    + alreadyExistingLetterEmojis,
-                            String.format(resourceBundle(event.getUserLocale()).getString(
-                                    "command.emojitizer.messagecontext.modal.title"), maxCount, character))
+            var amount = maxCount == 1 ? "single" : "plural";
+            var characterBundle = STR."command.emojitizer.messagecontext.modal.character.\{amount}";
+            var character = resourceBundle(event.getUserLocale()).getString(characterBundle);
+            Modal modal = Modal.create(STR."emojitizer-modal-\{event.getTarget()
+                                    .getId()};\{alreadyExistingLetterEmojis}",
+                            resourceBundle(event.getUserLocale()).getString(
+                                    "command.emojitizer.messagecontext.modal.title").formatted(maxCount, character))
                     .addActionRow(input)
                     .build();
             messageExecutor.addModal(modal);

@@ -20,8 +20,7 @@ public class FormatLogObject {
      * @return String of guild name(guild id), channel name(channel id), username(user id)
      */
     public static String eventInfo(MessageReceivedEvent event) {
-        return "Server: " + guildName(event.getGuild()) + ", Channel: " + channelInfo(event.getChannel()) + ", Author: "
-                + userInfo(event.getAuthor());
+        return STR."Server: \{guildName(event.getGuild())}, Channel: \{channelInfo(event.getChannel())}, Author: \{userInfo(event.getAuthor())}";
     }
 
     /**
@@ -34,7 +33,7 @@ public class FormatLogObject {
         if (guild == null) {
             return "null guild";
         }
-        return String.format(NAME_ID_ENTITY_FORMAT, guild.getName(), guild.getId());
+        return NAME_ID_ENTITY_FORMAT.formatted(guild.getName(), guild.getId());
     }
 
     /**
@@ -47,8 +46,7 @@ public class FormatLogObject {
         if (guild == null) {
             return "null guild";
         }
-        return String.format("Server %s, Owner %s", guildName(guild), memberInfo(guild.retrieveOwner()
-                .complete()));
+        return "Server %s, Owner %s".formatted(guildName(guild), memberInfo(guild.retrieveOwner().complete()));
     }
 
     /**
@@ -58,7 +56,7 @@ public class FormatLogObject {
      * @return String of member name(member id)
      */
     public static String memberInfo(Member member) {
-        return String.format(NAME_ID_ENTITY_FORMAT, member.getEffectiveName(), member.getId());
+        return NAME_ID_ENTITY_FORMAT.formatted(member.getEffectiveName(), member.getId());
     }
 
     /**
@@ -71,7 +69,7 @@ public class FormatLogObject {
         if (channel == null) {
             return "null channel";
         }
-        return String.format(NAME_ID_ENTITY_FORMAT, channel.getName(), channel.getId());
+        return NAME_ID_ENTITY_FORMAT.formatted(channel.getName(), channel.getId());
     }
 
     /**
@@ -84,7 +82,7 @@ public class FormatLogObject {
         if (user == null) {
             return "null user";
         }
-        return String.format(NAME_ID_ENTITY_FORMAT, user.getName(), user.getId());
+        return NAME_ID_ENTITY_FORMAT.formatted(user.getName(), user.getId());
     }
 
     /**
@@ -97,6 +95,6 @@ public class FormatLogObject {
         if (role == null) {
             return "null role";
         }
-        return String.format(NAME_ID_ENTITY_FORMAT, role.getName(), role.getId());
+        return NAME_ID_ENTITY_FORMAT.formatted(role.getName(), role.getId());
     }
 }
