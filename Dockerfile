@@ -1,17 +1,17 @@
 FROM maven:3.9.4-eclipse-temurin-21 AS build
 
-ARG open_telemetry_version=v1.29.0
+ARG open_telemetry_version=v1.31.0
 COPY . ./
 RUN mvn -B package -P git-commit
 RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
 RUN java -Djarmode=layertools -jar ninbot.jar extract
-RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$open_telemetry_version/opentelemetry-javaagent.jar
+RUN wget "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$open_telemetry_version/opentelemetry-javaagent.jar"
 
 FROM eclipse-temurin:21-jre-jammy
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
-LABEL org.opencontainers.image.source = "https://github.com/Nincodedo/Ninbot"
+LABEL org.opencontainers.image.source="https://github.com/Nincodedo/Ninbot"
 RUN groupadd -r ninbot && useradd -r -s /bin/false -g ninbot ninbot
 RUN mkdir /app && chown -hR ninbot:ninbot /app
 WORKDIR /app
