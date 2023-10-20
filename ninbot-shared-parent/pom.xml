@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.5</version>
         <relativePath/>
     </parent>
     <groupId>dev.nincodedo</groupId>
@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
-        <JDA.version>5.0.0-beta.13</JDA.version>
+        <JDA.version>5.0.0-beta.15</JDA.version>
         <annotations.version>24.0.1</annotations.version>
         <archunit.version>1.1.0</archunit.version>
         <assertj-core.version>3.24.2</assertj-core.version>
@@ -26,7 +26,7 @@
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>3.3.2</instancio-junit.version>
         <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
-        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
         <java.version>21</java.version>
         <jsr305.version>3.0.2</jsr305.version>
         <log4j.version>2.21.0</log4j.version>
@@ -38,11 +38,11 @@
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <opentelemetry-instrumentation-annotations.version>1.29.0</opentelemetry-instrumentation-annotations.version>
+        <opentelemetry-instrumentation-annotations.version>1.31.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.2.0</pitest-junit5-plugin.version>
         <pitest-maven.version>1.9.8</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
-        <snakeyaml.version>2.1</snakeyaml.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <spring-cloud-starter-openfeign.version>4.0.4</spring-cloud-starter-openfeign.version>
@@ -50,8 +50,8 @@
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.19.1</testcontainers.version>
-        <twitch4j.version>1.16.0</twitch4j.version>
-        <versions-maven-plugin.version>2.16.0</versions-maven-plugin.version>
+        <twitch4j.version>1.17.0</twitch4j.version>
+        <versions-maven-plugin.version>2.16.1</versions-maven-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
