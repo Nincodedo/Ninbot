@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "game-banner-source", url = "https://www.steamgriddb.com/api/v2", configuration =
         SteamGridDbFeignClientConfiguration.class)
-public interface SteamGridDBFeign {
+public interface SteamGridDbFeign {
     @GetMapping(value = "/search/autocomplete/{term}")
     BaseResponse<Game> searchGameByName(@PathVariable String term);
 
