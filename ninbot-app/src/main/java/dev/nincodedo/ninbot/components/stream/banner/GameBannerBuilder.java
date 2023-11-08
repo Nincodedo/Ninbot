@@ -26,10 +26,13 @@ import java.util.stream.Collectors;
 public abstract class GameBannerBuilder {
 
     protected GameBannerRepository gameBannerRepository;
+    protected GameTitleMappingRepository gameTitleMappingRepository;
     protected ExecutorService executorService;
 
-    protected GameBannerBuilder(GameBannerRepository gameBannerRepository, ExecutorService executorService) {
+    protected GameBannerBuilder(GameBannerRepository gameBannerRepository,
+            GameTitleMappingRepository gameTitleMappingRepository, ExecutorService executorService) {
         this.gameBannerRepository = gameBannerRepository;
+        this.gameTitleMappingRepository = gameTitleMappingRepository;
         this.executorService = executorService;
     }
 
@@ -42,7 +45,8 @@ public abstract class GameBannerBuilder {
                 futureGameBanner.complete(null);
                 return null;
             }
-            var cachedBanners = getGameBannerFilesFromCache(gameTitle).stream()
+            var gameTitleMapping = gameTitleMappingRepository.findByTwitchGameTitle(gameTitle);
+            var cachedBanners = getGameBannerFilesFromCache(getGameTitle(gameTitle, gameTitleMapping)).stream()
                     .map(this::getGameBannerFromFile)
                     .flatMap(Optional::stream)
                     .sorted(StreamUtils.shuffle())
@@ -56,12 +60,16 @@ public abstract class GameBannerBuilder {
                     Files.deleteIfExists(cachedBanner.getFile().toPath());
                 }
             }
-            var gameBanner = generateGameBannerFromTitle(gameTitle);
+            var gameBanner = generateGameBannerFromTitle(getGameTitle(gameTitle, gameTitleMapping));
             recordBannerUsed(gameBanner);
             futureGameBanner.complete(gameBanner);
             return null;
         });
         return futureGameBanner;
+    }
+
+    private String getGameTitle(String gameTitle, GameTitleMapping gameTitleMapping) {
+        return gameTitleMapping == null ? gameTitle : gameTitleMapping.getBannerGameTitle();
     }
 
     private void recordBannerUsed(GameBanner gameBanner) {

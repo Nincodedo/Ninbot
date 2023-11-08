@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.stream.banner.steamgriddb;
 import dev.nincodedo.ninbot.components.stream.banner.GameBanner;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerBuilder;
 import dev.nincodedo.ninbot.components.stream.banner.GameBannerRepository;
+import dev.nincodedo.ninbot.components.stream.banner.GameTitleMappingRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
@@ -25,15 +26,17 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Component
-public class SteamGridDBBannerBuilder extends GameBannerBuilder {
+public class SteamGridDbBannerBuilder extends GameBannerBuilder {
 
-    private SteamGridDBFeign steamGridDBFeign;
+    private SteamGridDbService steamGridDbService;
     private Random random;
     private Counter bannersGenerated = Metrics.counter("bot.stream.banners.generated.count");
 
-    public SteamGridDBBannerBuilder(SteamGridDBFeign steamGridDBFeign, GameBannerRepository gameBannerRepository) {
-        super(gameBannerRepository, Executors.newCachedThreadPool(new NamedThreadFactory("game-banner-builder")));
-        this.steamGridDBFeign = steamGridDBFeign;
+    public SteamGridDbBannerBuilder(SteamGridDbService steamGridDbService,
+            GameTitleMappingRepository gameTitleMappingRepository, GameBannerRepository gameBannerRepository) {
+        super(gameBannerRepository, gameTitleMappingRepository, Executors.newCachedThreadPool(new NamedThreadFactory(
+                "game-banner-builder")));
+        this.steamGridDbService = steamGridDbService;
         this.random = new SecureRandom();
     }
 
@@ -137,37 +140,13 @@ public class SteamGridDBBannerBuilder extends GameBannerBuilder {
 
     @Override
     protected GameBanner generateGameBannerFromTitle(String gameTitle) {
-        var combinedResponse = findImagesFromTitle(gameTitle);
+        var combinedResponse = steamGridDbService.findImagesFromTitle(gameTitle);
         if (combinedResponse.allResponsesSuccessful()) {
             var gameBanners = generateGameBanners(gameTitle, combinedResponse.getGameId(), combinedResponse.logos()
                     .getData(), combinedResponse.heroes().getData());
             return getMostSuitableBanner(gameBanners).orElse(null);
         } else {
             return null;
-        }
-    }
-
-    private SteamGridDBCombinedResponse findImagesFromTitle(String gameTitle) {
-        var searchResponse = steamGridDBFeign.searchGameByName(gameTitle);
-        if (searchResponse.isSuccess()) {
-            var gameId = searchResponse.firstData().id();
-            var logoResponse = steamGridDBFeign.retrieveLogoByGameId(gameId, new String[]{"official"});
-            filterLockedImages(logoResponse);
-            var heroResponse = steamGridDBFeign.retrieveHeroByGameId(gameId);
-            filterLockedImages(heroResponse);
-            return new SteamGridDBCombinedResponse(searchResponse, logoResponse, heroResponse);
-        } else {
-            return new SteamGridDBCombinedResponse(searchResponse, null, null);
-        }
-    }
-
-    private void filterLockedImages(BaseResponse<GameImage> gameImageBaseResponse) {
-        gameImageBaseResponse.setData(gameImageBaseResponse.getData()
-                .stream()
-                .filter(gameImage -> !gameImage.lock())
-                .toList());
-        if (gameImageBaseResponse.isSuccess()) {
-            gameImageBaseResponse.setSuccess(!gameImageBaseResponse.getData().isEmpty());
         }
     }
 }
