@@ -10,9 +10,6 @@
     </parent>
     <artifactId>nincord-common</artifactId>
     <name>Nincord Common Library</name>
-    <properties>
-        <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>club.minnced</groupId>

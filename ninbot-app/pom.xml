@@ -10,9 +10,6 @@
     </parent>
     <artifactId>ninbot-app</artifactId>
     <name>Ninbot Application</name>
-    <properties>
-        <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>club.minnced</groupId>
