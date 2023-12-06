@@ -25,4 +25,4 @@ USER ninbot:ninbot
 HEALTHCHECK --start-period=20s CMD java /app/DockerHealthCheck.java 2>&1 || exit 1
 EXPOSE 8080
 ENTRYPOINT ["java"]
-CMD ["-javaagent:/app/opentelemetry-javaagent.jar", "-Xss512k", "-Xmx256M", "--enable-preview", "org.springframework.boot.loader.JarLauncher"]
+CMD ["-javaagent:/app/opentelemetry-javaagent.jar", "-Xss512k", "-Xmx256M", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
