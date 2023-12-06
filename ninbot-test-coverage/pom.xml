@@ -5,7 +5,7 @@
     <parent>
         <groupId>dev.nincodedo</groupId>
         <artifactId>ninbot-shared-parent</artifactId>
-        <version>3.17.0-SNAPSHOT</version>
+        <version>3.17.0</version>
         <relativePath>../ninbot-shared-parent</relativePath>
     </parent>
     <artifactId>ninbot-test-coverage</artifactId>
