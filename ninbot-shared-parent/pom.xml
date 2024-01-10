@@ -34,7 +34,7 @@
         <mapstruct.version>1.6.0.Beta1</mapstruct.version>
         <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <opentelemetry-instrumentation-annotations.version>1.32.0</opentelemetry-instrumentation-annotations.version>
