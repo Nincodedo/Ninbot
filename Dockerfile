@@ -1,4 +1,4 @@
-FROM maven:3.9.4-eclipse-temurin-21 AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 ARG open_telemetry_version=v1.32.0
 COPY . ./

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.2</version>
         <relativePath/>
     </parent>
     <groupId>dev.nincodedo</groupId>
@@ -14,25 +14,25 @@
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
-        <JDA.version>5.0.0-beta.19</JDA.version>
+        <JDA.version>5.0.0-beta.20</JDA.version>
         <annotations.version>24.1.0</annotations.version>
-        <archunit.version>1.2.0</archunit.version>
-        <assertj-core.version>3.24.2</assertj-core.version>
+        <archunit.version>1.2.1</archunit.version>
+        <assertj-core.version>3.25.1</assertj-core.version>
         <commons-io.version>2.15.1</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.11.0</commons-text.version>
-        <dice.version>2.2.4</dice.version>
+        <dice.version>2.2.5</dice.version>
         <discord-webhooks.version>0.8.4</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
-        <instancio-junit.version>3.6.0</instancio-junit.version>
+        <instancio-junit.version>3.7.1</instancio-junit.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
         <java.version>21</java.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <log4j.version>2.22.0</log4j.version>
+        <log4j.version>2.22.1</log4j.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.6.0.Beta1</mapstruct.version>
-        <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven.compiler.source>21</maven.compiler.source>
