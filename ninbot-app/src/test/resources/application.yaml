@@ -32,3 +32,7 @@ nincodedo:
     clientId: 1
     clientSecret: 1
   steamgriddbapikey: 1
+  utils:
+    access:
+      id: 1
+      secret: 1
