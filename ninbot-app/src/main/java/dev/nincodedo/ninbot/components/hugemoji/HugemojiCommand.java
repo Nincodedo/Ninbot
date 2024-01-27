@@ -145,6 +145,6 @@ public class HugemojiCommand implements SlashCommand {
     @Override
     public List<OptionData> getCommandOptions() {
         return List.of(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(),
-                "The emote to " + "biggify.", true));
+                "The emote to biggify.", true));
     }
 }
