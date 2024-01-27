@@ -55,18 +55,19 @@ public class HugemojiCommand implements SlashCommand {
         if (emojiType == Type.UNICODE) {
             var emojiCode = emojiUnion.asUnicode().getAsCodepoints().substring(2);
             var emojiResponse = emojisFeign.getEmoji(emojiCode);
-            try {
-                if (emojiResponse.status() == 200) {
-                    event.replyFiles(FileUpload.fromData(emojiResponse.body().asInputStream(), emojiCode + ".png"))
+            if (emojiResponse.status() == 200) {
+                try {
+                    event.replyFiles(FileUpload.fromData(emojiResponse.body().asInputStream(), STR."\{emojiCode}.png"))
                             .queue();
-                } else {
-                    log.error("Did not get a successful response from emojis API for emoji code {}, response code {}."
-                            + " Falling back to just posting the emoji.", emojiCode, emojiResponse.status());
+                } catch (IOException e) {
+                    log.error("Failed to get emoji image with emoji code {}. Falling back to just posting the emoji."
+                            , emojiCode, e);
                     messageExecutor.addMessageResponse(emojiUnion.asUnicode().getName());
                 }
-            } catch (IOException e) {
-                log.error("Failed to get emoji image with emoji code {}", emojiCode, e);
-                messageExecutor.addEphemeralUnsuccessfulReaction();
+            } else {
+                log.error("Did not get a successful response from emojis API for emoji code {}, response code {}."
+                        + " Falling back to just posting the emoji.", emojiCode, emojiResponse.status());
+                messageExecutor.addMessageResponse(emojiUnion.asUnicode().getName());
             }
         } else if (emojiType == Type.CUSTOM) {
             var customEmoji = emojiUnion.asCustom();
@@ -115,8 +116,7 @@ public class HugemojiCommand implements SlashCommand {
         return Optional.of(inputStream);
     }
 
-    private InputStream biggifyImage(BufferedImage image, String imageFileType, boolean isSupporter)
-            throws IOException {
+    private InputStream biggifyImage(BufferedImage image, String imageFileType, boolean isSupporter) throws IOException {
         var lowerBound = (int) (Math.max(image.getHeight(), image.getWidth()) * getLowerMultiplier(isSupporter));
         var upperBound = Math.max(image.getHeight(), image.getWidth()) * getUpperMultiplier(isSupporter);
         var randomNewSize = random.nextInt(lowerBound, upperBound);
@@ -144,7 +144,7 @@ public class HugemojiCommand implements SlashCommand {
 
     @Override
     public List<OptionData> getCommandOptions() {
-        return List.of(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(), "The emote to "
-                + "biggify.", true));
+        return List.of(new OptionData(OptionType.STRING, HugemojiCommandName.Option.EMOTE.get(),
+                "The emote to " + "biggify.", true));
     }
 }
