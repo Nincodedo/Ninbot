@@ -53,7 +53,7 @@ public class HugemojiCommand implements SlashCommand {
         var emojiUnion = Emoji.fromFormatted(emojiOption);
         var emojiType = emojiUnion.getType();
         if (emojiType == Type.UNICODE) {
-            var emojiCode = emojiUnion.asUnicode().getAsCodepoints().substring(2);
+            var emojiCode = emojiUnion.asUnicode().getAsCodepoints().substring(2).replace("U+", "-");
             var emojiResponse = emojisFeign.getEmoji(emojiCode);
             if (emojiResponse.status() == 200) {
                 try {
