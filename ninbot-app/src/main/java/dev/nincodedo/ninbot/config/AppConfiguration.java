@@ -5,10 +5,8 @@ import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.ninbot.ocw.NinbotSupporterCheck;
-import dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot;
 import dev.nincodedo.nincord.config.properties.NincordProperties;
 import dev.nincodedo.nincord.config.properties.SupporterConfig;
-import dev.nincodedo.nincord.release.ReleaseFilter;
 import dev.nincodedo.nincord.supporter.SupporterCheck;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +55,6 @@ public class AppConfiguration {
         var check = new NinbotSupporterCheck();
         check.setPatreonServerId(supporterConfig.patreonServerId());
         return check;
-    }
-
-    @Bean
-    public ReleaseFilter releaseFilter() {
-        return new DegreesOfNinbot();
     }
 
 

@@ -36,5 +36,4 @@ nincodedo:
   info:
     documentation-url: https://ninbot.nincodedo.dev
     github-url: https://github.com/Nincodedo/Ninbot
-  release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
   main-server-id: 109466144993210368

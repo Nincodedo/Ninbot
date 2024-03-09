@@ -56,7 +56,6 @@ public class CommandRegistration extends ListenerAdapter {
             log.trace("Registering commands for server {}", FormatLogObject.guildName(guild));
             List<CommandData> commandDataList = commands.stream()
                     .filter(Command::isAbleToRegisterOnGuild)
-                    .filter(command -> releaseFilter.filter(command.getReleaseType(), guild))
                     .map(this::convertToCommandData)
                     .toList();
             guild.updateCommands()

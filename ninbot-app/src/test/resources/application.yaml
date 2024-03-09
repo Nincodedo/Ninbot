@@ -25,7 +25,6 @@ nincodedo:
   info:
     documentation-url: https://ninbot.nincodedo.dev
     github-url: https://github.com/Nincodedo/Ninbot
-  release-filter-class: dev.nincodedo.ninbot.ocw.release.DegreesOfNinbot
   main-server-id: 1
   ninbotToken: 1
   twitch:
