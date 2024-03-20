@@ -1,6 +1,6 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-ARG open_telemetry_version=v1.33.0
+ARG open_telemetry_version=v1.33.1
 COPY . ./
 RUN mvn -B package -P git-commit
 RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
