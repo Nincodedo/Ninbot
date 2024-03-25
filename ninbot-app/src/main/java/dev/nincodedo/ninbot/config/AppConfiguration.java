@@ -1,9 +1,5 @@
 package dev.nincodedo.ninbot.config;
 
-import com.github.philippheuer.credentialmanager.CredentialManager;
-import com.github.twitch4j.TwitchClient;
-import com.github.twitch4j.TwitchClientBuilder;
-import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.ninbot.ocw.NinbotSupporterCheck;
 import dev.nincodedo.nincord.config.properties.NincordProperties;
 import dev.nincodedo.nincord.config.properties.SupporterConfig;
@@ -71,15 +67,5 @@ public class AppConfiguration {
     @Bean
     public ExecutorService statCounterThreadPool() {
         return Executors.newCachedThreadPool(new NamedThreadFactory("stat-counter"));
-    }
-
-    @Bean
-    public TwitchClient twitchClient(TwitchIdentityProvider twitchIdentityProvider,
-            CredentialManager credentialManager) {
-        return TwitchClientBuilder.builder()
-                .withCredentialManager(credentialManager)
-                .withDefaultAuthToken(twitchIdentityProvider.getAppAccessToken())
-                .withEnableHelix(true)
-                .build();
     }
 }

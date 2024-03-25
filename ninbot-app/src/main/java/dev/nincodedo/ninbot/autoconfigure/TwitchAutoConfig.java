@@ -1,8 +1,10 @@
 package dev.nincodedo.ninbot.autoconfigure;
 
-import com.github.philippheuer.credentialmanager.CredentialManager;
 import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.credentialmanager.storage.TemporaryStorageBackend;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 import dev.nincodedo.ninbot.components.stream.twitch.TokenRefresh;
 import dev.nincodedo.ninbot.config.properties.TwitchConfig;
@@ -23,9 +25,9 @@ public class TwitchAutoConfig {
     }
 
     @Bean
-    public TokenRefresh tokenRefresh(CredentialManager credentialManager,
-            TwitchIdentityProvider twitchIdentityProvider) {
-        return new TokenRefresh(credentialManager, twitchIdentityProvider);
+    public TokenRefresh tokenRefresh(TwitchIdentityProvider twitchIdentityProvider, TwitchConfig twitchConfig,
+            OAuth2Credential twitchCredential) {
+        return new TokenRefresh(twitchIdentityProvider, twitchConfig, twitchCredential);
     }
 
     @Bean
@@ -34,11 +36,21 @@ public class TwitchAutoConfig {
     }
 
     @Bean
-    public CredentialManager credentialManager(TwitchIdentityProvider twitchIdentityProvider) {
+    public OAuth2Credential twitchCredentials(TwitchIdentityProvider twitchIdentityProvider) {
+        return twitchIdentityProvider.getAppAccessToken();
+    }
+
+    @Bean
+    public TwitchClient twitchClient(TwitchIdentityProvider twitchIdentityProvider,
+            OAuth2Credential twitchCredentials) {
         var credentialManager = CredentialManagerBuilder.builder()
                 .withStorageBackend(new TemporaryStorageBackend())
                 .build();
         credentialManager.registerIdentityProvider(twitchIdentityProvider);
-        return credentialManager;
+        return TwitchClientBuilder.builder()
+                .withCredentialManager(credentialManager)
+                .withDefaultAuthToken(twitchCredentials)
+                .withEnableHelix(true)
+                .build();
     }
 }
