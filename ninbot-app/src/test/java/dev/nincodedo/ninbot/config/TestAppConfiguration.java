@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.config;
 
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.TwitchClient;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.mockito.Answers;
@@ -12,4 +13,6 @@ public class TestAppConfiguration {
     ShardManager shardManager;
     @MockBean(answer = Answers.RETURNS_MOCKS)
     TwitchClient twitchClient;
+    @MockBean(answer = Answers.RETURNS_MOCKS)
+    OAuth2Credential twitchCredential;
 }
