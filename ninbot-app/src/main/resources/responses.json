@@ -107,7 +107,7 @@
     "regex": [
       {
         "response": "F",
-        "target": "^Wordle \\d* X/\\d.*"
+        "target": "^Wordle [\\d,]+ X/\\d.*"
       }
     ]
   }
