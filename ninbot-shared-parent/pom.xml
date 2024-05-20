@@ -20,7 +20,7 @@
         <assertj-core.version>3.25.3</assertj-core.version>
         <commons-io.version>2.16.1</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-text.version>1.11.0</commons-text.version>
+        <commons-text.version>1.12.0</commons-text.version>
         <dice.version>2.2.5</dice.version>
         <discord-webhooks.version>0.8.4</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
