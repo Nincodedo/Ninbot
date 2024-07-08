@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.stream.banner;
 import dev.nincodedo.nincord.util.StreamUtils;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -46,6 +47,10 @@ public abstract class GameBannerBuilder {
                 return null;
             }
             var gameTitleMapping = gameTitleMappingRepository.findByTwitchGameTitle(gameTitle);
+            if (StringUtils.isBlank(getGameTitle(gameTitle, gameTitleMapping))) {
+                futureGameBanner.complete(null);
+                return null;
+            }
             var cachedBanners = getGameBannerFilesFromCache(getGameTitle(gameTitle, gameTitleMapping)).stream()
                     .map(this::getGameBannerFromFile)
                     .flatMap(Optional::stream)
