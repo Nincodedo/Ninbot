@@ -3,6 +3,7 @@ package dev.nincodedo.ninbot.components.stream.banner;
 import dev.nincodedo.nincord.util.StreamUtils;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -46,6 +47,10 @@ public abstract class GameBannerBuilder {
                 return null;
             }
             var gameTitleMapping = gameTitleMappingRepository.findByTwitchGameTitle(gameTitle);
+            if (StringUtils.isBlank(getGameTitle(gameTitle, gameTitleMapping))) {
+                futureGameBanner.complete(null);
+                return null;
+            }
             var cachedBanners = getGameBannerFilesFromCache(getGameTitle(gameTitle, gameTitleMapping)).stream()
                     .map(this::getGameBannerFromFile)
                     .flatMap(Optional::stream)
@@ -124,8 +129,10 @@ public abstract class GameBannerBuilder {
      */
     protected Optional<GameBanner> getMostSuitableBanner(@Nullable List<GameBanner> gameBanners) {
         if (gameBanners == null || gameBanners.isEmpty()) {
+            log.trace("No banners found, returning empty");
             return Optional.empty();
         } else if (gameBanners.size() == 1) {
+            log.trace("One banner found, returning it");
             return Optional.of(gameBanners.get(0));
         }
         var scoredGameBannerMap = gameBanners.stream()
@@ -141,6 +148,7 @@ public abstract class GameBannerBuilder {
                         .isBefore(LocalDate.now().atStartOfDay()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         var maxScore = scoredGameBannerMap.keySet().stream().max(Long::compareTo);
+        scoredGameBannerMap.forEach((key, value) -> log.trace("Banner: {}, Score: {}", value, key));
         if (!scoredNotUsedTodayGameBannerMap.isEmpty()) {
             var maxScoreNotToday = scoredNotUsedTodayGameBannerMap.keySet().stream().max(Long::compareTo);
             return Optional.of(scoredGameBannerMap.get(maxScoreNotToday.get()));
