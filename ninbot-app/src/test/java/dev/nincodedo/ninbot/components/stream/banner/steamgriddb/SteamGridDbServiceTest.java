@@ -32,9 +32,21 @@ class SteamGridDbServiceTest {
         BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
         }).set(field("success"), true).create();
         List<GameImage> backgrounds = Instancio.of(new TypeToken<GameImage>() {
-        }).set(field("url"), "file://" + bg.getPath()).set(field("lock"), false).stream().limit(5).toList();
+                })
+                .set(field("url"), "file://" + bg.getPath())
+                .set(field("lock"), false)
+                .set(field("language"), "en")
+                .stream()
+                .limit(5)
+                .toList();
         List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
-        }).set(field("url"), "file://" + icon.getPath()).set(field("lock"), false).stream().limit(5).toList();
+                })
+                .set(field("url"), "file://" + icon.getPath())
+                .set(field("lock"), false)
+                .set(field("language"), "en")
+                .stream()
+                .limit(5)
+                .toList();
         BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
         }).set(field("success"), true).set(field("data"), logos).create();
         BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
@@ -60,6 +72,43 @@ class SteamGridDbServiceTest {
         }).set(field("url"), "file://" + bg.getPath()).set(field("lock"), true).stream().limit(5).toList();
         List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
         }).set(field("url"), "file://" + icon.getPath()).set(field("lock"), true).stream().limit(5).toList();
+        BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), logos).create();
+        BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
+        }).set(field("success"), true).set(field("data"), backgrounds).create();
+
+        when(steamGridDbFeign.searchGameByName("Zeldo")).thenReturn(gameBaseResponse);
+        when(steamGridDbFeign.retrieveLogoByGameId(gameBaseResponse.firstData()
+                .id(), new String[]{"official"})).thenReturn(logoResponse);
+        when(steamGridDbFeign.retrieveHeroByGameId(gameBaseResponse.firstData().id())).thenReturn(heroResponse);
+
+        var combinedResponse = steamGridDbService.findImagesFromTitle("Zeldo");
+
+        assertThat(combinedResponse.allResponsesSuccessful()).isFalse();
+    }
+
+    @Test
+    void findImagesFromTitleButAllNonEnglish() throws MalformedURLException {
+        var bg = Path.of("..", "docs", "images", "ninbot-github-social.png").toUri().toURL();
+        var icon = Path.of("..", "docs", "images", "ninbot-github-logo-small.png").toUri().toURL();
+        BaseResponse<Game> gameBaseResponse = Instancio.of(new TypeToken<BaseResponse<Game>>() {
+        }).set(field("success"), true).create();
+        List<GameImage> backgrounds = Instancio.of(new TypeToken<GameImage>() {
+                })
+                .set(field("url"), "file://" + bg.getPath())
+                .set(field("lock"), false)
+                .set(field("language"), "ko")
+                .stream()
+                .limit(5)
+                .toList();
+        List<GameImage> logos = Instancio.of(new TypeToken<GameImage>() {
+                })
+                .set(field("url"), "file://" + icon.getPath())
+                .set(field("lock"), false)
+                .set(field("language"), "ko")
+                .stream()
+                .limit(5)
+                .toList();
         BaseResponse<GameImage> logoResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {
         }).set(field("success"), true).set(field("data"), logos).create();
         BaseResponse<GameImage> heroResponse = Instancio.of(new TypeToken<BaseResponse<GameImage>>() {

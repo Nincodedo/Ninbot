@@ -1,6 +1,6 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-ARG open_telemetry_version=v2.4.0
+ARG open_telemetry_version=v2.5.0
 RUN wget "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$open_telemetry_version/opentelemetry-javaagent.jar"
 COPY . ./
 RUN mvn -B package -P git-commit
