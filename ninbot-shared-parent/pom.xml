@@ -48,7 +48,7 @@
         <sortpom-maven-plugin.version>3.4.1</sortpom-maven-plugin.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
-        <testcontainers.version>1.19.8</testcontainers.version>
+        <testcontainers.version>1.20.0</testcontainers.version>
         <twitch4j.version>1.20.0</twitch4j.version>
         <versions-maven-plugin.version>2.17.0</versions-maven-plugin.version>
     </properties>
