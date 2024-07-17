@@ -11,7 +11,6 @@ import dev.nincodedo.nincord.BaseListenerAdapter;
 import dev.nincodedo.nincord.command.CommandNameEnum;
 import dev.nincodedo.nincord.command.slash.SlashCommand;
 import dev.nincodedo.nincord.persistence.BaseEntity;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,7 +18,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import jakarta.persistence.Entity;
 import java.util.List;
 
-@Disabled("Until ArchUnit updates to support Java 20+")
 class VerifyArchitectureTest {
 
     JavaClasses ninbotClasses = new ClassFileImporter().importPackages("dev.nincodedo.ninbot");
