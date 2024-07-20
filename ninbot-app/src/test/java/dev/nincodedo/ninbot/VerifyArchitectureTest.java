@@ -8,8 +8,8 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 import com.tngtech.archunit.library.GeneralCodingRules;
 import dev.nincodedo.nincord.BaseListenerAdapter;
+import dev.nincodedo.nincord.command.Command;
 import dev.nincodedo.nincord.command.CommandNameEnum;
-import dev.nincodedo.nincord.command.slash.SlashCommand;
 import dev.nincodedo.nincord.persistence.BaseEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,11 +36,11 @@ class VerifyArchitectureTest {
                 .and()
                 .areNotInterfaces();
         return List.of(slashCommandClasses.should()
-                        .implement(SlashCommand.class)
-                        .because("Slash commands need the SlashCommand implementation to be auto registered"),
+                        .implement(Command.class)
+                        .because("Commands need the Command implementation to be auto registered"),
                 slashCommandClasses.should()
                         .dependOnClassesThat(JavaClass.Predicates.simpleNameEndingWith("CommandName"))
-                        .because("Slash commands should use CommandName enums"));
+                        .because("Commands should use CommandName enums"));
     }
 
     @Test
