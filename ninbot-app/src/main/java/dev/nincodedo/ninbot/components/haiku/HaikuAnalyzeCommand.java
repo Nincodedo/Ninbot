@@ -3,8 +3,10 @@ package dev.nincodedo.ninbot.components.haiku;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.message.MessageContextInteractionEventMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
+import dev.nincodedo.nincord.message.MessageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,9 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
     @Override
     public MessageExecutor execute(@NotNull MessageContextInteractionEvent event,
             @NotNull MessageContextInteractionEventMessageExecutor messageExecutor) {
-        var message = event.getTarget().getContentStripped();
+        var message = getContentStrippedMessage(event);
+        var rawMessage = getRawMessage(event);
+        boolean messageHasCharacters = !message.isEmpty();
         boolean messageOnlyCharacters = haikuMessageParser.isMessageOnlyCharacters(message);
         boolean messageIsCorrectSyllables = haikuMessageParser.getSyllableCount(message) == 17;
         int calculatedSyllableTotal = haikuMessageParser.getSyllableCount(message);
@@ -35,9 +39,14 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
         boolean line3SyllablesCorrect = false;
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Haiku Analysis");
-        embedBuilder.addField("Only characters*", Boolean.toString(messageOnlyCharacters), false);
-        embedBuilder.addField("17 syllables", Boolean.toString(messageIsCorrectSyllables), false);
+        embedBuilder.setTitle("Message Haikuability Analysis");
+        embedBuilder.addField("Has text", Boolean.toString(messageHasCharacters), true);
+        if (messageHasCharacters) {
+            embedBuilder.addField("Only characters*", Boolean.toString(messageOnlyCharacters), true);
+        }
+        if (messageOnlyCharacters) {
+            embedBuilder.addField("17 syllables", Boolean.toString(messageIsCorrectSyllables), true);
+        }
         List<Integer> lineTotals = new ArrayList<>();
         if (messageOnlyCharacters && messageIsCorrectSyllables) {
             var splitMessage = message.split("\\s+");
@@ -79,7 +88,7 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
             line1SyllablesCorrect = !lineTotals.isEmpty() && lineTotals.get(0) == 5;
             line2SyllablesCorrect = lineTotals.size() >= 2 && lineTotals.get(1) == 7;
             line3SyllablesCorrect = lineTotals.size() == 3 && lineTotals.get(2) == 5;
-            embedBuilder.addField("Line Analysis", lines.toString(), false);
+            embedBuilder.addField("Line Analysis", MessageUtils.addSpoilerText(lines.toString(), rawMessage), false);
         }
         String overallResponse;
         if (messageOnlyCharacters && messageIsCorrectSyllables && correctNumberOfLines && line1SyllablesCorrect
@@ -88,7 +97,9 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
         } else {
             overallResponse = "Not Haikuable";
             String additionalReason = ", too %s %s";
-            if (!messageOnlyCharacters) {
+            if (!messageHasCharacters) {
+                overallResponse += ", message has no text";
+            } else if (!messageOnlyCharacters) {
                 overallResponse += ", message has unsyllable characters";
             } else if (calculatedSyllableTotal != 17) {
                 overallResponse += String.format(additionalReason, getFewOrMany(
@@ -114,6 +125,28 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
         MessageCreateData messageCreateData = MessageCreateData.fromEmbeds(embedBuilder.build());
         messageExecutor.addEphemeralMessage(messageCreateData);
         return messageExecutor;
+    }
+
+    private @NotNull String getContentStrippedMessage(@NotNull MessageContextInteractionEvent event) {
+        var message = event.getTarget();
+        if (message.getAuthor().equals(event.getJDA().getSelfUser())) {
+            var embeds = event.getTarget().getEmbeds();
+            return embeds.getFirst().getDescription() == null ? "" : MarkdownSanitizer.sanitize(embeds.getFirst()
+                    .getDescription());
+        } else {
+            return event.getTarget().getContentStripped();
+        }
+    }
+
+    private @NotNull String getRawMessage(@NotNull MessageContextInteractionEvent event) {
+        var message = event.getTarget();
+        if (message.getAuthor().equals(event.getJDA().getSelfUser())) {
+            var embeds = event.getTarget().getEmbeds();
+            return embeds.getFirst().getDescription() == null ? "" : embeds.getFirst()
+                    .getDescription();
+        } else {
+            return event.getTarget().getContentRaw();
+        }
     }
 
     private @NotNull String getFewOrMany(boolean isLessThan) {
