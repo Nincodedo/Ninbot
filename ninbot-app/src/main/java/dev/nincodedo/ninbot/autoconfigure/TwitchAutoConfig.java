@@ -25,9 +25,8 @@ public class TwitchAutoConfig {
     }
 
     @Bean
-    public TokenRefresh tokenRefresh(TwitchIdentityProvider twitchIdentityProvider, TwitchConfig twitchConfig,
-            OAuth2Credential twitchCredential) {
-        return new TokenRefresh(twitchIdentityProvider, twitchConfig, twitchCredential);
+    public TokenRefresh tokenRefresh(TwitchIdentityProvider twitchIdentityProvider, OAuth2Credential twitchCredential) {
+        return new TokenRefresh(twitchIdentityProvider, twitchCredential);
     }
 
     @Bean
