@@ -6,7 +6,6 @@ import dev.nincodedo.nincord.command.CommandListener;
 import dev.nincodedo.nincord.command.CommandRegistration;
 import dev.nincodedo.nincord.config.db.ConfigRepository;
 import dev.nincodedo.nincord.config.db.ConfigService;
-import dev.nincodedo.nincord.release.ReleaseFilter;
 import dev.nincodedo.nincord.stats.StatManager;
 import dev.nincodedo.nincord.stats.StatRepository;
 import dev.nincodedo.nincord.util.ClassScanner;
@@ -62,8 +61,8 @@ public class CommandAutoConfig {
     }
 
     @Bean
-    public CommandRegistration commandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
-        return new CommandRegistration(commands, releaseFilter);
+    public CommandRegistration commandRegistration(List<Command> commands) {
+        return new CommandRegistration(commands);
     }
 
     @Bean

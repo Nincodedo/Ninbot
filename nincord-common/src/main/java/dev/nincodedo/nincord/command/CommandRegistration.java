@@ -3,11 +3,8 @@ package dev.nincodedo.nincord.command;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.command.slash.SlashCommand;
 import dev.nincodedo.nincord.command.user.UserContextCommand;
-import dev.nincodedo.nincord.logging.FormatLogObject;
-import dev.nincodedo.nincord.release.ReleaseFilter;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -15,55 +12,45 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 @Slf4j
 public class CommandRegistration extends ListenerAdapter {
 
     private List<Command> commands;
-    private ReleaseFilter releaseFilter;
 
-    public CommandRegistration(List<Command> commands, ReleaseFilter releaseFilter) {
+    public CommandRegistration(List<Command> commands) {
         this.commands = commands;
-        this.releaseFilter = releaseFilter;
     }
 
     @Override
     public void onReady(ReadyEvent readyEvent) {
         var shardManager = readyEvent.getJDA().getShardManager();
         if (shardManager != null) {
-            var guilds = shardManager.getGuilds();
-            log.info("Registering commands on {} guild(s)", guilds.size());
-            guilds.forEach(this::registerCommands);
+            var shards = shardManager.getShards();
+            log.info("Registering commands on {} shards(s)", shards.size());
+            shards.forEach(this::registerCommands);
+            shardManager.getGuilds().forEach(guild -> guild.updateCommands().queue());
             log.info("Finished registering commands");
         }
     }
 
-    @Override
-    public void onGuildJoin(@Nonnull GuildJoinEvent event) {
-        log.info("Registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
-        registerCommands(event.getGuild());
-        log.trace("Finished registering commands on joined guild {}", FormatLogObject.guildName(event.getGuild()));
-    }
-
-    private void registerCommands(Guild guild) {
-        if (guild == null) {
-            log.trace("Null guild found?");
+    private void registerCommands(JDA jda) {
+        if (jda == null) {
+            log.trace("Null shard found?");
             return;
         }
         try {
-            log.trace("Registering commands for server {}", FormatLogObject.guildName(guild));
             List<CommandData> commandDataList = commands.stream()
                     .filter(Command::isAbleToRegisterOnGuild)
                     .map(this::convertToCommandData)
                     .toList();
-            guild.updateCommands()
+            jda.updateCommands()
                     .addCommands(commandDataList)
-                    .queue(commandList -> log.info("Successfully registered {} commands on server {}",
-                            commandList.size(), FormatLogObject.guildName(guild)));
+                    .queue(commandList -> log.info("Successfully registered {} commands on shard {}",
+                            commandList.size(), jda.getShardInfo()));
         } catch (Exception e) {
-            log.error("Failed to register commands on guild {}", FormatLogObject.guildName(guild), e);
+            log.error("Failed to register commands on shard {}", jda.getShardInfo(), e);
         }
     }
 
