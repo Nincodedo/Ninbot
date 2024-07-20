@@ -26,18 +26,20 @@ public class CommandRegistration extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent readyEvent) {
         var shardManager = readyEvent.getJDA().getShardManager();
-        if (shardManager != null) {
-            var shards = shardManager.getShards();
-            log.info("Registering commands on {} shards(s)", shards.size());
-            shards.forEach(this::registerCommands);
-            shardManager.getGuilds().forEach(guild -> guild.updateCommands().queue());
-            log.info("Finished registering commands");
+        if (shardManager == null) {
+            log.trace("Null shard manager");
+            return;
         }
+        var shards = shardManager.getShards();
+        log.info("Registering commands on {} shards(s)", shards.size());
+        shards.forEach(this::registerCommands);
+        shardManager.getGuilds().forEach(guild -> guild.updateCommands().queue());
+        log.info("Finished registering commands");
     }
 
     private void registerCommands(JDA jda) {
         if (jda == null) {
-            log.trace("Null shard found?");
+            log.trace("Null shard");
             return;
         }
         try {
