@@ -24,7 +24,7 @@
         <dice.version>2.2.5</dice.version>
         <discord-webhooks.version>0.8.4</discord-webhooks.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
-        <instancio-junit.version>4.8.1</instancio-junit.version>
+        <instancio-junit.version>5.0.0</instancio-junit.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <java.version>21</java.version>
         <jsr305.version>3.0.2</jsr305.version>
