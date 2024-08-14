@@ -1,20 +1,15 @@
 package dev.nincodedo.ninbot.components.reaction.processor;
 
+import dev.nincodedo.nincord.ruleprocessing.RuleProcessor;
+import lombok.Getter;
+
 import java.util.List;
 
-public class ReactionRuleProcessor {
-    private List<ReactionRule> reactionRules;
+@Getter
+public class ReactionRuleProcessor implements RuleProcessor<ReactionRule, ReactionContext> {
+    private List<ReactionRule> rules;
 
-    public ReactionRuleProcessor(List<ReactionRule> reactionRules) {
-        this.reactionRules = reactionRules;
-    }
-
-    public ReactionContext process(ReactionContext reactionContext) {
-        for (var reactionRule : reactionRules) {
-            if (reactionRule.canProcess(reactionContext)) {
-                reactionRule.process(reactionContext);
-            }
-        }
-        return reactionContext;
+    public ReactionRuleProcessor(List<ReactionRule> rules) {
+        this.rules = rules;
     }
 }

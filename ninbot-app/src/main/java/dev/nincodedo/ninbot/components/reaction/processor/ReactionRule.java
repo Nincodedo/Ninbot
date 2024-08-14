@@ -1,23 +1,16 @@
 package dev.nincodedo.ninbot.components.reaction.processor;
 
+import dev.nincodedo.nincord.ruleprocessing.Rule;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.util.Optional;
 
-public interface ReactionRule {
-
-    default void process(ReactionContext reactionContext) {
-        if (canProcess(reactionContext)) {
-            execute(reactionContext);
-        }
-    }
+public interface ReactionRule extends Rule<ReactionContext> {
 
     default boolean canProcess(ReactionContext reactionContext) {
         return reactionContext.getReactionMessage().contains(getReplaceTarget());
     }
-
-    void execute(ReactionContext reactionContext);
 
     String getReplaceTarget();
 
