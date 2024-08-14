@@ -1,13 +1,15 @@
 package dev.nincodedo.ninbot.components.haiku;
 
+import dev.nincodedo.nincord.Emojis;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.message.MessageContextInteractionEventMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.MessageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
-import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +26,7 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
     }
 
     @Override
-    public MessageExecutor execute(@NotNull MessageContextInteractionEvent event,
-            @NotNull MessageContextInteractionEventMessageExecutor messageExecutor) {
+    public MessageExecutor execute(@NotNull MessageContextInteractionEvent event, @NotNull MessageContextInteractionEventMessageExecutor messageExecutor) {
         var message = getContentStrippedMessage(event);
         var rawMessage = getRawMessage(event);
         boolean messageHasCharacters = !message.isEmpty();
@@ -40,12 +41,13 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Message Haikuability Analysis");
-        embedBuilder.addField("Has text", Boolean.toString(messageHasCharacters), true);
+        embedBuilder.setUrl(event.getInteraction().getTarget().getJumpUrl());
+        embedBuilder.addField("Has text", Emojis.getCheckOrXResponse(messageHasCharacters), true);
         if (messageHasCharacters) {
-            embedBuilder.addField("Only characters*", Boolean.toString(messageOnlyCharacters), true);
+            embedBuilder.addField("Only characters", Emojis.getCheckOrXResponse(messageOnlyCharacters), true);
         }
         if (messageOnlyCharacters) {
-            embedBuilder.addField("17 syllables", Boolean.toString(messageIsCorrectSyllables), true);
+            embedBuilder.addField("17 syllables", Emojis.getCheckOrXResponse(messageIsCorrectSyllables), true);
         }
         List<Integer> lineTotals = new ArrayList<>();
         if (messageOnlyCharacters && messageIsCorrectSyllables) {
@@ -61,10 +63,7 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
                 lineSyllableTotal += wordSyllable;
                 lines.append(word).append(" (").append(wordSyllable).append(") ");
                 if (lineSyllableTotal >= nextSyllableCount) {
-                    lines.append(" = ")
-                            .append(lineSyllableTotal)
-                            .append(" actual, expected ")
-                            .append(nextSyllableCount);
+                    lines.append(String.format(" = %s actual, %s expected", lineSyllableTotal, nextSyllableCount));
                     lines.append("\n");
                     if (nextSyllableCount == 7) {
                         nextSyllableCount = 5;
@@ -74,12 +73,8 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
                     lineTotals.add(lineSyllableTotal);
                     lineSyllableTotal = 0;
                 }
-                if ((syllableTotal >= 17 || lineTotals.size() == 3 || i == splitMessage.length - 1)
-                        && lineSyllableTotal > 0) {
-                    lines.append(" = ")
-                            .append(lineSyllableTotal)
-                            .append(" actual, expected ")
-                            .append(nextSyllableCount);
+                if ((syllableTotal >= 17 || lineTotals.size() == 3 || i == splitMessage.length - 1) && lineSyllableTotal > 0) {
+                    lines.append(String.format(" = %s actual, %s expected", lineSyllableTotal, nextSyllableCount));
                     lineTotals.add(lineSyllableTotal);
                     break;
                 }
@@ -89,50 +84,61 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
             line2SyllablesCorrect = lineTotals.size() >= 2 && lineTotals.get(1) == 7;
             line3SyllablesCorrect = lineTotals.size() == 3 && lineTotals.get(2) == 5;
             embedBuilder.addField("Line Analysis", MessageUtils.addSpoilerText(lines.toString(), rawMessage), false);
-        }
-        String overallResponse;
-        if (messageOnlyCharacters && messageIsCorrectSyllables && correctNumberOfLines && line1SyllablesCorrect
-                && line2SyllablesCorrect && line3SyllablesCorrect) {
-            overallResponse = "Haikuable";
-        } else {
-            overallResponse = "Not Haikuable";
-            String additionalReason = ", too %s %s";
-            if (!messageHasCharacters) {
-                overallResponse += ", message has no text";
-            } else if (!messageOnlyCharacters) {
-                overallResponse += ", message has unsyllable characters";
-            } else if (calculatedSyllableTotal != 17) {
-                overallResponse += String.format(additionalReason, getFewOrMany(
-                        calculatedSyllableTotal < 17), "syllables");
-            } else if (lineTotals.size() != 3) {
-                overallResponse += String.format(additionalReason, getFewOrMany(lineTotals.size() < 3), "lines");
-            } else if (lineTotals.get(0) != 5) {
-                overallResponse += String.format(additionalReason, getFewOrMany(
-                        lineTotals.getFirst() < 5), " syllables in line 1");
-            } else if (lineTotals.get(1) != 7) {
-                overallResponse += String.format(additionalReason, getFewOrMany(
-                        lineTotals.get(1) < 7), "syllables in line 2");
-            } else if (lineTotals.get(2) != 5) {
-                overallResponse += String.format(additionalReason, getFewOrMany(
-                        lineTotals.get(2) < 5), "syllables in line 3");
-            } else {
-                overallResponse += ", heck I dunno how you got here";
+        } else if (messageOnlyCharacters) {
+            var splitMessage = message.split("\\s+");
+            StringBuilder messageAnalysis = new StringBuilder();
+            for (String word : splitMessage) {
+                var wordSyllable = haikuMessageParser.getSyllableCount(word);
+                messageAnalysis.append(word).append(" (").append(wordSyllable).append(") ");
             }
+            embedBuilder.addField("Message Analysis", MessageUtils.addSpoilerText(messageAnalysis.toString(), rawMessage), false);
         }
+
+        String overallResponse = overallResponseMessage(messageOnlyCharacters, messageIsCorrectSyllables, correctNumberOfLines, line1SyllablesCorrect, line2SyllablesCorrect, line3SyllablesCorrect, messageHasCharacters, calculatedSyllableTotal, lineTotals);
 
         embedBuilder.addField("Overall", overallResponse, false);
 
-        MessageCreateData messageCreateData = MessageCreateData.fromEmbeds(embedBuilder.build());
-        messageExecutor.addEphemeralMessage(messageCreateData);
+        MessageCreateBuilder createBuilder = new MessageCreateBuilder();
+        createBuilder.addEmbeds(embedBuilder.build());
+        createBuilder.addActionRow(Button.primary("haiku-share", "Share to channel"));
+
+        messageExecutor.addEphemeralMessage(createBuilder.build());
         return messageExecutor;
+    }
+
+    private @NotNull String overallResponseMessage(boolean messageOnlyCharacters, boolean messageIsCorrectSyllables, boolean correctNumberOfLines, boolean line1SyllablesCorrect, boolean line2SyllablesCorrect, boolean line3SyllablesCorrect, boolean messageHasCharacters, int calculatedSyllableTotal, List<Integer> lineTotals) {
+        String overallResponse;
+        if (messageOnlyCharacters && messageIsCorrectSyllables && correctNumberOfLines && line1SyllablesCorrect && line2SyllablesCorrect && line3SyllablesCorrect) {
+            overallResponse = "Haikuable";
+        } else {
+            overallResponse = "Not Haikuable";
+            String additionalReason = ". Too %s %s.";
+            if (!messageHasCharacters) {
+                overallResponse += ". Message has no text.";
+            } else if (!messageOnlyCharacters) {
+                overallResponse += ". Message has unsyllable characters.";
+            } else if (calculatedSyllableTotal != 17) {
+                overallResponse += String.format(additionalReason, getFewOrMany(calculatedSyllableTotal < 17), String.format("syllables: %s", calculatedSyllableTotal));
+            } else if (lineTotals.size() != 3) {
+                overallResponse += String.format(additionalReason, getFewOrMany(lineTotals.size() < 3), "lines");
+            } else if (lineTotals.get(0) != 5) {
+                overallResponse += String.format(additionalReason, getFewOrMany(lineTotals.getFirst() < 5), " syllables in line 1");
+            } else if (lineTotals.get(1) != 7) {
+                overallResponse += String.format(additionalReason, getFewOrMany(lineTotals.get(1) < 7), "syllables in line 2");
+            } else if (lineTotals.get(2) != 5) {
+                overallResponse += String.format(additionalReason, getFewOrMany(lineTotals.get(2) < 5), "syllables in line 3");
+            } else {
+                overallResponse += ". Heck I dunno how you got here.";
+            }
+        }
+        return overallResponse;
     }
 
     private @NotNull String getContentStrippedMessage(@NotNull MessageContextInteractionEvent event) {
         var message = event.getTarget();
         if (message.getAuthor().equals(event.getJDA().getSelfUser())) {
             var embeds = event.getTarget().getEmbeds();
-            return embeds.getFirst().getDescription() == null ? "" : MarkdownSanitizer.sanitize(embeds.getFirst()
-                    .getDescription());
+            return embeds.getFirst().getDescription() == null ? "" : MarkdownSanitizer.sanitize(embeds.getFirst().getDescription());
         } else {
             return event.getTarget().getContentStripped();
         }
@@ -142,8 +148,7 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
         var message = event.getTarget();
         if (message.getAuthor().equals(event.getJDA().getSelfUser())) {
             var embeds = event.getTarget().getEmbeds();
-            return embeds.getFirst().getDescription() == null ? "" : embeds.getFirst()
-                    .getDescription();
+            return embeds.getFirst().getDescription() == null ? "" : embeds.getFirst().getDescription();
         } else {
             return event.getTarget().getContentRaw();
         }
