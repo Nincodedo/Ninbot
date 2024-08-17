@@ -3,6 +3,10 @@
 Detailed changelogs can be found on the [Ninbot GitHub Releases page](https://github.com/Nincodedo/Ninbot/releases).
 This page will highlight more interesting changes between versions.
 
+## [3.19.0](https://github.com/Nincodedo/Ninbot/releases/tag/3.19.0)
+
+* Added the [Haiku Analyzer](../commands/index.md#haiku-analyzer) message command
+
 ## [3.9.0](https://github.com/Nincodedo/Ninbot/releases/tag/3.9.0)
 
 * Added the [Emojitizer](../commands/index.md#emojitizer) message command
