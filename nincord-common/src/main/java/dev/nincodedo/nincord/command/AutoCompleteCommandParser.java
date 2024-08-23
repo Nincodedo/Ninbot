@@ -8,8 +8,10 @@ import java.util.concurrent.ExecutorService;
 public class AutoCompleteCommandParser extends AbstractCommandParser<AutoCompleteCommand,
         CommandAutoCompleteInteractionEvent> {
 
-    public AutoCompleteCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService) {
-        super(commandExecutorService, AutoCompleteCommand.class, CommandAutoCompleteInteractionEvent.class);
+    public AutoCompleteCommandParser(@Qualifier("commandParserThreadPool") ExecutorService commandExecutorService,
+            CommandMetrics commandMetrics) {
+        super(commandExecutorService, AutoCompleteCommand.class, CommandAutoCompleteInteractionEvent.class,
+                commandMetrics);
     }
 
     @Override
