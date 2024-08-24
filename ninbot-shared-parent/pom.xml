@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.nincodedo</groupId>
     <artifactId>ninbot-shared-parent</artifactId>
-    <version>3.19.0-SNAPSHOT</version>
+    <version>3.19.0</version>
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
