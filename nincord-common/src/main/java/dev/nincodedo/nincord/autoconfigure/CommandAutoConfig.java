@@ -3,6 +3,7 @@ package dev.nincodedo.nincord.autoconfigure;
 import dev.nincodedo.nincord.command.AbstractCommandParser;
 import dev.nincodedo.nincord.command.Command;
 import dev.nincodedo.nincord.command.CommandListener;
+import dev.nincodedo.nincord.command.CommandMetrics;
 import dev.nincodedo.nincord.command.CommandRegistration;
 import dev.nincodedo.nincord.config.db.ConfigRepository;
 import dev.nincodedo.nincord.config.db.ConfigService;
@@ -31,7 +32,7 @@ public class CommandAutoConfig {
     }
 
     @Bean
-    public CommandListener commandListener(List<Command> commands) {
+    public CommandListener commandListener(List<Command> commands, CommandMetrics commandMetrics) {
         if (commands.isEmpty()) {
             log.trace("No commands found, not registering a Command Listener");
             return null;
@@ -41,14 +42,14 @@ public class CommandAutoConfig {
         var requiredCommandParsers = parserClassList.stream()
                 .map(aClass -> {
                     try {
-                        return aClass.getDeclaredConstructor(ExecutorService.class);
+                        return aClass.getDeclaredConstructor(ExecutorService.class, CommandMetrics.class);
                     } catch (NoSuchMethodException e) {
                         throw new RuntimeException(e);
                     }
                 })
                 .map(constructor -> {
                     try {
-                        return constructor.newInstance(commandParserThreadPool());
+                        return constructor.newInstance(commandParserThreadPool(), commandMetrics);
                     } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
