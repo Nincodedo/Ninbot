@@ -41,7 +41,7 @@ public class HaikuAnalyzeCommand implements MessageContextCommand {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Message Haikuability Analysis");
-        embedBuilder.setUrl(event.getInteraction().getTarget().getJumpUrl());
+        embedBuilder.setUrl(event.getTarget().getJumpUrl());
         embedBuilder.addField("Has text", Emojis.getCheckOrXResponse(messageHasCharacters), true);
         if (messageHasCharacters) {
             embedBuilder.addField("Only characters", Emojis.getCheckOrXResponse(messageOnlyCharacters), true);
