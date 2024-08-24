@@ -41,4 +41,14 @@ public class Emojis {
     public static String getRandomDoctorEmoji() {
         return DOCTOR_LIST.get(random.nextInt(DOCTOR_LIST.size()));
     }
+
+    /**
+     * Returns the appropriate check or x emoji based on the passed in boolean of true or false.
+     *
+     * @param decidingBoolean boolean deciding factor
+     * @return returns check for true and x for false
+     */
+    public static String getCheckOrXResponse(boolean decidingBoolean) {
+        return decidingBoolean ? CHECK_MARK : CROSS_X;
+    }
 }
