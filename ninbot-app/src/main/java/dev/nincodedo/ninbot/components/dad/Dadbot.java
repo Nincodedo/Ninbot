@@ -7,14 +7,12 @@ import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.config.db.component.ComponentService;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.MessageReceivedEventMessageExecutor;
-import dev.nincodedo.nincord.message.MessageUtils;
 import dev.nincodedo.nincord.message.impersonation.Impersonation;
 import dev.nincodedo.nincord.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +31,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     private ConfigService configService;
     private ComponentService componentService;
     private String componentName;
+    private DadbotMessageParser dadbotMessageParser;
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
     private Impersonation dadbotImpersonation;
 
@@ -43,6 +42,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         this.configService = configService;
         componentName = "dad";
         this.componentService = componentService;
+        this.dadbotMessageParser = new DadbotMessageParser();
         this.dadbotImpersonation = Impersonation.of("Dadbot", "https://i.imgur.com/zfKodNp.png");
     }
 
@@ -58,14 +58,13 @@ public class Dadbot extends StatAwareListenerAdapter {
     private MessageExecutor parseMessage(MessageReceivedEvent event) {
         var messageExecutor = new MessageReceivedEventMessageExecutor(event);
         var strippedMessage = event.getMessage().getContentStripped();
-        var first = strippedMessage.split("\\s+")[0];
-        if (!(first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imcontraction"))
-                || first.equalsIgnoreCase(resourceBundle.getString("listener.dad.imnocontraction")))
-                || !event.getChannelType().isGuild()) {
+        var rawMessage = event.getMessage().getContentRaw();
+        var optionalDadJoke = dadbotMessageParser.dadReply(strippedMessage, rawMessage);
+        if (optionalDadJoke.isEmpty() || !event.getChannelType().isGuild()) {
             return messageExecutor;
         }
-        if (StringUtils.isNotBlank(strippedMessage) && strippedMessage.split("\\s+").length >= 1 && checkChance()) {
-            hiImDad(event.getMessage(), event, messageExecutor);
+        if (checkChance()) {
+            hiImDad(event, messageExecutor, optionalDadJoke.get());
         }
         return messageExecutor;
     }
@@ -75,32 +74,30 @@ public class Dadbot extends StatAwareListenerAdapter {
         return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
     }
 
-    private void hiImDad(Message message, MessageReceivedEvent event,
-            MessageReceivedEventMessageExecutor messageExecutor) {
+    private void hiImDad(MessageReceivedEvent event,
+            MessageReceivedEventMessageExecutor messageExecutor, String dadName) {
         if (channelIsOnDenyList(event.getGuild().getId(), event.getChannel().getId())) {
             return;
         }
         messageExecutor.impersonate(dadbotImpersonation);
-        String strippedMessage = message.getContentStripped();
 
-        String dadName = MessageUtils.addSpoilerText(strippedMessage.substring(strippedMessage.indexOf(' '))
-                .trim(), message.getContentRaw());
-        String dadResponse = resourceBundle.getString("listener.dad.hi") + " "
-                + dadName
-                + resourceBundle.getString("listener.dad.imdad");
+        String dadResponse = String.format(resourceBundle.getString("listener.dad.joke"), dadName);
         messageExecutor.addMessageResponse(dadResponse);
-        dadJoke(dadName, message.getMember());
+        dadJoke(dadName, event.getMember());
         countOneStat(componentName, event.getGuild().getId());
     }
 
     private void dadJoke(String dadName, Member member) {
+        if (dadName.length() > DISCORD_NICKNAME_LENGTH_LIMIT || member == null) {
+            return;
+        }
         var self = member.getGuild().getSelfMember();
-        if (dadName.length() > DISCORD_NICKNAME_LENGTH_LIMIT || !self.hasPermission(Permission.NICKNAME_MANAGE)
+        if (!self.hasPermission(Permission.NICKNAME_MANAGE)
                 || !self.canInteract(member)) {
             return;
         }
         var oldName = member.getNickname();
-        member.modifyNickname(StringUtils.capitalize(dadName))
+        member.modifyNickname(WordUtils.capitalizeFully(dadName))
                 .reason("Dad joke")
                 .queue(success -> member.modifyNickname(oldName)
                         .reason("Dad joke done")
