@@ -15,7 +15,7 @@
     <name>Ninbot Shared Parent Pom</name>
     <properties>
         <JDA.version>5.1.1</JDA.version>
-        <annotations.version>24.1.0</annotations.version>
+        <annotations.version>26.0.0</annotations.version>
         <archunit.version>1.3.0</archunit.version>
         <assertj-core.version>3.26.3</assertj-core.version>
         <commons-io.version>2.17.0</commons-io.version>
