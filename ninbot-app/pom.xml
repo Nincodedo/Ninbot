@@ -12,10 +12,6 @@
     <name>Ninbot Application</name>
     <dependencies>
         <dependency>
-            <groupId>club.minnced</groupId>
-            <artifactId>discord-webhooks</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.bernardomg.tabletop</groupId>
             <artifactId>dice</artifactId>
         </dependency>
