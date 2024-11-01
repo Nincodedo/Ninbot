@@ -1,6 +1,5 @@
 package dev.nincodedo.nincord.message;
 
-import dev.nincodedo.nincord.logging.FormatLogObject;
 import dev.nincodedo.nincord.message.impersonation.Impersonation;
 import dev.nincodedo.nincord.message.impersonation.Impersonator;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +8,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class MessageReceivedEventMessageExecutor extends MessageExecutor {
@@ -39,11 +36,7 @@ public class MessageReceivedEventMessageExecutor extends MessageExecutor {
         } else {
             Impersonator impersonator = new Impersonator(impersonation, getGuild(),
                     messageReceivedEvent.getChannel());
-            try {
-                impersonator.sendMessage(message).get();
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("Failed to send webhook message in server {}", FormatLogObject.guildName(getGuild()), e);
-            }
+            impersonator.sendMessage(message);
         }
     }
 
