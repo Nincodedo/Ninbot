@@ -30,7 +30,7 @@
         <jsr305.version>3.0.2</jsr305.version>
         <log4j.version>2.24.1</log4j.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
-        <lombok.version>1.18.34</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
         <mapstruct.version>1.6.2</mapstruct.version>
         <maven-failsafe-plugin.version>3.5.0</maven-failsafe-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
