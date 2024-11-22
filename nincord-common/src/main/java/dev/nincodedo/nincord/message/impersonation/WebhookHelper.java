@@ -1,9 +1,5 @@
 package dev.nincodedo.nincord.message.impersonation;
 
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.WebhookClientBuilder;
-import club.minnced.discord.webhook.receive.ReadonlyMessage;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,13 +9,11 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.managers.WebhookManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 class WebhookHelper {
@@ -58,11 +52,8 @@ class WebhookHelper {
         return webhook.getManager();
     }
 
-    public @NotNull CompletableFuture<ReadonlyMessage> sendMessage(MessageCreateData message) {
-        WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder();
-        messageBuilder.append(message.getContent());
-        try (WebhookClient client = new WebhookClientBuilder(webhook.getUrl()).build()) {
-            return client.send(messageBuilder.build());
-        }
+    public void sendMessage(MessageCreateData message) {
+        var client = net.dv8tion.jda.api.entities.WebhookClient.createClient(webhook.getJDA(), webhook.getUrl());
+        client.sendMessage(message).queue();
     }
 }

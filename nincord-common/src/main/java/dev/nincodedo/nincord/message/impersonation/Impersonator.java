@@ -1,11 +1,8 @@
 package dev.nincodedo.nincord.message.impersonation;
 
-import club.minnced.discord.webhook.receive.ReadonlyMessage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-
-import java.util.concurrent.CompletableFuture;
 
 public class Impersonator {
 
@@ -22,11 +19,10 @@ public class Impersonator {
         this.webhookHelper = new WebhookHelper();
     }
 
-    public CompletableFuture<ReadonlyMessage> sendMessage(MessageCreateData message) {
+    public void sendMessage(MessageCreateData message) {
         setupWebhook();
-        var future = webhookHelper.sendMessage(message);
+        webhookHelper.sendMessage(message);
         tearDown();
-        return future;
     }
 
     private void tearDown() {
