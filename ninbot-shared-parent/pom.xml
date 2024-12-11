@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -22,6 +21,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.12.0</commons-text.version>
         <dice.version>2.2.5</dice.version>
+        <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>5.0.2</instancio-junit.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
@@ -41,10 +41,9 @@
         <pitest-maven.version>1.16.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <snakeyaml.version>2.3</snakeyaml.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
-        <spring-cloud-starter-openfeign.version>4.1.2</spring-cloud-starter-openfeign.version>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
+        <spring-cloud-starter-openfeign.version>4.1.2</spring-cloud-starter-openfeign.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.20.3</testcontainers.version>
@@ -275,6 +274,8 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                     <configuration>
+                        <preparationGoals>clean verify sortpom:sort editorconfig:format</preparationGoals>
+                        <completionGoals>sortpom:sort editorconfig:format</completionGoals>
                         <scmDevelopmentCommitComment>Update version for dev</scmDevelopmentCommitComment>
                         <scmReleaseCommitComment>Update version for release @{releaseLabel}</scmReleaseCommitComment>
                         <tagNameFormat>@{project.version}</tagNameFormat>
@@ -298,6 +299,11 @@
                     <configuration>
                         <processDependencyManagement>false</processDependencyManagement>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.ec4j.maven</groupId>
+                    <artifactId>editorconfig-maven-plugin</artifactId>
+                    <version>${editorconfig-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -355,6 +361,25 @@
                     <sortPlugins>groupId,artifactId</sortPlugins>
                     <sortProperties>true</sortProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.ec4j.maven</groupId>
+                <artifactId>editorconfig-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>pom.xml</include>
+                        <include>**/pom.xml</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>format</id>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
