@@ -2,6 +2,7 @@ package dev.nincodedo.ninbot.components.dad;
 
 import dev.nincodedo.nincord.LocaleService;
 import dev.nincodedo.nincord.StatAwareListenerAdapter;
+import dev.nincodedo.nincord.config.db.Config;
 import dev.nincodedo.nincord.config.db.ConfigConstants;
 import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.config.db.component.ComponentService;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +65,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         if (optionalDadJoke.isEmpty() || !event.getChannelType().isGuild()) {
             return messageExecutor;
         }
-        if (checkChance()) {
+        if (checkChance(event.getGuild().getId())) {
             hiImDad(event, messageExecutor, optionalDadJoke.get());
         }
         return messageExecutor;
@@ -71,7 +73,7 @@ public class Dadbot extends StatAwareListenerAdapter {
 
     private boolean channelIsOnDenyList(String guildId, String channelId) {
         var channelConfigList = configService.getConfigByName(guildId, ConfigConstants.DADBOT_DENY_LIST_CHANNEL);
-        return channelConfigList.stream().anyMatch(config -> config.getValue().equals(channelId));
+        return channelConfigList.stream().anyMatch(config -> channelId.equals(config.getValue()));
     }
 
     private void hiImDad(MessageReceivedEvent event,
@@ -104,7 +106,14 @@ public class Dadbot extends StatAwareListenerAdapter {
                         .queueAfter(2, TimeUnit.MINUTES));
     }
 
-    private boolean checkChance() {
-        return random.nextInt(100) < 10;
+    private boolean checkChance(String guildId) {
+        int chance = configService.getGlobalConfigByName(ConfigConstants.DADBOT_REPLY_CHANCE, guildId)
+                .stream()
+                .map(Config::getValue)
+                .filter(Objects::nonNull)
+                .map(Integer::parseInt)
+                .findFirst()
+                .orElse(10);
+        return random.nextInt(100) < chance;
     }
 }

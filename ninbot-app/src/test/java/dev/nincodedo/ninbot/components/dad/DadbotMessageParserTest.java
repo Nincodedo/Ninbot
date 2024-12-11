@@ -1,5 +1,6 @@
 package dev.nincodedo.ninbot.components.dad;
 
+import dev.nincodedo.nincord.LocaleService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,7 +14,7 @@ class DadbotMessageParserTest {
 
     DadbotMessageParser dadbotMessageParser = new DadbotMessageParser();
 
-    public static List<String> dadreplies() {
+    public static List<String> dadReplies() {
         return List.of("I'm happy", "im glad", "i'm tired", "hi im sad", "I'm ready for anything", "I'm a really long"
                         + " message with another sentence in it. This should still reply correctly.",
                 "This is also a really long message with another sentence in it, but the dad part doesn't happen "
@@ -30,20 +31,21 @@ class DadbotMessageParserTest {
                         + "I'm sure in the end it will.");
     }
 
-    public static List<String> nodadreplies() {
+    public static List<String> noDadReplies() {
         return List.of("I'm", "I'm ", "Just words that don't have that word");
     }
 
     @ParameterizedTest
-    @MethodSource("dadreplies")
+    @MethodSource("dadReplies")
     void dadReply(String message) {
         var actual = dadbotMessageParser.dadReply(message, "");
         assertThat(actual).isPresent();
-        log.debug(actual.get());
+        log.debug(String.format(LocaleService.getResourceBundleOrDefault(null)
+                .getString("listener.dad.joke"), actual.get()));
     }
 
     @ParameterizedTest
-    @MethodSource("nodadreplies")
+    @MethodSource("noDadReplies")
     void noDadReply(String message) {
         var actual = dadbotMessageParser.dadReply(message, "");
         assertThat(actual).isEmpty();
