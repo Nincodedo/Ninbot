@@ -13,7 +13,6 @@ public class DadbotMessageParser {
         var initialPattern = Pattern.compile("i(?:['‛’‵‘′`]?m| am) ", Pattern.CASE_INSENSITIVE);
         var initialMatcher = initialPattern.matcher(message);
         if (!initialMatcher.find()) {
-            log.debug("Failed initial matching \"{}\"", message);
             return Optional.empty();
         }
         var startingMessage = message.substring(initialMatcher.end());
