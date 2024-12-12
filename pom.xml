@@ -4,7 +4,7 @@
     <parent>
         <groupId>dev.nincodedo</groupId>
         <artifactId>ninbot-shared-parent</artifactId>
-        <version>3.21.0-SNAPSHOT</version>
+        <version>3.20.1</version>
         <relativePath>ninbot-shared-parent</relativePath>
     </parent>
     <artifactId>ninbot</artifactId>
@@ -34,7 +34,7 @@
     <scm>
         <connection>scm:git:https://github.com/Nincodedo/Ninbot.git</connection>
         <developerConnection>scm:git:ssh://github.com:Nincodedo/Ninbot.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>3.20.1</tag>
         <url>https://github.com/Nincodedo/Ninbot</url>
     </scm>
     <properties>
