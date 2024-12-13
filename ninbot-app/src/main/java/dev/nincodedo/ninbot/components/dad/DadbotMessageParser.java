@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class DadbotMessageParser {
 
     public Optional<String> dadReply(String message, String rawMessage) {
-        var initialPattern = Pattern.compile("i(?:['‛’‵‘′`]?m| am) ", Pattern.CASE_INSENSITIVE);
+        var initialPattern = Pattern.compile("(^|\\s)i(?:['‛’‵‘′`]?m| am) ", Pattern.CASE_INSENSITIVE);
         var initialMatcher = initialPattern.matcher(message);
         if (!initialMatcher.find()) {
             return Optional.empty();

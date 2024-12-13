@@ -32,13 +32,14 @@ class DadbotMessageParserTest {
     }
 
     public static List<String> noDadReplies() {
-        return List.of("I'm", "I'm ", "Just words that don't have that word");
+        return List.of("I'm", "I'm ", "Just words that don't have that word", "I have never claimed to be smart.",
+                "This claim is false.");
     }
 
     @ParameterizedTest
     @MethodSource("dadReplies")
     void dadReply(String message) {
-        var actual = dadbotMessageParser.dadReply(message, "");
+        var actual = dadbotMessageParser.dadReply(message, message);
         assertThat(actual).isPresent();
         log.debug(String.format(LocaleService.getResourceBundleOrDefault(null)
                 .getString("listener.dad.joke"), actual.get()));
@@ -47,7 +48,7 @@ class DadbotMessageParserTest {
     @ParameterizedTest
     @MethodSource("noDadReplies")
     void noDadReply(String message) {
-        var actual = dadbotMessageParser.dadReply(message, "");
+        var actual = dadbotMessageParser.dadReply(message, message);
         assertThat(actual).isEmpty();
     }
 }
