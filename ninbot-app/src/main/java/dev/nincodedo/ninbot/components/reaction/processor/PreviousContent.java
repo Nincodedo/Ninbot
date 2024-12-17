@@ -18,6 +18,8 @@ public class PreviousContent implements ReactionRule {
                 reactionContext.setCanReact(false);
             }
             reactionMessage = reactionMessage.replace(getReplaceTarget(), previousMessageContent);
+        } else if (lastMessageOptional.isEmpty()) {
+            reactionContext.setCanReact(false);
         }
         reactionContext.setReactionMessage(reactionMessage);
     }

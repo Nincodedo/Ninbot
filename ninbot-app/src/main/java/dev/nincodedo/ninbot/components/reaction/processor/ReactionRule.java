@@ -25,11 +25,6 @@ public interface ReactionRule {
         if (message.getReferencedMessage() != null) {
             return Optional.of(message.getReferencedMessage());
         }
-        var messageHistory = channel.getHistoryBefore(message, 1).complete().getRetrievedHistory();
-        if (!messageHistory.isEmpty() && !messageHistory.get(0).isWebhookMessage()) {
-            return Optional.of(messageHistory.get(0));
-        } else {
-            return Optional.empty();
-        }
+        return channel.getHistoryBefore(message, 1).complete().getRetrievedHistory().stream().findFirst();
     }
 }
