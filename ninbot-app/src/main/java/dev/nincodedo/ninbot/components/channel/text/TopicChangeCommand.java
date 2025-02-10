@@ -7,7 +7,9 @@ import dev.nincodedo.nincord.config.db.ConfigConstants;
 import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.SlashCommandEventMessageExecutor;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +28,8 @@ public class TopicChangeCommand implements SlashCommand {
     }
 
     @Override
-    public boolean isCommandEnabledByDefault() {
-        return false;
+    public DefaultMemberPermissions getPermissions() {
+        return DefaultMemberPermissions.enabledFor(Permission.MANAGE_CHANNEL);
     }
 
     @Override

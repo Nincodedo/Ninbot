@@ -62,7 +62,7 @@ public class CommandAutoConfig {
     }
 
     @Bean
-    public CommandRegistration commandRegistration(List<Command> commands) {
+    public CommandRegistration commandRegistration(List<Command<?>> commands) {
         return new CommandRegistration(commands);
     }
 

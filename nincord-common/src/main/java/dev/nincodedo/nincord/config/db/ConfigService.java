@@ -29,38 +29,40 @@ public class ConfigService {
         return list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Cacheable("config-value-by-server-name")
     public Optional<String> getSingleValueByName(String serverId, String configName) {
-        var list = configRepository.getConfigsByServerIdAndName(serverId, configName);
-        var valueList = list.stream().map(Config::getValue).collect(Collectors.toCollection(ArrayList::new));
-        if (valueList.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.ofNullable(valueList.get(0));
-        }
+        return configRepository.getConfigsByServerIdAndName(serverId, configName)
+                .stream()
+                .map(Config::getValue)
+                .findFirst();
     }
 
     public Optional<Config> getConfigByServerIdAndName(String serverId, String configName) {
         return configRepository.getConfigByServerIdAndName(serverId, configName);
     }
 
-    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-configs-by-name"})
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-config-by-name",
+            "global-configs-by-name"})
     public void removeConfig(Config config) {
         configRepository.delete(config);
     }
 
-    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-configs-by-name"})
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-config-by-name",
+            "global-configs-by-name"})
     public void removeConfig(String serverId, String configName, String configValue) {
         configRepository.getConfigByServerIdAndNameAndValue(serverId, configName, configValue).ifPresent(config ->
                 configRepository.delete(config)
         );
     }
 
-    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-configs-by-name"})
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-config-by-name",
+            "global-configs-by-name"})
     public void addConfig(Config config) {
         configRepository.save(config);
     }
 
-    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-configs-by-name"})
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-config-by-name",
+            "global-configs-by-name"})
     public void addConfig(String serverId, String configName, String configValue) {
         configRepository.save(new Config(serverId, configName, configValue));
     }
@@ -69,7 +71,8 @@ public class ConfigService {
         return configRepository.getConfigsByServerId(serverId);
     }
 
-    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-configs-by-name"})
+    @CacheEvict(allEntries = true, value = {"configs-by-name", "config-values-by-name", "global-config-by-name",
+            "global-configs-by-name"})
     public void updateConfig(Config config) {
         configRepository.getConfigByServerIdAndName(config.getServerId(), config.getName()).ifPresent(oldConfig -> {
             oldConfig.setValue(config.getValue());
@@ -88,7 +91,7 @@ public class ConfigService {
         }
     }
 
-    @Cacheable("global-configs-by-name")
+    @Cacheable("global-config-by-name")
     public Optional<Config> getGlobalConfigByName(String configName, String serverId) {
         //First try to find config by server ID. If none found, then use the global
         var serverConfig = configRepository.getConfigsByServerIdAndName(serverId, configName);
