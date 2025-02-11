@@ -8,5 +8,9 @@ public interface DisabledComponentsRepository extends BaseRepository<DisabledCom
 
     List<DisabledComponents> findByServerId(String serverId);
 
+    List<DisabledComponents> findByUserId(String userId);
+
     List<DisabledComponents> findByComponentAndServerId(Component component, String serverId);
+
+    List<DisabledComponents> findByComponentAndUserId(Component component, String userId);
 }

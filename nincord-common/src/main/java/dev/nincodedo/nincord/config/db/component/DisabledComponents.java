@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 public class DisabledComponents extends BaseEntity {
 
     private String serverId;
+    private String userId;
     @ManyToOne
     @ToString.Exclude
     private Component component;
@@ -22,6 +23,12 @@ public class DisabledComponents extends BaseEntity {
 
     DisabledComponents(String serverId, Component component) {
         this.serverId = serverId;
+        this.component = component;
+    }
+
+    DisabledComponents(String serverId, String userId, Component component) {
+        this.serverId = null;
+        this.userId = userId;
         this.component = component;
     }
 }

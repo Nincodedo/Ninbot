@@ -65,8 +65,12 @@ public class CommandRegistration extends ListenerAdapter {
                                 slashCommand.getDescription())
                         .setDefaultPermissions(slashCommand.getPermissions());
                 try {
-                    slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
-                    slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
+                    if (!slashCommand.getCommandOptions().isEmpty()) {
+                        slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
+                    }
+                    if (!slashCommand.getSubcommandDatas().isEmpty()) {
+                        slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
+                    }
                     yield slashCommandData;
                 } catch (Exception e) {
                     log.error("Failed to add {}", slashCommand, e);

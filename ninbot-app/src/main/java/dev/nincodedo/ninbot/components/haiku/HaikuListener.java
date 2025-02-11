@@ -43,7 +43,7 @@ public class HaikuListener extends StatAwareListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild() || event.getAuthor().isBot()
-                || componentService.isDisabled(componentName, event.getGuild().getId())) {
+                || componentService.isDisabled(componentName, event.getGuild().getId(), event.getAuthor().getId())) {
             return;
         }
         var message = event.getMessage().getContentStripped();
