@@ -5,8 +5,11 @@ import dev.nincodedo.nincord.command.CommandType;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.ModalInteractionCommandMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.interactions.IntegrationType;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Set;
 
 public interface ModalInteraction extends Command<ModalInteractionEvent>,
         Interaction {
@@ -34,6 +37,11 @@ public interface ModalInteraction extends Command<ModalInteractionEvent>,
     @Override
     default boolean isAbleToRegisterOnGuild() {
         return false;
+    }
+
+    @Override
+    default Set<IntegrationType> allowedIntegrations() {
+        return Set.of(IntegrationType.UNKNOWN);
     }
 
     Logger log();

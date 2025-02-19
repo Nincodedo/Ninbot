@@ -5,8 +5,11 @@ import dev.nincodedo.nincord.command.CommandType;
 import dev.nincodedo.nincord.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.IntegrationType;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Set;
 
 public interface ButtonInteraction extends Command<ButtonInteractionEvent>, Interaction {
 
@@ -18,6 +21,11 @@ public interface ButtonInteraction extends Command<ButtonInteractionEvent>, Inte
     @Override
     default boolean isAbleToRegisterOnGuild() {
         return false;
+    }
+
+    @Override
+    default Set<IntegrationType> allowedIntegrations() {
+        return Set.of(IntegrationType.UNKNOWN);
     }
 
     @Override

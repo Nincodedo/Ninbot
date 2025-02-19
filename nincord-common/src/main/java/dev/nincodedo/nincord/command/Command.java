@@ -2,11 +2,13 @@ package dev.nincodedo.nincord.command;
 
 import dev.nincodedo.nincord.message.MessageExecutor;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.IntegrationType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public interface Command<F> {
     Locale defaultLocale = Locale.ENGLISH;
@@ -44,5 +46,9 @@ public interface Command<F> {
 
     default DefaultMemberPermissions getPermissions() {
         return DefaultMemberPermissions.ENABLED;
+    }
+
+    default Set<IntegrationType> allowedIntegrations() {
+        return Set.of(IntegrationType.GUILD_INSTALL);
     }
 }

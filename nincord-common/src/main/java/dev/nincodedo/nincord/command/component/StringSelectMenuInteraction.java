@@ -5,8 +5,11 @@ import dev.nincodedo.nincord.command.CommandType;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.StringSelectMenuInteractionCommandMessageExecutor;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.IntegrationType;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Set;
 
 public interface StringSelectMenuInteraction extends Command<StringSelectInteractionEvent>, Interaction {
     @Override
@@ -17,6 +20,11 @@ public interface StringSelectMenuInteraction extends Command<StringSelectInterac
     @Override
     default boolean isAbleToRegisterOnGuild() {
         return false;
+    }
+
+    @Override
+    default Set<IntegrationType> allowedIntegrations() {
+        return Set.of(IntegrationType.UNKNOWN);
     }
 
     MessageExecutor execute(@NotNull StringSelectInteractionEvent event,

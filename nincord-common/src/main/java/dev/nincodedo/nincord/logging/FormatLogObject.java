@@ -33,6 +33,9 @@ public class FormatLogObject {
         if (guild == null) {
             return "null guild";
         }
+        if (guild.isDetached()) {
+            return NAME_ID_ENTITY_FORMAT.formatted("Detached Guild", guild.getId());
+        }
         return NAME_ID_ENTITY_FORMAT.formatted(guild.getName(), guild.getId());
     }
 

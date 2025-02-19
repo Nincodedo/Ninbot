@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.IntegrationType;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -40,8 +42,8 @@ public class CommandRegistration extends ListenerAdapter {
         }
         try {
             List<CommandData> commandDataList = commands.stream()
-                    .filter(Command::isAbleToRegisterOnGuild)
-                    .map(this::convertToGuildCommandData)
+                    .filter(command -> !command.allowedIntegrations().contains(IntegrationType.UNKNOWN))
+                    .map(this::convertToCommandData)
                     .toList();
             jda.updateCommands()
                     .addCommands(commandDataList)
@@ -58,12 +60,14 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToGuildCommandData(Command<?> command) {
+    private CommandData convertToCommandData(Command<?> command) {
         return switch (command) {
             case SlashCommand slashCommand -> {
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
                                 slashCommand.getDescription())
-                        .setDefaultPermissions(slashCommand.getPermissions());
+                        .setDefaultPermissions(slashCommand.getPermissions())
+                        .setContexts(InteractionContextType.ALL)
+                        .setIntegrationTypes(slashCommand.allowedIntegrations());
                 try {
                     if (!slashCommand.getCommandOptions().isEmpty()) {
                         slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
@@ -78,9 +82,13 @@ public class CommandRegistration extends ListenerAdapter {
                 yield slashCommandData;
             }
             case UserContextCommand userContextCommand -> Commands.user(userContextCommand.getName())
-                    .setDefaultPermissions(userContextCommand.getPermissions());
+                    .setDefaultPermissions(userContextCommand.getPermissions())
+                    .setContexts(InteractionContextType.ALL)
+                    .setIntegrationTypes(userContextCommand.allowedIntegrations());
             case MessageContextCommand messageContextCommand -> Commands.message(messageContextCommand.getName())
-                    .setDefaultPermissions(messageContextCommand.getPermissions());
+                    .setDefaultPermissions(messageContextCommand.getPermissions())
+                    .setContexts(InteractionContextType.ALL)
+                    .setIntegrationTypes(messageContextCommand.allowedIntegrations());
             default -> Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         };
     }
