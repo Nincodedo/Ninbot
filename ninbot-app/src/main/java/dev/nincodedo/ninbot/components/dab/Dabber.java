@@ -58,7 +58,8 @@ public class Dabber {
             messageExecutor.addReaction(getDabResponse().getEmojiList());
         }
 
-        var emoteList = shardManager.getEmojis().stream()
+        var emoteList = shardManager.getEmojis()
+                .stream()
                 .filter(emoji -> emoji.getName().contains("dab"))
                 .sorted(StreamUtils.shuffle())
                 .distinct()
@@ -75,6 +76,13 @@ public class Dabber {
     }
 
     MessageCreateData buildDabMessage(@NotNull Member target) {
+        return new MessageCreateBuilder().addContent("<:ninbotdab:786750382771535902>")
+                .addContent(" ")
+                .addContent(target.getEffectiveName())
+                .build();
+    }
+
+    public MessageCreateData buildDabMessage(User target) {
         return new MessageCreateBuilder().addContent("<:ninbotdab:786750382771535902>")
                 .addContent(" ")
                 .addContent(target.getEffectiveName())

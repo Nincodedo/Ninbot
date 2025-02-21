@@ -33,6 +33,9 @@ public class FormatLogObject {
         if (guild == null) {
             return "null guild";
         }
+        if (guild.isDetached()) {
+            return NAME_ID_ENTITY_FORMAT.formatted("Detached Guild", guild.getId());
+        }
         return NAME_ID_ENTITY_FORMAT.formatted(guild.getName(), guild.getId());
     }
 
@@ -46,6 +49,9 @@ public class FormatLogObject {
         if (guild == null) {
             return "null guild";
         }
+        if (guild.isDetached()) {
+            return "Server %s".formatted(guildName(guild));
+        }
         return "Server %s, Owner %s".formatted(guildName(guild), memberInfo(guild.retrieveOwner().complete()));
     }
 
@@ -56,6 +62,9 @@ public class FormatLogObject {
      * @return String of member name(member id)
      */
     public static String memberInfo(Member member) {
+        if (member.isDetached()) {
+            return NAME_ID_ENTITY_FORMAT.formatted("Detached Member", member.getId());
+        }
         return NAME_ID_ENTITY_FORMAT.formatted(member.getEffectiveName(), member.getId());
     }
 
@@ -68,6 +77,9 @@ public class FormatLogObject {
     public static String channelInfo(Channel channel) {
         if (channel == null) {
             return "null channel";
+        }
+        if (channel.isDetached()) {
+            return NAME_ID_ENTITY_FORMAT.formatted("Detached Channel", channel.getId());
         }
         return NAME_ID_ENTITY_FORMAT.formatted(channel.getName(), channel.getId());
     }
@@ -94,6 +106,9 @@ public class FormatLogObject {
     public static String roleInfo(Role role) {
         if (role == null) {
             return "null role";
+        }
+        if (role.isDetached()) {
+            return NAME_ID_ENTITY_FORMAT.formatted("Detached Role", role.getId());
         }
         return NAME_ID_ENTITY_FORMAT.formatted(role.getName(), role.getId());
     }
