@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface UserRepository extends BaseRepository<NinbotUser> {
 
-    Optional<NinbotUser> getFirstByUserId(String userId);
+    Optional<NinbotUser> getByUserId(String userId);
 }

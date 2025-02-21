@@ -6,6 +6,7 @@ import dev.nincodedo.nincord.config.db.Config;
 import dev.nincodedo.nincord.config.db.ConfigConstants;
 import dev.nincodedo.nincord.config.db.ConfigService;
 import dev.nincodedo.nincord.config.db.component.ComponentService;
+import dev.nincodedo.nincord.config.db.component.ComponentType;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.nincord.message.impersonation.Impersonation;
@@ -44,6 +45,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         this.configService = configService;
         componentName = "dad";
         this.componentService = componentService;
+        this.componentService.registerComponent(componentName, ComponentType.ACTION);
         this.dadbotMessageParser = new DadbotMessageParser();
         this.dadbotImpersonation = Impersonation.of("Dadbot", "https://i.imgur.com/zfKodNp.png");
     }
@@ -51,7 +53,7 @@ public class Dadbot extends StatAwareListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.isFromGuild() && !event.getAuthor().isBot()
-                && !componentService.isDisabled(componentName, event.getGuild().getId())) {
+                && !componentService.isDisabled(componentName, event.getGuild().getId(), event.getAuthor().getId())) {
             resourceBundle = LocaleService.getResourceBundleOrDefault(event.getGuild());
             parseMessage(event).executeActions();
         }

@@ -1,14 +1,14 @@
 package dev.nincodedo.nincord.command;
 
 import dev.nincodedo.nincord.message.MessageExecutor;
-import dev.nincodedo.nincord.release.ReleaseStage;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public interface Command<F> extends ReleaseStage {
+public interface Command<F> {
     Locale defaultLocale = Locale.ENGLISH;
 
     /**
@@ -19,10 +19,6 @@ public interface Command<F> extends ReleaseStage {
     String getName();
 
     CommandType getType();
-
-    default boolean isCommandEnabledByDefault() {
-        return true;
-    }
 
     MessageExecutor execute(@NotNull F event);
 
@@ -44,5 +40,9 @@ public interface Command<F> extends ReleaseStage {
 
     default String resource(String resourceBundleKey) {
         return resourceBundle().getString(resourceBundleKey);
+    }
+
+    default DefaultMemberPermissions getPermissions() {
+        return DefaultMemberPermissions.ENABLED;
     }
 }

@@ -39,7 +39,9 @@ public class NinbotCommandLineRunner implements CommandLineRunner {
             jda.awaitReady();
             log.info("Shard ID {}: Connected to {} server(s)", jda.getShardInfo().getShardId(), jda.getGuilds().size());
             statManager.upsertCount("Connected Servers", "server", null, jda.getGuilds().size());
-            jda.getGuilds().forEach(guild -> log.info(FormatLogObject.guildInfo(guild)));
+            jda.getGuilds()
+                    .forEach(guild -> log.info("Shard ID {} connected to {}", jda.getShardInfo()
+                            .getShardId(), FormatLogObject.guildInfo(guild)));
         } catch (InterruptedException e) {
             log.error("Failed to wait for shard to start", e);
         }

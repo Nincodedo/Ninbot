@@ -47,7 +47,7 @@ public class GoodNumbersListener extends StatAwareListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || !event.isFromGuild()
-                || componentService.isDisabled(componentName, event.getGuild().getId())) {
+                || componentService.isDisabled(componentName, event.getGuild().getId(), event.getAuthor().getId())) {
             return;
         }
         List<Integer> numbers = collectNumbers(event);

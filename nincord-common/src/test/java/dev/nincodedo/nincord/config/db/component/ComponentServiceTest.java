@@ -23,7 +23,7 @@ class ComponentServiceTest {
     ComponentRepository componentRepository;
 
     @Mock
-    DisabledComponentsRepository componentSettingRepository;
+    ComponentConfigurationRepository componentConfigurationRepository;
 
     @InjectMocks
     ComponentService componentService;

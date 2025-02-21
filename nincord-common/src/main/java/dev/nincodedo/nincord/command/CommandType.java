@@ -3,7 +3,7 @@ package dev.nincodedo.nincord.command;
 import org.apache.commons.lang.WordUtils;
 
 public enum CommandType {
-    SLASH, MESSAGE, USER, AUTO_COMPLETE, BUTTON, MODAL;
+    SLASH, MESSAGE, USER, AUTO_COMPLETE, BUTTON, MODAL, STRING_SELECT_MENU;
 
 
     @Override

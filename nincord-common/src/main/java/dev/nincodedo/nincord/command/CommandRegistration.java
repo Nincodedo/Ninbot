@@ -3,11 +3,11 @@ package dev.nincodedo.nincord.command;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.command.slash.SlashCommand;
 import dev.nincodedo.nincord.command.user.UserContextCommand;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -15,13 +15,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CommandRegistration extends ListenerAdapter {
 
-    private List<Command> commands;
-
-    public CommandRegistration(List<Command> commands) {
-        this.commands = commands;
-    }
+    private final List<Command<?>> commands;
 
     @Override
     public void onReady(ReadyEvent readyEvent) {
@@ -33,7 +30,6 @@ public class CommandRegistration extends ListenerAdapter {
         var shards = shardManager.getShards();
         log.info("Registering commands on {} shards(s)", shards.size());
         shards.forEach(this::registerCommands);
-        shardManager.getGuilds().forEach(guild -> guild.updateCommands().queue());
         log.info("Finished registering commands");
     }
 
@@ -45,7 +41,7 @@ public class CommandRegistration extends ListenerAdapter {
         try {
             List<CommandData> commandDataList = commands.stream()
                     .filter(Command::isAbleToRegisterOnGuild)
-                    .map(this::convertToCommandData)
+                    .map(this::convertToGuildCommandData)
                     .toList();
             jda.updateCommands()
                     .addCommands(commandDataList)
@@ -62,15 +58,19 @@ public class CommandRegistration extends ListenerAdapter {
      * @param command Ninbot command to convert
      * @return JDA CommandData
      */
-    private CommandData convertToCommandData(Command<?> command) {
+    private CommandData convertToGuildCommandData(Command<?> command) {
         return switch (command) {
             case SlashCommand slashCommand -> {
                 SlashCommandData slashCommandData = Commands.slash(slashCommand.getName(),
                                 slashCommand.getDescription())
-                        .setDefaultPermissions(getDefaultPermissions(slashCommand));
+                        .setDefaultPermissions(slashCommand.getPermissions());
                 try {
-                    slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
-                    slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
+                    if (!slashCommand.getCommandOptions().isEmpty()) {
+                        slashCommand.getCommandOptions().forEach(slashCommandData::addOptions);
+                    }
+                    if (!slashCommand.getSubcommandDatas().isEmpty()) {
+                        slashCommand.getSubcommandDatas().forEach(slashCommandData::addSubcommands);
+                    }
                     yield slashCommandData;
                 } catch (Exception e) {
                     log.error("Failed to add {}", slashCommand, e);
@@ -78,15 +78,10 @@ public class CommandRegistration extends ListenerAdapter {
                 yield slashCommandData;
             }
             case UserContextCommand userContextCommand -> Commands.user(userContextCommand.getName())
-                    .setDefaultPermissions(getDefaultPermissions(userContextCommand));
+                    .setDefaultPermissions(userContextCommand.getPermissions());
             case MessageContextCommand messageContextCommand -> Commands.message(messageContextCommand.getName())
-                    .setDefaultPermissions(getDefaultPermissions(messageContextCommand));
+                    .setDefaultPermissions(messageContextCommand.getPermissions());
             default -> Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.UNKNOWN, "null");
         };
-    }
-
-    private DefaultMemberPermissions getDefaultPermissions(Command<?> command) {
-        return command.isCommandEnabledByDefault() ? DefaultMemberPermissions.ENABLED :
-                DefaultMemberPermissions.DISABLED;
     }
 }

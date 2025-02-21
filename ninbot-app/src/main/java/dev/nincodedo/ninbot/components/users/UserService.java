@@ -1,49 +1,31 @@
 package dev.nincodedo.ninbot.components.users;
 
-import dev.nincodedo.nincord.Scheduler;
+import dev.nincodedo.nincord.config.db.component.ComponentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class UserService implements Scheduler<NinbotUser, UserRepository> {
-    private UserRepository userRepository;
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+    private final ComponentService componentService;
 
-    UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Transactional
-    public void updateBirthday(String userId, String guildId, String birthday) {
-        var optionalUser = userRepository.getFirstByUserId(userId);
-        NinbotUser ninbotUser;
+    public NinbotUser getUserById(String userId) {
+        NinbotUser user;
+        var optionalUser = userRepository.getByUserId(userId);
         if (optionalUser.isPresent()) {
-            ninbotUser = optionalUser.get();
+            user = optionalUser.get();
         } else {
-            ninbotUser = new NinbotUser();
-            ninbotUser.setUserId(userId);
-            ninbotUser.setServerId(guildId);
+            user = new NinbotUser(userId);
+            userRepository.saveAndFlush(user);
         }
-        ninbotUser.setBirthday(birthday);
-        userRepository.save(ninbotUser);
+        user.setUserSettings(componentService.findUserConfigurations(userId));
+        return user;
     }
 
-    public void toggleBirthdayAnnouncement(String userId) {
-        userRepository.getFirstByUserId(userId)
-                .ifPresent(user -> {
-                    user.setAnnounceBirthday(!user.getAnnounceBirthday());
-                    userRepository.save(user);
-                });
-    }
-
-    @Override
-    public List<NinbotUser> findAllOpenItems() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public UserRepository getRepository() {
-        return userRepository;
+    public void setDisableComponentsByUser(String userId, List<String> disabledComponentNames) {
+        componentService.setDisabledComponentsByUser(userId, disabledComponentNames);
     }
 }
