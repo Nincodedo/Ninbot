@@ -48,7 +48,8 @@ public class SubscribeCommand implements SlashCommand {
                 event.getInteraction().getHook().editOriginal(Emojis.CROSS_X).queue();
             }
         } else {
-            messageExecutor.addEphemeralMessage(resourceBundle().getString(""));
+            messageExecutor.addEphemeralMessage(String.format(resourceBundle().getString("command.subscribe"
+                    + ".norolefound"), publicRole.getName()));
         }
         return messageExecutor;
     }
