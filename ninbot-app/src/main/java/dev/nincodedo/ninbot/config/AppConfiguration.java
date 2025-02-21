@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +32,6 @@ public class AppConfiguration {
         this.supporterConfig = supporterConfig;
     }
 
-    @Autowired
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         return DefaultShardManagerBuilder.create(nincordProperties.ninbotToken(),

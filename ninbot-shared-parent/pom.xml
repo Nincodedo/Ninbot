@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.1</version>
         <relativePath/>
     </parent>
     <groupId>dev.nincodedo</groupId>
@@ -41,9 +41,10 @@
         <pitest-maven.version>1.16.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <snakeyaml.version>2.3</snakeyaml.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
-        <spring-cloud-starter-openfeign.version>4.1.2</spring-cloud-starter-openfeign.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
         <testcontainers.version>1.20.3</testcontainers.version>
@@ -52,6 +53,13 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>com.bernardomg.tabletop</groupId>
                 <artifactId>dice</artifactId>
@@ -174,17 +182,6 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc-openapi-ui.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>${spring-cloud-starter-openfeign.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>io.github.openfeign</groupId>
-                        <artifactId>feign-core</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
