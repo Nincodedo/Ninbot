@@ -31,11 +31,9 @@ public class Impersonator {
     }
 
     private void setupWebhook() {
-        var webhookOptional = webhookHelper.getWebhookByName(guild, messageChannel, webhookName);
-        if (webhookOptional.isPresent()) {
-            webhookHelper.setWebhookIcon(impersonation.iconUrl())
-                    .setName(impersonation.name())
-                    .complete();
-        }
+        webhookHelper.getWebhookByName(guild, messageChannel, webhookName)
+                .ifPresent(_ -> webhookHelper.setWebhookIcon(impersonation.iconUrl())
+                        .setName(impersonation.name())
+                        .complete());
     }
 }

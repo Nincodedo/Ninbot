@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.WebhookClient;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.managers.WebhookManager;
@@ -53,7 +54,9 @@ class WebhookHelper {
     }
 
     public void sendMessage(MessageCreateData message) {
-        var client = net.dv8tion.jda.api.entities.WebhookClient.createClient(webhook.getJDA(), webhook.getUrl());
-        client.sendMessage(message).queue();
+        if (webhook != null) {
+            var client = WebhookClient.createClient(webhook.getJDA(), webhook.getUrl());
+            client.sendMessage(message).queue();
+        }
     }
 }
