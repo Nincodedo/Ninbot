@@ -23,7 +23,6 @@ public class ActivityUpdater {
         this.shardManager = shardManager;
         this.activityStatusList = new ArrayList<>();
         this.activityStatusRepository = activityStatusRepository;
-        updateNinbotActivity();
     }
 
     @Scheduled(fixedDelay = 24, timeUnit = TimeUnit.HOURS)
