@@ -11,20 +11,26 @@ import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.MessageReceivedEventMessageExecutor;
 import dev.nincodedo.nincord.message.impersonation.Impersonation;
 import dev.nincodedo.nincord.stats.StatManager;
+import lombok.Getter;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.text.WordUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @Component
 public class Dadbot extends StatAwareListenerAdapter {
@@ -37,6 +43,8 @@ public class Dadbot extends StatAwareListenerAdapter {
     private DadbotMessageParser dadbotMessageParser;
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("lang", Locale.ENGLISH);
     private Impersonation dadbotImpersonation;
+    @Getter
+    private HashMap<String, List<String>> originalNicknames;
 
     public Dadbot(StatManager statManager, @Qualifier("statCounterThreadPool") ExecutorService executorService,
             ConfigService configService, ComponentService componentService) {
@@ -48,6 +56,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         this.componentService.registerComponent(componentName, ComponentType.ACTION);
         this.dadbotMessageParser = new DadbotMessageParser();
         this.dadbotImpersonation = Impersonation.of("Dadbot", "https://i.imgur.com/zfKodNp.png");
+        this.originalNicknames = new HashMap<>();
     }
 
     @Override
@@ -91,7 +100,7 @@ public class Dadbot extends StatAwareListenerAdapter {
         countOneStat(componentName, event.getGuild().getId());
     }
 
-    private void dadJoke(String dadName, Member member) {
+    protected void dadJoke(String dadName, Member member) {
         if (dadName.length() > DISCORD_NICKNAME_LENGTH_LIMIT || member == null) {
             return;
         }
@@ -100,12 +109,25 @@ public class Dadbot extends StatAwareListenerAdapter {
                 || !self.canInteract(member)) {
             return;
         }
-        var oldName = member.getNickname();
+        var memberLocation = String.format("%s-%s", member.getGuild().getId(), member.getId());
+        originalNicknames.computeIfAbsent(memberLocation, _ -> new ArrayList<>());
+        originalNicknames.get(memberLocation).add(member.getNickname());
         member.modifyNickname(WordUtils.capitalizeFully(dadName))
                 .reason("Dad joke")
-                .queue(success -> member.modifyNickname(oldName)
-                        .reason("Dad joke done")
-                        .queueAfter(2, TimeUnit.MINUTES));
+                .queue(restoreNickname(member, memberLocation));
+    }
+
+    private @NotNull Consumer<Void> restoreNickname(Member member, String memberLocation) {
+        return _ -> {
+            var originalNicknameList = originalNicknames.get(memberLocation);
+            var originalNickname = originalNicknameList.removeLast();
+            if (originalNicknameList.isEmpty()) {
+                originalNicknames.remove(memberLocation);
+            }
+            member.modifyNickname(originalNickname)
+                    .reason("Dad joke done")
+                    .queueAfter(2, TimeUnit.MINUTES);
+        };
     }
 
     private boolean checkChance(String guildId) {
