@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Slf4j
@@ -26,9 +27,9 @@ public class HugeDabber extends Dabber {
             var channel = messageExecutor.getChannel();
             var emote = emoteList.get(getRandom().nextInt(emoteList.size()));
             var imageFileType = emote.getImageUrl().substring(emote.getImageUrl().lastIndexOf('.'));
-            InputStream file = new URL(emote.getImageUrl()).openStream();
+            InputStream file = new URI(emote.getImageUrl()).toURL().openStream();
             channel.sendFiles(FileUpload.fromData(file, emote.getName() + imageFileType)).queue();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             log.error("Failed to upload emote image", e);
         }
     }
