@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
-        <JDA.version>5.4.0</JDA.version>
+        <JDA.version>5.5.1</JDA.version>
         <annotations.version>26.0.2</annotations.version>
         <archunit.version>1.4.0</archunit.version>
         <assertj-core.version>3.27.3</assertj-core.version>
