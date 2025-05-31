@@ -20,4 +20,5 @@ public class ConfigConstants {
     public static final String HAIKU_CHANCE = "haikuChance";
     public static final String STREAMING_GAME_TITLE_BANNER_DENY_LIST = "streamingGameTitleBannerDenyList";
     public static final String GOOD_NUMBERS = "goodNumbers";
+    public static final String MAGIC_EIGHT_BALL_MAX_SHAKES = "magicEightBallMaxShakes";
 }
