@@ -33,8 +33,7 @@ public class Magic8BallReshakeButtonInteraction implements ButtonInteraction {
         var serverId = event.getGuild() != null ? event.getGuild().getId() : "0";
         var maxShakesConfigOptional = configService.getGlobalConfigByName(ConfigConstants.MAGIC_EIGHT_BALL_MAX_SHAKES
                 , serverId);
-        int maxShakes;
-        maxShakes = maxShakesConfigOptional.map(config -> Integer.parseInt(config.getValue())).orElse(8);
+        int maxShakes = maxShakesConfigOptional.map(config -> Integer.parseInt(config.getValue())).orElse(8);
         var editMessage = magic8BallMessageBuilder.reshake(message, maxShakes);
         event.getHook().editOriginal(editMessage.build()).queue();
         return messageExecutor;

@@ -30,7 +30,7 @@ public class Magic8BallCommand implements SlashCommand {
                 .userName(event.getUser().getEffectiveName())
                 .build();
         var response = new MessageCreateBuilder().addEmbeds(messageEmbed)
-                .addComponents(ActionRow.of(Button.primary("eightball-reshake-%s".formatted(event.getUser()
+                .addComponents(ActionRow.of(Button.primary("%s-reshake-%s".formatted(getName(), event.getUser()
                         .getId()), "Shake Again")))
                 .build();
         messageExecutor.addMessageResponse(response);
