@@ -4,6 +4,7 @@ import dev.nincodedo.ninbot.components.reaction.ReactionUtils;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.message.MessageContextInteractionEventMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.entities.Message;
@@ -12,7 +13,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +57,7 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                                     .getId()};\{alreadyExistingLetterEmojis}",
                             resourceBundle(event.getUserLocale()).getString(
                                     "command.emojitizer.messagecontext.modal.title").formatted(maxCount, character))
-                    .addActionRow(input)
+                    .addComponents(ActionRow.of(input))
                     .build();
             messageExecutor.addModal(modal);
         }

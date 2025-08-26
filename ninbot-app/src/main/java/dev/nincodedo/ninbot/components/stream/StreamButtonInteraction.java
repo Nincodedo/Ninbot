@@ -6,10 +6,11 @@ import dev.nincodedo.nincord.command.component.ComponentData;
 import dev.nincodedo.nincord.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -55,12 +56,12 @@ public class StreamButtonInteraction implements ButtonInteraction {
             streamingMemberRepository.save(streamingMember);
         }
         return Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
-                .addActionRow(TextInput.create("stream-twitchname", "What's your Twitch username?",
+                .addComponents(ActionRow.of(TextInput.create("stream-twitchname", "What's your Twitch username?",
                                 TextInputStyle.SHORT)
                         .setMinLength(4)
                         .setMaxLength(25)
                         .setValue(streamingMember.getTwitchUsername())
-                        .build())
+                        .build()))
                 .build();
     }
 

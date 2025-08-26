@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -13,7 +14,7 @@
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
-        <JDA.version>6.0.0-rc.2</JDA.version>
+        <JDA.version>6.0.0-rc.3</JDA.version>
         <annotations.version>26.0.2</annotations.version>
         <archunit.version>1.4.0</archunit.version>
         <assertj-core.version>3.27.3</assertj-core.version>
@@ -41,7 +42,8 @@
         <pitest-maven.version>1.16.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <snakeyaml.version>2.4</snakeyaml.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
