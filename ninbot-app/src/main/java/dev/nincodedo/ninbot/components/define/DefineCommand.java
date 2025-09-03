@@ -5,11 +5,12 @@ import dev.nincodedo.nincord.command.slash.SlashCommand;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import dev.nincodedo.nincord.message.SlashCommandEventMessageExecutor;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public class DefineCommand implements SlashCommand {
                 .addEmbeds(new EmbedBuilder()
                         .setTitle("Definition of " + wordDefinition.word())
                         .addField(wordDefinition.word(), wordDefinition.definition().split("\n")[0], false).build())
-                .addActionRow(Button.link(wordDefinition.permalink(), "Find Out More"))
+                .addComponents(ActionRow.of(Button.link(wordDefinition.permalink(), "Find Out More")))
                 .build();
     }
 

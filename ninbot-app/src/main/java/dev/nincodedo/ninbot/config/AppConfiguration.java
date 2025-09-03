@@ -35,7 +35,7 @@ public class AppConfiguration {
     @Bean
     public ShardManager shardManager(List<ListenerAdapter> listenerAdapters) {
         return DefaultShardManagerBuilder.create(nincordProperties.ninbotToken(),
-                        EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+                        EnumSet.of(GatewayIntent.GUILD_EXPRESSIONS,
                                 GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES,
                                 GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
                                 GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT))
