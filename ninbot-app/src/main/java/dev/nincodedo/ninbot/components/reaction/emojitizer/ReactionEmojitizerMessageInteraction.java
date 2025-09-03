@@ -4,7 +4,7 @@ import dev.nincodedo.ninbot.components.reaction.ReactionUtils;
 import dev.nincodedo.nincord.command.message.MessageContextCommand;
 import dev.nincodedo.nincord.message.MessageContextInteractionEventMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
-import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.entities.Message;
@@ -36,8 +36,7 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     "command.emojitizer.messagecontext.maxreactions"));
         } else {
             var maxCount = Message.MAX_REACTIONS - currentEmojiCount;
-            TextInput input = TextInput.create("emojitizer-text", resourceBundle(event.getUserLocale()).getString(
-                            "command.emojitizer.messagecontext.textinput"), TextInputStyle.SHORT)
+            TextInput input = TextInput.create("emojitizer-text", TextInputStyle.SHORT)
                     .setMinLength(1)
                     .setMaxLength(maxCount)
                     .build();
@@ -57,7 +56,8 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                                     .getId()};\{alreadyExistingLetterEmojis}",
                             resourceBundle(event.getUserLocale()).getString(
                                     "command.emojitizer.messagecontext.modal.title").formatted(maxCount, character))
-                    .addComponents(ActionRow.of(input))
+                    .addComponents(Label.of(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
+                            + ".messagecontext.textinput"), input))
                     .build();
             messageExecutor.addModal(modal);
         }

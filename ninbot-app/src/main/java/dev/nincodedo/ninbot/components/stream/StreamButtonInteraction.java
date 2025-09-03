@@ -6,7 +6,7 @@ import dev.nincodedo.nincord.command.component.ComponentData;
 import dev.nincodedo.nincord.message.ButtonInteractionCommandMessageExecutor;
 import dev.nincodedo.nincord.message.MessageExecutor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -56,7 +56,7 @@ public class StreamButtonInteraction implements ButtonInteraction {
             streamingMemberRepository.save(streamingMember);
         }
         return Modal.create("stream-twitchname-" + userId, "Update Twitch Username")
-                .addComponents(ActionRow.of(TextInput.create("stream-twitchname", "What's your Twitch username?",
+                .addComponents(Label.of("What's your Twitch username?", TextInput.create("stream-twitchname",
                                 TextInputStyle.SHORT)
                         .setMinLength(4)
                         .setMaxLength(25)
