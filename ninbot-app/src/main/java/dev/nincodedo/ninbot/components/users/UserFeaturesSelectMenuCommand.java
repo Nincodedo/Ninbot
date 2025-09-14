@@ -7,8 +7,8 @@ import dev.nincodedo.nincord.message.StringSelectMenuInteractionCommandMessageEx
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.components.selections.SelectOption;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
