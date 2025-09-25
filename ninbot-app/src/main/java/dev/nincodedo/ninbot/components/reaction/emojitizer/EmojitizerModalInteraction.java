@@ -32,7 +32,7 @@ public class EmojitizerModalInteraction implements ModalInteraction {
         if (textInput == null) {
             return messageExecutor;
         }
-        var emojiText = textInput.getAsString().replace(" ", "");
+        var emojiText = textInput.getAsString();
         String[] existingEmojiLetters = new String[0];
         if (componentData.hasExtraData()) {
             existingEmojiLetters = componentData.extraData().get(1).split(",");
