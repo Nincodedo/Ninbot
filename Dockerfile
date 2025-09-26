@@ -7,7 +7,7 @@ RUN mvn -B package -P git-commit
 RUN cp ninbot-app/target/ninbot-*.jar ninbot.jar
 RUN java -Djarmode=tools -jar ninbot.jar extract --layers --launcher
 
-FROM eclipse-temurin:21-jre-noble
+FROM eclipse-temurin:25-jre-noble
 
 LABEL maintainer="Nincodedo"
 LABEL source="https://github.com/Nincodedo/Ninbot"
