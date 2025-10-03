@@ -57,8 +57,8 @@ public class HugemojiCommand implements SlashCommand {
             var emojiResponse = emojisFeign.getEmoji(emojiCode);
             if (emojiResponse.status() == 200) {
                 try {
-                    event.replyFiles(FileUpload.fromData(emojiResponse.body().asInputStream(), STR."\{emojiCode}.png"))
-                            .queue();
+                    event.replyFiles(FileUpload.fromData(emojiResponse.body()
+                            .asInputStream(), String.format("%s.png", emojiCode))).queue();
                 } catch (IOException e) {
                     log.error("Failed to get emoji image with emoji code {}. Falling back to just posting the emoji."
                             , emojiCode, e);
