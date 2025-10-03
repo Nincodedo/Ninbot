@@ -14,43 +14,42 @@
     <packaging>pom</packaging>
     <name>Ninbot Shared Parent Pom</name>
     <properties>
-        <JDA.version>5.5.1</JDA.version>
-        <annotations.version>26.0.2</annotations.version>
-        <archunit.version>1.4.0</archunit.version>
-        <assertj-core.version>3.27.3</assertj-core.version>
-        <commons-io.version>2.19.0</commons-io.version>
+        <JDA.version>5.6.1</JDA.version>
+        <annotations.version>26.0.2-1</annotations.version>
+        <archunit.version>1.4.1</archunit.version>
+        <assertj-core.version>3.27.6</assertj-core.version>
+        <commons-io.version>2.20.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.14.0</commons-text.version>
-        <dice.version>2.2.5</dice.version>
+        <dice.version>2.2.6</dice.version>
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
-        <instancio-junit.version>5.4.1</instancio-junit.version>
+        <instancio-junit.version>5.5.1</instancio-junit.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <java.version>25</java.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <log4j.version>2.24.3</log4j.version>
+        <log4j.version>2.25.2</log4j.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
-        <lombok.version>1.18.38</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <opentelemetry-instrumentation-annotations.version>2.15.0</opentelemetry-instrumentation-annotations.version>
-        <pitest-junit5-plugin.version>1.2.2</pitest-junit5-plugin.version>
+        <opentelemetry-instrumentation-annotations.version>2.20.1</opentelemetry-instrumentation-annotations.version>
+        <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
         <pitest-maven.version>1.16.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
-        <snakeyaml.version>2.4</snakeyaml.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
+        <snakeyaml.version>2.5</snakeyaml.version>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <syllable-counter.version>4.1.0</syllable-counter.version>
-        <testcontainers.version>1.21.1</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
         <twitch4j.version>1.25.0</twitch4j.version>
-        <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
+        <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
