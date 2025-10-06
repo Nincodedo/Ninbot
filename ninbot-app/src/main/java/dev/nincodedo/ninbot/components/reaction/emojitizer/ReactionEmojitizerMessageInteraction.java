@@ -50,10 +50,10 @@ public class ReactionEmojitizerMessageInteraction implements MessageContextComma
                     .filter(s -> ReactionUtils.getLetterMap().containsValue(s))
                     .collect(Collectors.joining(","));
             var amount = maxCount == 1 ? "single" : "plural";
-            var characterBundle = STR."command.emojitizer.messagecontext.modal.character.\{amount}";
+            var characterBundle = String.format("command.emojitizer.messagecontext.modal.character.%s", amount);
             var character = resourceBundle(event.getUserLocale()).getString(characterBundle);
-            Modal modal = Modal.create(STR."emojitizer-modal-\{event.getTarget()
-                                    .getId()};\{alreadyExistingLetterEmojis}",
+            Modal modal = Modal.create(String.format("emojitizer-modal-%s;%s", event.getTarget()
+                            .getId(), alreadyExistingLetterEmojis),
                             resourceBundle(event.getUserLocale()).getString(
                                     "command.emojitizer.messagecontext.modal.title").formatted(maxCount, character))
                     .addComponents(Label.of(resourceBundle(event.getUserLocale()).getString("command.emojitizer"
