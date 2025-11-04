@@ -24,7 +24,7 @@
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
         <instancio-junit.version>5.5.1</instancio-junit.version>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <java.version>25</java.version>
         <jsr305.version>3.0.2</jsr305.version>
         <log4j.version>2.25.2</log4j.version>
@@ -36,9 +36,9 @@
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <opentelemetry-instrumentation-annotations.version>2.20.1</opentelemetry-instrumentation-annotations.version>
+        <opentelemetry-instrumentation-annotations.version>2.21.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
-        <pitest-maven.version>1.16.1</pitest-maven.version>
+        <pitest-maven.version>1.21.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <snakeyaml.version>2.5</snakeyaml.version>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
@@ -208,36 +208,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <repositories>
-        <repository>
-            <id>dv8tion</id>
-            <name>m2-dv8tion</name>
-            <url>https://m2.dv8tion.net/releases</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <name>sonatype-snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <pluginManagement>
             <plugins>
