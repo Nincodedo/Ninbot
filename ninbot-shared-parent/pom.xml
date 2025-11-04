@@ -17,7 +17,7 @@
         <annotations.version>26.0.2-1</annotations.version>
         <archunit.version>1.4.1</archunit.version>
         <assertj-core.version>3.27.6</assertj-core.version>
-        <commons-io.version>2.20.0</commons-io.version>
+        <commons-io.version>2.21.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.14.0</commons-text.version>
         <dice.version>2.2.6</dice.version>
@@ -32,7 +32,7 @@
         <lombok.version>1.18.42</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
-        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
