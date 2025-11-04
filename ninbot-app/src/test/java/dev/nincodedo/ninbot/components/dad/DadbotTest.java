@@ -5,6 +5,7 @@ import dev.nincodedo.nincord.config.db.component.ComponentService;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.SelfMember;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ class DadbotTest {
     void oneDadJoke() {
         Member member = Mockito.mock(Member.class);
         Guild guild = Mockito.mock(Guild.class);
-        Member selfMember = Mockito.mock(Member.class);
+        var selfMember = Mockito.mock(SelfMember.class);
         Void voidmock = Mockito.mock(Void.class);
         AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
         String dadJokeName = "tired";
@@ -76,7 +77,7 @@ class DadbotTest {
         Member member = Mockito.mock(Member.class);
         Member secondJoke = Mockito.mock(Member.class);
         Guild guild = Mockito.mock(Guild.class);
-        Member selfMember = Mockito.mock(Member.class);
+        var selfMember = Mockito.mock(SelfMember.class);
         Void voidmock = Mockito.mock(Void.class);
         AuditableRestAction auditableRestAction = Mockito.mock(AuditableRestAction.class);
 
@@ -111,7 +112,7 @@ class DadbotTest {
         verify(auditableRestAction, times(2)).queue(lambdaCaptor.capture());
         verify(member).modifyNickname(anyString());
         verify(secondJoke).modifyNickname(anyString());
-        
+
         var voidConsumers = lambdaCaptor.getAllValues();
 
         voidConsumers.getFirst().accept(voidmock);

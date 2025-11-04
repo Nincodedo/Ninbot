@@ -6,6 +6,7 @@ import dev.nincodedo.nincord.stats.StatManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.SelfMember;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
@@ -57,7 +58,7 @@ class TempVoiceChannelManagerTest {
     void onGuildVoiceJoin() {
         var guild = Mockito.mock(Guild.class);
         var joinEvent = Mockito.mock(GuildVoiceUpdateEvent.class);
-        var selfMember = Mockito.mock(Member.class);
+        var selfMember = Mockito.mock(SelfMember.class);
         var member = Mockito.mock(Member.class);
         var voiceChannelJoined = Mockito.mock(AudioChannelUnion.class);
         var restAction = Mockito.mock(ChannelAction.class);
