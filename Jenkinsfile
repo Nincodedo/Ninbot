@@ -17,7 +17,7 @@ pipeline {
             }
             always {
                 junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: '**/target/surefire-reports/TEST-*.xml'
-                recordCoverage ignoreParsingErrors: true, skipPublishingChecks: true, tools: [[parser: 'JACOCO', pattern: 'ninbot-app/**/jacoco.xml,nincord-common/**/jacoco.xml', [parser: 'PIT']]
+                recordCoverage ignoreParsingErrors: true, skipPublishingChecks: true, tools: [[parser: 'JACOCO', pattern: 'ninbot-app/**/jacoco.xml,nincord-common/**/jacoco.xml'], [parser: 'PIT']]
             }
         }
       }
