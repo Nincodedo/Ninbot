@@ -9,11 +9,10 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,24 +26,8 @@ class HaikuAnalyzeCommandTest {
 
     HaikuAnalyzeCommand haikuAnalyzeCommand = new HaikuAnalyzeCommand(haikuMessageParser);
 
-    static List<String> nonhaikuables() {
-        return List.of("too short",
-                "Because Amazon continues to be a curse on my work life.",
-                "that is a diaminopropyltetramethylenediamine", "welcome welcome welcome place place place place "
-                        + "place place place place place place place", "place place place place place welcome welcome"
-                        + " welcome welcome place place place place", "place place place place place place place "
-                        + "place place place place place welcome welcome", "", "wow numbers like this 51261");
-    }
-
-    static List<String> haikuables() {
-        return List.of("the the the the the the the the the the the the the the the the the", "the the the the the "
-                        + "the the the the the the the the the the the 9",
-                "Because Amazon continues to be a curse on my whole work life.", "Thank you Nintendo for Nintendo"
-                        + " 64 it so a haiku");
-    }
-
     @ParameterizedTest
-    @MethodSource("nonhaikuables")
+    @ArgumentsSource(NonhaikuableArgumentsProvider.class)
     void nonHaikuTest(String words) {
         var event = Mockito.mock(MessageContextInteractionEvent.class);
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
@@ -74,7 +57,7 @@ class HaikuAnalyzeCommandTest {
     }
 
     @ParameterizedTest
-    @MethodSource("haikuables")
+    @ArgumentsSource(HaikuableArgumentsProvider.class)
     void haikuTest(String words) {
         var event = Mockito.mock(MessageContextInteractionEvent.class);
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
