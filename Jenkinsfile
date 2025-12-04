@@ -4,7 +4,7 @@ pipeline {
     stages {
       stage('Maven Build') {
         steps {
-            sh "mvn clean verify -P git-commit"
+            sh "mvn clean verify org.pitest:pitest-maven:mutationCoverage -P git-commit"
         }
         agent any
         tools {
@@ -17,6 +17,7 @@ pipeline {
             }
             always {
                 junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: '**/target/surefire-reports/TEST-*.xml'
+                recordCoverage ignoreParsingErrors: true, skipPublishingChecks: true, tools: [[parser: 'JACOCO', pattern: 'ninbot-test-coverage/**/jacoco.xml'], [parser: 'PIT']]
             }
         }
       }
