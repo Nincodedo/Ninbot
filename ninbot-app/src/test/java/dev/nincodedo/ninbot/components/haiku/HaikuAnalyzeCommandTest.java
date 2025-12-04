@@ -1,21 +1,24 @@
 package dev.nincodedo.ninbot.components.haiku;
 
 import dev.nincodedo.nincord.message.MessageContextInteractionEventMessageExecutor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class HaikuAnalyzeCommandTest {
 
@@ -23,18 +26,8 @@ class HaikuAnalyzeCommandTest {
 
     HaikuAnalyzeCommand haikuAnalyzeCommand = new HaikuAnalyzeCommand(haikuMessageParser);
 
-    static List<String> nonhaikuables() {
-        return List.of("too short", "the the the the the the the the the the the the the the the the 9",
-                "Because Amazon continues to be a curse on my work life.");
-    }
-
-    static List<String> haikuables() {
-        return List.of("the the the the the the the the the the the the the the the the the",
-                "Because Amazon continues to be a curse on my whole work life.");
-    }
-
     @ParameterizedTest
-    @MethodSource("nonhaikuables")
+    @ArgumentsSource(NonhaikuableArgumentsProvider.class)
     void nonHaikuTest(String words) {
         var event = Mockito.mock(MessageContextInteractionEvent.class);
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
@@ -53,13 +46,18 @@ class HaikuAnalyzeCommandTest {
 
         assertThat(result.getEphemeralMessageResponses()).isNotEmpty();
         var embeds = result.getEphemeralMessageResponses().getFirst().getEmbeds();
+        log.debug("Results: {}", embeds.getFirst()
+                .getFields()
+                .stream()
+                .map(MessageEmbed.Field::getValue)
+                .collect(Collectors.joining()));
         assertThat(embeds).isNotEmpty();
         assertThat(embeds.getFirst().getFields()).isNotEmpty();
         assertThat(embeds.getFirst().getFields().getLast().getValue()).contains("Not");
     }
 
     @ParameterizedTest
-    @MethodSource("haikuables")
+    @ArgumentsSource(HaikuableArgumentsProvider.class)
     void haikuTest(String words) {
         var event = Mockito.mock(MessageContextInteractionEvent.class);
         var messageExecutor = new MessageContextInteractionEventMessageExecutor(event);
@@ -78,8 +76,13 @@ class HaikuAnalyzeCommandTest {
 
         assertThat(result.getEphemeralMessageResponses()).isNotEmpty();
         var embeds = result.getEphemeralMessageResponses().getFirst().getEmbeds();
+        log.debug("Results: {}", embeds.getFirst()
+                .getFields()
+                .stream()
+                .map(MessageEmbed.Field::getValue)
+                .collect(Collectors.joining()));
         assertThat(embeds).isNotEmpty();
         assertThat(embeds.getFirst().getFields()).isNotEmpty();
-        assertThat(embeds.getFirst().getFields().getLast().getValue()).contains("Haikuable");
+        assertThat(embeds.getFirst().getFields().getLast().getValue()).doesNotContain("Not");
     }
 }

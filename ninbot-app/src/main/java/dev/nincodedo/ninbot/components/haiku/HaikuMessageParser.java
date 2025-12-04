@@ -1,5 +1,7 @@
 package dev.nincodedo.ninbot.components.haiku;
 
+import com.ibm.icu.text.RuleBasedNumberFormat;
+import com.ibm.icu.util.ULocale;
 import eu.crydee.syllablecounter.SyllableCounter;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +14,11 @@ import java.util.regex.Pattern;
 public class HaikuMessageParser {
 
     private SyllableCounter syllableCounter;
+    private RuleBasedNumberFormat numberFormater;
 
     public HaikuMessageParser() {
         this.syllableCounter = new SyllableCounter();
+        this.numberFormater = new RuleBasedNumberFormat(new ULocale("EN", "US"), RuleBasedNumberFormat.SPELLOUT);
     }
 
     Optional<String> isHaikuable(String message) {
@@ -64,13 +68,18 @@ public class HaikuMessageParser {
     }
 
     boolean isMessageOnlyCharacters(String message) {
-        return Pattern.compile("^[a-zA-Z\\sé.,!?]+$").matcher(message).matches();
+        return Pattern.compile("^[a-zA-Z\\d\\sé.,!?]+$").matcher(message).matches();
     }
 
     int getSyllableCount(String message) {
         int count = 0;
-        for (String word : message.split("\\s+")) {
-            count += syllableCounter.count(word.replaceAll("\\W", ""));
+        var splitMessage = message.split("\\s+");
+        for (var individualMessageSection : splitMessage) {
+            var words = individualMessageSection.replaceAll("\\W", "");
+            if (Pattern.compile("\\d+").matcher(words).matches()) {
+                words = numberFormater.format(Long.valueOf(words));
+            }
+            count += syllableCounter.count(words);
         }
         return count;
     }
