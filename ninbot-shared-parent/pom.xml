@@ -33,7 +33,7 @@
         <lombok.version>1.18.42</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
-        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
+        <maven-release-plugin.version>3.3.0</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
