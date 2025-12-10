@@ -37,7 +37,7 @@
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <opentelemetry-instrumentation-annotations.version>2.21.0</opentelemetry-instrumentation-annotations.version>
+        <opentelemetry-instrumentation-annotations.version>2.22.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
         <pitest-maven.version>1.21.1</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
