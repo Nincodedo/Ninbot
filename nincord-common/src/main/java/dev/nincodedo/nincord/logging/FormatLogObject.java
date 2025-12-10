@@ -20,7 +20,8 @@ public class FormatLogObject {
      * @return String of guild name(guild id), channel name(channel id), username(user id)
      */
     public static String eventInfo(MessageReceivedEvent event) {
-        return STR."Server: \{guildName(event.getGuild())}, Channel: \{channelInfo(event.getChannel())}, Author: \{userInfo(event.getAuthor())}";
+        return String.format("Server: %s, Channel: %s, Author: %s", guildName(event.getGuild()),
+                channelInfo(event.getChannel()), userInfo(event.getAuthor()));
     }
 
     /**
