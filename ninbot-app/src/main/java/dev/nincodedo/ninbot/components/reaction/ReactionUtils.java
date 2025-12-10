@@ -11,7 +11,7 @@ import java.util.Map;
 
 @UtilityClass
 public class ReactionUtils {
-    private static List<String> badCharacters = Arrays.asList(" ", "!", ":");
+    private static List<String> badCharacters = Arrays.asList("!", ":");
     @Getter
     private static Map<String, String> letterMap;
 
@@ -24,6 +24,7 @@ public class ReactionUtils {
             letterChar++;
             unicodeChar++;
         }
+        letterMap.put(" ".toUpperCase(), "🟦");
     }
 
     public static boolean isCanEmoji(String response) {
