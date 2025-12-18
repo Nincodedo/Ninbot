@@ -2,23 +2,36 @@ pipeline {
     agent none
 
     stages {
-      stage('Maven Build') {
-        steps {
-            sh "mvn clean verify org.pitest:pitest-maven:mutationCoverage -P git-commit"
-        }
-        agent any
-        tools {
-          jdk 'jdk25'
-          maven 'M3'
-        }
-        post {
-            success {
-                archiveArtifacts 'ninbot-app/target/*.jar'
+      stage('Build') {
+        failFast true
+        parallel {
+          stage('Maven') {
+            steps {
+              sh "mvn clean verify org.pitest:pitest-maven:mutationCoverage -P git-commit"
             }
-            always {
+            agent any
+            tools {
+              jdk 'jdk25'
+              maven 'M3'
+            }
+            post {
+              success {
+                archiveArtifacts 'ninbot-app/target/*.jar'
+              }
+              always {
                 junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: '**/target/surefire-reports/TEST-*.xml'
                 recordCoverage ignoreParsingErrors: true, skipPublishingChecks: true, tools: [[parser: 'JACOCO', pattern: 'ninbot-test-coverage/**/jacoco.xml'], [parser: 'PIT']]
+              }
             }
+          }
+          stage('Docker') {
+            steps {
+              sh "docker build --no-cache ."
+            }
+            agent {
+              label 'buildx'
+            }
+          }
         }
       }
     }
