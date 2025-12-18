@@ -26,7 +26,7 @@ pipeline {
           }
           stage('Docker') {
             steps {
-              sh "docker build ."
+              sh "docker build --no-cache ."
             }
             agent {
               label 'buildx'
