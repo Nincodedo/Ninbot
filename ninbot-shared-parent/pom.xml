@@ -16,7 +16,7 @@
         <JDA.version>6.2.0</JDA.version>
         <annotations.version>26.0.2-1</annotations.version>
         <archunit.version>1.4.1</archunit.version>
-        <assertj-core.version>3.27.6</assertj-core.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
         <commons-io.version>2.21.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-text.version>1.14.0</commons-text.version>
