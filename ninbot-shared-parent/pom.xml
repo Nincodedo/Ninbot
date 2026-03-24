@@ -39,7 +39,7 @@
         <maven.compiler.target>25</maven.compiler.target>
         <opentelemetry-instrumentation-annotations.version>2.22.0</opentelemetry-instrumentation-annotations.version>
         <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
-        <pitest-maven.version>1.21.1</pitest-maven.version>
+        <pitest-maven.version>1.22.0</pitest-maven.version>
         <sap-conversational-ai-java-api.version>0.0.4</sap-conversational-ai-java-api.version>
         <snakeyaml.version>2.5</snakeyaml.version>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
